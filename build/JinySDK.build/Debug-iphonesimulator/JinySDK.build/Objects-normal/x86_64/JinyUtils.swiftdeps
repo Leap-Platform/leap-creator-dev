@@ -1,0 +1,790 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+provides-nominal:
+provides-member:
+- ["So13UIApplicationC", ""]
+- ["SS", ""]
+- ["10Foundation4DateV", ""]
+- ["So13UIApplicationC", "getCurrentVC"]
+- ["So13UIApplicationC", "findBestViewController"]
+- ["SS", "generateUUIDString"]
+- ["SS", "randomString"]
+- ["SS", "toDate"]
+- ["10Foundation4DateV", "getTimeStamp"]
+provides-dynamic-lookup:
+- "findBestViewController"
+- "getCurrentVC"
+depends-top-level:
+- !private "..<"
+- !private ">"
+- "AssignmentPrecedence"
+- !private "Calendar"
+- "CastingPrecedence"
+- "Date"
+- !private "DateFormatter"
+- !private "FloatLiteralType"
+- "Int"
+- !private "IntegerLiteralType"
+- !private "Locale"
+- "String"
+- "StringLiteralType"
+- !private "TimeZone"
+- "UIApplication"
+- !private "UINavigationController"
+- !private "UITabBarController"
+- "UIViewController"
+- !private "UnicodeScalarType"
+depends-member:
+- !private ["Sa", "count"]
+- !private ["Sa", "last"]
+- !private ["SK", "Calendar"]
+- !private ["SK", "DateFormatter"]
+- !private ["SK", "Locale"]
+- !private ["SK", "String"]
+- !private ["SK", "TimeZone"]
+- !private ["SK", "count"]
+- !private ["SK", "init"]
+- !private ["SK", "last"]
+- !private ["SK", "map"]
+- !private ["SK", "randomElement"]
+- !private ["SK", "randomString"]
+- !private ["So15CALayerDelegateP", "rootViewController"]
+- !private ["s7CVarArgP", "Calendar"]
+- !private ["s7CVarArgP", "DateFormatter"]
+- !private ["s7CVarArgP", "Locale"]
+- !private ["s7CVarArgP", "String"]
+- !private ["s7CVarArgP", "TimeZone"]
+- !private ["s7CVarArgP", "UIApplication"]
+- !private ["s7CVarArgP", "calendar"]
+- !private ["s7CVarArgP", "children"]
+- !private ["s7CVarArgP", "count"]
+- !private ["s7CVarArgP", "date"]
+- !private ["s7CVarArgP", "dateFormat"]
+- !private ["s7CVarArgP", "findBestViewController"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "keyWindow"]
+- !private ["s7CVarArgP", "last"]
+- !private ["s7CVarArgP", "locale"]
+- !private ["s7CVarArgP", "presentedViewController"]
+- !private ["s7CVarArgP", "randomElement"]
+- !private ["s7CVarArgP", "randomString"]
+- !private ["s7CVarArgP", "rootViewController"]
+- !private ["s7CVarArgP", "selectedViewController"]
+- !private ["s7CVarArgP", "shared"]
+- !private ["s7CVarArgP", "string"]
+- !private ["s7CVarArgP", "timeZone"]
+- !private ["s7CVarArgP", "visibleViewController"]
+- !private ["10Foundation8CalendarV", "init"]
+- !private ["Sl", "Calendar"]
+- !private ["Sl", "DateFormatter"]
+- !private ["Sl", "Locale"]
+- !private ["Sl", "String"]
+- !private ["Sl", "TimeZone"]
+- !private ["Sl", "count"]
+- !private ["Sl", "init"]
+- !private ["Sl", "last"]
+- !private ["Sl", "map"]
+- !private ["Sl", "randomElement"]
+- !private ["Sl", "randomString"]
+- !private ["SL", "Calendar"]
+- !private ["SL", "Date"]
+- !private ["SL", "DateFormatter"]
+- !private ["SL", "Locale"]
+- !private ["SL", "String"]
+- !private ["SL", "TimeZone"]
+- !private ["SL", "init"]
+- !private ["SL", "randomElement"]
+- !private ["SL", "randomString"]
+- !private ["10Foundation15ContiguousBytesP", "count"]
+- !private ["10Foundation15ContiguousBytesP", "last"]
+- !private ["s28CustomDebugStringConvertibleP", "Calendar"]
+- !private ["s28CustomDebugStringConvertibleP", "Date"]
+- !private ["s28CustomDebugStringConvertibleP", "DateFormatter"]
+- !private ["s28CustomDebugStringConvertibleP", "Locale"]
+- !private ["s28CustomDebugStringConvertibleP", "String"]
+- !private ["s28CustomDebugStringConvertibleP", "TimeZone"]
+- !private ["s28CustomDebugStringConvertibleP", "UIApplication"]
+- !private ["s28CustomDebugStringConvertibleP", "calendar"]
+- !private ["s28CustomDebugStringConvertibleP", "children"]
+- !private ["s28CustomDebugStringConvertibleP", "count"]
+- !private ["s28CustomDebugStringConvertibleP", "current"]
+- !private ["s28CustomDebugStringConvertibleP", "date"]
+- !private ["s28CustomDebugStringConvertibleP", "dateFormat"]
+- !private ["s28CustomDebugStringConvertibleP", "findBestViewController"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "keyWindow"]
+- !private ["s28CustomDebugStringConvertibleP", "last"]
+- !private ["s28CustomDebugStringConvertibleP", "locale"]
+- !private ["s28CustomDebugStringConvertibleP", "map"]
+- !private ["s28CustomDebugStringConvertibleP", "presentedViewController"]
+- !private ["s28CustomDebugStringConvertibleP", "randomElement"]
+- !private ["s28CustomDebugStringConvertibleP", "randomString"]
+- !private ["s28CustomDebugStringConvertibleP", "rootViewController"]
+- !private ["s28CustomDebugStringConvertibleP", "selectedViewController"]
+- !private ["s28CustomDebugStringConvertibleP", "shared"]
+- !private ["s28CustomDebugStringConvertibleP", "string"]
+- !private ["s28CustomDebugStringConvertibleP", "timeZone"]
+- !private ["s28CustomDebugStringConvertibleP", "visibleViewController"]
+- !private ["s17CustomReflectableP", "Calendar"]
+- !private ["s17CustomReflectableP", "Date"]
+- !private ["s17CustomReflectableP", "DateFormatter"]
+- !private ["s17CustomReflectableP", "Locale"]
+- !private ["s17CustomReflectableP", "String"]
+- !private ["s17CustomReflectableP", "TimeZone"]
+- !private ["s17CustomReflectableP", "count"]
+- !private ["s17CustomReflectableP", "current"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "last"]
+- !private ["s17CustomReflectableP", "map"]
+- !private ["s17CustomReflectableP", "randomElement"]
+- !private ["s17CustomReflectableP", "randomString"]
+- !private ["s23CustomStringConvertibleP", "Calendar"]
+- !private ["s23CustomStringConvertibleP", "Date"]
+- !private ["s23CustomStringConvertibleP", "DateFormatter"]
+- !private ["s23CustomStringConvertibleP", "Locale"]
+- !private ["s23CustomStringConvertibleP", "String"]
+- !private ["s23CustomStringConvertibleP", "TimeZone"]
+- !private ["s23CustomStringConvertibleP", "UIApplication"]
+- !private ["s23CustomStringConvertibleP", "appendInterpolation"]
+- !private ["s23CustomStringConvertibleP", "appendLiteral"]
+- !private ["s23CustomStringConvertibleP", "calendar"]
+- !private ["s23CustomStringConvertibleP", "children"]
+- !private ["s23CustomStringConvertibleP", "count"]
+- !private ["s23CustomStringConvertibleP", "current"]
+- !private ["s23CustomStringConvertibleP", "date"]
+- !private ["s23CustomStringConvertibleP", "dateFormat"]
+- !private ["s23CustomStringConvertibleP", "findBestViewController"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "keyWindow"]
+- !private ["s23CustomStringConvertibleP", "last"]
+- !private ["s23CustomStringConvertibleP", "locale"]
+- !private ["s23CustomStringConvertibleP", "map"]
+- !private ["s23CustomStringConvertibleP", "presentedViewController"]
+- !private ["s23CustomStringConvertibleP", "randomElement"]
+- !private ["s23CustomStringConvertibleP", "randomString"]
+- !private ["s23CustomStringConvertibleP", "rootViewController"]
+- !private ["s23CustomStringConvertibleP", "selectedViewController"]
+- !private ["s23CustomStringConvertibleP", "shared"]
+- !private ["s23CustomStringConvertibleP", "string"]
+- !private ["s23CustomStringConvertibleP", "timeZone"]
+- !private ["s23CustomStringConvertibleP", "visibleViewController"]
+- !private ["10Foundation12DataProtocolP", "count"]
+- !private ["10Foundation12DataProtocolP", "last"]
+- !private ["10Foundation4DateV", "Date"]
+- !private ["10Foundation4DateV", "DateFormatter"]
+- ["10Foundation4DateV", "String"]
+- !private ["10Foundation4DateV", "TimeZone"]
+- ["10Foundation4DateV", "getTimeStamp"]
+- !private ["10Foundation4DateV", "init"]
+- !private ["So15NSDateFormatterC", "calendar"]
+- !private ["So15NSDateFormatterC", "date"]
+- !private ["So15NSDateFormatterC", "dateFormat"]
+- !private ["So15NSDateFormatterC", "init"]
+- !private ["So15NSDateFormatterC", "locale"]
+- !private ["So15NSDateFormatterC", "string"]
+- !private ["So15NSDateFormatterC", "timeZone"]
+- !private ["Se", "Calendar"]
+- !private ["Se", "Date"]
+- !private ["Se", "DateFormatter"]
+- !private ["Se", "Locale"]
+- !private ["Se", "String"]
+- !private ["Se", "TimeZone"]
+- !private ["Se", "count"]
+- !private ["Se", "current"]
+- !private ["Se", "init"]
+- !private ["Se", "last"]
+- !private ["Se", "map"]
+- !private ["Se", "randomElement"]
+- !private ["Se", "randomString"]
+- !private ["s26DefaultStringInterpolationV", "appendInterpolation"]
+- !private ["s26DefaultStringInterpolationV", "appendLiteral"]
+- !private ["SE", "Calendar"]
+- !private ["SE", "Date"]
+- !private ["SE", "DateFormatter"]
+- !private ["SE", "Locale"]
+- !private ["SE", "String"]
+- !private ["SE", "TimeZone"]
+- !private ["SE", "count"]
+- !private ["SE", "current"]
+- !private ["SE", "init"]
+- !private ["SE", "last"]
+- !private ["SE", "map"]
+- !private ["SE", "randomElement"]
+- !private ["SE", "randomString"]
+- !private ["SQ", "Calendar"]
+- !private ["SQ", "Date"]
+- !private ["SQ", "DateFormatter"]
+- !private ["SQ", "Locale"]
+- !private ["SQ", "String"]
+- !private ["SQ", "TimeZone"]
+- !private ["SQ", "UIApplication"]
+- !private ["SQ", "calendar"]
+- !private ["SQ", "children"]
+- !private ["SQ", "count"]
+- !private ["SQ", "current"]
+- !private ["SQ", "date"]
+- !private ["SQ", "dateFormat"]
+- !private ["SQ", "findBestViewController"]
+- !private ["SQ", "gregorian"]
+- !private ["SQ", "init"]
+- !private ["SQ", "keyWindow"]
+- !private ["SQ", "last"]
+- !private ["SQ", "locale"]
+- !private ["SQ", "map"]
+- !private ["SQ", "presentedViewController"]
+- !private ["SQ", "randomElement"]
+- !private ["SQ", "randomString"]
+- !private ["SQ", "rootViewController"]
+- !private ["SQ", "selectedViewController"]
+- !private ["SQ", "shared"]
+- !private ["SQ", "string"]
+- !private ["SQ", "timeZone"]
+- !private ["SQ", "visibleViewController"]
+- !private ["s25ExpressibleByArrayLiteralP", "count"]
+- !private ["s25ExpressibleByArrayLiteralP", "last"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "Calendar"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "DateFormatter"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "Locale"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "String"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "TimeZone"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "randomElement"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "randomString"]
+- !private ["s32ExpressibleByStringInterpolationP", "Calendar"]
+- !private ["s32ExpressibleByStringInterpolationP", "DateFormatter"]
+- !private ["s32ExpressibleByStringInterpolationP", "Locale"]
+- !private ["s32ExpressibleByStringInterpolationP", "String"]
+- !private ["s32ExpressibleByStringInterpolationP", "TimeZone"]
+- !private ["s32ExpressibleByStringInterpolationP", "init"]
+- !private ["s32ExpressibleByStringInterpolationP", "randomElement"]
+- !private ["s32ExpressibleByStringInterpolationP", "randomString"]
+- !private ["s26ExpressibleByStringLiteralP", "Calendar"]
+- !private ["s26ExpressibleByStringLiteralP", "DateFormatter"]
+- !private ["s26ExpressibleByStringLiteralP", "Locale"]
+- !private ["s26ExpressibleByStringLiteralP", "String"]
+- !private ["s26ExpressibleByStringLiteralP", "TimeZone"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "randomElement"]
+- !private ["s26ExpressibleByStringLiteralP", "randomString"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "Calendar"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "DateFormatter"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "Locale"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "String"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "TimeZone"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "randomElement"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "randomString"]
+- !private ["So11NSFormatterC", "calendar"]
+- !private ["So11NSFormatterC", "date"]
+- !private ["So11NSFormatterC", "dateFormat"]
+- !private ["So11NSFormatterC", "init"]
+- !private ["So11NSFormatterC", "locale"]
+- !private ["So11NSFormatterC", "string"]
+- !private ["So11NSFormatterC", "timeZone"]
+- !private ["SH", "Calendar"]
+- !private ["SH", "Date"]
+- !private ["SH", "DateFormatter"]
+- !private ["SH", "Locale"]
+- !private ["SH", "String"]
+- !private ["SH", "TimeZone"]
+- !private ["SH", "UIApplication"]
+- !private ["SH", "calendar"]
+- !private ["SH", "children"]
+- !private ["SH", "count"]
+- !private ["SH", "current"]
+- !private ["SH", "date"]
+- !private ["SH", "dateFormat"]
+- !private ["SH", "findBestViewController"]
+- !private ["SH", "gregorian"]
+- !private ["SH", "init"]
+- !private ["SH", "keyWindow"]
+- !private ["SH", "last"]
+- !private ["SH", "locale"]
+- !private ["SH", "map"]
+- !private ["SH", "presentedViewController"]
+- !private ["SH", "randomElement"]
+- !private ["SH", "randomString"]
+- !private ["SH", "rootViewController"]
+- !private ["SH", "selectedViewController"]
+- !private ["SH", "shared"]
+- !private ["SH", "string"]
+- !private ["SH", "timeZone"]
+- !private ["SH", "visibleViewController"]
+- !private ["10Foundation8CalendarV10IdentifierO", "gregorian"]
+- !private ["10Foundation6LocaleV", "init"]
+- !private ["s25LosslessStringConvertibleP", "Calendar"]
+- !private ["s25LosslessStringConvertibleP", "DateFormatter"]
+- !private ["s25LosslessStringConvertibleP", "Locale"]
+- !private ["s25LosslessStringConvertibleP", "String"]
+- !private ["s25LosslessStringConvertibleP", "TimeZone"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "randomElement"]
+- !private ["s25LosslessStringConvertibleP", "randomString"]
+- !private ["s10MirrorPathP", "Calendar"]
+- !private ["s10MirrorPathP", "DateFormatter"]
+- !private ["s10MirrorPathP", "Locale"]
+- !private ["s10MirrorPathP", "String"]
+- !private ["s10MirrorPathP", "TimeZone"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s10MirrorPathP", "randomElement"]
+- !private ["s10MirrorPathP", "randomString"]
+- !private ["SM", "count"]
+- !private ["SM", "last"]
+- !private ["10Foundation19MutableDataProtocolP", "count"]
+- !private ["10Foundation19MutableDataProtocolP", "last"]
+- !private ["So8NSCodingP", "calendar"]
+- !private ["So8NSCodingP", "children"]
+- !private ["So8NSCodingP", "date"]
+- !private ["So8NSCodingP", "dateFormat"]
+- !private ["So8NSCodingP", "init"]
+- !private ["So8NSCodingP", "locale"]
+- !private ["So8NSCodingP", "presentedViewController"]
+- !private ["So8NSCodingP", "randomElement"]
+- !private ["So8NSCodingP", "rootViewController"]
+- !private ["So8NSCodingP", "selectedViewController"]
+- !private ["So8NSCodingP", "string"]
+- !private ["So8NSCodingP", "timeZone"]
+- !private ["So8NSCodingP", "visibleViewController"]
+- !private ["So9NSCopyingP", "calendar"]
+- !private ["So9NSCopyingP", "date"]
+- !private ["So9NSCopyingP", "dateFormat"]
+- !private ["So9NSCopyingP", "init"]
+- !private ["So9NSCopyingP", "locale"]
+- !private ["So9NSCopyingP", "randomElement"]
+- !private ["So9NSCopyingP", "string"]
+- !private ["So9NSCopyingP", "timeZone"]
+- !private ["So26NSExtensionRequestHandlingP", "children"]
+- !private ["So26NSExtensionRequestHandlingP", "presentedViewController"]
+- !private ["So26NSExtensionRequestHandlingP", "selectedViewController"]
+- !private ["So26NSExtensionRequestHandlingP", "visibleViewController"]
+- !private ["So21NSItemProviderReadingP", "randomElement"]
+- !private ["So21NSItemProviderWritingP", "randomElement"]
+- !private ["So16NSMutableCopyingP", "randomElement"]
+- !private ["So8NSObjectC", "UIApplication"]
+- !private ["So8NSObjectC", "UINavigationController"]
+- !private ["So8NSObjectC", "UITabBarController"]
+- ["So8NSObjectC", "UIViewController"]
+- !private ["So8NSObjectC", "calendar"]
+- !private ["So8NSObjectC", "children"]
+- !private ["So8NSObjectC", "date"]
+- !private ["So8NSObjectC", "dateFormat"]
+- ["So8NSObjectC", "findBestViewController"]
+- ["So8NSObjectC", "getCurrentVC"]
+- !private ["So8NSObjectC", "init"]
+- !private ["So8NSObjectC", "keyWindow"]
+- !private ["So8NSObjectC", "locale"]
+- !private ["So8NSObjectC", "presentedViewController"]
+- !private ["So8NSObjectC", "randomElement"]
+- !private ["So8NSObjectC", "rootViewController"]
+- !private ["So8NSObjectC", "selectedViewController"]
+- !private ["So8NSObjectC", "shared"]
+- !private ["So8NSObjectC", "string"]
+- !private ["So8NSObjectC", "timeZone"]
+- !private ["So8NSObjectC", "visibleViewController"]
+- !private ["So8NSObjectP", "UIApplication"]
+- !private ["So8NSObjectP", "calendar"]
+- !private ["So8NSObjectP", "children"]
+- !private ["So8NSObjectP", "date"]
+- !private ["So8NSObjectP", "dateFormat"]
+- !private ["So8NSObjectP", "findBestViewController"]
+- !private ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "keyWindow"]
+- !private ["So8NSObjectP", "locale"]
+- !private ["So8NSObjectP", "presentedViewController"]
+- !private ["So8NSObjectP", "randomElement"]
+- !private ["So8NSObjectP", "rootViewController"]
+- !private ["So8NSObjectP", "selectedViewController"]
+- !private ["So8NSObjectP", "shared"]
+- !private ["So8NSObjectP", "string"]
+- !private ["So8NSObjectP", "timeZone"]
+- !private ["So8NSObjectP", "visibleViewController"]
+- !private ["So14NSSecureCodingP", "randomElement"]
+- !private ["So8NSStringC", "randomElement"]
+- !private ["Sk", "count"]
+- !private ["Sk", "last"]
+- !private ["Sk", "map"]
+- !private ["Sn", "map"]
+- !private ["SX", "map"]
+- !private ["Sm", "Calendar"]
+- !private ["Sm", "DateFormatter"]
+- !private ["Sm", "Locale"]
+- !private ["Sm", "String"]
+- !private ["Sm", "TimeZone"]
+- !private ["Sm", "count"]
+- !private ["Sm", "init"]
+- !private ["Sm", "last"]
+- !private ["Sm", "randomElement"]
+- !private ["Sm", "randomString"]
+- !private ["10Foundation20ReferenceConvertibleP", "Date"]
+- !private ["10Foundation20ReferenceConvertibleP", "DateFormatter"]
+- !private ["10Foundation20ReferenceConvertibleP", "TimeZone"]
+- !private ["10Foundation20ReferenceConvertibleP", "current"]
+- !private ["10Foundation20ReferenceConvertibleP", "init"]
+- !private ["ST", "Calendar"]
+- !private ["ST", "DateFormatter"]
+- !private ["ST", "Locale"]
+- !private ["ST", "String"]
+- !private ["ST", "TimeZone"]
+- !private ["ST", "count"]
+- !private ["ST", "init"]
+- !private ["ST", "last"]
+- !private ["ST", "map"]
+- !private ["ST", "randomElement"]
+- !private ["ST", "randomString"]
+- !private ["SS", "Calendar"]
+- ["SS", "Date"]
+- !private ["SS", "DateFormatter"]
+- ["SS", "Int"]
+- !private ["SS", "Locale"]
+- ["SS", "String"]
+- !private ["SS", "TimeZone"]
+- ["SS", "generateUUIDString"]
+- !private ["SS", "init"]
+- !private ["SS", "randomElement"]
+- ["SS", "randomString"]
+- ["SS", "toDate"]
+- !private ["s27StringInterpolationProtocolP", "appendInterpolation"]
+- !private ["s27StringInterpolationProtocolP", "appendLiteral"]
+- !private ["Sy", "Calendar"]
+- !private ["Sy", "DateFormatter"]
+- !private ["Sy", "Locale"]
+- !private ["Sy", "String"]
+- !private ["Sy", "TimeZone"]
+- !private ["Sy", "init"]
+- !private ["Sy", "randomElement"]
+- !private ["Sy", "randomString"]
+- !private ["s16TextOutputStreamP", "Calendar"]
+- !private ["s16TextOutputStreamP", "DateFormatter"]
+- !private ["s16TextOutputStreamP", "Locale"]
+- !private ["s16TextOutputStreamP", "String"]
+- !private ["s16TextOutputStreamP", "TimeZone"]
+- !private ["s16TextOutputStreamP", "appendInterpolation"]
+- !private ["s16TextOutputStreamP", "appendLiteral"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s16TextOutputStreamP", "randomElement"]
+- !private ["s16TextOutputStreamP", "randomString"]
+- !private ["s20TextOutputStreamableP", "Calendar"]
+- !private ["s20TextOutputStreamableP", "DateFormatter"]
+- !private ["s20TextOutputStreamableP", "Locale"]
+- !private ["s20TextOutputStreamableP", "String"]
+- !private ["s20TextOutputStreamableP", "TimeZone"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["s20TextOutputStreamableP", "randomElement"]
+- !private ["s20TextOutputStreamableP", "randomString"]
+- !private ["10Foundation8TimeZoneV", "current"]
+- !private ["10Foundation8TimeZoneV", "init"]
+- !private ["So29UIAccessibilityIdentificationP", "rootViewController"]
+- !private ["So12UIAppearanceP", "rootViewController"]
+- !private ["So21UIAppearanceContainerP", "children"]
+- !private ["So21UIAppearanceContainerP", "presentedViewController"]
+- !private ["So21UIAppearanceContainerP", "rootViewController"]
+- !private ["So21UIAppearanceContainerP", "selectedViewController"]
+- !private ["So21UIAppearanceContainerP", "visibleViewController"]
+- !private ["So13UIApplicationC", "UIApplication"]
+- !private ["So13UIApplicationC", "UINavigationController"]
+- !private ["So13UIApplicationC", "UITabBarController"]
+- ["So13UIApplicationC", "UIViewController"]
+- ["So13UIApplicationC", "findBestViewController"]
+- ["So13UIApplicationC", "getCurrentVC"]
+- !private ["So13UIApplicationC", "keyWindow"]
+- !private ["So13UIApplicationC", "shared"]
+- !private ["So18UIContentContainerP", "children"]
+- !private ["So18UIContentContainerP", "presentedViewController"]
+- !private ["So18UIContentContainerP", "selectedViewController"]
+- !private ["So18UIContentContainerP", "visibleViewController"]
+- !private ["So17UICoordinateSpaceP", "rootViewController"]
+- !private ["So13UIDynamicItemP", "rootViewController"]
+- !private ["So18UIFocusEnvironmentP", "children"]
+- !private ["So18UIFocusEnvironmentP", "presentedViewController"]
+- !private ["So18UIFocusEnvironmentP", "rootViewController"]
+- !private ["So18UIFocusEnvironmentP", "selectedViewController"]
+- !private ["So18UIFocusEnvironmentP", "visibleViewController"]
+- !private ["So11UIFocusItemP", "rootViewController"]
+- !private ["So20UIFocusItemContainerP", "rootViewController"]
+- !private ["So24UILargeContentViewerItemP", "rootViewController"]
+- !private ["So22UINavigationControllerC", "visibleViewController"]
+- !private ["So30UIPasteConfigurationSupportingP", "UIApplication"]
+- !private ["So30UIPasteConfigurationSupportingP", "children"]
+- !private ["So30UIPasteConfigurationSupportingP", "findBestViewController"]
+- !private ["So30UIPasteConfigurationSupportingP", "keyWindow"]
+- !private ["So30UIPasteConfigurationSupportingP", "presentedViewController"]
+- !private ["So30UIPasteConfigurationSupportingP", "rootViewController"]
+- !private ["So30UIPasteConfigurationSupportingP", "selectedViewController"]
+- !private ["So30UIPasteConfigurationSupportingP", "shared"]
+- !private ["So30UIPasteConfigurationSupportingP", "visibleViewController"]
+- !private ["So11UIResponderC", "UIApplication"]
+- !private ["So11UIResponderC", "UINavigationController"]
+- !private ["So11UIResponderC", "UITabBarController"]
+- ["So11UIResponderC", "UIViewController"]
+- !private ["So11UIResponderC", "children"]
+- ["So11UIResponderC", "findBestViewController"]
+- ["So11UIResponderC", "getCurrentVC"]
+- !private ["So11UIResponderC", "keyWindow"]
+- !private ["So11UIResponderC", "presentedViewController"]
+- !private ["So11UIResponderC", "rootViewController"]
+- !private ["So11UIResponderC", "selectedViewController"]
+- !private ["So11UIResponderC", "shared"]
+- !private ["So11UIResponderC", "visibleViewController"]
+- !private ["So30UIResponderStandardEditActionsP", "UIApplication"]
+- !private ["So30UIResponderStandardEditActionsP", "children"]
+- !private ["So30UIResponderStandardEditActionsP", "findBestViewController"]
+- !private ["So30UIResponderStandardEditActionsP", "keyWindow"]
+- !private ["So30UIResponderStandardEditActionsP", "presentedViewController"]
+- !private ["So30UIResponderStandardEditActionsP", "rootViewController"]
+- !private ["So30UIResponderStandardEditActionsP", "selectedViewController"]
+- !private ["So30UIResponderStandardEditActionsP", "shared"]
+- !private ["So30UIResponderStandardEditActionsP", "visibleViewController"]
+- !private ["So16UIStateRestoringP", "children"]
+- !private ["So16UIStateRestoringP", "presentedViewController"]
+- !private ["So16UIStateRestoringP", "selectedViewController"]
+- !private ["So16UIStateRestoringP", "visibleViewController"]
+- !private ["So18UITabBarControllerC", "selectedViewController"]
+- !private ["So16UITabBarDelegateP", "selectedViewController"]
+- !private ["So18UITraitEnvironmentP", "children"]
+- !private ["So18UITraitEnvironmentP", "presentedViewController"]
+- !private ["So18UITraitEnvironmentP", "rootViewController"]
+- !private ["So18UITraitEnvironmentP", "selectedViewController"]
+- !private ["So18UITraitEnvironmentP", "visibleViewController"]
+- !private ["So23UIUserActivityRestoringP", "UIApplication"]
+- !private ["So23UIUserActivityRestoringP", "children"]
+- !private ["So23UIUserActivityRestoringP", "findBestViewController"]
+- !private ["So23UIUserActivityRestoringP", "keyWindow"]
+- !private ["So23UIUserActivityRestoringP", "presentedViewController"]
+- !private ["So23UIUserActivityRestoringP", "rootViewController"]
+- !private ["So23UIUserActivityRestoringP", "selectedViewController"]
+- !private ["So23UIUserActivityRestoringP", "shared"]
+- !private ["So23UIUserActivityRestoringP", "visibleViewController"]
+- !private ["So6UIViewC", "rootViewController"]
+- !private ["So16UIViewControllerC", "children"]
+- !private ["So16UIViewControllerC", "presentedViewController"]
+- !private ["So16UIViewControllerC", "selectedViewController"]
+- !private ["So16UIViewControllerC", "visibleViewController"]
+- !private ["So8UIWindowC", "rootViewController"]
+- !private ["s14_ArrayProtocolP", "count"]
+- !private ["s14_ArrayProtocolP", "last"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "Calendar"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "Date"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "DateFormatter"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "Locale"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "String"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "TimeZone"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "init"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "randomElement"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "randomString"]
+- !private ["s24_DestructorSafeContainerP", "count"]
+- !private ["s24_DestructorSafeContainerP", "last"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "Calendar"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "DateFormatter"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "Locale"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "String"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "TimeZone"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "randomElement"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "randomString"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "Calendar"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "DateFormatter"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "Locale"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "String"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "TimeZone"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "randomElement"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "randomString"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "Calendar"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "DateFormatter"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "Locale"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "String"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "TimeZone"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "randomElement"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "randomString"]
+- !private ["s19_HasContiguousBytesP", "Calendar"]
+- !private ["s19_HasContiguousBytesP", "DateFormatter"]
+- !private ["s19_HasContiguousBytesP", "Locale"]
+- !private ["s19_HasContiguousBytesP", "String"]
+- !private ["s19_HasContiguousBytesP", "TimeZone"]
+- !private ["s19_HasContiguousBytesP", "count"]
+- !private ["s19_HasContiguousBytesP", "init"]
+- !private ["s19_HasContiguousBytesP", "last"]
+- !private ["s19_HasContiguousBytesP", "randomElement"]
+- !private ["s19_HasContiguousBytesP", "randomString"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "count"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "last"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "randomElement"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "UIApplication"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "calendar"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "children"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "date"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "dateFormat"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "findBestViewController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "keyWindow"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "locale"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "presentedViewController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "randomElement"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "rootViewController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "selectedViewController"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "shared"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "string"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "timeZone"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "visibleViewController"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "UIApplication"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "calendar"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "children"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "date"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "dateFormat"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "findBestViewController"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "init"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "keyWindow"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "locale"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "presentedViewController"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "randomElement"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "rootViewController"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "selectedViewController"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "shared"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "string"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "timeZone"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "visibleViewController"]
+- !private ["s21_ObjectiveCBridgeableP", "Calendar"]
+- !private ["s21_ObjectiveCBridgeableP", "Date"]
+- !private ["s21_ObjectiveCBridgeableP", "DateFormatter"]
+- !private ["s21_ObjectiveCBridgeableP", "Locale"]
+- !private ["s21_ObjectiveCBridgeableP", "String"]
+- !private ["s21_ObjectiveCBridgeableP", "TimeZone"]
+- !private ["s21_ObjectiveCBridgeableP", "count"]
+- !private ["s21_ObjectiveCBridgeableP", "current"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "last"]
+- !private ["s21_ObjectiveCBridgeableP", "randomElement"]
+- !private ["s21_ObjectiveCBridgeableP", "randomString"]
+- !private ["s38__DefaultCustomPlaygroundQuickLookableP", "rootViewController"]
+depends-nominal:
+- !private "Sa"
+- !private "SK"
+- !private "So15CALayerDelegateP"
+- !private "s7CVarArgP"
+- !private "10Foundation8CalendarV"
+- !private "Sl"
+- !private "SL"
+- !private "10Foundation15ContiguousBytesP"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "10Foundation12DataProtocolP"
+- "10Foundation4DateV"
+- !private "So15NSDateFormatterC"
+- !private "Se"
+- !private "s26DefaultStringInterpolationV"
+- !private "SE"
+- !private "SQ"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s32ExpressibleByStringInterpolationP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "So11NSFormatterC"
+- !private "SH"
+- !private "10Foundation8CalendarV10IdentifierO"
+- !private "10Foundation6LocaleV"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "SM"
+- !private "10Foundation19MutableDataProtocolP"
+- !private "So8NSCodingP"
+- !private "So9NSCopyingP"
+- !private "So26NSExtensionRequestHandlingP"
+- !private "So21NSItemProviderReadingP"
+- !private "So21NSItemProviderWritingP"
+- !private "So16NSMutableCopyingP"
+- "So8NSObjectC"
+- !private "So8NSObjectP"
+- !private "So14NSSecureCodingP"
+- !private "So8NSStringC"
+- !private "Sk"
+- !private "Sn"
+- !private "SX"
+- !private "Sm"
+- !private "10Foundation20ReferenceConvertibleP"
+- !private "ST"
+- "SS"
+- !private "s27StringInterpolationProtocolP"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "10Foundation8TimeZoneV"
+- !private "So29UIAccessibilityIdentificationP"
+- !private "So12UIAppearanceP"
+- !private "So21UIAppearanceContainerP"
+- "So13UIApplicationC"
+- !private "So18UIContentContainerP"
+- !private "So17UICoordinateSpaceP"
+- !private "So13UIDynamicItemP"
+- !private "So18UIFocusEnvironmentP"
+- !private "So11UIFocusItemP"
+- !private "So20UIFocusItemContainerP"
+- !private "So24UILargeContentViewerItemP"
+- !private "So22UINavigationControllerC"
+- !private "So30UIPasteConfigurationSupportingP"
+- "So11UIResponderC"
+- !private "So30UIResponderStandardEditActionsP"
+- !private "So16UIStateRestoringP"
+- !private "So18UITabBarControllerC"
+- !private "So16UITabBarDelegateP"
+- !private "So18UITraitEnvironmentP"
+- !private "So23UIUserActivityRestoringP"
+- !private "So6UIViewC"
+- !private "So16UIViewControllerC"
+- !private "So8UIWindowC"
+- !private "s14_ArrayProtocolP"
+- !private "s30_CustomPlaygroundQuickLookableP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s19_HasContiguousBytesP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "10Foundation27_KeyValueCodingAndObservingP"
+- !private "10Foundation37_KeyValueCodingAndObservingPublishingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s38__DefaultCustomPlaygroundQuickLookableP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/ObjectiveC.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMIDI.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMedia.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/simd.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreImage.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/QuartzCore.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Dispatch.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Metal.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Darwin.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Foundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/AVFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreAudio.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreGraphics.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Swift.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/UIKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/SwiftOnoneSupport.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Combine.swiftmodule/x86_64-apple-ios-simulator.swiftmodule"
+- "/Users/aravindgs/workspace/JinySDK/JinySDK/JinySDK.h"
+- "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreMedia.framework/Headers/CoreMedia.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/apinotes/Dispatch.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVFoundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreAudioTypes.framework/Headers/CoreAudioTypes.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UserNotifications.framework/Headers/UserNotifications.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AdSupport.framework/Headers/AdSupport.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers/MediaToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "12bc0958429cf3082e59d76a15766f09"

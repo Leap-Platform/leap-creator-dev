@@ -3,17 +3,175 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		D073E9382425FF7600764EF5 /* JinySDKUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D073E9392425FF7600764EF5 /* Build configuration list for PBXAggregateTarget "JinySDKUniversal" */;
+			buildPhases = (
+				D073E93C2425FF8B00764EF5 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = JinySDKUniversal;
+			productName = JinySDKUniversal;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		D0084C882486814D0082508C /* JinyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* JinyConfig.swift */; };
+		D0084C8A2486817B0082508C /* JinySound.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C892486817B0082508C /* JinySound.swift */; };
+		D0084C8C248681A30082508C /* JinyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* JinyFlow.swift */; };
+		D0084C8E248681CF0082508C /* JinyPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8D248681CF0082508C /* JinyPage.swift */; };
+		D0084C90248681F90082508C /* JinyStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8F248681F90082508C /* JinyStage.swift */; };
+		D0084C92248682A80082508C /* JinyTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C91248682A80082508C /* JinyTrigger.swift */; };
+		D0084C94248683440082508C /* JinyTriggerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C93248683440082508C /* JinyTriggerIdentifier.swift */; };
+		D0084C96248683C60082508C /* JinyDiscoveryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C95248683C60082508C /* JinyDiscoveryInfo.swift */; };
+		D0084C9A2486B3D70082508C /* JinyDiscoveryInfoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C992486B3D70082508C /* JinyDiscoveryInfoData.swift */; };
+		D00B8F5F249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
+		D00B8F66249B2988006F4CA1 /* JinyAuthSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00B8F65249B2988006F4CA1 /* JinyAuthSDKTests.swift */; };
+		D00B8F68249B2988006F4CA1 /* JinyAuthSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D00B8F58249B2988006F4CA1 /* JinyAuthSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D00B8F6B249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
+		D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D03E44E32420AABA00A43FEA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44E22420AABA00A43FEA /* AppDelegate.swift */; };
+		D03E44E52420AABA00A43FEA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44E42420AABA00A43FEA /* SceneDelegate.swift */; };
+		D03E44E72420AABA00A43FEA /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44E62420AABA00A43FEA /* HomeViewController.swift */; };
+		D03E44EA2420AABA00A43FEA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D03E44E82420AABA00A43FEA /* Main.storyboard */; };
+		D03E44EC2420AABC00A43FEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D03E44EB2420AABC00A43FEA /* Assets.xcassets */; };
+		D03E44EF2420AABC00A43FEA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D03E44ED2420AABC00A43FEA /* LaunchScreen.storyboard */; };
+		D03E44FA2420AABC00A43FEA /* JinySampleAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44F92420AABC00A43FEA /* JinySampleAppTests.swift */; };
+		D03E45052420AABC00A43FEA /* JinySampleAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45042420AABC00A43FEA /* JinySampleAppUITests.swift */; };
+		D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* JinyInternal.swift */; };
+		D03E45132420F75400A43FEA /* JinyNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45122420F75400A43FEA /* JinyNetworking.swift */; };
+		D03E45172423AAAA00A43FEA /* JinyPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45162423AAAA00A43FEA /* JinyPointer.swift */; };
+		D04195D8244DB1390085B9F4 /* JinyAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04195D7244DB1390085B9F4 /* JinyAudioManager.swift */; };
+		D04356C32498CB7C00B90276 /* JinyLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04356C22498CB7C00B90276 /* JinyLanguage.swift */; };
+		D049F5F7249D242000372324 /* JinyAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F6249D242000372324 /* JinyAuth.swift */; };
+		D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */; };
+		D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04BBA362472832000DF9716 /* LoginOptionViewController.swift */; };
+		D04BBA392474FEE400DF9716 /* JinyUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04BBA382474FEE400DF9716 /* JinyUIManager.swift */; };
 		D0592E81241FA6E3007782A8 /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
 		D0592E86241FA6E3007782A8 /* JinySDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0592E85241FA6E3007782A8 /* JinySDKTests.swift */; };
 		D0592E88241FA6E3007782A8 /* JinySDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* JinySDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0592E92241FAA3D007782A8 /* Jiny.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0592E91241FAA3D007782A8 /* Jiny.swift */; };
+		D0592E95241FAD99007782A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; platformFilter = ios; };
+		D071662D24629D3E001937EE /* JinyContextDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662C24629D3E001937EE /* JinyContextDetector.swift */; };
+		D071662F24629D5D001937EE /* JinyContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662E24629D5D001937EE /* JinyContextManager.swift */; };
+		D073E9332425E04E00764EF5 /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
+		D073E9342425E04E00764EF5 /* JinySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D07FEB092492C600004FFD99 /* JinyLanguageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEAFC2492C600004FFD99 /* JinyLanguageRow.swift */; };
+		D07FEB0A2492C600004FFD99 /* JinyLanguagePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEAFD2492C600004FFD99 /* JinyLanguagePanel.swift */; };
+		D07FEB0B2492C600004FFD99 /* JinyOptionPanelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEAFF2492C600004FFD99 /* JinyOptionPanelButton.swift */; };
+		D07FEB0C2492C600004FFD99 /* JinyOptionPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB002492C600004FFD99 /* JinyOptionPanel.swift */; };
+		D07FEB0D2492C600004FFD99 /* JinyPoweredBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB022492C600004FFD99 /* JinyPoweredBy.swift */; };
+		D07FEB0E2492C600004FFD99 /* JinySwipeDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB032492C600004FFD99 /* JinySwipeDismiss.swift */; };
+		D07FEB0F2492C600004FFD99 /* JinyDragRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB042492C600004FFD99 /* JinyDragRect.swift */; };
+		D07FEB102492C600004FFD99 /* JinyLanguageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB062492C600004FFD99 /* JinyLanguageButton.swift */; };
+		D07FEB112492C600004FFD99 /* JinyBottomDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB072492C600004FFD99 /* JinyBottomDiscoveryView.swift */; };
+		D07FEB122492C600004FFD99 /* JinyOptInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB082492C600004FFD99 /* JinyOptInButton.swift */; };
+		D07FEB1B2492C7F2004FFD99 /* jiny_change_lang.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB132492C7F2004FFD99 /* jiny_change_lang.png */; };
+		D07FEB1C2492C7F2004FFD99 /* jiny_powered_by.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB142492C7F2004FFD99 /* jiny_powered_by.png */; };
+		D07FEB1D2492C7F2004FFD99 /* jiny_mute.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB152492C7F2004FFD99 /* jiny_mute.png */; };
+		D07FEB1E2492C7F2004FFD99 /* jiny_language.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB162492C7F2004FFD99 /* jiny_language.png */; };
+		D07FEB1F2492C7F2004FFD99 /* jiny_close.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB172492C7F2004FFD99 /* jiny_close.png */; };
+		D07FEB202492C7F2004FFD99 /* jiny_continue.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB182492C7F2004FFD99 /* jiny_continue.png */; };
+		D07FEB212492C7F2004FFD99 /* jiny_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB192492C7F2004FFD99 /* jiny_icon.png */; };
+		D07FEB222492C7F2004FFD99 /* jiny_repeat.png in Resources */ = {isa = PBXBuildFile; fileRef = D07FEB1A2492C7F2004FFD99 /* jiny_repeat.png */; };
+		D07FEB242493A7F2004FFD99 /* JinyMainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB232493A7F2004FFD99 /* JinyMainButton.swift */; };
+		D07FEB282494A95A004FFD99 /* SearchHotelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */; };
+		D0850079242CC081007889B1 /* JinyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0850078242CC081007889B1 /* JinyUtils.swift */; };
+		D08C079B247FBFD40026F068 /* JinyAnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08C079A247FBFD40026F068 /* JinyAnalyticsManager.swift */; };
+		D09C722E246A987A0060E054 /* JinyFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722D246A987A0060E054 /* JinyFlowManager.swift */; };
+		D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* JinyStageManager.swift */; };
+		D09C7232247174400060E054 /* JinyFlowSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C7231247174400060E054 /* JinyFlowSelector.swift */; };
+		D0ABD0062481155F0069FA67 /* JinyAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */; };
+		D0ABD008248115E00069FA67 /* JinyMenuItemClickInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD007248115E00069FA67 /* JinyMenuItemClickInfo.swift */; };
+		D0ABD00A248116D30069FA67 /* JinyBottomActivityStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD009248116D30069FA67 /* JinyBottomActivityStateInfo.swift */; };
+		D0ABD00C248117760069FA67 /* JinyCallbacksInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD00B248117760069FA67 /* JinyCallbacksInfo.swift */; };
+		D0ABD00E2481191A0069FA67 /* JinySoundInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD00D2481191A0069FA67 /* JinySoundInfo.swift */; };
+		D0ABD0102481198C0069FA67 /* JinyLanguageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD00F2481198C0069FA67 /* JinyLanguageInfo.swift */; };
+		D0ABD01224811A060069FA67 /* JinyDiscoveryIconMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01124811A060069FA67 /* JinyDiscoveryIconMetrics.swift */; };
+		D0ABD01424811AB30069FA67 /* JinyTriggerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01324811AB30069FA67 /* JinyTriggerInfo.swift */; };
+		D0ABD01624811B060069FA67 /* JinyDiscoveryExpInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01524811B060069FA67 /* JinyDiscoveryExpInfo.swift */; };
+		D0ABD01824811FEB0069FA67 /* JinyDiscoveryItemClickInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01724811FEB0069FA67 /* JinyDiscoveryItemClickInfo.swift */; };
+		D0ABD01A248120C90069FA67 /* JinyClientPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD019248120C90069FA67 /* JinyClientPreference.swift */; };
+		D0ABD01C2481210D0069FA67 /* JinyDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01B2481210D0069FA67 /* JinyDeviceInfo.swift */; };
+		D0ABD01E248121A50069FA67 /* JinyAppleIdInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01D248121A50069FA67 /* JinyAppleIdInfo.swift */; };
+		D0ABD0202481221E0069FA67 /* JinyOutputTypeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01F2481221E0069FA67 /* JinyOutputTypeInfo.swift */; };
+		D0ABD022248122A80069FA67 /* JinyTimeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD021248122A80069FA67 /* JinyTimeInfo.swift */; };
+		D0ABD024248123350069FA67 /* JinyLambdaInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD023248123350069FA67 /* JinyLambdaInfo.swift */; };
+		D0ABD0262481237E0069FA67 /* JinyContextTypeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0252481237E0069FA67 /* JinyContextTypeInfo.swift */; };
+		D0ABD028248123D60069FA67 /* JinyFlowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD027248123D60069FA67 /* JinyFlowInfo.swift */; };
+		D0ABD02A248124250069FA67 /* JinyPageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD029248124250069FA67 /* JinyPageInfo.swift */; };
+		D0ABD02C248124D50069FA67 /* JinyStageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD02B248124D50069FA67 /* JinyStageInfo.swift */; };
+		D0ABD02E248125390069FA67 /* JinyPilotInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD02D248125390069FA67 /* JinyPilotInfo.swift */; };
+		D0ABD030248125AB0069FA67 /* JinyExperimentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD02F248125AB0069FA67 /* JinyExperimentInfo.swift */; };
+		D0ABD032248125F90069FA67 /* JinyClickInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD031248125F90069FA67 /* JinyClickInfo.swift */; };
+		D0ABD034248126820069FA67 /* JinySDKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD033248126820069FA67 /* JinySDKInfo.swift */; };
+		D0ABD038248145F60069FA67 /* JinySharedInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD037248145F60069FA67 /* JinySharedInformation.swift */; };
+		D0B205B32494DDEE00C69775 /* FlightSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */; };
+		D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC371C249DCF24002648FF /* JinyViewProps.swift */; };
+		D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC371E249DFB41002648FF /* AutomaticViewController.swift */; };
+		D0BC372B249DFF60002648FF /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC3721249DFF60002648FF /* PTUSBHub.m */; };
+		D0BC372C249DFF60002648FF /* PTProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC3722249DFF60002648FF /* PTProtocol.m */; };
+		D0BC372E249DFF60002648FF /* Peertalk.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3724249DFF60002648FF /* Peertalk.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0BC372F249DFF60002648FF /* PTChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC3725249DFF60002648FF /* PTChannel.m */; };
+		D0BC3730249DFF60002648FF /* PTPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3726249DFF60002648FF /* PTPrivate.h */; };
+		D0BC3731249DFF60002648FF /* PTProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3727249DFF60002648FF /* PTProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0BC3732249DFF60002648FF /* PTUSBHub.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3728249DFF60002648FF /* PTUSBHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0BC3733249DFF60002648FF /* PTChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3729249DFF60002648FF /* PTChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0BC949B2487AAE400C18D92 /* JinyTriggerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC949A2487AAE400C18D92 /* JinyTriggerManager.swift */; };
+		D0E55D592479747E005B3EAB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
+		D0ED4B8A24472AC100AE32A4 /* JinyIdentifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ED4B8924472AC100AE32A4 /* JinyIdentifer.swift */; };
+		D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D00B8F60249B2988006F4CA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D00B8F55249B2988006F4CA1;
+			remoteInfo = JinyAuthSDK;
+		};
+		D00B8F62249B2988006F4CA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D03E44DF2420AABA00A43FEA;
+			remoteInfo = JinySampleApp;
+		};
+		D00B8F69249B2988006F4CA1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D00B8F55249B2988006F4CA1;
+			remoteInfo = JinyAuthSDK;
+		};
+		D03E44F62420AABC00A43FEA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D03E44DF2420AABA00A43FEA;
+			remoteInfo = JinySampleApp;
+		};
+		D03E45012420AABC00A43FEA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D03E44DF2420AABA00A43FEA;
+			remoteInfo = JinySampleApp;
+		};
 		D0592E82241FA6E3007782A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D0592E76241FA6E3007782A8;
+			remoteInfo = JinySDK;
+		};
+		D073E9352425E04E00764EF5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
 			proxyType = 1;
@@ -22,20 +180,181 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D073E9372425E04E00764EF5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D073E9342425E04E00764EF5 /* JinySDK.framework in Embed Frameworks */,
+				D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		D0084C872486814D0082508C /* JinyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyConfig.swift; sourceTree = "<group>"; };
+		D0084C892486817B0082508C /* JinySound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySound.swift; sourceTree = "<group>"; };
+		D0084C8B248681A30082508C /* JinyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlow.swift; sourceTree = "<group>"; };
+		D0084C8D248681CF0082508C /* JinyPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPage.swift; sourceTree = "<group>"; };
+		D0084C8F248681F90082508C /* JinyStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyStage.swift; sourceTree = "<group>"; };
+		D0084C91248682A80082508C /* JinyTrigger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTrigger.swift; sourceTree = "<group>"; };
+		D0084C93248683440082508C /* JinyTriggerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTriggerIdentifier.swift; sourceTree = "<group>"; };
+		D0084C95248683C60082508C /* JinyDiscoveryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDiscoveryInfo.swift; sourceTree = "<group>"; };
+		D0084C992486B3D70082508C /* JinyDiscoveryInfoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDiscoveryInfoData.swift; sourceTree = "<group>"; };
+		D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JinyAuthSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D00B8F58249B2988006F4CA1 /* JinyAuthSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JinyAuthSDK.h; sourceTree = "<group>"; };
+		D00B8F59249B2988006F4CA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D00B8F5E249B2988006F4CA1 /* JinyAuthSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JinyAuthSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D00B8F65249B2988006F4CA1 /* JinyAuthSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthSDKTests.swift; sourceTree = "<group>"; };
+		D00B8F67249B2988006F4CA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D03E44E02420AABA00A43FEA /* Jiny Sample App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jiny Sample App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D03E44E22420AABA00A43FEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D03E44E42420AABA00A43FEA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D03E44E62420AABA00A43FEA /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		D03E44E92420AABA00A43FEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D03E44EB2420AABC00A43FEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D03E44EE2420AABC00A43FEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D03E44F02420AABC00A43FEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D03E44F52420AABC00A43FEA /* JinySampleAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JinySampleAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D03E44F92420AABC00A43FEA /* JinySampleAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySampleAppTests.swift; sourceTree = "<group>"; };
+		D03E44FB2420AABC00A43FEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D03E45002420AABC00A43FEA /* JinySampleAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JinySampleAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D03E45042420AABC00A43FEA /* JinySampleAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySampleAppUITests.swift; sourceTree = "<group>"; };
+		D03E45062420AABC00A43FEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D03E45102420DE1500A43FEA /* JinyInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyInternal.swift; sourceTree = "<group>"; };
+		D03E45122420F75400A43FEA /* JinyNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyNetworking.swift; sourceTree = "<group>"; };
+		D03E45162423AAAA00A43FEA /* JinyPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPointer.swift; sourceTree = "<group>"; };
+		D04195D7244DB1390085B9F4 /* JinyAudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAudioManager.swift; sourceTree = "<group>"; };
+		D04356C22498CB7C00B90276 /* JinyLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyLanguage.swift; sourceTree = "<group>"; };
+		D049F5F6249D242000372324 /* JinyAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuth.swift; sourceTree = "<group>"; };
+		D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthInternal.swift; sourceTree = "<group>"; };
+		D04BBA362472832000DF9716 /* LoginOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOptionViewController.swift; sourceTree = "<group>"; };
+		D04BBA382474FEE400DF9716 /* JinyUIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyUIManager.swift; sourceTree = "<group>"; };
 		D0592E77241FA6E3007782A8 /* JinySDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JinySDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0592E7A241FA6E3007782A8 /* JinySDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JinySDK.h; sourceTree = "<group>"; };
 		D0592E7B241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0592E80241FA6E3007782A8 /* JinySDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JinySDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0592E85241FA6E3007782A8 /* JinySDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySDKTests.swift; sourceTree = "<group>"; };
 		D0592E87241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0592E91241FAA3D007782A8 /* Jiny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jiny.swift; sourceTree = "<group>"; };
+		D0592E94241FAD99007782A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D071662C24629D3E001937EE /* JinyContextDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyContextDetector.swift; sourceTree = "<group>"; };
+		D071662E24629D5D001937EE /* JinyContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyContextManager.swift; sourceTree = "<group>"; };
+		D07FEAFC2492C600004FFD99 /* JinyLanguageRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyLanguageRow.swift; sourceTree = "<group>"; };
+		D07FEAFD2492C600004FFD99 /* JinyLanguagePanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyLanguagePanel.swift; sourceTree = "<group>"; };
+		D07FEAFF2492C600004FFD99 /* JinyOptionPanelButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyOptionPanelButton.swift; sourceTree = "<group>"; };
+		D07FEB002492C600004FFD99 /* JinyOptionPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyOptionPanel.swift; sourceTree = "<group>"; };
+		D07FEB022492C600004FFD99 /* JinyPoweredBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyPoweredBy.swift; sourceTree = "<group>"; };
+		D07FEB032492C600004FFD99 /* JinySwipeDismiss.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinySwipeDismiss.swift; sourceTree = "<group>"; };
+		D07FEB042492C600004FFD99 /* JinyDragRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyDragRect.swift; sourceTree = "<group>"; };
+		D07FEB062492C600004FFD99 /* JinyLanguageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyLanguageButton.swift; sourceTree = "<group>"; };
+		D07FEB072492C600004FFD99 /* JinyBottomDiscoveryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyBottomDiscoveryView.swift; sourceTree = "<group>"; };
+		D07FEB082492C600004FFD99 /* JinyOptInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyOptInButton.swift; sourceTree = "<group>"; };
+		D07FEB132492C7F2004FFD99 /* jiny_change_lang.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_change_lang.png; sourceTree = "<group>"; };
+		D07FEB142492C7F2004FFD99 /* jiny_powered_by.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_powered_by.png; sourceTree = "<group>"; };
+		D07FEB152492C7F2004FFD99 /* jiny_mute.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_mute.png; sourceTree = "<group>"; };
+		D07FEB162492C7F2004FFD99 /* jiny_language.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_language.png; sourceTree = "<group>"; };
+		D07FEB172492C7F2004FFD99 /* jiny_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_close.png; sourceTree = "<group>"; };
+		D07FEB182492C7F2004FFD99 /* jiny_continue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_continue.png; sourceTree = "<group>"; };
+		D07FEB192492C7F2004FFD99 /* jiny_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_icon.png; sourceTree = "<group>"; };
+		D07FEB1A2492C7F2004FFD99 /* jiny_repeat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_repeat.png; sourceTree = "<group>"; };
+		D07FEB232493A7F2004FFD99 /* JinyMainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyMainButton.swift; sourceTree = "<group>"; };
+		D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHotelViewController.swift; sourceTree = "<group>"; };
+		D0850078242CC081007889B1 /* JinyUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyUtils.swift; sourceTree = "<group>"; };
+		D08C079A247FBFD40026F068 /* JinyAnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAnalyticsManager.swift; sourceTree = "<group>"; };
+		D09C722D246A987A0060E054 /* JinyFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowManager.swift; sourceTree = "<group>"; };
+		D09C722F246A98860060E054 /* JinyStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyStageManager.swift; sourceTree = "<group>"; };
+		D09C7231247174400060E054 /* JinyFlowSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowSelector.swift; sourceTree = "<group>"; };
+		D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAnalyticsEvent.swift; sourceTree = "<group>"; };
+		D0ABD007248115E00069FA67 /* JinyMenuItemClickInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyMenuItemClickInfo.swift; sourceTree = "<group>"; };
+		D0ABD009248116D30069FA67 /* JinyBottomActivityStateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyBottomActivityStateInfo.swift; sourceTree = "<group>"; };
+		D0ABD00B248117760069FA67 /* JinyCallbacksInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyCallbacksInfo.swift; sourceTree = "<group>"; };
+		D0ABD00D2481191A0069FA67 /* JinySoundInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySoundInfo.swift; sourceTree = "<group>"; };
+		D0ABD00F2481198C0069FA67 /* JinyLanguageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyLanguageInfo.swift; sourceTree = "<group>"; };
+		D0ABD01124811A060069FA67 /* JinyDiscoveryIconMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDiscoveryIconMetrics.swift; sourceTree = "<group>"; };
+		D0ABD01324811AB30069FA67 /* JinyTriggerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTriggerInfo.swift; sourceTree = "<group>"; };
+		D0ABD01524811B060069FA67 /* JinyDiscoveryExpInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDiscoveryExpInfo.swift; sourceTree = "<group>"; };
+		D0ABD01724811FEB0069FA67 /* JinyDiscoveryItemClickInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDiscoveryItemClickInfo.swift; sourceTree = "<group>"; };
+		D0ABD019248120C90069FA67 /* JinyClientPreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyClientPreference.swift; sourceTree = "<group>"; };
+		D0ABD01B2481210D0069FA67 /* JinyDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDeviceInfo.swift; sourceTree = "<group>"; };
+		D0ABD01D248121A50069FA67 /* JinyAppleIdInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAppleIdInfo.swift; sourceTree = "<group>"; };
+		D0ABD01F2481221E0069FA67 /* JinyOutputTypeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyOutputTypeInfo.swift; sourceTree = "<group>"; };
+		D0ABD021248122A80069FA67 /* JinyTimeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTimeInfo.swift; sourceTree = "<group>"; };
+		D0ABD023248123350069FA67 /* JinyLambdaInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyLambdaInfo.swift; sourceTree = "<group>"; };
+		D0ABD0252481237E0069FA67 /* JinyContextTypeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyContextTypeInfo.swift; sourceTree = "<group>"; };
+		D0ABD027248123D60069FA67 /* JinyFlowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowInfo.swift; sourceTree = "<group>"; };
+		D0ABD029248124250069FA67 /* JinyPageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPageInfo.swift; sourceTree = "<group>"; };
+		D0ABD02B248124D50069FA67 /* JinyStageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyStageInfo.swift; sourceTree = "<group>"; };
+		D0ABD02D248125390069FA67 /* JinyPilotInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPilotInfo.swift; sourceTree = "<group>"; };
+		D0ABD02F248125AB0069FA67 /* JinyExperimentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyExperimentInfo.swift; sourceTree = "<group>"; };
+		D0ABD031248125F90069FA67 /* JinyClickInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyClickInfo.swift; sourceTree = "<group>"; };
+		D0ABD033248126820069FA67 /* JinySDKInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySDKInfo.swift; sourceTree = "<group>"; };
+		D0ABD037248145F60069FA67 /* JinySharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySharedInformation.swift; sourceTree = "<group>"; };
+		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
+		D0BC371C249DCF24002648FF /* JinyViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyViewProps.swift; sourceTree = "<group>"; };
+		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
+		D0BC3721249DFF60002648FF /* PTUSBHub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUSBHub.m; sourceTree = "<group>"; };
+		D0BC3722249DFF60002648FF /* PTProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTProtocol.m; sourceTree = "<group>"; };
+		D0BC3724249DFF60002648FF /* Peertalk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peertalk.h; sourceTree = "<group>"; };
+		D0BC3725249DFF60002648FF /* PTChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChannel.m; sourceTree = "<group>"; };
+		D0BC3726249DFF60002648FF /* PTPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPrivate.h; sourceTree = "<group>"; };
+		D0BC3727249DFF60002648FF /* PTProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTProtocol.h; sourceTree = "<group>"; };
+		D0BC3728249DFF60002648FF /* PTUSBHub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUSBHub.h; sourceTree = "<group>"; };
+		D0BC3729249DFF60002648FF /* PTChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChannel.h; sourceTree = "<group>"; };
+		D0BC949A2487AAE400C18D92 /* JinyTriggerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTriggerManager.swift; sourceTree = "<group>"; };
+		D0E55D582479747E005B3EAB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		D0ED4B8924472AC100AE32A4 /* JinyIdentifer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIdentifer.swift; sourceTree = "<group>"; };
+		D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D00B8F53249B2988006F4CA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00B8F5B249B2988006F4CA1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D00B8F5F249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44DD2420AABA00A43FEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D073E9332425E04E00764EF5 /* JinySDK.framework in Frameworks */,
+				D00B8F6B249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44F22420AABC00A43FEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44FD2420AABC00A43FEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D0592E74241FA6E3007782A8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0592E95241FAD99007782A8 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,12 +369,111 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D0084C862486812B0082508C /* Modals */ = {
+			isa = PBXGroup;
+			children = (
+				D0ED4B8924472AC100AE32A4 /* JinyIdentifer.swift */,
+				D0084C872486814D0082508C /* JinyConfig.swift */,
+				D0084C892486817B0082508C /* JinySound.swift */,
+				D0084C8B248681A30082508C /* JinyFlow.swift */,
+				D0084C8D248681CF0082508C /* JinyPage.swift */,
+				D0084C8F248681F90082508C /* JinyStage.swift */,
+				D0084C91248682A80082508C /* JinyTrigger.swift */,
+				D0084C93248683440082508C /* JinyTriggerIdentifier.swift */,
+				D0084C95248683C60082508C /* JinyDiscoveryInfo.swift */,
+				D0084C992486B3D70082508C /* JinyDiscoveryInfoData.swift */,
+				D04356C22498CB7C00B90276 /* JinyLanguage.swift */,
+			);
+			path = Modals;
+			sourceTree = "<group>";
+		};
+		D00B8F57249B2988006F4CA1 /* JinyAuthSDK */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC3720249DFF60002648FF /* peertalk */,
+				D00B8F58249B2988006F4CA1 /* JinyAuthSDK.h */,
+				D00B8F59249B2988006F4CA1 /* Info.plist */,
+				D049F5F6249D242000372324 /* JinyAuth.swift */,
+				D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */,
+				D0BC371C249DCF24002648FF /* JinyViewProps.swift */,
+			);
+			path = JinyAuthSDK;
+			sourceTree = "<group>";
+		};
+		D00B8F64249B2988006F4CA1 /* JinyAuthSDKTests */ = {
+			isa = PBXGroup;
+			children = (
+				D00B8F65249B2988006F4CA1 /* JinyAuthSDKTests.swift */,
+				D00B8F67249B2988006F4CA1 /* Info.plist */,
+			);
+			path = JinyAuthSDKTests;
+			sourceTree = "<group>";
+		};
+		D03E44E12420AABA00A43FEA /* JinySampleApp */ = {
+			isa = PBXGroup;
+			children = (
+				D03E44E22420AABA00A43FEA /* AppDelegate.swift */,
+				D03E44E42420AABA00A43FEA /* SceneDelegate.swift */,
+				D03E44E62420AABA00A43FEA /* HomeViewController.swift */,
+				D03E44E82420AABA00A43FEA /* Main.storyboard */,
+				D03E44EB2420AABC00A43FEA /* Assets.xcassets */,
+				D03E44ED2420AABC00A43FEA /* LaunchScreen.storyboard */,
+				D03E44F02420AABC00A43FEA /* Info.plist */,
+				D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */,
+				D04BBA362472832000DF9716 /* LoginOptionViewController.swift */,
+				D0E55D582479747E005B3EAB /* LoginViewController.swift */,
+				D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */,
+				D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */,
+				D0BC371E249DFB41002648FF /* AutomaticViewController.swift */,
+			);
+			path = JinySampleApp;
+			sourceTree = "<group>";
+		};
+		D03E44F82420AABC00A43FEA /* JinySampleAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				D03E44F92420AABC00A43FEA /* JinySampleAppTests.swift */,
+				D03E44FB2420AABC00A43FEA /* Info.plist */,
+			);
+			path = JinySampleAppTests;
+			sourceTree = "<group>";
+		};
+		D03E45032420AABC00A43FEA /* JinySampleAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D03E45042420AABC00A43FEA /* JinySampleAppUITests.swift */,
+				D03E45062420AABC00A43FEA /* Info.plist */,
+			);
+			path = JinySampleAppUITests;
+			sourceTree = "<group>";
+		};
+		D04E8589248A886700BA5CA3 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				D07FEB132492C7F2004FFD99 /* jiny_change_lang.png */,
+				D07FEB172492C7F2004FFD99 /* jiny_close.png */,
+				D07FEB182492C7F2004FFD99 /* jiny_continue.png */,
+				D07FEB192492C7F2004FFD99 /* jiny_icon.png */,
+				D07FEB162492C7F2004FFD99 /* jiny_language.png */,
+				D07FEB152492C7F2004FFD99 /* jiny_mute.png */,
+				D07FEB142492C7F2004FFD99 /* jiny_powered_by.png */,
+				D07FEB1A2492C7F2004FFD99 /* jiny_repeat.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		D0592E6D241FA6E3007782A8 = {
 			isa = PBXGroup;
 			children = (
 				D0592E79241FA6E3007782A8 /* JinySDK */,
 				D0592E84241FA6E3007782A8 /* JinySDKTests */,
+				D03E44E12420AABA00A43FEA /* JinySampleApp */,
+				D03E44F82420AABC00A43FEA /* JinySampleAppTests */,
+				D03E45032420AABC00A43FEA /* JinySampleAppUITests */,
+				D00B8F57249B2988006F4CA1 /* JinyAuthSDK */,
+				D00B8F64249B2988006F4CA1 /* JinyAuthSDKTests */,
 				D0592E78241FA6E3007782A8 /* Products */,
+				D0592E93241FAD99007782A8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +482,11 @@
 			children = (
 				D0592E77241FA6E3007782A8 /* JinySDK.framework */,
 				D0592E80241FA6E3007782A8 /* JinySDKTests.xctest */,
+				D03E44E02420AABA00A43FEA /* Jiny Sample App.app */,
+				D03E44F52420AABC00A43FEA /* JinySampleAppTests.xctest */,
+				D03E45002420AABC00A43FEA /* JinySampleAppUITests.xctest */,
+				D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */,
+				D00B8F5E249B2988006F4CA1 /* JinyAuthSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,8 +494,11 @@
 		D0592E79241FA6E3007782A8 /* JinySDK */ = {
 			isa = PBXGroup;
 			children = (
+				D071662624629C06001937EE /* AUI */,
+				D071662524629BED001937EE /* Core */,
 				D0592E7A241FA6E3007782A8 /* JinySDK.h */,
 				D0592E7B241FA6E3007782A8 /* Info.plist */,
+				D0592E91241FAA3D007782A8 /* Jiny.swift */,
 			);
 			path = JinySDK;
 			sourceTree = "<group>";
@@ -86,9 +512,166 @@
 			path = JinySDKTests;
 			sourceTree = "<group>";
 		};
+		D0592E93241FAD99007782A8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D0592E94241FAD99007782A8 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D071662524629BED001937EE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D0084C862486812B0082508C /* Modals */,
+				D0ABD0042481154C0069FA67 /* Analytics */,
+				D071662B24629C7E001937EE /* Utils */,
+				D071662924629C69001937EE /* Context */,
+				D03E45102420DE1500A43FEA /* JinyInternal.swift */,
+				D0ABD037248145F60069FA67 /* JinySharedInformation.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		D071662624629C06001937EE /* AUI */ = {
+			isa = PBXGroup;
+			children = (
+				D07FEB052492C600004FFD99 /* JinyBottomDiscoveryView */,
+				D07FEB012492C600004FFD99 /* JinyCommonUIUtils */,
+				D07FEAFB2492C600004FFD99 /* JinyLanguagePanel */,
+				D07FEAFE2492C600004FFD99 /* JinyOptionPanel */,
+				D04E8589248A886700BA5CA3 /* Images */,
+				D03E45162423AAAA00A43FEA /* JinyPointer.swift */,
+				D09C7231247174400060E054 /* JinyFlowSelector.swift */,
+				D04BBA382474FEE400DF9716 /* JinyUIManager.swift */,
+				D07FEB232493A7F2004FFD99 /* JinyMainButton.swift */,
+			);
+			path = AUI;
+			sourceTree = "<group>";
+		};
+		D071662924629C69001937EE /* Context */ = {
+			isa = PBXGroup;
+			children = (
+				D071662E24629D5D001937EE /* JinyContextManager.swift */,
+				D071662C24629D3E001937EE /* JinyContextDetector.swift */,
+				D09C722D246A987A0060E054 /* JinyFlowManager.swift */,
+				D09C722F246A98860060E054 /* JinyStageManager.swift */,
+				D0BC949A2487AAE400C18D92 /* JinyTriggerManager.swift */,
+			);
+			path = Context;
+			sourceTree = "<group>";
+		};
+		D071662B24629C7E001937EE /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				D03E45122420F75400A43FEA /* JinyNetworking.swift */,
+				D0850078242CC081007889B1 /* JinyUtils.swift */,
+				D04195D7244DB1390085B9F4 /* JinyAudioManager.swift */,
+				D08C079A247FBFD40026F068 /* JinyAnalyticsManager.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		D07FEAFB2492C600004FFD99 /* JinyLanguagePanel */ = {
+			isa = PBXGroup;
+			children = (
+				D07FEAFC2492C600004FFD99 /* JinyLanguageRow.swift */,
+				D07FEAFD2492C600004FFD99 /* JinyLanguagePanel.swift */,
+			);
+			path = JinyLanguagePanel;
+			sourceTree = "<group>";
+		};
+		D07FEAFE2492C600004FFD99 /* JinyOptionPanel */ = {
+			isa = PBXGroup;
+			children = (
+				D07FEAFF2492C600004FFD99 /* JinyOptionPanelButton.swift */,
+				D07FEB002492C600004FFD99 /* JinyOptionPanel.swift */,
+			);
+			path = JinyOptionPanel;
+			sourceTree = "<group>";
+		};
+		D07FEB012492C600004FFD99 /* JinyCommonUIUtils */ = {
+			isa = PBXGroup;
+			children = (
+				D07FEB022492C600004FFD99 /* JinyPoweredBy.swift */,
+				D07FEB032492C600004FFD99 /* JinySwipeDismiss.swift */,
+				D07FEB042492C600004FFD99 /* JinyDragRect.swift */,
+			);
+			path = JinyCommonUIUtils;
+			sourceTree = "<group>";
+		};
+		D07FEB052492C600004FFD99 /* JinyBottomDiscoveryView */ = {
+			isa = PBXGroup;
+			children = (
+				D07FEB062492C600004FFD99 /* JinyLanguageButton.swift */,
+				D07FEB072492C600004FFD99 /* JinyBottomDiscoveryView.swift */,
+				D07FEB082492C600004FFD99 /* JinyOptInButton.swift */,
+			);
+			path = JinyBottomDiscoveryView;
+			sourceTree = "<group>";
+		};
+		D0ABD0042481154C0069FA67 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */,
+				D0ABD007248115E00069FA67 /* JinyMenuItemClickInfo.swift */,
+				D0ABD009248116D30069FA67 /* JinyBottomActivityStateInfo.swift */,
+				D0ABD00B248117760069FA67 /* JinyCallbacksInfo.swift */,
+				D0ABD00D2481191A0069FA67 /* JinySoundInfo.swift */,
+				D0ABD00F2481198C0069FA67 /* JinyLanguageInfo.swift */,
+				D0ABD01124811A060069FA67 /* JinyDiscoveryIconMetrics.swift */,
+				D0ABD01324811AB30069FA67 /* JinyTriggerInfo.swift */,
+				D0ABD01524811B060069FA67 /* JinyDiscoveryExpInfo.swift */,
+				D0ABD01724811FEB0069FA67 /* JinyDiscoveryItemClickInfo.swift */,
+				D0ABD019248120C90069FA67 /* JinyClientPreference.swift */,
+				D0ABD01B2481210D0069FA67 /* JinyDeviceInfo.swift */,
+				D0ABD01D248121A50069FA67 /* JinyAppleIdInfo.swift */,
+				D0ABD01F2481221E0069FA67 /* JinyOutputTypeInfo.swift */,
+				D0ABD021248122A80069FA67 /* JinyTimeInfo.swift */,
+				D0ABD023248123350069FA67 /* JinyLambdaInfo.swift */,
+				D0ABD0252481237E0069FA67 /* JinyContextTypeInfo.swift */,
+				D0ABD027248123D60069FA67 /* JinyFlowInfo.swift */,
+				D0ABD029248124250069FA67 /* JinyPageInfo.swift */,
+				D0ABD02B248124D50069FA67 /* JinyStageInfo.swift */,
+				D0ABD02D248125390069FA67 /* JinyPilotInfo.swift */,
+				D0ABD02F248125AB0069FA67 /* JinyExperimentInfo.swift */,
+				D0ABD031248125F90069FA67 /* JinyClickInfo.swift */,
+				D0ABD033248126820069FA67 /* JinySDKInfo.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		D0BC3720249DFF60002648FF /* peertalk */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC3721249DFF60002648FF /* PTUSBHub.m */,
+				D0BC3722249DFF60002648FF /* PTProtocol.m */,
+				D0BC3724249DFF60002648FF /* Peertalk.h */,
+				D0BC3725249DFF60002648FF /* PTChannel.m */,
+				D0BC3726249DFF60002648FF /* PTPrivate.h */,
+				D0BC3727249DFF60002648FF /* PTProtocol.h */,
+				D0BC3728249DFF60002648FF /* PTUSBHub.h */,
+				D0BC3729249DFF60002648FF /* PTChannel.h */,
+			);
+			path = peertalk;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		D00B8F51249B2988006F4CA1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0BC3730249DFF60002648FF /* PTPrivate.h in Headers */,
+				D00B8F68249B2988006F4CA1 /* JinyAuthSDK.h in Headers */,
+				D0BC372E249DFF60002648FF /* Peertalk.h in Headers */,
+				D0BC3732249DFF60002648FF /* PTUSBHub.h in Headers */,
+				D0BC3733249DFF60002648FF /* PTChannel.h in Headers */,
+				D0BC3731249DFF60002648FF /* PTProtocol.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D0592E72241FA6E3007782A8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -100,6 +683,99 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		D00B8F55249B2988006F4CA1 /* JinyAuthSDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D00B8F71249B2988006F4CA1 /* Build configuration list for PBXNativeTarget "JinyAuthSDK" */;
+			buildPhases = (
+				D00B8F51249B2988006F4CA1 /* Headers */,
+				D00B8F52249B2988006F4CA1 /* Sources */,
+				D00B8F53249B2988006F4CA1 /* Frameworks */,
+				D00B8F54249B2988006F4CA1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JinyAuthSDK;
+			productName = JinyAuthSDK;
+			productReference = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D00B8F5D249B2988006F4CA1 /* JinyAuthSDKTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D00B8F72249B2988006F4CA1 /* Build configuration list for PBXNativeTarget "JinyAuthSDKTests" */;
+			buildPhases = (
+				D00B8F5A249B2988006F4CA1 /* Sources */,
+				D00B8F5B249B2988006F4CA1 /* Frameworks */,
+				D00B8F5C249B2988006F4CA1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D00B8F61249B2988006F4CA1 /* PBXTargetDependency */,
+				D00B8F63249B2988006F4CA1 /* PBXTargetDependency */,
+			);
+			name = JinyAuthSDKTests;
+			productName = JinyAuthSDKTests;
+			productReference = D00B8F5E249B2988006F4CA1 /* JinyAuthSDKTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D03E44DF2420AABA00A43FEA /* JinySampleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D03E450D2420AABC00A43FEA /* Build configuration list for PBXNativeTarget "JinySampleApp" */;
+			buildPhases = (
+				D03E44DC2420AABA00A43FEA /* Sources */,
+				D03E44DD2420AABA00A43FEA /* Frameworks */,
+				D03E44DE2420AABA00A43FEA /* Resources */,
+				D073E9372425E04E00764EF5 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D073E9362425E04E00764EF5 /* PBXTargetDependency */,
+				D00B8F6A249B2988006F4CA1 /* PBXTargetDependency */,
+			);
+			name = JinySampleApp;
+			productName = JinySampleApp;
+			productReference = D03E44E02420AABA00A43FEA /* Jiny Sample App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D03E44F42420AABC00A43FEA /* JinySampleAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D03E450E2420AABC00A43FEA /* Build configuration list for PBXNativeTarget "JinySampleAppTests" */;
+			buildPhases = (
+				D03E44F12420AABC00A43FEA /* Sources */,
+				D03E44F22420AABC00A43FEA /* Frameworks */,
+				D03E44F32420AABC00A43FEA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D03E44F72420AABC00A43FEA /* PBXTargetDependency */,
+			);
+			name = JinySampleAppTests;
+			productName = JinySampleAppTests;
+			productReference = D03E44F52420AABC00A43FEA /* JinySampleAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D03E44FF2420AABC00A43FEA /* JinySampleAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D03E450F2420AABC00A43FEA /* Build configuration list for PBXNativeTarget "JinySampleAppUITests" */;
+			buildPhases = (
+				D03E44FC2420AABC00A43FEA /* Sources */,
+				D03E44FD2420AABC00A43FEA /* Frameworks */,
+				D03E44FE2420AABC00A43FEA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D03E45022420AABC00A43FEA /* PBXTargetDependency */,
+			);
+			name = JinySampleAppUITests;
+			productName = JinySampleAppUITests;
+			productReference = D03E45002420AABC00A43FEA /* JinySampleAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		D0592E76241FA6E3007782A8 /* JinySDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D0592E8B241FA6E3007782A8 /* Build configuration list for PBXNativeTarget "JinySDK" */;
@@ -142,14 +818,37 @@
 		D0592E6E241FA6E3007782A8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1130;
+				LastSwiftUpdateCheck = 1140;
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Aravind GS";
 				TargetAttributes = {
-					D0592E76241FA6E3007782A8 = {
+					D00B8F55249B2988006F4CA1 = {
+						CreatedOnToolsVersion = 11.4;
+						LastSwiftMigration = 1150;
+					};
+					D00B8F5D249B2988006F4CA1 = {
+						CreatedOnToolsVersion = 11.4;
+						TestTargetID = D03E44DF2420AABA00A43FEA;
+					};
+					D03E44DF2420AABA00A43FEA = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
+					D03E44F42420AABC00A43FEA = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = D03E44DF2420AABA00A43FEA;
+					};
+					D03E44FF2420AABC00A43FEA = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = D03E44DF2420AABA00A43FEA;
+					};
+					D0592E76241FA6E3007782A8 = {
+						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
+					};
 					D0592E7F241FA6E3007782A8 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+					D073E9382425FF7600764EF5 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
 				};
@@ -169,15 +868,67 @@
 			targets = (
 				D0592E76241FA6E3007782A8 /* JinySDK */,
 				D0592E7F241FA6E3007782A8 /* JinySDKTests */,
+				D03E44DF2420AABA00A43FEA /* JinySampleApp */,
+				D03E44F42420AABC00A43FEA /* JinySampleAppTests */,
+				D03E44FF2420AABC00A43FEA /* JinySampleAppUITests */,
+				D073E9382425FF7600764EF5 /* JinySDKUniversal */,
+				D00B8F55249B2988006F4CA1 /* JinyAuthSDK */,
+				D00B8F5D249B2988006F4CA1 /* JinyAuthSDKTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D00B8F54249B2988006F4CA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00B8F5C249B2988006F4CA1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44DE2420AABA00A43FEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D03E44EF2420AABC00A43FEA /* LaunchScreen.storyboard in Resources */,
+				D03E44EC2420AABC00A43FEA /* Assets.xcassets in Resources */,
+				D03E44EA2420AABA00A43FEA /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44F32420AABC00A43FEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44FE2420AABC00A43FEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D0592E75241FA6E3007782A8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D07FEB1B2492C7F2004FFD99 /* jiny_change_lang.png in Resources */,
+				D07FEB1C2492C7F2004FFD99 /* jiny_powered_by.png in Resources */,
+				D07FEB1D2492C7F2004FFD99 /* jiny_mute.png in Resources */,
+				D07FEB212492C7F2004FFD99 /* jiny_icon.png in Resources */,
+				D07FEB1F2492C7F2004FFD99 /* jiny_close.png in Resources */,
+				D07FEB202492C7F2004FFD99 /* jiny_continue.png in Resources */,
+				D07FEB222492C7F2004FFD99 /* jiny_repeat.png in Resources */,
+				D07FEB1E2492C7F2004FFD99 /* jiny_language.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,11 +941,145 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D073E93C2425FF8B00764EF5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z \"$XCODE_VERSION_CORRECT\" ]\nthen\n    export SUDO_ASKPASS=\"${PROJECT_DIR}/../scripts/askpass.sh\"\nfi\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 1. Build Device and Simulator versions\n# add BITCODE_GENERATION_MODE=bitcode to support bitcode\necho \"Building for devices\"\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphoneos ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# add BITCODE_GENERATION_MODE=marker to support bitcode\necho \"Building for simulators\"\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\necho \"Copying framework structure\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\necho \"Copying simulator Swift modules\"\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create new combined simulator and device swift header file\nCOMBINED_PATH=\"${BUILD_DIR}/iOS + iOS Simulator/${PROJECT_NAME}-Swift.h\"\nmkdir -p \"${BUILD_DIR}/iOS + iOS Simulator/\"\ntouch \"${COMBINED_PATH}\"\necho \"#if TARGET_OS_SIMULATOR\" >> \"${COMBINED_PATH}\"\ncat \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" >> \"${COMBINED_PATH}\"\necho \"#else\" >> \"${COMBINED_PATH}\"\necho \"//Start of iphoneos\" >> \"${COMBINED_PATH}\"\ncat \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" >> \"${COMBINED_PATH}\"\necho \"#endif\" >> \"${COMBINED_PATH}\"\n\n\n# Step 5. Create universal binary file using lipo and place the combined executable in the copied framework directory\necho \"Creating universal binary using lipo\"\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\n\n# Step 6. Overwrite generated -Swift.h file with combined -Swift.h file -- Kknown Issue with XCode 10.2 https://developer.apple.com/documentation/xcode_release_notes/xcode_10_2_release_notes#3141454\ncat \"$COMBINED_PATH\" > \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" \n\n# Step 7. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework\" \"${PROJECT_DIR}/${PROJECT_NAME}.framework\"\n\n# Step 8. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		D00B8F52249B2988006F4CA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */,
+				D0BC372F249DFF60002648FF /* PTChannel.m in Sources */,
+				D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */,
+				D0BC372B249DFF60002648FF /* PTUSBHub.m in Sources */,
+				D049F5F7249D242000372324 /* JinyAuth.swift in Sources */,
+				D0BC372C249DFF60002648FF /* PTProtocol.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D00B8F5A249B2988006F4CA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D00B8F66249B2988006F4CA1 /* JinyAuthSDKTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44DC2420AABA00A43FEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0E55D592479747E005B3EAB /* LoginViewController.swift in Sources */,
+				D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */,
+				D07FEB282494A95A004FFD99 /* SearchHotelViewController.swift in Sources */,
+				D03E44E72420AABA00A43FEA /* HomeViewController.swift in Sources */,
+				D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */,
+				D03E44E32420AABA00A43FEA /* AppDelegate.swift in Sources */,
+				D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */,
+				D0B205B32494DDEE00C69775 /* FlightSuccessViewController.swift in Sources */,
+				D03E44E52420AABA00A43FEA /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44F12420AABC00A43FEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D03E44FA2420AABC00A43FEA /* JinySampleAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D03E44FC2420AABC00A43FEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D03E45052420AABC00A43FEA /* JinySampleAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D0592E73241FA6E3007782A8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0ABD01424811AB30069FA67 /* JinyTriggerInfo.swift in Sources */,
+				D07FEB0D2492C600004FFD99 /* JinyPoweredBy.swift in Sources */,
+				D071662F24629D5D001937EE /* JinyContextManager.swift in Sources */,
+				D0084C882486814D0082508C /* JinyConfig.swift in Sources */,
+				D0ABD022248122A80069FA67 /* JinyTimeInfo.swift in Sources */,
+				D07FEB0E2492C600004FFD99 /* JinySwipeDismiss.swift in Sources */,
+				D0ABD00C248117760069FA67 /* JinyCallbacksInfo.swift in Sources */,
+				D0084C90248681F90082508C /* JinyStage.swift in Sources */,
+				D0ABD00A248116D30069FA67 /* JinyBottomActivityStateInfo.swift in Sources */,
+				D07FEB0B2492C600004FFD99 /* JinyOptionPanelButton.swift in Sources */,
+				D04BBA392474FEE400DF9716 /* JinyUIManager.swift in Sources */,
+				D0084C8A2486817B0082508C /* JinySound.swift in Sources */,
+				D03E45132420F75400A43FEA /* JinyNetworking.swift in Sources */,
+				D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */,
+				D07FEB102492C600004FFD99 /* JinyLanguageButton.swift in Sources */,
+				D0ABD024248123350069FA67 /* JinyLambdaInfo.swift in Sources */,
+				D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */,
+				D07FEB122492C600004FFD99 /* JinyOptInButton.swift in Sources */,
+				D0ABD034248126820069FA67 /* JinySDKInfo.swift in Sources */,
+				D0ABD02A248124250069FA67 /* JinyPageInfo.swift in Sources */,
+				D0ABD02C248124D50069FA67 /* JinyStageInfo.swift in Sources */,
+				D0ABD01824811FEB0069FA67 /* JinyDiscoveryItemClickInfo.swift in Sources */,
+				D08C079B247FBFD40026F068 /* JinyAnalyticsManager.swift in Sources */,
+				D0592E92241FAA3D007782A8 /* Jiny.swift in Sources */,
+				D0ABD01224811A060069FA67 /* JinyDiscoveryIconMetrics.swift in Sources */,
+				D0ABD032248125F90069FA67 /* JinyClickInfo.swift in Sources */,
+				D07FEB092492C600004FFD99 /* JinyLanguageRow.swift in Sources */,
+				D0BC949B2487AAE400C18D92 /* JinyTriggerManager.swift in Sources */,
+				D07FEB0F2492C600004FFD99 /* JinyDragRect.swift in Sources */,
+				D0084C8E248681CF0082508C /* JinyPage.swift in Sources */,
+				D0850079242CC081007889B1 /* JinyUtils.swift in Sources */,
+				D03E45172423AAAA00A43FEA /* JinyPointer.swift in Sources */,
+				D0ABD02E248125390069FA67 /* JinyPilotInfo.swift in Sources */,
+				D0084C9A2486B3D70082508C /* JinyDiscoveryInfoData.swift in Sources */,
+				D0ABD01A248120C90069FA67 /* JinyClientPreference.swift in Sources */,
+				D0ABD0202481221E0069FA67 /* JinyOutputTypeInfo.swift in Sources */,
+				D07FEB0A2492C600004FFD99 /* JinyLanguagePanel.swift in Sources */,
+				D07FEB112492C600004FFD99 /* JinyBottomDiscoveryView.swift in Sources */,
+				D0ABD038248145F60069FA67 /* JinySharedInformation.swift in Sources */,
+				D0ABD0262481237E0069FA67 /* JinyContextTypeInfo.swift in Sources */,
+				D0ABD01624811B060069FA67 /* JinyDiscoveryExpInfo.swift in Sources */,
+				D09C722E246A987A0060E054 /* JinyFlowManager.swift in Sources */,
+				D07FEB0C2492C600004FFD99 /* JinyOptionPanel.swift in Sources */,
+				D0084C96248683C60082508C /* JinyDiscoveryInfo.swift in Sources */,
+				D0084C8C248681A30082508C /* JinyFlow.swift in Sources */,
+				D0ABD0062481155F0069FA67 /* JinyAnalyticsEvent.swift in Sources */,
+				D04195D8244DB1390085B9F4 /* JinyAudioManager.swift in Sources */,
+				D0ABD00E2481191A0069FA67 /* JinySoundInfo.swift in Sources */,
+				D07FEB242493A7F2004FFD99 /* JinyMainButton.swift in Sources */,
+				D0ABD0102481198C0069FA67 /* JinyLanguageInfo.swift in Sources */,
+				D0ABD01C2481210D0069FA67 /* JinyDeviceInfo.swift in Sources */,
+				D09C7232247174400060E054 /* JinyFlowSelector.swift in Sources */,
+				D0ABD008248115E00069FA67 /* JinyMenuItemClickInfo.swift in Sources */,
+				D071662D24629D3E001937EE /* JinyContextDetector.swift in Sources */,
+				D04356C32498CB7C00B90276 /* JinyLanguage.swift in Sources */,
+				D0ED4B8A24472AC100AE32A4 /* JinyIdentifer.swift in Sources */,
+				D0084C94248683440082508C /* JinyTriggerIdentifier.swift in Sources */,
+				D0ABD01E248121A50069FA67 /* JinyAppleIdInfo.swift in Sources */,
+				D0ABD028248123D60069FA67 /* JinyFlowInfo.swift in Sources */,
+				D0084C92248682A80082508C /* JinyTrigger.swift in Sources */,
+				D0ABD030248125AB0069FA67 /* JinyExperimentInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,17 +1094,280 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D00B8F61249B2988006F4CA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D00B8F55249B2988006F4CA1 /* JinyAuthSDK */;
+			targetProxy = D00B8F60249B2988006F4CA1 /* PBXContainerItemProxy */;
+		};
+		D00B8F63249B2988006F4CA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D03E44DF2420AABA00A43FEA /* JinySampleApp */;
+			targetProxy = D00B8F62249B2988006F4CA1 /* PBXContainerItemProxy */;
+		};
+		D00B8F6A249B2988006F4CA1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D00B8F55249B2988006F4CA1 /* JinyAuthSDK */;
+			targetProxy = D00B8F69249B2988006F4CA1 /* PBXContainerItemProxy */;
+		};
+		D03E44F72420AABC00A43FEA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D03E44DF2420AABA00A43FEA /* JinySampleApp */;
+			targetProxy = D03E44F62420AABC00A43FEA /* PBXContainerItemProxy */;
+		};
+		D03E45022420AABC00A43FEA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D03E44DF2420AABA00A43FEA /* JinySampleApp */;
+			targetProxy = D03E45012420AABC00A43FEA /* PBXContainerItemProxy */;
+		};
 		D0592E83241FA6E3007782A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D0592E76241FA6E3007782A8 /* JinySDK */;
 			targetProxy = D0592E82241FA6E3007782A8 /* PBXContainerItemProxy */;
 		};
+		D073E9362425E04E00764EF5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D0592E76241FA6E3007782A8 /* JinySDK */;
+			targetProxy = D073E9352425E04E00764EF5 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		D03E44E82420AABA00A43FEA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D03E44E92420AABA00A43FEA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D03E44ED2420AABC00A43FEA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D03E44EE2420AABC00A43FEA /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		D00B8F6D249B2988006F4CA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = JinyAuthSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinyAuthSDK;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D00B8F6E249B2988006F4CA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = JinyAuthSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinyAuthSDK;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D00B8F6F249B2988006F4CA1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = JinyAuthSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinyAuthSDKTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Jiny Sample App.app/Jiny Sample App";
+			};
+			name = Debug;
+		};
+		D00B8F70249B2988006F4CA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = JinyAuthSDKTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinyAuthSDKTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Jiny Sample App.app/Jiny Sample App";
+			};
+			name = Release;
+		};
+		D03E45072420AABC00A43FEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = JinySampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleApp;
+				PRODUCT_NAME = "Jiny Sample App";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D03E45082420AABC00A43FEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = JinySampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleApp;
+				PRODUCT_NAME = "Jiny Sample App";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D03E45092420AABC00A43FEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = JinySampleAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JinySampleApp.app/JinySampleApp";
+			};
+			name = Debug;
+		};
+		D03E450A2420AABC00A43FEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = JinySampleAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JinySampleApp.app/JinySampleApp";
+			};
+			name = Release;
+		};
+		D03E450B2420AABC00A43FEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = JinySampleAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = JinySampleApp;
+			};
+			name = Debug;
+		};
+		D03E450C2420AABC00A43FEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = JinySampleAppUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = JinySampleApp;
+			};
+			name = Release;
+		};
 		D0592E89241FA6E3007782A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -283,6 +1431,7 @@
 		D0592E8A241FA6E3007782A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -340,6 +1489,8 @@
 		D0592E8C241FA6E3007782A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -347,6 +1498,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = JinySDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -355,6 +1507,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -363,6 +1516,8 @@
 		D0592E8D241FA6E3007782A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -370,6 +1525,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = JinySDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -386,6 +1542,7 @@
 		D0592E8F241FA6E3007782A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = JinySDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -403,6 +1560,7 @@
 		D0592E90241FA6E3007782A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = JinySDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -417,9 +1575,72 @@
 			};
 			name = Release;
 		};
+		D073E93A2425FF7600764EF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D073E93B2425FF7600764EF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D00B8F71249B2988006F4CA1 /* Build configuration list for PBXNativeTarget "JinyAuthSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D00B8F6D249B2988006F4CA1 /* Debug */,
+				D00B8F6E249B2988006F4CA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D00B8F72249B2988006F4CA1 /* Build configuration list for PBXNativeTarget "JinyAuthSDKTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D00B8F6F249B2988006F4CA1 /* Debug */,
+				D00B8F70249B2988006F4CA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D03E450D2420AABC00A43FEA /* Build configuration list for PBXNativeTarget "JinySampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D03E45072420AABC00A43FEA /* Debug */,
+				D03E45082420AABC00A43FEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D03E450E2420AABC00A43FEA /* Build configuration list for PBXNativeTarget "JinySampleAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D03E45092420AABC00A43FEA /* Debug */,
+				D03E450A2420AABC00A43FEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D03E450F2420AABC00A43FEA /* Build configuration list for PBXNativeTarget "JinySampleAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D03E450B2420AABC00A43FEA /* Debug */,
+				D03E450C2420AABC00A43FEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "JinySDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -443,6 +1664,15 @@
 			buildConfigurations = (
 				D0592E8F241FA6E3007782A8 /* Debug */,
 				D0592E90241FA6E3007782A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D073E9392425FF7600764EF5 /* Build configuration list for PBXAggregateTarget "JinySDKUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D073E93A2425FF7600764EF5 /* Debug */,
+				D073E93B2425FF7600764EF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

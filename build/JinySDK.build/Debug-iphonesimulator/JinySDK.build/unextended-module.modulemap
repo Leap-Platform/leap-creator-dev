@@ -1,0 +1,10 @@
+framework module JinySDK {
+  umbrella header "JinySDK.h"
+
+  export *
+  module * { export * }
+}
+
+module JinySDK.__Swift {
+    exclude header "JinySDK-Swift.h"
+}

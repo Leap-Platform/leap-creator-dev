@@ -1,0 +1,179 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Jiny"
+- "Constants"
+provides-nominal:
+- "7JinySDK0A0C"
+- "7JinySDK9ConstantsV"
+provides-member:
+- ["7JinySDK0A0C", ""]
+- ["7JinySDK9ConstantsV", ""]
+provides-dynamic-lookup:
+- "apiKey"
+- "enable"
+- "initialize"
+- "isTest"
+- "jinyInternal"
+- "sdkEnabled"
+- "shared"
+depends-top-level:
+- !private "!="
+- "AssignmentPrecedence"
+- "Bool"
+- "BooleanLiteralType"
+- "Constants"
+- "Jiny"
+- "JinyInternal"
+- "NSObject"
+- "String"
+- !private "StringLiteralType"
+- !private "assert"
+depends-member:
+- ["s7CVarArgP", "Jiny"]
+- !private ["s7CVarArgP", "JinyInternal"]
+- ["s7CVarArgP", ""]
+- !private ["s7CVarArgP", "apiKey"]
+- !private ["s7CVarArgP", "assert"]
+- ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "isTest"]
+- !private ["s7CVarArgP", "jinyInternal"]
+- !private ["s7CVarArgP", "sdkEnabled"]
+- ["7JinySDK9ConstantsV", "init"]
+- ["s28CustomDebugStringConvertibleP", "Jiny"]
+- !private ["s28CustomDebugStringConvertibleP", "JinyInternal"]
+- ["s28CustomDebugStringConvertibleP", ""]
+- !private ["s28CustomDebugStringConvertibleP", "apiKey"]
+- !private ["s28CustomDebugStringConvertibleP", "assert"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "isTest"]
+- !private ["s28CustomDebugStringConvertibleP", "jinyInternal"]
+- !private ["s28CustomDebugStringConvertibleP", "sdkEnabled"]
+- ["s23CustomStringConvertibleP", "Jiny"]
+- !private ["s23CustomStringConvertibleP", "JinyInternal"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "apiKey"]
+- !private ["s23CustomStringConvertibleP", "assert"]
+- ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "isTest"]
+- !private ["s23CustomStringConvertibleP", "jinyInternal"]
+- !private ["s23CustomStringConvertibleP", "sdkEnabled"]
+- ["SQ", "Jiny"]
+- !private ["SQ", "JinyInternal"]
+- ["SQ", ""]
+- !private ["SQ", "apiKey"]
+- !private ["SQ", "assert"]
+- ["SQ", "init"]
+- !private ["SQ", "isTest"]
+- !private ["SQ", "jinyInternal"]
+- !private ["SQ", "sdkEnabled"]
+- ["SH", "Jiny"]
+- !private ["SH", "JinyInternal"]
+- ["SH", ""]
+- !private ["SH", "apiKey"]
+- !private ["SH", "assert"]
+- ["SH", "init"]
+- !private ["SH", "isTest"]
+- !private ["SH", "jinyInternal"]
+- !private ["SH", "sdkEnabled"]
+- ["7JinySDK0A0C", "Bool"]
+- ["7JinySDK0A0C", "Jiny"]
+- ["7JinySDK0A0C", "JinyInternal"]
+- ["7JinySDK0A0C", "String"]
+- !private ["7JinySDK0A0C", "apiKey"]
+- !private ["7JinySDK0A0C", "assert"]
+- ["7JinySDK0A0C", "deinit"]
+- ["7JinySDK0A0C", "enable"]
+- ["7JinySDK0A0C", "init"]
+- ["7JinySDK0A0C", "initialize"]
+- !private ["7JinySDK0A0C", "isTest"]
+- !private ["7JinySDK0A0C", "jinyInternal"]
+- !private ["7JinySDK0A0C", "sdkEnabled"]
+- ["7JinySDK0A0C", "shared"]
+- !private ["7JinySDK0A20AudioManagerDelegateP", "init"]
+- !private ["7JinySDK0A8InternalC", "init"]
+- ["So8NSObjectC", "Bool"]
+- ["So8NSObjectC", "Jiny"]
+- ["So8NSObjectC", "JinyInternal"]
+- ["So8NSObjectC", "String"]
+- ["So8NSObjectC", ""]
+- ["So8NSObjectC", "apiKey"]
+- !private ["So8NSObjectC", "assert"]
+- ["So8NSObjectC", "enable"]
+- ["So8NSObjectC", "init"]
+- ["So8NSObjectC", "initialize"]
+- ["So8NSObjectC", "isTest"]
+- ["So8NSObjectC", "jinyInternal"]
+- ["So8NSObjectC", "sdkEnabled"]
+- ["So8NSObjectC", "shared"]
+- ["So8NSObjectP", "Jiny"]
+- !private ["So8NSObjectP", "JinyInternal"]
+- ["So8NSObjectP", ""]
+- !private ["So8NSObjectP", "apiKey"]
+- !private ["So8NSObjectP", "assert"]
+- ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "isTest"]
+- !private ["So8NSObjectP", "jinyInternal"]
+- !private ["So8NSObjectP", "sdkEnabled"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "Jiny"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "JinyInternal"]
+- ["10Foundation27_KeyValueCodingAndObservingP", ""]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "apiKey"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "assert"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "isTest"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "jinyInternal"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "sdkEnabled"]
+depends-nominal:
+- "s7CVarArgP"
+- "7JinySDK9ConstantsV"
+- "s28CustomDebugStringConvertibleP"
+- "s23CustomStringConvertibleP"
+- "SQ"
+- "SH"
+- "7JinySDK0A0C"
+- !private "7JinySDK0A20AudioManagerDelegateP"
+- !private "7JinySDK0A8InternalC"
+- "So8NSObjectC"
+- "So8NSObjectP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/ObjectiveC.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMIDI.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMedia.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/simd.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreImage.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/QuartzCore.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Dispatch.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Metal.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Darwin.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Foundation.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/AVFoundation.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreFoundation.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreAudio.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreGraphics.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Swift.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/UIKit.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/SwiftOnoneSupport.swiftmodule/i386.swiftmodule"
+- "/Users/aravindgs/workspace/JinySDK/JinySDK/JinySDK.h"
+- "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreMedia.framework/Headers/CoreMedia.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/apinotes/Dispatch.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVFoundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreAudioTypes.framework/Headers/CoreAudioTypes.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UserNotifications.framework/Headers/UserNotifications.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AdSupport.framework/Headers/AdSupport.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers/MediaToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "6ff2601e5d6337deca85d10559b52a6f"

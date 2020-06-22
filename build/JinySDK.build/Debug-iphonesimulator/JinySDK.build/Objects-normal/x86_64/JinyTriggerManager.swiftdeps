@@ -1,0 +1,219 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "JinyTriggerManagerDelegate"
+- "JinyTriggerManager"
+provides-nominal:
+- "7JinySDK0A22TriggerManagerDelegateP"
+- "7JinySDK0A14TriggerManagerC"
+provides-member:
+- ["7JinySDK0A22TriggerManagerDelegateP", ""]
+- ["7JinySDK0A14TriggerManagerC", ""]
+provides-dynamic-lookup:
+- "addTriggerToIdentifiedList"
+- "allTriggers"
+- "completedTriggers"
+- "currentTrigger"
+- "currentTriggerCompleted"
+- "delegate"
+- "getAllTriggers"
+- "getCompletedTriggers"
+- "getCurrentTrigger"
+- "getMutedTriggers"
+- "getTriggersToCheck"
+- "getTriggersToCheckForContextualTriggering"
+- "identifiedTriggers"
+- "muteCurrentTrigger"
+- "noTriggerFound"
+- "resetCurrentTrigger"
+- "setAllTriggers"
+- "triggerFound"
+depends-top-level:
+- !private "!"
+- !private "!="
+- !private "+"
+- !private "=="
+- "Array"
+- "AssignmentPrecedence"
+- "Int"
+- "JinyTrigger"
+- "JinyTriggerManager"
+- "JinyTriggerManagerDelegate"
+depends-member:
+- !private ["Sa", "append"]
+- !private ["Sa", "contains"]
+- !private ["Sa", "filter"]
+- !private ["SK", "append"]
+- !private ["SK", "contains"]
+- !private ["SK", "filter"]
+- !private ["s7CVarArgP", "append"]
+- !private ["s7CVarArgP", "contains"]
+- !private ["s7CVarArgP", "filter"]
+- !private ["Sl", "append"]
+- !private ["Sl", "contains"]
+- !private ["Sl", "filter"]
+- !private ["10Foundation15ContiguousBytesP", "append"]
+- !private ["10Foundation15ContiguousBytesP", "contains"]
+- !private ["10Foundation15ContiguousBytesP", "filter"]
+- !private ["s28CustomDebugStringConvertibleP", "append"]
+- !private ["s28CustomDebugStringConvertibleP", "contains"]
+- !private ["s28CustomDebugStringConvertibleP", "filter"]
+- !private ["s17CustomReflectableP", "append"]
+- !private ["s17CustomReflectableP", "contains"]
+- !private ["s17CustomReflectableP", "filter"]
+- !private ["s23CustomStringConvertibleP", "append"]
+- !private ["s23CustomStringConvertibleP", "contains"]
+- !private ["s23CustomStringConvertibleP", "filter"]
+- !private ["10Foundation12DataProtocolP", "append"]
+- !private ["10Foundation12DataProtocolP", "contains"]
+- !private ["10Foundation12DataProtocolP", "filter"]
+- !private ["Se", "append"]
+- !private ["Se", "contains"]
+- !private ["Se", "filter"]
+- !private ["SE", "append"]
+- !private ["SE", "contains"]
+- !private ["SE", "filter"]
+- !private ["SQ", "append"]
+- !private ["SQ", "contains"]
+- !private ["SQ", "copy"]
+- !private ["SQ", "filter"]
+- !private ["SQ", "id"]
+- !private ["s25ExpressibleByArrayLiteralP", "append"]
+- !private ["s25ExpressibleByArrayLiteralP", "contains"]
+- !private ["s25ExpressibleByArrayLiteralP", "filter"]
+- !private ["SH", "append"]
+- !private ["SH", "contains"]
+- !private ["SH", "filter"]
+- !private ["7JinySDK0A7TriggerC", "copy"]
+- !private ["7JinySDK0A7TriggerC", "deinit"]
+- !private ["7JinySDK0A7TriggerC", "id"]
+- ["7JinySDK0A14TriggerManagerC", "Array"]
+- ["7JinySDK0A14TriggerManagerC", "JinyTrigger"]
+- ["7JinySDK0A14TriggerManagerC", "JinyTriggerManagerDelegate"]
+- ["7JinySDK0A14TriggerManagerC", "addTriggerToIdentifiedList"]
+- !private ["7JinySDK0A14TriggerManagerC", "allTriggers"]
+- !private ["7JinySDK0A14TriggerManagerC", "completedTriggers"]
+- !private ["7JinySDK0A14TriggerManagerC", "currentTrigger"]
+- ["7JinySDK0A14TriggerManagerC", "currentTriggerCompleted"]
+- ["7JinySDK0A14TriggerManagerC", "deinit"]
+- !private ["7JinySDK0A14TriggerManagerC", "delegate"]
+- ["7JinySDK0A14TriggerManagerC", "getAllTriggers"]
+- ["7JinySDK0A14TriggerManagerC", "getCompletedTriggers"]
+- ["7JinySDK0A14TriggerManagerC", "getCurrentTrigger"]
+- ["7JinySDK0A14TriggerManagerC", "getMutedTriggers"]
+- ["7JinySDK0A14TriggerManagerC", "getTriggersToCheck"]
+- ["7JinySDK0A14TriggerManagerC", "getTriggersToCheckForContextualTriggering"]
+- !private ["7JinySDK0A14TriggerManagerC", "identifiedTriggers"]
+- ["7JinySDK0A14TriggerManagerC", "init"]
+- ["7JinySDK0A14TriggerManagerC", "muteCurrentTrigger"]
+- ["7JinySDK0A14TriggerManagerC", "noTriggerFound"]
+- ["7JinySDK0A14TriggerManagerC", "resetCurrentTrigger"]
+- ["7JinySDK0A14TriggerManagerC", "setAllTriggers"]
+- ["7JinySDK0A14TriggerManagerC", "triggerFound"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "Array"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "Int"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "JinyTrigger"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "addNewTriggerToMute"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "getMutedTriggerIds"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "newTriggerIdentified"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "noContextualTrigger"]
+- ["7JinySDK0A22TriggerManagerDelegateP", "sameTriggerIdentified"]
+- !private ["SM", "append"]
+- !private ["SM", "contains"]
+- !private ["SM", "filter"]
+- !private ["10Foundation19MutableDataProtocolP", "append"]
+- !private ["10Foundation19MutableDataProtocolP", "contains"]
+- !private ["10Foundation19MutableDataProtocolP", "filter"]
+- !private ["Sk", "append"]
+- !private ["Sk", "contains"]
+- !private ["Sk", "filter"]
+- !private ["Sm", "append"]
+- !private ["Sm", "contains"]
+- !private ["Sm", "filter"]
+- !private ["ST", "append"]
+- !private ["ST", "contains"]
+- !private ["ST", "filter"]
+- !private ["s14_ArrayProtocolP", "append"]
+- !private ["s14_ArrayProtocolP", "contains"]
+- !private ["s14_ArrayProtocolP", "filter"]
+- !private ["s24_DestructorSafeContainerP", "append"]
+- !private ["s24_DestructorSafeContainerP", "contains"]
+- !private ["s24_DestructorSafeContainerP", "filter"]
+- !private ["s19_HasContiguousBytesP", "append"]
+- !private ["s19_HasContiguousBytesP", "contains"]
+- !private ["s19_HasContiguousBytesP", "filter"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "append"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "contains"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "filter"]
+- !private ["s21_ObjectiveCBridgeableP", "append"]
+- !private ["s21_ObjectiveCBridgeableP", "contains"]
+- !private ["s21_ObjectiveCBridgeableP", "filter"]
+depends-nominal:
+- !private "Sa"
+- !private "SK"
+- !private "s7CVarArgP"
+- !private "Sl"
+- !private "10Foundation15ContiguousBytesP"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "10Foundation12DataProtocolP"
+- !private "Se"
+- !private "SE"
+- !private "SQ"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "SH"
+- !private "7JinySDK0A7TriggerC"
+- "7JinySDK0A14TriggerManagerC"
+- "7JinySDK0A22TriggerManagerDelegateP"
+- !private "SM"
+- !private "10Foundation19MutableDataProtocolP"
+- !private "Sk"
+- !private "Sm"
+- !private "ST"
+- !private "s14_ArrayProtocolP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s19_HasContiguousBytesP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "s21_ObjectiveCBridgeableP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/ObjectiveC.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMIDI.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMedia.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/simd.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreImage.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/QuartzCore.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Dispatch.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Metal.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Darwin.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Foundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/AVFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreAudio.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreGraphics.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Swift.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/UIKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/SwiftOnoneSupport.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Combine.swiftmodule/x86_64-apple-ios-simulator.swiftmodule"
+- "/Users/aravindgs/workspace/JinySDK/JinySDK/JinySDK.h"
+- "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreMedia.framework/Headers/CoreMedia.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/apinotes/Dispatch.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVFoundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreAudioTypes.framework/Headers/CoreAudioTypes.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UserNotifications.framework/Headers/UserNotifications.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AdSupport.framework/Headers/AdSupport.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers/MediaToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "6d9c7d9a1a5c681f39bdcdf2014a07a7"

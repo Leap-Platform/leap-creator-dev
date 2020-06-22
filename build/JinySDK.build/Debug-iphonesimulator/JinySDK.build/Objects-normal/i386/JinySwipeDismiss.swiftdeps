@@ -1,0 +1,378 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "JinySwipeDismiss"
+provides-nominal:
+- "7JinySDK0A12SwipeDismissC"
+provides-member:
+- ["7JinySDK0A12SwipeDismissC", ""]
+provides-dynamic-lookup:
+- "actionableView"
+- "instance"
+- "method"
+- "swipeToClose"
+depends-top-level:
+- !private "*"
+- !private "=="
+- !private ">"
+- "AssignmentPrecedence"
+- !private "CGAffineTransform"
+- "CastingPrecedence"
+- !private "FloatLiteralType"
+- !private "IntegerLiteralType"
+- "JinySwipeDismiss"
+- !private "NSObject"
+- "Selector"
+- "UIPanGestureRecognizer"
+- "UIView"
+depends-member:
+- !private ["So15CALayerDelegateP", "animate"]
+- !private ["So15CALayerDelegateP", "frame"]
+- !private ["So15CALayerDelegateP", "transform"]
+- !private ["So17CGAffineTransformV", "identity"]
+- !private ["So17CGAffineTransformV", "init"]
+- !private ["So7CGPointV", "y"]
+- !private ["So6CGRectV", "height"]
+- !private ["s7CVarArgP", "CGAffineTransform"]
+- !private ["s7CVarArgP", "UIView"]
+- ["s7CVarArgP", ""]
+- !private ["s7CVarArgP", "actionableView"]
+- !private ["s7CVarArgP", "addTarget"]
+- !private ["s7CVarArgP", "animate"]
+- !private ["s7CVarArgP", "frame"]
+- !private ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "instance"]
+- !private ["s7CVarArgP", "method"]
+- !private ["s7CVarArgP", "perform"]
+- !private ["s7CVarArgP", "responds"]
+- !private ["s7CVarArgP", "state"]
+- !private ["s7CVarArgP", "swipeToClose"]
+- !private ["s7CVarArgP", "transform"]
+- !private ["s7CVarArgP", "translation"]
+- !private ["s7CVarArgP", "velocity"]
+- !private ["s28CustomDebugStringConvertibleP", "CGAffineTransform"]
+- !private ["s28CustomDebugStringConvertibleP", "UIView"]
+- ["s28CustomDebugStringConvertibleP", ""]
+- !private ["s28CustomDebugStringConvertibleP", "actionableView"]
+- !private ["s28CustomDebugStringConvertibleP", "addTarget"]
+- !private ["s28CustomDebugStringConvertibleP", "animate"]
+- !private ["s28CustomDebugStringConvertibleP", "frame"]
+- !private ["s28CustomDebugStringConvertibleP", "height"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "instance"]
+- !private ["s28CustomDebugStringConvertibleP", "method"]
+- !private ["s28CustomDebugStringConvertibleP", "perform"]
+- !private ["s28CustomDebugStringConvertibleP", "responds"]
+- !private ["s28CustomDebugStringConvertibleP", "state"]
+- !private ["s28CustomDebugStringConvertibleP", "swipeToClose"]
+- !private ["s28CustomDebugStringConvertibleP", "transform"]
+- !private ["s28CustomDebugStringConvertibleP", "translation"]
+- !private ["s28CustomDebugStringConvertibleP", "velocity"]
+- !private ["s28CustomDebugStringConvertibleP", "y"]
+- !private ["s17CustomReflectableP", "height"]
+- !private ["s17CustomReflectableP", "y"]
+- !private ["s23CustomStringConvertibleP", "CGAffineTransform"]
+- !private ["s23CustomStringConvertibleP", "UIView"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "actionableView"]
+- !private ["s23CustomStringConvertibleP", "addTarget"]
+- !private ["s23CustomStringConvertibleP", "animate"]
+- !private ["s23CustomStringConvertibleP", "frame"]
+- !private ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "instance"]
+- !private ["s23CustomStringConvertibleP", "method"]
+- !private ["s23CustomStringConvertibleP", "perform"]
+- !private ["s23CustomStringConvertibleP", "responds"]
+- !private ["s23CustomStringConvertibleP", "state"]
+- !private ["s23CustomStringConvertibleP", "swipeToClose"]
+- !private ["s23CustomStringConvertibleP", "transform"]
+- !private ["s23CustomStringConvertibleP", "translation"]
+- !private ["s23CustomStringConvertibleP", "velocity"]
+- !private ["Se", "height"]
+- !private ["Se", "identity"]
+- !private ["Se", "init"]
+- !private ["Se", "y"]
+- !private ["SE", "height"]
+- !private ["SE", "identity"]
+- !private ["SE", "init"]
+- !private ["SE", "y"]
+- !private ["SQ", "CGAffineTransform"]
+- !private ["SQ", "UIView"]
+- ["SQ", ""]
+- !private ["SQ", "actionableView"]
+- !private ["SQ", "addTarget"]
+- !private ["SQ", "animate"]
+- !private ["SQ", "began"]
+- !private ["SQ", "changed"]
+- !private ["SQ", "ended"]
+- !private ["SQ", "frame"]
+- !private ["SQ", "height"]
+- !private ["SQ", "identity"]
+- !private ["SQ", "init"]
+- !private ["SQ", "instance"]
+- !private ["SQ", "method"]
+- !private ["SQ", "perform"]
+- !private ["SQ", "responds"]
+- !private ["SQ", "state"]
+- !private ["SQ", "swipeToClose"]
+- !private ["SQ", "transform"]
+- !private ["SQ", "translation"]
+- !private ["SQ", "velocity"]
+- !private ["SQ", "y"]
+- !private ["SH", "CGAffineTransform"]
+- !private ["SH", "UIView"]
+- ["SH", ""]
+- !private ["SH", "actionableView"]
+- !private ["SH", "addTarget"]
+- !private ["SH", "animate"]
+- !private ["SH", "began"]
+- !private ["SH", "changed"]
+- !private ["SH", "ended"]
+- !private ["SH", "frame"]
+- !private ["SH", "init"]
+- !private ["SH", "instance"]
+- !private ["SH", "method"]
+- !private ["SH", "perform"]
+- !private ["SH", "responds"]
+- !private ["SH", "state"]
+- !private ["SH", "swipeToClose"]
+- !private ["SH", "transform"]
+- !private ["SH", "translation"]
+- !private ["SH", "velocity"]
+- !private ["7JinySDK0A12SwipeDismissC", "CGAffineTransform"]
+- !private ["7JinySDK0A12SwipeDismissC", "NSObject"]
+- ["7JinySDK0A12SwipeDismissC", "Selector"]
+- ["7JinySDK0A12SwipeDismissC", "UIPanGestureRecognizer"]
+- ["7JinySDK0A12SwipeDismissC", "UIView"]
+- !private ["7JinySDK0A12SwipeDismissC", "actionableView"]
+- !private ["7JinySDK0A12SwipeDismissC", "addTarget"]
+- ["7JinySDK0A12SwipeDismissC", "deinit"]
+- ["7JinySDK0A12SwipeDismissC", "init"]
+- !private ["7JinySDK0A12SwipeDismissC", "instance"]
+- !private ["7JinySDK0A12SwipeDismissC", "method"]
+- !private ["7JinySDK0A12SwipeDismissC", "swipeToClose"]
+- !private ["So8NSCodingP", "animate"]
+- !private ["So8NSCodingP", "frame"]
+- !private ["So8NSCodingP", "transform"]
+- !private ["So8NSObjectC", "CGAffineTransform"]
+- !private ["So8NSObjectC", "NSObject"]
+- ["So8NSObjectC", "Selector"]
+- ["So8NSObjectC", "UIPanGestureRecognizer"]
+- ["So8NSObjectC", "UIView"]
+- ["So8NSObjectC", "actionableView"]
+- !private ["So8NSObjectC", "addTarget"]
+- !private ["So8NSObjectC", "animate"]
+- !private ["So8NSObjectC", "frame"]
+- ["So8NSObjectC", "init"]
+- ["So8NSObjectC", "instance"]
+- ["So8NSObjectC", "method"]
+- !private ["So8NSObjectC", "perform"]
+- !private ["So8NSObjectC", "responds"]
+- !private ["So8NSObjectC", "state"]
+- ["So8NSObjectC", "swipeToClose"]
+- !private ["So8NSObjectC", "transform"]
+- !private ["So8NSObjectC", "translation"]
+- !private ["So8NSObjectC", "velocity"]
+- !private ["So8NSObjectP", "CGAffineTransform"]
+- !private ["So8NSObjectP", "UIView"]
+- ["So8NSObjectP", ""]
+- !private ["So8NSObjectP", "actionableView"]
+- !private ["So8NSObjectP", "addTarget"]
+- !private ["So8NSObjectP", "animate"]
+- !private ["So8NSObjectP", "frame"]
+- !private ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "instance"]
+- !private ["So8NSObjectP", "method"]
+- !private ["So8NSObjectP", "perform"]
+- !private ["So8NSObjectP", "responds"]
+- !private ["So8NSObjectP", "state"]
+- !private ["So8NSObjectP", "swipeToClose"]
+- !private ["So8NSObjectP", "transform"]
+- !private ["So8NSObjectP", "translation"]
+- !private ["So8NSObjectP", "velocity"]
+- !private ["SY", "began"]
+- !private ["SY", "changed"]
+- !private ["SY", "ended"]
+- !private ["So24UIGestureRecognizerStateV", "began"]
+- !private ["So24UIGestureRecognizerStateV", "changed"]
+- !private ["So24UIGestureRecognizerStateV", "ended"]
+- !private ["So29UIAccessibilityIdentificationP", "animate"]
+- !private ["So29UIAccessibilityIdentificationP", "frame"]
+- !private ["So29UIAccessibilityIdentificationP", "transform"]
+- !private ["So12UIAppearanceP", "animate"]
+- !private ["So12UIAppearanceP", "frame"]
+- !private ["So12UIAppearanceP", "transform"]
+- !private ["So21UIAppearanceContainerP", "animate"]
+- !private ["So21UIAppearanceContainerP", "frame"]
+- !private ["So21UIAppearanceContainerP", "transform"]
+- !private ["So17UICoordinateSpaceP", "animate"]
+- !private ["So17UICoordinateSpaceP", "frame"]
+- !private ["So17UICoordinateSpaceP", "transform"]
+- !private ["So13UIDynamicItemP", "animate"]
+- !private ["So13UIDynamicItemP", "frame"]
+- !private ["So13UIDynamicItemP", "transform"]
+- !private ["So18UIFocusEnvironmentP", "animate"]
+- !private ["So18UIFocusEnvironmentP", "frame"]
+- !private ["So18UIFocusEnvironmentP", "transform"]
+- !private ["So11UIFocusItemP", "animate"]
+- !private ["So11UIFocusItemP", "frame"]
+- !private ["So11UIFocusItemP", "transform"]
+- !private ["So20UIFocusItemContainerP", "animate"]
+- !private ["So20UIFocusItemContainerP", "frame"]
+- !private ["So20UIFocusItemContainerP", "transform"]
+- !private ["So19UIGestureRecognizerC", "CGAffineTransform"]
+- !private ["So19UIGestureRecognizerC", "NSObject"]
+- ["So19UIGestureRecognizerC", "Selector"]
+- ["So19UIGestureRecognizerC", "UIPanGestureRecognizer"]
+- ["So19UIGestureRecognizerC", "UIView"]
+- ["So19UIGestureRecognizerC", "actionableView"]
+- !private ["So19UIGestureRecognizerC", "addTarget"]
+- ["So19UIGestureRecognizerC", "init"]
+- ["So19UIGestureRecognizerC", "instance"]
+- ["So19UIGestureRecognizerC", "method"]
+- !private ["So19UIGestureRecognizerC", "state"]
+- ["So19UIGestureRecognizerC", "swipeToClose"]
+- !private ["So19UIGestureRecognizerC", "translation"]
+- !private ["So19UIGestureRecognizerC", "velocity"]
+- !private ["So24UILargeContentViewerItemP", "animate"]
+- !private ["So24UILargeContentViewerItemP", "frame"]
+- !private ["So24UILargeContentViewerItemP", "transform"]
+- !private ["So22UIPanGestureRecognizerC", "CGAffineTransform"]
+- !private ["So22UIPanGestureRecognizerC", "NSObject"]
+- ["So22UIPanGestureRecognizerC", "Selector"]
+- ["So22UIPanGestureRecognizerC", "UIPanGestureRecognizer"]
+- ["So22UIPanGestureRecognizerC", "UIView"]
+- ["So22UIPanGestureRecognizerC", ""]
+- ["So22UIPanGestureRecognizerC", "actionableView"]
+- !private ["So22UIPanGestureRecognizerC", "addTarget"]
+- ["So22UIPanGestureRecognizerC", "init"]
+- ["So22UIPanGestureRecognizerC", "instance"]
+- ["So22UIPanGestureRecognizerC", "method"]
+- !private ["So22UIPanGestureRecognizerC", "state"]
+- ["So22UIPanGestureRecognizerC", "swipeToClose"]
+- !private ["So22UIPanGestureRecognizerC", "translation"]
+- !private ["So22UIPanGestureRecognizerC", "velocity"]
+- !private ["So30UIPasteConfigurationSupportingP", "animate"]
+- !private ["So30UIPasteConfigurationSupportingP", "frame"]
+- !private ["So30UIPasteConfigurationSupportingP", "transform"]
+- !private ["So11UIResponderC", "animate"]
+- !private ["So11UIResponderC", "frame"]
+- !private ["So11UIResponderC", "transform"]
+- !private ["So30UIResponderStandardEditActionsP", "animate"]
+- !private ["So30UIResponderStandardEditActionsP", "frame"]
+- !private ["So30UIResponderStandardEditActionsP", "transform"]
+- !private ["So18UITraitEnvironmentP", "animate"]
+- !private ["So18UITraitEnvironmentP", "frame"]
+- !private ["So18UITraitEnvironmentP", "transform"]
+- !private ["So23UIUserActivityRestoringP", "animate"]
+- !private ["So23UIUserActivityRestoringP", "frame"]
+- !private ["So23UIUserActivityRestoringP", "transform"]
+- !private ["So6UIViewC", "animate"]
+- !private ["So6UIViewC", "frame"]
+- !private ["So6UIViewC", "transform"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "height"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "y"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "CGAffineTransform"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "UIView"]
+- ["10Foundation27_KeyValueCodingAndObservingP", ""]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "actionableView"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "addTarget"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "animate"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "frame"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "instance"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "method"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "perform"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "responds"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "state"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "swipeToClose"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "transform"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "translation"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "velocity"]
+- !private ["s21_ObjectiveCBridgeableP", "height"]
+- !private ["s21_ObjectiveCBridgeableP", "identity"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "y"]
+- !private ["s38__DefaultCustomPlaygroundQuickLookableP", "animate"]
+- !private ["s38__DefaultCustomPlaygroundQuickLookableP", "frame"]
+- !private ["s38__DefaultCustomPlaygroundQuickLookableP", "transform"]
+depends-nominal:
+- !private "So15CALayerDelegateP"
+- !private "So17CGAffineTransformV"
+- !private "So7CGPointV"
+- !private "So6CGRectV"
+- "s7CVarArgP"
+- "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- !private "Se"
+- !private "SE"
+- "SQ"
+- "SH"
+- "7JinySDK0A12SwipeDismissC"
+- !private "So8NSCodingP"
+- "So8NSObjectC"
+- "So8NSObjectP"
+- !private "SY"
+- !private "So24UIGestureRecognizerStateV"
+- !private "So29UIAccessibilityIdentificationP"
+- !private "So12UIAppearanceP"
+- !private "So21UIAppearanceContainerP"
+- !private "So17UICoordinateSpaceP"
+- !private "So13UIDynamicItemP"
+- !private "So18UIFocusEnvironmentP"
+- !private "So11UIFocusItemP"
+- !private "So20UIFocusItemContainerP"
+- "So19UIGestureRecognizerC"
+- !private "So24UILargeContentViewerItemP"
+- "So22UIPanGestureRecognizerC"
+- !private "So30UIPasteConfigurationSupportingP"
+- !private "So11UIResponderC"
+- !private "So30UIResponderStandardEditActionsP"
+- !private "So18UITraitEnvironmentP"
+- !private "So23UIUserActivityRestoringP"
+- !private "So6UIViewC"
+- !private "s30_CustomPlaygroundQuickLookableP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+- !private "s21_ObjectiveCBridgeableP"
+- !private "s38__DefaultCustomPlaygroundQuickLookableP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/ObjectiveC.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMIDI.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMedia.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/simd.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreImage.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/QuartzCore.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Dispatch.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Metal.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Darwin.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Foundation.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/AVFoundation.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreFoundation.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreAudio.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreGraphics.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Swift.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/UIKit.swiftmodule/i386.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/SwiftOnoneSupport.swiftmodule/i386.swiftmodule"
+- "/Users/aravindgs/workspace/JinySDK/JinySDK/JinySDK.h"
+- "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreMedia.framework/Headers/CoreMedia.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/apinotes/Dispatch.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVFoundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreAudioTypes.framework/Headers/CoreAudioTypes.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UserNotifications.framework/Headers/UserNotifications.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AdSupport.framework/Headers/AdSupport.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers/MediaToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "2d3c701cc8cb337af7eea6b789924b88"

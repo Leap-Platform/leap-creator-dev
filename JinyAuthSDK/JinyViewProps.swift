@@ -1,0 +1,147 @@
+//
+//  JinyViewProps.swift
+//  JinyAuthSDK
+//
+//  Created by Aravind GS on 20/06/20.
+//  Copyright © 2020 Aravind GS. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import WebKit
+
+class JinyViewBounds:Codable {
+    
+    var left:Float
+    var top:Float
+    var right:Float
+    var bottom:Float
+    
+    init(view:UIView) {
+        let rect = view.superview?.convert(view.frame, from: nil)
+        left = Float(rect?.origin.x ?? 0)
+        top = Float(rect?.origin.y ?? 0)
+        right = left + Float(rect?.size.width ?? 0)
+        bottom = top + Float(rect?.size.height ?? 0)
+    }
+}
+
+class JinyViewProps:Codable {
+    
+    var controller:String?
+    var acc_id:String
+    var acc_label:String
+    var acc_hint:String
+    var tag:Int
+    var className:String
+    var node_index:Int
+    var bounds:JinyViewBounds
+    var placeholder:String?
+    var text:String?
+    var is_focusable: Bool
+    var is_focused: Bool
+    var is_selected: Bool
+    var is_enabled: Bool
+    var is_user_interaction_enabled: Bool
+    var is_multiple_touch_enabled: Bool
+    var is_exclusive_touch: Bool
+    var is_clickable: Bool
+    var is_scroll_container: Bool
+    var is_web_view:Bool
+    var location_x_on_screen:Float
+    var location_y_on_screen:Float
+    var bgColor:Dictionary<String,Int>
+    var tintColor:Dictionary<String, Int>
+    var uuid:String?
+    var children:Array<JinyViewProps> = []
+    
+    
+    init(view:UIView) {
+        
+        acc_id = view.accessibilityIdentifier ?? ""
+        acc_label = view.accessibilityLabel ?? ""
+        acc_hint = view.accessibilityHint ?? ""
+        tag = view.tag
+        className = String(describing: type(of: view))
+        node_index = view.superview?.subviews.firstIndex(of: view) ?? -1
+        bounds = JinyViewBounds(view: view)
+        is_focusable = view.canBecomeFocused
+        is_focused = view.isFocused
+        is_selected = (view as? UIControl)?.isSelected ?? false
+        is_enabled = (view as? UIControl)?.isEnabled ?? false
+        is_user_interaction_enabled = view.isUserInteractionEnabled
+        is_multiple_touch_enabled = view.isMultipleTouchEnabled
+        is_exclusive_touch = view.isExclusiveTouch
+        is_scroll_container = view.isKind(of: UIScrollView.self)
+        is_web_view = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
+        if let control = view as? UIControl {
+            let targetActions = control.allTargets.filter{
+                control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
+            }
+            is_clickable = targetActions.count > 0
+        } else {
+            let tapGesture = view.gestureRecognizers?.filter{ $0.isKind(of: UITapGestureRecognizer.self) }
+            is_clickable = (tapGesture?.count ?? 0) > 0
+        }
+        location_x_on_screen = bounds.left
+        location_y_on_screen = bounds.top
+        bgColor = view.backgroundColor?.getComponentDict() ?? [:]
+        if let tint = view.tintColor { tintColor = tint.getComponentDict() }
+        else { tintColor = [:] }
+        
+        
+        if let textField  = view as? UITextField {
+            placeholder = textField.placeholder
+            text = textField.text
+        } else if let textView = view as? UITextView {
+            text = textView.text
+            
+        } else if let button = view as? UIButton {
+            text = button.currentTitle
+        }
+        if view.window == UIApplication.shared.keyWindow {
+            let childrenToCheck = getVisibleSiblings(allSiblings: view.subviews)
+            for child in childrenToCheck {
+                children.append(JinyViewProps(view: child))
+            }
+        } else {
+            for child in view.subviews  {
+                children.append(JinyViewProps(view: child))
+            }
+        }
+        
+    }
+    
+    func getVisibleSiblings(allSiblings:Array<UIView>) -> Array<UIView> {
+        guard allSiblings.count > 1 else { return allSiblings }
+        var visibleViews = allSiblings
+        for view in allSiblings.reversed() {
+            if !visibleViews.contains(view) { continue }
+            let indexOfView =  allSiblings.firstIndex(of: view)
+            if indexOfView == nil  { break }
+            if indexOfView == 0 { break }
+            let viewsToCheck = visibleViews[0..<indexOfView!]
+            let hiddenViews = viewsToCheck.filter { view.frame.contains($0.frame) }
+            visibleViews = visibleViews.filter { !hiddenViews.contains($0) }
+        }
+        return visibleViews
+    }
+    
+}
+
+extension UIColor {
+    
+    func getComponentDict() ->Dictionary<String,Int> {
+        guard cgColor.components?.count ?? 0 > 2  else { return [:] }
+        let rComponent = cgColor.components![0]
+        let gComponent = cgColor.components![1]
+        let bComponent = cgColor.components![2]
+        var colorDict = ["r": lroundf(Float(rComponent * 255)), "g":  lroundf(Float(gComponent * 255)),  "b":lroundf(Float(bComponent * 255))]
+        if cgColor.components?.count ?? 0 > 3 {
+            let aComponent = cgColor.components![3]
+            colorDict["a"] =  lroundf(Float(aComponent * 255))
+        }
+        return colorDict
+    }
+    
+}

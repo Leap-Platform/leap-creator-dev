@@ -1,0 +1,308 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "JinyFlowManagerDelegate"
+- "JinyFlowManager"
+provides-nominal:
+- "7JinySDK0A19FlowManagerDelegateP"
+- "7JinySDK0A11FlowManagerC"
+provides-member:
+- ["7JinySDK0A19FlowManagerDelegateP", ""]
+- ["7JinySDK0A11FlowManagerC", ""]
+provides-dynamic-lookup:
+- "addNewFlow"
+- "delegate"
+- "flowsArray"
+- "getFlowsToCheck"
+- "getRelevantFlow"
+- "indexFromLast"
+- "popLastFlow"
+- "removeStage"
+- "resetFlowsArray"
+- "updateFlowArrayAndResetCounter"
+depends-top-level:
+- !private "!"
+- !private "!="
+- !private "+="
+- !private "-"
+- !private "<="
+- !private "=="
+- !private ">"
+- "Array"
+- "AssignmentPrecedence"
+- "Bool"
+- "FloatLiteralType"
+- "Int"
+- "IntegerLiteralType"
+- "JinyFlow"
+- "JinyFlowManager"
+- "JinyFlowManagerDelegate"
+- "JinyStage"
+depends-member:
+- !private ["Sa", "append"]
+- !private ["Sa", "count"]
+- !private ["Sa", "filter"]
+- !private ["Sa", "popLast"]
+- !private ["Sa", "removeAll"]
+- !private ["Sa", "removeLast"]
+- !private ["Sa", "subscript"]
+- !private ["SK", "append"]
+- !private ["SK", "count"]
+- !private ["SK", "filter"]
+- !private ["SK", "popLast"]
+- !private ["SK", "removeAll"]
+- !private ["SK", "removeLast"]
+- !private ["SK", "subscript"]
+- !private ["s7CVarArgP", "append"]
+- !private ["s7CVarArgP", "count"]
+- !private ["s7CVarArgP", "filter"]
+- !private ["s7CVarArgP", "popLast"]
+- !private ["s7CVarArgP", "removeAll"]
+- !private ["s7CVarArgP", "removeLast"]
+- !private ["s7CVarArgP", "subscript"]
+- !private ["Sl", "append"]
+- !private ["Sl", "count"]
+- !private ["Sl", "filter"]
+- !private ["Sl", "popLast"]
+- !private ["Sl", "removeAll"]
+- !private ["Sl", "removeLast"]
+- !private ["Sl", "subscript"]
+- !private ["10Foundation15ContiguousBytesP", "append"]
+- !private ["10Foundation15ContiguousBytesP", "count"]
+- !private ["10Foundation15ContiguousBytesP", "filter"]
+- !private ["10Foundation15ContiguousBytesP", "popLast"]
+- !private ["10Foundation15ContiguousBytesP", "removeAll"]
+- !private ["10Foundation15ContiguousBytesP", "removeLast"]
+- !private ["10Foundation15ContiguousBytesP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "append"]
+- !private ["s28CustomDebugStringConvertibleP", "count"]
+- !private ["s28CustomDebugStringConvertibleP", "filter"]
+- !private ["s28CustomDebugStringConvertibleP", "popLast"]
+- !private ["s28CustomDebugStringConvertibleP", "removeAll"]
+- !private ["s28CustomDebugStringConvertibleP", "removeLast"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s17CustomReflectableP", "append"]
+- !private ["s17CustomReflectableP", "count"]
+- !private ["s17CustomReflectableP", "filter"]
+- !private ["s17CustomReflectableP", "popLast"]
+- !private ["s17CustomReflectableP", "removeAll"]
+- !private ["s17CustomReflectableP", "removeLast"]
+- !private ["s17CustomReflectableP", "subscript"]
+- !private ["s23CustomStringConvertibleP", "append"]
+- !private ["s23CustomStringConvertibleP", "count"]
+- !private ["s23CustomStringConvertibleP", "filter"]
+- !private ["s23CustomStringConvertibleP", "popLast"]
+- !private ["s23CustomStringConvertibleP", "removeAll"]
+- !private ["s23CustomStringConvertibleP", "removeLast"]
+- !private ["s23CustomStringConvertibleP", "subscript"]
+- !private ["10Foundation12DataProtocolP", "append"]
+- !private ["10Foundation12DataProtocolP", "count"]
+- !private ["10Foundation12DataProtocolP", "filter"]
+- !private ["10Foundation12DataProtocolP", "popLast"]
+- !private ["10Foundation12DataProtocolP", "removeAll"]
+- !private ["10Foundation12DataProtocolP", "removeLast"]
+- !private ["10Foundation12DataProtocolP", "subscript"]
+- !private ["Se", "append"]
+- !private ["Se", "count"]
+- !private ["Se", "filter"]
+- !private ["Se", "popLast"]
+- !private ["Se", "removeAll"]
+- !private ["Se", "removeLast"]
+- !private ["Se", "subscript"]
+- !private ["SE", "append"]
+- !private ["SE", "count"]
+- !private ["SE", "filter"]
+- !private ["SE", "popLast"]
+- !private ["SE", "removeAll"]
+- !private ["SE", "removeLast"]
+- !private ["SE", "subscript"]
+- !private ["SQ", "append"]
+- !private ["SQ", "count"]
+- !private ["SQ", "filter"]
+- !private ["SQ", "popLast"]
+- !private ["SQ", "removeAll"]
+- !private ["SQ", "removeLast"]
+- !private ["SQ", "subscript"]
+- !private ["s25ExpressibleByArrayLiteralP", "append"]
+- !private ["s25ExpressibleByArrayLiteralP", "count"]
+- !private ["s25ExpressibleByArrayLiteralP", "filter"]
+- !private ["s25ExpressibleByArrayLiteralP", "popLast"]
+- !private ["s25ExpressibleByArrayLiteralP", "removeAll"]
+- !private ["s25ExpressibleByArrayLiteralP", "removeLast"]
+- !private ["s25ExpressibleByArrayLiteralP", "subscript"]
+- !private ["SH", "append"]
+- !private ["SH", "count"]
+- !private ["SH", "filter"]
+- !private ["SH", "popLast"]
+- !private ["SH", "removeAll"]
+- !private ["SH", "removeLast"]
+- !private ["SH", "subscript"]
+- !private ["7JinySDK0A4FlowC", "nativePages"]
+- !private ["7JinySDK0A4FlowC", "webPages"]
+- ["7JinySDK0A11FlowManagerC", "Array"]
+- ["7JinySDK0A11FlowManagerC", "Bool"]
+- ["7JinySDK0A11FlowManagerC", "Int"]
+- ["7JinySDK0A11FlowManagerC", "JinyFlow"]
+- ["7JinySDK0A11FlowManagerC", "JinyFlowManagerDelegate"]
+- ["7JinySDK0A11FlowManagerC", "JinyStage"]
+- ["7JinySDK0A11FlowManagerC", "addNewFlow"]
+- ["7JinySDK0A11FlowManagerC", "deinit"]
+- !private ["7JinySDK0A11FlowManagerC", "delegate"]
+- !private ["7JinySDK0A11FlowManagerC", "flowsArray"]
+- ["7JinySDK0A11FlowManagerC", "getFlowsToCheck"]
+- ["7JinySDK0A11FlowManagerC", "getRelevantFlow"]
+- !private ["7JinySDK0A11FlowManagerC", "indexFromLast"]
+- ["7JinySDK0A11FlowManagerC", "init"]
+- ["7JinySDK0A11FlowManagerC", "popLastFlow"]
+- ["7JinySDK0A11FlowManagerC", "removeStage"]
+- ["7JinySDK0A11FlowManagerC", "resetFlowsArray"]
+- ["7JinySDK0A11FlowManagerC", "updateFlowArrayAndResetCounter"]
+- ["7JinySDK0A19FlowManagerDelegateP", "noActiveFlows"]
+- !private ["7JinySDK0A10NativePageC", "nativeStages"]
+- !private ["7JinySDK0A4PageC", "nativeStages"]
+- !private ["7JinySDK0A4PageC", "webStages"]
+- !private ["7JinySDK0A5StageC", "deinit"]
+- !private ["7JinySDK0A7WebPageC", "webStages"]
+- !private ["SM", "append"]
+- !private ["SM", "count"]
+- !private ["SM", "filter"]
+- !private ["SM", "popLast"]
+- !private ["SM", "removeAll"]
+- !private ["SM", "removeLast"]
+- !private ["SM", "subscript"]
+- !private ["10Foundation19MutableDataProtocolP", "append"]
+- !private ["10Foundation19MutableDataProtocolP", "count"]
+- !private ["10Foundation19MutableDataProtocolP", "filter"]
+- !private ["10Foundation19MutableDataProtocolP", "popLast"]
+- !private ["10Foundation19MutableDataProtocolP", "removeAll"]
+- !private ["10Foundation19MutableDataProtocolP", "removeLast"]
+- !private ["10Foundation19MutableDataProtocolP", "subscript"]
+- !private ["Sk", "append"]
+- !private ["Sk", "count"]
+- !private ["Sk", "filter"]
+- !private ["Sk", "popLast"]
+- !private ["Sk", "removeAll"]
+- !private ["Sk", "removeLast"]
+- !private ["Sk", "subscript"]
+- !private ["Sm", "append"]
+- !private ["Sm", "count"]
+- !private ["Sm", "filter"]
+- !private ["Sm", "popLast"]
+- !private ["Sm", "removeAll"]
+- !private ["Sm", "removeLast"]
+- !private ["Sm", "subscript"]
+- !private ["ST", "append"]
+- !private ["ST", "count"]
+- !private ["ST", "filter"]
+- !private ["ST", "popLast"]
+- !private ["ST", "removeAll"]
+- !private ["ST", "removeLast"]
+- !private ["ST", "subscript"]
+- !private ["s14_ArrayProtocolP", "append"]
+- !private ["s14_ArrayProtocolP", "count"]
+- !private ["s14_ArrayProtocolP", "filter"]
+- !private ["s14_ArrayProtocolP", "popLast"]
+- !private ["s14_ArrayProtocolP", "removeAll"]
+- !private ["s14_ArrayProtocolP", "removeLast"]
+- !private ["s14_ArrayProtocolP", "subscript"]
+- !private ["s24_DestructorSafeContainerP", "append"]
+- !private ["s24_DestructorSafeContainerP", "count"]
+- !private ["s24_DestructorSafeContainerP", "filter"]
+- !private ["s24_DestructorSafeContainerP", "popLast"]
+- !private ["s24_DestructorSafeContainerP", "removeAll"]
+- !private ["s24_DestructorSafeContainerP", "removeLast"]
+- !private ["s24_DestructorSafeContainerP", "subscript"]
+- !private ["s19_HasContiguousBytesP", "append"]
+- !private ["s19_HasContiguousBytesP", "count"]
+- !private ["s19_HasContiguousBytesP", "filter"]
+- !private ["s19_HasContiguousBytesP", "popLast"]
+- !private ["s19_HasContiguousBytesP", "removeAll"]
+- !private ["s19_HasContiguousBytesP", "removeLast"]
+- !private ["s19_HasContiguousBytesP", "subscript"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "append"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "count"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "filter"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "popLast"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "removeAll"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "removeLast"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "subscript"]
+- !private ["s21_ObjectiveCBridgeableP", "append"]
+- !private ["s21_ObjectiveCBridgeableP", "count"]
+- !private ["s21_ObjectiveCBridgeableP", "filter"]
+- !private ["s21_ObjectiveCBridgeableP", "popLast"]
+- !private ["s21_ObjectiveCBridgeableP", "removeAll"]
+- !private ["s21_ObjectiveCBridgeableP", "removeLast"]
+- !private ["s21_ObjectiveCBridgeableP", "subscript"]
+depends-nominal:
+- !private "Sa"
+- !private "SK"
+- !private "s7CVarArgP"
+- !private "Sl"
+- !private "10Foundation15ContiguousBytesP"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- !private "s23CustomStringConvertibleP"
+- !private "10Foundation12DataProtocolP"
+- !private "Se"
+- !private "SE"
+- !private "SQ"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "SH"
+- !private "7JinySDK0A4FlowC"
+- "7JinySDK0A11FlowManagerC"
+- "7JinySDK0A19FlowManagerDelegateP"
+- !private "7JinySDK0A10NativePageC"
+- !private "7JinySDK0A4PageC"
+- !private "7JinySDK0A5StageC"
+- !private "7JinySDK0A7WebPageC"
+- !private "SM"
+- !private "10Foundation19MutableDataProtocolP"
+- !private "Sk"
+- !private "Sm"
+- !private "ST"
+- !private "s14_ArrayProtocolP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s19_HasContiguousBytesP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- !private "s21_ObjectiveCBridgeableP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/ObjectiveC.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMIDI.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMedia.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/simd.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreImage.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/QuartzCore.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Dispatch.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Metal.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Darwin.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Foundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/AVFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreAudio.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreGraphics.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Swift.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/UIKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/SwiftOnoneSupport.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Combine.swiftmodule/x86_64-apple-ios-simulator.swiftmodule"
+- "/Users/aravindgs/workspace/JinySDK/JinySDK/JinySDK.h"
+- "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreMedia.framework/Headers/CoreMedia.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/apinotes/Dispatch.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVFoundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreAudioTypes.framework/Headers/CoreAudioTypes.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UserNotifications.framework/Headers/UserNotifications.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AdSupport.framework/Headers/AdSupport.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers/MediaToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "c8b6e420ae0dbac154e1498100805043"

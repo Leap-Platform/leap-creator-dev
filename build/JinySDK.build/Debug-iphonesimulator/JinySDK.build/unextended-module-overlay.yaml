@@ -1,0 +1,13 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/aravindgs/Library/Developer/Xcode/DerivedData/JinySDK-dozxmzozxwyaoravdalxvkoxvfzq/Build/Products/Debug-iphonesimulator/JinySDK.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap",
+    }]
+  }]
+}

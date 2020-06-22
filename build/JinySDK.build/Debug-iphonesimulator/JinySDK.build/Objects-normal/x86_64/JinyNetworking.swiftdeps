@@ -1,0 +1,780 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "JinyOperation"
+- "JinyDownloadOperation"
+- "JinyDataOperation"
+- "JinyNetWorker"
+provides-nominal:
+- "7JinySDK0A9OperationC"
+- "7JinySDK0A17DownloadOperationC"
+- "7JinySDK0A13DataOperationC"
+- "7JinySDK0A9NetWorkerC"
+- "7JinySDK9ConstantsV10NetworkingV"
+provides-member:
+- ["7JinySDK0A9OperationC", ""]
+- ["7JinySDK0A17DownloadOperationC", ""]
+- ["7JinySDK0A13DataOperationC", ""]
+- ["7JinySDK0A9NetWorkerC", ""]
+- ["7JinySDK9ConstantsV", ""]
+- ["7JinySDK9ConstantsV10NetworkingV", ""]
+- ["7JinySDK9ConstantsV", "Networking"]
+provides-dynamic-lookup:
+- "$__lazy_storage_$_dataQueue"
+- "$__lazy_storage_$_downloadQueue"
+- "$__lazy_storage_$_fm"
+- "_executing"
+- "_finished"
+- "audio"
+- "checkIfJinyFolderExists"
+- "copyFileToJinyFolder"
+- "dataQueue"
+- "downloadFile"
+- "downloadQueue"
+- "executing"
+- "fetchAPI"
+- "finished"
+- "fm"
+- "isAsynchronous"
+- "isExecuting"
+- "isFinished"
+- "main"
+- "request"
+- "session"
+- "shared"
+- "statusUpdate"
+depends-top-level:
+- !private "!"
+- !private "+"
+- !private "=="
+- "AssignmentPrecedence"
+- "Bool"
+- "BooleanLiteralType"
+- "Constants"
+- "FileManager"
+- "FloatLiteralType"
+- "IntegerLiteralType"
+- "JinyDataOperation"
+- "JinyDownloadOperation"
+- "JinyNetWorker"
+- "JinyOperation"
+- "JinySound"
+- !private "ObjCBool"
+- "Operation"
+- "OperationQueue"
+- !private "String"
+- "StringLiteralType"
+- "URL"
+- "URLRequest"
+- "URLSession"
+- !private "UnicodeScalarType"
+- "Void"
+- !private "fatalError"
+- !private "print"
+depends-member:
+- !private ["Sa", "subscript"]
+- !private ["SK", "init"]
+- !private ["SK", "subscript"]
+- !private ["s7CVarArgP", "Constants"]
+- ["s7CVarArgP", "FileManager"]
+- !private ["s7CVarArgP", "ObjCBool"]
+- !private ["s7CVarArgP", "String"]
+- !private ["s7CVarArgP", "URLRequest"]
+- ["s7CVarArgP", "URLSession"]
+- ["s7CVarArgP", ""]
+- !private ["s7CVarArgP", "_executing"]
+- !private ["s7CVarArgP", "_finished"]
+- !private ["s7CVarArgP", "audio"]
+- !private ["s7CVarArgP", "checkIfJinyFolderExists"]
+- !private ["s7CVarArgP", "copyFileToJinyFolder"]
+- !private ["s7CVarArgP", "copyItem"]
+- !private ["s7CVarArgP", "createDirectory"]
+- !private ["s7CVarArgP", "dataTask"]
+- ["s7CVarArgP", "default"]
+- !private ["s7CVarArgP", "didChangeValue"]
+- !private ["s7CVarArgP", "downloadFile"]
+- !private ["s7CVarArgP", "downloadTask"]
+- !private ["s7CVarArgP", "executing"]
+- !private ["s7CVarArgP", "fatalError"]
+- !private ["s7CVarArgP", "fetchAPI"]
+- !private ["s7CVarArgP", "fileExists"]
+- !private ["s7CVarArgP", "finished"]
+- !private ["s7CVarArgP", "fm"]
+- ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "isCancelled"]
+- !private ["s7CVarArgP", "main"]
+- ["s7CVarArgP", "maxConcurrentOperationCount"]
+- ["s7CVarArgP", "name"]
+- !private ["s7CVarArgP", "print"]
+- !private ["s7CVarArgP", "request"]
+- !private ["s7CVarArgP", "resume"]
+- !private ["s7CVarArgP", "session"]
+- ["s7CVarArgP", "shared"]
+- !private ["s7CVarArgP", "statusUpdate"]
+- !private ["s7CVarArgP", "subscript"]
+- !private ["s7CVarArgP", "urls"]
+- !private ["s7CVarArgP", "willChangeValue"]
+- !private ["Sl", "init"]
+- !private ["Sl", "subscript"]
+- !private ["SL", "init"]
+- ["7JinySDK9ConstantsV", "Networking"]
+- !private ["10Foundation15ContiguousBytesP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "Constants"]
+- ["s28CustomDebugStringConvertibleP", "FileManager"]
+- !private ["s28CustomDebugStringConvertibleP", "ObjCBool"]
+- !private ["s28CustomDebugStringConvertibleP", "String"]
+- !private ["s28CustomDebugStringConvertibleP", "URLRequest"]
+- ["s28CustomDebugStringConvertibleP", "URLSession"]
+- ["s28CustomDebugStringConvertibleP", ""]
+- !private ["s28CustomDebugStringConvertibleP", "_executing"]
+- !private ["s28CustomDebugStringConvertibleP", "_finished"]
+- !private ["s28CustomDebugStringConvertibleP", "absoluteString"]
+- !private ["s28CustomDebugStringConvertibleP", "absoluteURL"]
+- !private ["s28CustomDebugStringConvertibleP", "appendingPathComponent"]
+- !private ["s28CustomDebugStringConvertibleP", "audio"]
+- !private ["s28CustomDebugStringConvertibleP", "checkIfJinyFolderExists"]
+- !private ["s28CustomDebugStringConvertibleP", "copyFileToJinyFolder"]
+- !private ["s28CustomDebugStringConvertibleP", "copyItem"]
+- !private ["s28CustomDebugStringConvertibleP", "createDirectory"]
+- !private ["s28CustomDebugStringConvertibleP", "dataTask"]
+- ["s28CustomDebugStringConvertibleP", "default"]
+- !private ["s28CustomDebugStringConvertibleP", "didChangeValue"]
+- !private ["s28CustomDebugStringConvertibleP", "downloadFile"]
+- !private ["s28CustomDebugStringConvertibleP", "downloadTask"]
+- !private ["s28CustomDebugStringConvertibleP", "executing"]
+- !private ["s28CustomDebugStringConvertibleP", "fatalError"]
+- !private ["s28CustomDebugStringConvertibleP", "fetchAPI"]
+- !private ["s28CustomDebugStringConvertibleP", "fileExists"]
+- !private ["s28CustomDebugStringConvertibleP", "finished"]
+- !private ["s28CustomDebugStringConvertibleP", "fm"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "isCancelled"]
+- !private ["s28CustomDebugStringConvertibleP", "main"]
+- ["s28CustomDebugStringConvertibleP", "maxConcurrentOperationCount"]
+- ["s28CustomDebugStringConvertibleP", "name"]
+- !private ["s28CustomDebugStringConvertibleP", "print"]
+- !private ["s28CustomDebugStringConvertibleP", "request"]
+- !private ["s28CustomDebugStringConvertibleP", "resume"]
+- !private ["s28CustomDebugStringConvertibleP", "session"]
+- ["s28CustomDebugStringConvertibleP", "shared"]
+- !private ["s28CustomDebugStringConvertibleP", "statusUpdate"]
+- !private ["s28CustomDebugStringConvertibleP", "subscript"]
+- !private ["s28CustomDebugStringConvertibleP", "urls"]
+- !private ["s28CustomDebugStringConvertibleP", "willChangeValue"]
+- !private ["s17CustomReflectableP", "boolValue"]
+- !private ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "subscript"]
+- !private ["s23CustomStringConvertibleP", "Constants"]
+- ["s23CustomStringConvertibleP", "FileManager"]
+- !private ["s23CustomStringConvertibleP", "ObjCBool"]
+- !private ["s23CustomStringConvertibleP", "String"]
+- !private ["s23CustomStringConvertibleP", "URLRequest"]
+- ["s23CustomStringConvertibleP", "URLSession"]
+- ["s23CustomStringConvertibleP", ""]
+- !private ["s23CustomStringConvertibleP", "_executing"]
+- !private ["s23CustomStringConvertibleP", "_finished"]
+- !private ["s23CustomStringConvertibleP", "absoluteString"]
+- !private ["s23CustomStringConvertibleP", "absoluteURL"]
+- !private ["s23CustomStringConvertibleP", "appendingPathComponent"]
+- !private ["s23CustomStringConvertibleP", "audio"]
+- !private ["s23CustomStringConvertibleP", "boolValue"]
+- !private ["s23CustomStringConvertibleP", "checkIfJinyFolderExists"]
+- !private ["s23CustomStringConvertibleP", "copyFileToJinyFolder"]
+- !private ["s23CustomStringConvertibleP", "copyItem"]
+- !private ["s23CustomStringConvertibleP", "createDirectory"]
+- !private ["s23CustomStringConvertibleP", "dataTask"]
+- ["s23CustomStringConvertibleP", "default"]
+- !private ["s23CustomStringConvertibleP", "didChangeValue"]
+- !private ["s23CustomStringConvertibleP", "downloadFile"]
+- !private ["s23CustomStringConvertibleP", "downloadTask"]
+- !private ["s23CustomStringConvertibleP", "executing"]
+- !private ["s23CustomStringConvertibleP", "fatalError"]
+- !private ["s23CustomStringConvertibleP", "fetchAPI"]
+- !private ["s23CustomStringConvertibleP", "fileExists"]
+- !private ["s23CustomStringConvertibleP", "finished"]
+- !private ["s23CustomStringConvertibleP", "fm"]
+- ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "isCancelled"]
+- !private ["s23CustomStringConvertibleP", "main"]
+- ["s23CustomStringConvertibleP", "maxConcurrentOperationCount"]
+- ["s23CustomStringConvertibleP", "name"]
+- !private ["s23CustomStringConvertibleP", "print"]
+- !private ["s23CustomStringConvertibleP", "request"]
+- !private ["s23CustomStringConvertibleP", "resume"]
+- !private ["s23CustomStringConvertibleP", "session"]
+- ["s23CustomStringConvertibleP", "shared"]
+- !private ["s23CustomStringConvertibleP", "statusUpdate"]
+- !private ["s23CustomStringConvertibleP", "subscript"]
+- !private ["s23CustomStringConvertibleP", "urls"]
+- !private ["s23CustomStringConvertibleP", "willChangeValue"]
+- !private ["10Foundation12DataProtocolP", "subscript"]
+- !private ["Se", "absoluteString"]
+- !private ["Se", "absoluteURL"]
+- !private ["Se", "appendingPathComponent"]
+- !private ["Se", "init"]
+- !private ["Se", "subscript"]
+- !private ["SE", "absoluteString"]
+- !private ["SE", "absoluteURL"]
+- !private ["SE", "appendingPathComponent"]
+- !private ["SE", "init"]
+- !private ["SE", "subscript"]
+- !private ["SQ", "Constants"]
+- ["SQ", "FileManager"]
+- !private ["SQ", "ObjCBool"]
+- !private ["SQ", "String"]
+- !private ["SQ", "URLRequest"]
+- ["SQ", "URLSession"]
+- ["SQ", ""]
+- !private ["SQ", "_executing"]
+- !private ["SQ", "_finished"]
+- !private ["SQ", "absoluteString"]
+- !private ["SQ", "absoluteURL"]
+- !private ["SQ", "appendingPathComponent"]
+- !private ["SQ", "audio"]
+- !private ["SQ", "checkIfJinyFolderExists"]
+- !private ["SQ", "copyFileToJinyFolder"]
+- !private ["SQ", "copyItem"]
+- !private ["SQ", "createDirectory"]
+- !private ["SQ", "dataTask"]
+- ["SQ", "default"]
+- !private ["SQ", "didChangeValue"]
+- !private ["SQ", "documentDirectory"]
+- !private ["SQ", "downloadFile"]
+- !private ["SQ", "downloadTask"]
+- !private ["SQ", "executing"]
+- !private ["SQ", "fatalError"]
+- !private ["SQ", "fetchAPI"]
+- !private ["SQ", "fileExists"]
+- !private ["SQ", "finished"]
+- !private ["SQ", "fm"]
+- ["SQ", "init"]
+- !private ["SQ", "isCancelled"]
+- !private ["SQ", "main"]
+- ["SQ", "maxConcurrentOperationCount"]
+- ["SQ", "name"]
+- !private ["SQ", "print"]
+- !private ["SQ", "request"]
+- !private ["SQ", "resume"]
+- !private ["SQ", "session"]
+- ["SQ", "shared"]
+- !private ["SQ", "statusUpdate"]
+- !private ["SQ", "subscript"]
+- !private ["SQ", "urls"]
+- !private ["SQ", "userDomainMask"]
+- !private ["SQ", "willChangeValue"]
+- !private ["s5ErrorP", "localizedDescription"]
+- !private ["s25ExpressibleByArrayLiteralP", "subscript"]
+- !private ["s25ExpressibleByArrayLiteralP", "userDomainMask"]
+- !private ["s27ExpressibleByBooleanLiteralP", "boolValue"]
+- !private ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s32ExpressibleByStringInterpolationP", "init"]
+- !private ["s26ExpressibleByStringLiteralP", "init"]
+- !private ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["So13NSFileManagerC", "copyItem"]
+- !private ["So13NSFileManagerC", "createDirectory"]
+- ["So13NSFileManagerC", "default"]
+- !private ["So13NSFileManagerC", "fileExists"]
+- !private ["So13NSFileManagerC", "urls"]
+- !private ["SH", "Constants"]
+- ["SH", "FileManager"]
+- !private ["SH", "ObjCBool"]
+- !private ["SH", "String"]
+- !private ["SH", "URLRequest"]
+- ["SH", "URLSession"]
+- ["SH", ""]
+- !private ["SH", "_executing"]
+- !private ["SH", "_finished"]
+- !private ["SH", "absoluteString"]
+- !private ["SH", "absoluteURL"]
+- !private ["SH", "appendingPathComponent"]
+- !private ["SH", "audio"]
+- !private ["SH", "checkIfJinyFolderExists"]
+- !private ["SH", "copyFileToJinyFolder"]
+- !private ["SH", "copyItem"]
+- !private ["SH", "createDirectory"]
+- !private ["SH", "dataTask"]
+- ["SH", "default"]
+- !private ["SH", "didChangeValue"]
+- !private ["SH", "documentDirectory"]
+- !private ["SH", "downloadFile"]
+- !private ["SH", "downloadTask"]
+- !private ["SH", "executing"]
+- !private ["SH", "fatalError"]
+- !private ["SH", "fetchAPI"]
+- !private ["SH", "fileExists"]
+- !private ["SH", "finished"]
+- !private ["SH", "fm"]
+- ["SH", "init"]
+- !private ["SH", "isCancelled"]
+- !private ["SH", "main"]
+- ["SH", "maxConcurrentOperationCount"]
+- ["SH", "name"]
+- !private ["SH", "print"]
+- !private ["SH", "request"]
+- !private ["SH", "resume"]
+- !private ["SH", "session"]
+- ["SH", "shared"]
+- !private ["SH", "statusUpdate"]
+- !private ["SH", "subscript"]
+- !private ["SH", "urls"]
+- !private ["SH", "willChangeValue"]
+- ["7JinySDK0A13DataOperationC", "deinit"]
+- !private ["7JinySDK0A13DataOperationC", "executing"]
+- ["7JinySDK0A13DataOperationC", "fetchAPI"]
+- !private ["7JinySDK0A13DataOperationC", "finished"]
+- ["7JinySDK0A13DataOperationC", "init"]
+- ["7JinySDK0A13DataOperationC", "main"]
+- !private ["7JinySDK0A13DataOperationC", "request"]
+- !private ["7JinySDK0A13DataOperationC", "session"]
+- ["7JinySDK0A17DownloadOperationC", "Bool"]
+- !private ["7JinySDK0A17DownloadOperationC", "Constants"]
+- ["7JinySDK0A17DownloadOperationC", "JinySound"]
+- !private ["7JinySDK0A17DownloadOperationC", "ObjCBool"]
+- !private ["7JinySDK0A17DownloadOperationC", "String"]
+- ["7JinySDK0A17DownloadOperationC", "URL"]
+- ["7JinySDK0A17DownloadOperationC", "URLRequest"]
+- ["7JinySDK0A17DownloadOperationC", "Void"]
+- ["7JinySDK0A17DownloadOperationC", "audio"]
+- ["7JinySDK0A17DownloadOperationC", "checkIfJinyFolderExists"]
+- ["7JinySDK0A17DownloadOperationC", "copyFileToJinyFolder"]
+- ["7JinySDK0A17DownloadOperationC", "deinit"]
+- ["7JinySDK0A17DownloadOperationC", "downloadFile"]
+- !private ["7JinySDK0A17DownloadOperationC", "executing"]
+- !private ["7JinySDK0A17DownloadOperationC", "fatalError"]
+- !private ["7JinySDK0A17DownloadOperationC", "finished"]
+- !private ["7JinySDK0A17DownloadOperationC", "fm"]
+- ["7JinySDK0A17DownloadOperationC", "init"]
+- ["7JinySDK0A17DownloadOperationC", "main"]
+- !private ["7JinySDK0A17DownloadOperationC", "print"]
+- !private ["7JinySDK0A17DownloadOperationC", "session"]
+- !private ["7JinySDK0A17DownloadOperationC", "statusUpdate"]
+- !private ["7JinySDK0A9NetWorkerC", "$__lazy_storage_$_dataQueue"]
+- !private ["7JinySDK0A9NetWorkerC", "$__lazy_storage_$_downloadQueue"]
+- ["7JinySDK0A9NetWorkerC", "Constants"]
+- ["7JinySDK0A9NetWorkerC", "JinyNetWorker"]
+- ["7JinySDK0A9NetWorkerC", "OperationQueue"]
+- ["7JinySDK0A9NetWorkerC", "dataQueue"]
+- ["7JinySDK0A9NetWorkerC", "deinit"]
+- ["7JinySDK0A9NetWorkerC", "downloadQueue"]
+- ["7JinySDK0A9NetWorkerC", "init"]
+- ["7JinySDK0A9NetWorkerC", "shared"]
+- !private ["7JinySDK0A9OperationC", "$__lazy_storage_$_fm"]
+- ["7JinySDK0A9OperationC", "Bool"]
+- !private ["7JinySDK0A9OperationC", "Constants"]
+- ["7JinySDK0A9OperationC", "FileManager"]
+- ["7JinySDK0A9OperationC", "JinySound"]
+- !private ["7JinySDK0A9OperationC", "ObjCBool"]
+- !private ["7JinySDK0A9OperationC", "String"]
+- ["7JinySDK0A9OperationC", "URL"]
+- ["7JinySDK0A9OperationC", "URLRequest"]
+- ["7JinySDK0A9OperationC", "URLSession"]
+- ["7JinySDK0A9OperationC", "Void"]
+- ["7JinySDK0A9OperationC", ""]
+- !private ["7JinySDK0A9OperationC", "_executing"]
+- !private ["7JinySDK0A9OperationC", "_finished"]
+- ["7JinySDK0A9OperationC", "audio"]
+- ["7JinySDK0A9OperationC", "checkIfJinyFolderExists"]
+- ["7JinySDK0A9OperationC", "copyFileToJinyFolder"]
+- ["7JinySDK0A9OperationC", "deinit"]
+- !private ["7JinySDK0A9OperationC", "didChangeValue"]
+- ["7JinySDK0A9OperationC", "downloadFile"]
+- ["7JinySDK0A9OperationC", "executing"]
+- !private ["7JinySDK0A9OperationC", "fatalError"]
+- ["7JinySDK0A9OperationC", "fetchAPI"]
+- ["7JinySDK0A9OperationC", "finished"]
+- ["7JinySDK0A9OperationC", "fm"]
+- ["7JinySDK0A9OperationC", "init"]
+- ["7JinySDK0A9OperationC", "isAsynchronous"]
+- !private ["7JinySDK0A9OperationC", "isCancelled"]
+- ["7JinySDK0A9OperationC", "isExecuting"]
+- ["7JinySDK0A9OperationC", "isFinished"]
+- ["7JinySDK0A9OperationC", "main"]
+- !private ["7JinySDK0A9OperationC", "print"]
+- ["7JinySDK0A9OperationC", "request"]
+- ["7JinySDK0A9OperationC", "session"]
+- ["7JinySDK0A9OperationC", "statusUpdate"]
+- !private ["7JinySDK0A9OperationC", "willChangeValue"]
+- !private ["7JinySDK0A5SoundC", "langCode"]
+- !private ["7JinySDK0A5SoundC", "name"]
+- !private ["7JinySDK0A5SoundC", "url"]
+- !private ["7JinySDK0A5SoundC", "version"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["SM", "subscript"]
+- !private ["10Foundation19MutableDataProtocolP", "subscript"]
+- !private ["So9NSCopyingP", "resume"]
+- ["So8NSObjectC", "$__lazy_storage_$_fm"]
+- ["So8NSObjectC", "Bool"]
+- !private ["So8NSObjectC", "Constants"]
+- ["So8NSObjectC", "FileManager"]
+- ["So8NSObjectC", "JinySound"]
+- !private ["So8NSObjectC", "ObjCBool"]
+- !private ["So8NSObjectC", "String"]
+- ["So8NSObjectC", "URL"]
+- ["So8NSObjectC", "URLRequest"]
+- ["So8NSObjectC", "URLSession"]
+- ["So8NSObjectC", "Void"]
+- ["So8NSObjectC", "_executing"]
+- ["So8NSObjectC", "_finished"]
+- ["So8NSObjectC", "audio"]
+- ["So8NSObjectC", "checkIfJinyFolderExists"]
+- ["So8NSObjectC", "copyFileToJinyFolder"]
+- !private ["So8NSObjectC", "copyItem"]
+- !private ["So8NSObjectC", "createDirectory"]
+- !private ["So8NSObjectC", "dataTask"]
+- ["So8NSObjectC", "default"]
+- !private ["So8NSObjectC", "didChangeValue"]
+- ["So8NSObjectC", "downloadFile"]
+- !private ["So8NSObjectC", "downloadTask"]
+- ["So8NSObjectC", "executing"]
+- !private ["So8NSObjectC", "fatalError"]
+- ["So8NSObjectC", "fetchAPI"]
+- !private ["So8NSObjectC", "fileExists"]
+- ["So8NSObjectC", "finished"]
+- ["So8NSObjectC", "fm"]
+- ["So8NSObjectC", "init"]
+- ["So8NSObjectC", "isAsynchronous"]
+- !private ["So8NSObjectC", "isCancelled"]
+- ["So8NSObjectC", "isExecuting"]
+- ["So8NSObjectC", "isFinished"]
+- ["So8NSObjectC", "main"]
+- ["So8NSObjectC", "maxConcurrentOperationCount"]
+- ["So8NSObjectC", "name"]
+- !private ["So8NSObjectC", "print"]
+- ["So8NSObjectC", "request"]
+- !private ["So8NSObjectC", "resume"]
+- ["So8NSObjectC", "session"]
+- ["So8NSObjectC", "shared"]
+- ["So8NSObjectC", "statusUpdate"]
+- !private ["So8NSObjectC", "urls"]
+- !private ["So8NSObjectC", "willChangeValue"]
+- !private ["So8NSObjectP", "Constants"]
+- ["So8NSObjectP", "FileManager"]
+- !private ["So8NSObjectP", "ObjCBool"]
+- !private ["So8NSObjectP", "String"]
+- !private ["So8NSObjectP", "URLRequest"]
+- ["So8NSObjectP", "URLSession"]
+- ["So8NSObjectP", ""]
+- !private ["So8NSObjectP", "_executing"]
+- !private ["So8NSObjectP", "_finished"]
+- !private ["So8NSObjectP", "audio"]
+- !private ["So8NSObjectP", "checkIfJinyFolderExists"]
+- !private ["So8NSObjectP", "copyFileToJinyFolder"]
+- !private ["So8NSObjectP", "copyItem"]
+- !private ["So8NSObjectP", "createDirectory"]
+- !private ["So8NSObjectP", "dataTask"]
+- ["So8NSObjectP", "default"]
+- !private ["So8NSObjectP", "didChangeValue"]
+- !private ["So8NSObjectP", "downloadFile"]
+- !private ["So8NSObjectP", "downloadTask"]
+- !private ["So8NSObjectP", "executing"]
+- !private ["So8NSObjectP", "fatalError"]
+- !private ["So8NSObjectP", "fetchAPI"]
+- !private ["So8NSObjectP", "fileExists"]
+- !private ["So8NSObjectP", "finished"]
+- !private ["So8NSObjectP", "fm"]
+- ["So8NSObjectP", "init"]
+- !private ["So8NSObjectP", "isCancelled"]
+- !private ["So8NSObjectP", "main"]
+- ["So8NSObjectP", "maxConcurrentOperationCount"]
+- ["So8NSObjectP", "name"]
+- !private ["So8NSObjectP", "print"]
+- !private ["So8NSObjectP", "request"]
+- !private ["So8NSObjectP", "resume"]
+- !private ["So8NSObjectP", "session"]
+- ["So8NSObjectP", "shared"]
+- !private ["So8NSObjectP", "statusUpdate"]
+- !private ["So8NSObjectP", "urls"]
+- !private ["So8NSObjectP", "willChangeValue"]
+- ["7JinySDK9ConstantsV10NetworkingV", "analyticsEndPoint"]
+- ["7JinySDK9ConstantsV10NetworkingV", "dataQ"]
+- ["7JinySDK9ConstantsV10NetworkingV", "downloadQ"]
+- ["7JinySDK9ConstantsV10NetworkingV", "downloadsFolder"]
+- ["7JinySDK9ConstantsV10NetworkingV", "init"]
+- ["7JinySDK9ConstantsV10NetworkingV", "isExecuting"]
+- ["7JinySDK9ConstantsV10NetworkingV", "isFinished"]
+- !private ["10ObjectiveC8ObjCBoolV", "boolValue"]
+- ["So11NSOperationC", "$__lazy_storage_$_fm"]
+- ["So11NSOperationC", "Bool"]
+- !private ["So11NSOperationC", "Constants"]
+- ["So11NSOperationC", "FileManager"]
+- ["So11NSOperationC", "JinySound"]
+- !private ["So11NSOperationC", "ObjCBool"]
+- !private ["So11NSOperationC", "String"]
+- ["So11NSOperationC", "URL"]
+- ["So11NSOperationC", "URLRequest"]
+- ["So11NSOperationC", "URLSession"]
+- ["So11NSOperationC", "Void"]
+- ["So11NSOperationC", ""]
+- ["So11NSOperationC", "_executing"]
+- ["So11NSOperationC", "_finished"]
+- ["So11NSOperationC", "audio"]
+- ["So11NSOperationC", "checkIfJinyFolderExists"]
+- ["So11NSOperationC", "copyFileToJinyFolder"]
+- !private ["So11NSOperationC", "didChangeValue"]
+- ["So11NSOperationC", "downloadFile"]
+- ["So11NSOperationC", "executing"]
+- !private ["So11NSOperationC", "fatalError"]
+- ["So11NSOperationC", "fetchAPI"]
+- ["So11NSOperationC", "finished"]
+- ["So11NSOperationC", "fm"]
+- ["So11NSOperationC", "init"]
+- ["So11NSOperationC", "isAsynchronous"]
+- !private ["So11NSOperationC", "isCancelled"]
+- ["So11NSOperationC", "isExecuting"]
+- ["So11NSOperationC", "isFinished"]
+- ["So11NSOperationC", "main"]
+- !private ["So11NSOperationC", "print"]
+- ["So11NSOperationC", "request"]
+- ["So11NSOperationC", "session"]
+- ["So11NSOperationC", "statusUpdate"]
+- !private ["So11NSOperationC", "willChangeValue"]
+- ["So16NSOperationQueueC", "init"]
+- ["So16NSOperationQueueC", "maxConcurrentOperationCount"]
+- ["So16NSOperationQueueC", "name"]
+- !private ["s9OptionSetP", "userDomainMask"]
+- ["So19NSProgressReportingP", "init"]
+- ["So19NSProgressReportingP", "maxConcurrentOperationCount"]
+- ["So19NSProgressReportingP", "name"]
+- !private ["So19NSProgressReportingP", "resume"]
+- !private ["Sk", "subscript"]
+- !private ["Sm", "init"]
+- !private ["Sm", "subscript"]
+- !private ["SY", "documentDirectory"]
+- !private ["SY", "userDomainMask"]
+- !private ["10Foundation20ReferenceConvertibleP", "absoluteString"]
+- !private ["10Foundation20ReferenceConvertibleP", "absoluteURL"]
+- !private ["10Foundation20ReferenceConvertibleP", "appendingPathComponent"]
+- !private ["10Foundation20ReferenceConvertibleP", "init"]
+- ["7Combine9SchedulerP", "init"]
+- ["7Combine9SchedulerP", "maxConcurrentOperationCount"]
+- ["7Combine9SchedulerP", "name"]
+- !private ["So21NSSearchPathDirectoryV", "documentDirectory"]
+- !private ["So22NSSearchPathDomainMaskV", "userDomainMask"]
+- !private ["ST", "init"]
+- !private ["ST", "subscript"]
+- !private ["s10SetAlgebraP", "userDomainMask"]
+- !private ["SS", "init"]
+- !private ["Sy", "init"]
+- !private ["s16TextOutputStreamP", "init"]
+- !private ["s20TextOutputStreamableP", "init"]
+- !private ["10Foundation3URLV", "absoluteString"]
+- !private ["10Foundation3URLV", "absoluteURL"]
+- !private ["10Foundation3URLV", "appendingPathComponent"]
+- !private ["10Foundation10URLRequestV", "init"]
+- !private ["So12NSURLSessionC", "dataTask"]
+- !private ["So12NSURLSessionC", "downloadTask"]
+- ["So12NSURLSessionC", "shared"]
+- !private ["So20NSURLSessionDataTaskC", "resume"]
+- !private ["So24NSURLSessionDownloadTaskC", "resume"]
+- !private ["So16NSURLSessionTaskC", "resume"]
+- !private ["s14_ArrayProtocolP", "subscript"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "absoluteString"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "absoluteURL"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "appendingPathComponent"]
+- !private ["s30_CustomPlaygroundQuickLookableP", "init"]
+- !private ["s24_DestructorSafeContainerP", "subscript"]
+- !private ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- !private ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- !private ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- !private ["s34_ExpressibleByFileReferenceLiteralP", "absoluteString"]
+- !private ["s34_ExpressibleByFileReferenceLiteralP", "absoluteURL"]
+- !private ["s34_ExpressibleByFileReferenceLiteralP", "appendingPathComponent"]
+- !private ["s19_HasContiguousBytesP", "init"]
+- !private ["s19_HasContiguousBytesP", "subscript"]
+- !private ["s35_HasCustomAnyHashableRepresentationP", "subscript"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "Constants"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "FileManager"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "ObjCBool"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "String"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "URLRequest"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "URLSession"]
+- ["10Foundation27_KeyValueCodingAndObservingP", ""]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "_executing"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "_finished"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "audio"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "checkIfJinyFolderExists"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "copyFileToJinyFolder"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "copyItem"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "createDirectory"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "dataTask"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "default"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "didChangeValue"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "downloadFile"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "downloadTask"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "executing"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "fatalError"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "fetchAPI"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "fileExists"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "finished"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "fm"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "init"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "isCancelled"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "main"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "maxConcurrentOperationCount"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "name"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "print"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "request"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "resume"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "session"]
+- ["10Foundation27_KeyValueCodingAndObservingP", "shared"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "statusUpdate"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "urls"]
+- !private ["10Foundation27_KeyValueCodingAndObservingP", "willChangeValue"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "Constants"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "FileManager"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "ObjCBool"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "String"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "URLRequest"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "URLSession"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", ""]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "_executing"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "_finished"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "audio"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "checkIfJinyFolderExists"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "copyFileToJinyFolder"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "copyItem"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "createDirectory"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "dataTask"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "default"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "didChangeValue"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "downloadFile"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "downloadTask"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "executing"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "fatalError"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "fetchAPI"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "fileExists"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "finished"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "fm"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "init"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "isCancelled"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "main"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "maxConcurrentOperationCount"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "name"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "print"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "request"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "resume"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "session"]
+- ["10Foundation37_KeyValueCodingAndObservingPublishingP", "shared"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "statusUpdate"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "urls"]
+- !private ["10Foundation37_KeyValueCodingAndObservingPublishingP", "willChangeValue"]
+- !private ["s21_ObjectiveCBridgeableP", "absoluteString"]
+- !private ["s21_ObjectiveCBridgeableP", "absoluteURL"]
+- !private ["s21_ObjectiveCBridgeableP", "appendingPathComponent"]
+- !private ["s21_ObjectiveCBridgeableP", "init"]
+- !private ["s21_ObjectiveCBridgeableP", "subscript"]
+depends-nominal:
+- !private "Sa"
+- !private "SK"
+- "s7CVarArgP"
+- !private "Sl"
+- !private "SL"
+- "7JinySDK9ConstantsV"
+- !private "10Foundation15ContiguousBytesP"
+- "s28CustomDebugStringConvertibleP"
+- !private "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- !private "10Foundation12DataProtocolP"
+- !private "Se"
+- !private "SE"
+- "SQ"
+- !private "s5ErrorP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- !private "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- !private "s32ExpressibleByStringInterpolationP"
+- !private "s26ExpressibleByStringLiteralP"
+- !private "s33ExpressibleByUnicodeScalarLiteralP"
+- "So13NSFileManagerC"
+- "SH"
+- "7JinySDK0A13DataOperationC"
+- "7JinySDK0A17DownloadOperationC"
+- "7JinySDK0A9NetWorkerC"
+- "7JinySDK0A9OperationC"
+- !private "7JinySDK0A5SoundC"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "SM"
+- !private "10Foundation19MutableDataProtocolP"
+- !private "So9NSCopyingP"
+- "So8NSObjectC"
+- "So8NSObjectP"
+- "7JinySDK9ConstantsV10NetworkingV"
+- !private "10ObjectiveC8ObjCBoolV"
+- "So11NSOperationC"
+- "So16NSOperationQueueC"
+- !private "s9OptionSetP"
+- "So19NSProgressReportingP"
+- !private "Sk"
+- !private "Sm"
+- !private "SY"
+- !private "10Foundation20ReferenceConvertibleP"
+- "7Combine9SchedulerP"
+- !private "So21NSSearchPathDirectoryV"
+- !private "So22NSSearchPathDomainMaskV"
+- !private "ST"
+- !private "s10SetAlgebraP"
+- !private "SS"
+- !private "Sy"
+- !private "s16TextOutputStreamP"
+- !private "s20TextOutputStreamableP"
+- !private "10Foundation3URLV"
+- !private "10Foundation10URLRequestV"
+- "So12NSURLSessionC"
+- !private "So20NSURLSessionDataTaskC"
+- !private "So24NSURLSessionDownloadTaskC"
+- !private "So16NSURLSessionTaskC"
+- !private "s14_ArrayProtocolP"
+- !private "s30_CustomPlaygroundQuickLookableP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- !private "s34_ExpressibleByBuiltinStringLiteralP"
+- !private "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- !private "s34_ExpressibleByFileReferenceLiteralP"
+- !private "s19_HasContiguousBytesP"
+- !private "s35_HasCustomAnyHashableRepresentationP"
+- "10Foundation27_KeyValueCodingAndObservingP"
+- "10Foundation37_KeyValueCodingAndObservingPublishingP"
+- !private "s21_ObjectiveCBridgeableP"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/ObjectiveC.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMIDI.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreMedia.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/simd.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreImage.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/QuartzCore.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Dispatch.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Metal.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Darwin.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Foundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/AVFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreFoundation.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreAudio.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/CoreGraphics.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Swift.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/UIKit.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/SwiftOnoneSupport.swiftmodule/x86_64.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/prebuilt-modules/Combine.swiftmodule/x86_64-apple-ios-simulator.swiftmodule"
+- "/Users/aravindgs/workspace/JinySDK/JinySDK/JinySDK.h"
+- "/Users/aravindgs/workspace/JinySDK/build/JinySDK.build/Debug-iphonesimulator/JinySDK.build/unextended-module.modulemap"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/objc/ObjectiveC.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/OpenGLES.framework/Headers/OpenGLES.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreMedia.framework/Headers/CoreMedia.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CoreImage.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/QuartzCore.framework/Headers/QuartzCore.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/apinotes/Dispatch.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Metal.framework/Headers/Metal.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/usr/include/Darwin.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AVFoundation.framework/Headers/AVFoundation.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CoreGraphics.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreAudioTypes.framework/Headers/CoreAudioTypes.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UserNotifications.framework/Headers/UserNotifications.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AdSupport.framework/Headers/AdSupport.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/CoreText.framework/Headers/CoreText.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/MediaToolbox.framework/Headers/MediaToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/AudioToolbox.framework/Headers/AudioToolbox.apinotes"
+- "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator13.5.sdk/System/Library/Frameworks/Security.framework/Headers/Security.apinotes"
+interface-hash: "f6eab74021845ee18f573a30cafc21a6"
