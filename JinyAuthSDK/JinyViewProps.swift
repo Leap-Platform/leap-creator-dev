@@ -99,15 +99,13 @@ class JinyViewProps:Codable {
         } else if let button = view as? UIButton {
             text = button.currentTitle
         }
+        var childViews = view.subviews
+        childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
         if view.window == UIApplication.shared.keyWindow {
-            let childrenToCheck = getVisibleSiblings(allSiblings: view.subviews)
-            for child in childrenToCheck {
-                children.append(JinyViewProps(view: child))
-            }
+            let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
+            for child in childrenToCheck { children.append(JinyViewProps(view: child)) }
         } else {
-            for child in view.subviews  {
-                children.append(JinyViewProps(view: child))
-            }
+            for child in childViews  { children.append(JinyViewProps(view: child)) }
         }
         
     }
