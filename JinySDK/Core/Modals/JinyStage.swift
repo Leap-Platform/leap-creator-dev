@@ -102,3 +102,66 @@ extension JinyStage:Equatable {
         return lhs.stageId == rhs.stageId && lhs.stageName == rhs.stageName
     }
 }
+
+
+class JinyNewStage {
+    
+    let id:Int?
+    let name:String?
+    let isWeb:Bool
+    let type:JinyStageType
+    let frequencyPerFlow:Int
+    let weight:Int
+    let isSuccess:Bool
+    let nativeIdentifiers:Array<String>
+    let webIdentifiers:Array<String>
+    let branchInfo:JinyBranchInfo?
+    let instruction:JinyInstruction?
+    
+    init(withDict stageDict:Dictionary<String,Any>) {
+        
+        id = stageDict["id"] as? Int
+        name = stageDict["name"] as? String
+        isWeb = stageDict["is_web"] as? Bool ?? false
+        if let typeString = stageDict["type"] as? String { type = JinyStageType(rawValue: typeString) ?? .Normal }
+        else { type = .Normal }
+        frequencyPerFlow = stageDict["frequency_per_flow"] as? Int ?? -1
+        weight = stageDict["weight"] as? Int ?? 1
+        isSuccess = stageDict["is_success"] as? Bool ?? false
+        nativeIdentifiers = stageDict["native_identifiers"] as? Array<String> ?? []
+        webIdentifiers = stageDict["web_identifiers"] as? Array<String> ?? []
+        
+        if type == .Branch {
+            if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> { branchInfo = JinyBranchInfo(withBranchInfo: branchDict) }
+            else { branchInfo = nil }
+        }
+        else { branchInfo = nil }
+        if let instructionDict = stageDict["instruction"] as? Dictionary<String,Any> {
+            instruction = JinyInstruction(withDict: instructionDict)
+        } else {
+            instruction = nil
+        }
+    }
+    
+}
+
+extension JinyNewStage:Equatable {
+    
+    static func == (lhs:JinyNewStage, rhs:JinyNewStage) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
+    }
+    
+}
+
+
+class JinyNewBranchInfo {
+    
+    let branchTitle:Dictionary<String,Any>
+    let branchFlows:Array<String>
+    
+    init(withDict branchInfoDict:Dictionary<String,Any>) {
+        branchTitle = branchInfoDict["branch_title"] as? Dictionary<String,String> ?? [:]
+        branchFlows = branchInfoDict["branch_flows"] as? Array<String> ?? []
+    }
+    
+}

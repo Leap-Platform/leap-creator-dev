@@ -21,6 +21,7 @@ class JinyDiscoveryInfo {
     var optInText:Dictionary<String,String> = [:]
     var optOutText:Dictionary<String,String> = [:]
     var outsideDismiss:Bool
+    var hideKeyboard:Bool
     
     init(_ dict:Dictionary<String,Any>) {
         type = JinyDiscoveryInfoType(rawValue: dict["type"] as? String ?? "None") ?? .None
@@ -28,5 +29,6 @@ class JinyDiscoveryInfo {
         triggerText = dict["trigger_text"] as? Dictionary<String,Array<String>> ?? [:]
         optInText = dict["opt_in_text"] as? Dictionary<String,String> ?? [:]
         optOutText = dict["opt_out_text"] as? Dictionary<String,String> ?? [:]
+        hideKeyboard = dict["hide_keyboard"] as? Bool ?? false
     }
 }
