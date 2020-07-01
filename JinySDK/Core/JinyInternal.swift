@@ -16,6 +16,7 @@ class JinyInternal:NSObject {
     private var apikey:String
     var ptr:JinyPointer?
     var jinyConfig:JinyConfig?
+    var jinyConfiguration:JinyConfiguration?
     var contextManager:JinyContextManager?
     var audioManager:JinyAudioManager
     

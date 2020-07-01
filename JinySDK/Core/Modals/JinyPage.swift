@@ -67,8 +67,8 @@ class JinyPageObject {
     let weight:Int
     let previousId:Int?
     let mustHavePreviousPage:Bool?
-    let nativeIdentifiers:Array<String>?
-    let webIdentifiers:Array<String>?
+    let nativeIdentifiers:Array<String>
+    let webIdentifiers:Array<String>
     var stages:Array<JinyNewStage> = []
     
     
@@ -79,12 +79,20 @@ class JinyPageObject {
         weight = pageDict["weight"] as? Int ?? 1
         previousId = pageDict["prev_id"] as? Int
         mustHavePreviousPage = pageDict["must_have_prev_page"] as? Bool
-        nativeIdentifiers = pageDict["native_identifiers"] as? Array<String>
-        webIdentifiers = pageDict["web_identifiers"] as? Array<String>
+        nativeIdentifiers = pageDict["native_identifiers"] as? Array<String> ?? []
+        webIdentifiers = pageDict["web_identifiers"] as? Array<String> ?? []
         if let stagesDictsArray = pageDict["stages"] as? Array<Dictionary<String,Any>> {
             for stageDict in stagesDictsArray { stages.append(JinyNewStage(withDict: stageDict)) }
         }
         
+    }
+    
+}
+
+extension JinyPageObject:Equatable {
+    
+    static func == (lhs:JinyPageObject, rhs:JinyPageObject) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
     }
     
 }

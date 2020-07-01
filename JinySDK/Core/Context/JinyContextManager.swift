@@ -15,16 +15,18 @@ protocol JinyContextManagerAudioDelegate {
     func languageChanged()
 }
 
-/// JinyContextManager class acts as the central hub of the Core SDK once the config and sounds are downloaded. It invokes the JinyContextDetector class which helps in identoifying the current flow, page and stage to be executed. JinyContextManager acts as the delegate to JinyContextDetector receiving information about flow, page and stage and passing it to JinyFlowManager & JinyStageManager.  JinyContextManager also acts as delegate to JinyStageManager, there by understanding if a new stage is identified or the same stage is identified and invoking the AUI SDK . JinyContextManger is also responsible for communicating with JinyAnalyticsManager
+/// JinyContextManager class acts as the central hub of the Core SDK once the config is downloaded. It invokes the JinyContextDetector class which helps in identifying the current flow, page and stage to be executed. JinyContextManager acts as the delegate to JinyContextDetector receiving information about flow, page and stage and passing it to JinyFlowManager & JinyStageManager.  JinyContextManager also acts as delegate to JinyStageManager, there by understanding if a new stage is identified or the same stage is identified and invoking the AUI SDK . JinyContextManger is also responsible for communicating with JinyAnalyticsManager
 class JinyContextManager {
     
     private var contextDetector:JinyContextDetector?
+    private var discoveryManager:JinyDiscoveryManager?
     private var triggerManager:JinyTriggerManager?
     private var flowManager:JinyFlowManager?
     private var stageManager:JinyStageManager?
     private var uiManager:JinyUIManager?
     private var analyticsManager:JinyAnalyticsManager?
     private let config:JinyConfig
+    private var configuration:JinyConfiguration?
     
     
     var audioManagerDelegate:JinyContextManagerAudioDelegate?
@@ -35,7 +37,8 @@ class JinyContextManager {
     
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
     func initialize() {
-        contextDetector = JinyContextDetector(withDelegate: self, andConfig: config)
+        contextDetector = JinyContextDetector(withDelegate: self)
+        discoveryManager = JinyDiscoveryManager(self)
         triggerManager = JinyTriggerManager(self)
         flowManager = JinyFlowManager(self)
         stageManager = JinyStageManager(self)
@@ -54,6 +57,30 @@ class JinyContextManager {
 
 // MARK: - CONTEXT DETECTOR DELEGATE METHODS
 extension JinyContextManager:JinyContextDetectorDelegate {
+    
+    // MARK: - Identifier Methods
+    func getWebIdentifier(identifierId: String) -> JinyWebIdentifier? {
+        return configuration?.webIdentifiers[identifierId]
+    }
+    
+    func getNativeIdentifier(identifierId: String) -> JinyNativeIdentifier? {
+        return configuration?.nativeIdentifiers[identifierId]
+    }
+    
+    
+    // MARK: - Discovery Methods
+    
+    func getDiscoveriesToCheck() -> Array<JinyDiscovery> {
+        return []
+    }
+    
+    func discoveryIdentified(discovery: JinyDiscovery) {
+        
+    }
+    
+    func noDiscoveryIdentified() {
+        
+    }
     
     // MARK: - Trigger Methods
     func getTriggersToCheck() -> Array<JinyTrigger> { return triggerManager?.getTriggersToCheck() ?? []}
@@ -98,6 +125,33 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     func webStageFound(_ webStage: JinyWebStage, pointerRect rect:CGRect?) { stageManager?.setCurrentStage(webStage, view: nil, rect: rect) }
     
     func stageNotFound() { stageManager?.setCurrentStage(nil, view: nil, rect: nil) }
+    
+}
+
+// MARK: - DISCOVERY MANAGER DELEGATE METHODS
+
+extension JinyContextManager:JinyDiscoveryManagerDelegate {
+    
+    func getMutedDiscoveryIds() -> Array<Int> {
+        return JinySharedInformation.shared.getMutedTriggerIds()
+    }
+    
+    func addDiscoveryIdToMutedList(id: Int) {
+        JinySharedInformation.shared.addToMutedTrigger(id)
+    }
+    
+    func newDiscoveryIdentified(discovery: JinyDiscovery) {
+        
+    }
+    
+    func sameDiscoveryIdentified(discovery: JinyDiscovery) {
+        
+    }
+    
+    func noContextualDiscoveryIdentified() {
+        uiManager?.dismissJinyButton()
+    }
+    
     
 }
 
