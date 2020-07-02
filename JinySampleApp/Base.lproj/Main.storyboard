@@ -263,7 +263,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EAP-vz-sQx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1381" y="-668"/>
+            <point key="canvasLocation" x="1729" y="-2628"/>
         </scene>
         <!--Search Hotel View Controller-->
         <scene sceneID="zNj-0z-kBL">
@@ -335,7 +335,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I33-nx-Eom" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1945" y="-1624"/>
+            <point key="canvasLocation" x="3129" y="-1937"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Iwa-fh-uOt">
@@ -402,7 +402,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="00U-pD-Kzm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2219" y="-668"/>
+            <point key="canvasLocation" x="2597" y="-1392"/>
         </scene>
         <!--Single Webview View Controller-->
         <scene sceneID="RZw-yX-WFV">
@@ -437,7 +437,55 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lez-TG-vfO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1238" y="520"/>
+            <point key="canvasLocation" x="1151" y="-204"/>
+        </scene>
+        <!--Multiple Web Views View Controller-->
+        <scene sceneID="XQm-2U-pcL">
+            <objects>
+                <viewController id="cj8-8D-b2g" customClass="MultipleWebViewsViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ed2-GP-gpw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FkW-dj-xcz">
+                                <rect key="frame" x="0.0" y="88" width="414" height="387"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9lf-uF-02z">
+                                <rect key="frame" x="0.0" y="475" width="414" height="387"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="FkW-dj-xcz" firstAttribute="leading" secondItem="R3K-v1-msd" secondAttribute="leading" id="2RB-dQ-lTN"/>
+                            <constraint firstItem="R3K-v1-msd" firstAttribute="bottom" secondItem="9lf-uF-02z" secondAttribute="bottom" id="36P-gA-Yip"/>
+                            <constraint firstItem="R3K-v1-msd" firstAttribute="trailing" secondItem="FkW-dj-xcz" secondAttribute="trailing" id="AjJ-i7-qkE"/>
+                            <constraint firstItem="9lf-uF-02z" firstAttribute="top" secondItem="FkW-dj-xcz" secondAttribute="bottom" id="BHq-Va-dH2"/>
+                            <constraint firstItem="R3K-v1-msd" firstAttribute="centerY" secondItem="FkW-dj-xcz" secondAttribute="bottom" id="FV1-eX-ImA"/>
+                            <constraint firstItem="R3K-v1-msd" firstAttribute="trailing" secondItem="9lf-uF-02z" secondAttribute="trailing" id="Gpr-0r-Ya2"/>
+                            <constraint firstItem="FkW-dj-xcz" firstAttribute="top" secondItem="R3K-v1-msd" secondAttribute="top" id="UeA-5s-Axi"/>
+                            <constraint firstItem="9lf-uF-02z" firstAttribute="leading" secondItem="R3K-v1-msd" secondAttribute="leading" id="qef-ST-uuC"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="R3K-v1-msd"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="2zy-uv-ues"/>
+                    <connections>
+                        <outlet property="webview1" destination="FkW-dj-xcz" id="L2S-Sg-yEG"/>
+                        <outlet property="webview2" destination="9lf-uF-02z" id="zve-EV-307"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AAq-PH-oFW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1203" y="496"/>
         </scene>
         <!--Automatic View Controller-->
         <scene sceneID="EmM-iV-Pbf">
@@ -499,7 +547,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uSz-R2-ht0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1922" y="179"/>
+            <point key="canvasLocation" x="2228" y="-627"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Y9A-ru-qUi">
@@ -541,6 +589,9 @@
                                 <state key="normal" title="Multiple Web Views">
                                     <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <segue destination="cj8-8D-b2g" kind="show" id="SsU-z0-Nhd"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wj2-8n-97q">
                                 <rect key="frame" x="111.5" y="368" width="191" height="40"/>
@@ -612,7 +663,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="B0J-Ed-B1f"/>
-        <segue reference="Cik-br-1gi"/>
+        <segue reference="v9b-IL-YUg"/>
+        <segue reference="YFK-kB-g51"/>
     </inferredMetricsTieBreakers>
 </document>

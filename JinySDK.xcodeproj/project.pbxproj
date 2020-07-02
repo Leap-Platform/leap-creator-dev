@@ -125,6 +125,7 @@
 		D0BC3731249DFF60002648FF /* PTProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3727249DFF60002648FF /* PTProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0BC3732249DFF60002648FF /* PTUSBHub.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3728249DFF60002648FF /* PTUSBHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0BC3733249DFF60002648FF /* PTChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = D0BC3729249DFF60002648FF /* PTChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0BC9ED824AE243000CE5364 /* MultipleWebViewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */; };
 		D0D7293424AC9B0000F75D0D /* JinyJSMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D7293324AC9B0000F75D0D /* JinyJSMaker.swift */; };
 		D0E55D592479747E005B3EAB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
 		D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
@@ -317,6 +318,7 @@
 		D0BC3727249DFF60002648FF /* PTProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTProtocol.h; sourceTree = "<group>"; };
 		D0BC3728249DFF60002648FF /* PTUSBHub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUSBHub.h; sourceTree = "<group>"; };
 		D0BC3729249DFF60002648FF /* PTChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChannel.h; sourceTree = "<group>"; };
+		D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleWebViewsViewController.swift; sourceTree = "<group>"; };
 		D0D7293324AC9B0000F75D0D /* JinyJSMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyJSMaker.swift; sourceTree = "<group>"; };
 		D0E55D582479747E005B3EAB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewController.swift; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 				D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */,
 				D0BC371E249DFB41002648FF /* AutomaticViewController.swift */,
 				D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */,
+				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
 			);
 			path = JinySampleApp;
 			sourceTree = "<group>";
@@ -1007,6 +1010,7 @@
 				D07FEB282494A95A004FFD99 /* SearchHotelViewController.swift in Sources */,
 				D03E44E72420AABA00A43FEA /* HomeViewController.swift in Sources */,
 				D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */,
+				D0BC9ED824AE243000CE5364 /* MultipleWebViewsViewController.swift in Sources */,
 				D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */,
 				D03E44E32420AABA00A43FEA /* AppDelegate.swift in Sources */,
 				D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */,
