@@ -170,7 +170,7 @@ extension JinyContextDetector {
             // Check if webview is present in current hierarchy, if not skip to native check only
             if webviews.count == 0 {
                 // No webviews in current hierarchy, check for native
-                let discoveriesWithOnlyNativeIds = discoveriesWithWebIdentifiers.filter{ $0.webIdentifiers.count == 0 && $0.nativeIdentifiers.count > 0 }
+                let discoveriesWithOnlyNativeIds = discoveries.filter{ $0.webIdentifiers.count == 0 && $0.nativeIdentifiers.count > 0 }
                 guard discoveriesWithOnlyNativeIds.count > 0 else {
                     discoveryIdentified(nil)
                     return
