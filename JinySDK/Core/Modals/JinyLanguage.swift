@@ -37,20 +37,3 @@ class JinyLanguage {
     }
     
 }
-
-
-//{
-//  "locale_id": "mar",
-//  "locale_name": "Marathi",
-//  "locale_script": "मराठी",
-//  "onboarding_first_text": "Hello! I'm\nJiny, your Assistant",
-//  "onboarding_second_text": "To continue, tap here",
-//  "more_options_text": "More Options",
-//  "mute_text": "निशब्द",
-//  "repeat_text": "पुन्हा करा",
-//  "change_language_text": "भाषा बदला",
-//  "jiny_help_text": "Tap here for help",
-//  "jiny_download_progress_text": "कृपया प्रतीक्षा करा ..."
-//}
-
-

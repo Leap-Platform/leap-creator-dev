@@ -13,13 +13,11 @@ class JinyPageInfo:Codable {
     
     var page_id:String
     var page_name:String
-    var page_type:String
     var client_activity_name:String
     
     init(page:JinyPage) {
-        page_id = String(page.pageId)
-        page_name = String(page.pageName)
-        page_type = page.pageType.rawValue
+        page_id = String(page.id!)
+        page_name = String(page.name!)
         if let currentVC = UIApplication.getCurrentVC() { client_activity_name = String(describing: type(of: currentVC)) }
         else { client_activity_name = "" }
     }

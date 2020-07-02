@@ -1,5 +1,5 @@
 //
-//  JinyIdentifiers.swift
+//  JinyIdentifier.swift
 //  JinySDK
 //
 //  Created by Aravind GS on 28/06/20.
@@ -13,7 +13,7 @@ import UIKit
 class JinyWebIdentifier {
     
     let tagName:String
-    let attributes:Dictionary<String,String>?
+    let attributes:Dictionary<String,Dictionary<String,String>>?
     let innerHtml:Dictionary<String,String>?
     let innerText:Dictionary<String,String>?
     let value:Dictionary<String,String>?
@@ -22,7 +22,7 @@ class JinyWebIdentifier {
     
     init(withDict webDict:Dictionary<String,Any>) {
         tagName = webDict["tag_name"] as? String ?? ""
-        attributes = webDict["attributes"] as? Dictionary<String,String>
+        attributes = webDict["attributes"] as? Dictionary<String,Dictionary<String,String>>
         innerHtml = webDict["inner_html"] as? Dictionary<String,String>
         innerText = webDict["inner_text"] as? Dictionary<String,String>
         value = webDict["value"] as? Dictionary<String,String>
@@ -109,12 +109,50 @@ class JinyNativeIdentifier:JinyNativeElement {
     override init(withDict nativeDict:Dictionary<String,Any>) {
         controller = nativeDict["controller"] as? String
         nesting = nativeDict["nesting"] as? String
-        isAnchorSameAsTarget = nativeDict["is_anchor_same_as_target"] as? Bool
+        isAnchorSameAsTarget = nativeDict["is_anchor_same_as_target"] as? Bool ?? false
         relationToTarget = nativeDict["relation_to_target"] as? Array<String>
         if let targetDict = nativeDict["target"] as? Dictionary<String,Any> {
             target = JinyNativeElement(withDict: targetDict)
         }
         super.init(withDict: nativeDict)
+    }
+    
+}
+
+
+class JinyPointerIdentifier {
+    
+    let isWeb:Bool
+    let highlightClickable:Bool
+    let autoScroll:Bool
+    let focus:Bool
+    let type:JinyPointerType
+    let identifier:String?
+    let bgType:String?
+    let alignment:String?
+    let animationType:String?
+    let scrollIdentifier:String?
+    let tooltipInfo:Dictionary<String,Any>?
+    
+    init(withDict pointerDict:Dictionary<String,Any>) {
+        isWeb = pointerDict["is_web"] as? Bool ?? false
+        highlightClickable = pointerDict["highlight_clickable"] as? Bool ?? true
+        autoScroll = pointerDict["auto_scroll"] as? Bool ?? true
+        focus = pointerDict["focus"] as? Bool ?? true
+        switch pointerDict["pointer_type"] as? String {
+        case "NORMAL":
+            type = . Normal
+        case "NEGATIVE_UI":
+            type = .NegativeUI
+        default:
+            type = .None
+        }
+        identifier = pointerDict["identifier"] as? String
+        bgType = pointerDict["bg_type"] as? String
+        alignment = pointerDict["alignment"] as? String
+        animationType = pointerDict["animation_type"] as? String
+        scrollIdentifier = pointerDict["scroll_identifier"] as? String
+        tooltipInfo = pointerDict["tooltip_info"] as? Dictionary<String,Any>
     }
     
 }

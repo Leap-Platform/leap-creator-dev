@@ -13,15 +13,8 @@ import WebKit
 class JinyJSMaker {
     
     class func createJSScript(for identifier:JinyWebIdentifier) -> String {
-        var baseJs = "document.querySelectorAll('"
-        baseJs += identifier.tagName
-        identifier.attributes?.forEach({ (attr, value) in
-            baseJs += "[\(attr)=\"\(value)\"]"
-        })
-        baseJs += "')[\(identifier.index)]"
         
-        print (baseJs)
-        
+        let baseJs = getElementScript(identifier)
         var finalCheck = "(" + baseJs + " != null" + ")"
         
         if let innerHTML = identifier.innerHtml {
@@ -47,6 +40,31 @@ class JinyJSMaker {
         
         
         return "("+finalCheck+").toString()"
+    }
+    
+    class func calculateBoundsScript(_ id:JinyWebIdentifier) -> String {
+        let baseJs = getElementScript(id)
+        let rect = baseJs + ".getBoundingClientRect()"
+        let x = rect + ".x"
+        let y = rect + ".y"
+        let width = rect + ".width"
+        let height = rect + ".height"
+        let finalQuery = "([\(x),\(y),\(width),\(height)]).toString()"
+        return finalQuery
+    }
+    
+    private class func getElementScript(_ id:JinyWebIdentifier) -> String {
+        var baseJs = "document.querySelectorAll('"
+        baseJs += id.tagName
+        
+        if let attributes = id.attributes, let localeAttrs = attributes["ang"] {
+            localeAttrs.forEach { (attr, value) in
+                 baseJs += "[\(attr)=\"\(value)\"]"
+            }
+        }
+        
+        baseJs += "')[\(id.index)]"
+        return baseJs
     }
     
 }

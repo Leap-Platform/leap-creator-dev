@@ -18,15 +18,15 @@ class JinyFlowInfo:Codable {
     var branch_flow_name:String?
     
     init(flow:JinyFlow, subFlow:JinyFlow?) {
-        flow_id = String(flow.flowId)
-        flow_name = flow.flowName
+        flow_id = String(flow.id!)
+        flow_name = flow.name!
         guard let branchFlow = subFlow else {
             is_branch = false
             return
         }
         is_branch = true
-        branch_flow_id = String(branchFlow.flowId)
-        branch_flow_name = branchFlow.flowName
+        branch_flow_id = String(branchFlow.id!)
+        branch_flow_name = branchFlow.name!
     }
     
 }

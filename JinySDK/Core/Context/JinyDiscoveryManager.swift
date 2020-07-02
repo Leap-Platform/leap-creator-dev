@@ -35,6 +35,8 @@ class JinyDiscoveryManager {
         return allDiscoveries.filter{ !(getMutedDiscoveries().contains($0) || completedDiscoveriesInSession.contains($0)) }
     }
     
+    func getCompletedDiscoveries() -> Array<JinyDiscovery> { return completedDiscoveriesInSession }
+    
     func discoveriesForContextCheck() -> Array<JinyDiscovery> { return (identifiedDiscoveries + completedDiscoveriesInSession).reversed() }
     
     func discoveryFound(_ discovery:JinyDiscovery) {
@@ -57,6 +59,8 @@ class JinyDiscoveryManager {
     
     func setDiscovery(_ discovery:JinyDiscovery) { currentDiscovery = discovery }
     
+    func getCurrentDiscovery() -> JinyDiscovery? { return currentDiscovery }
+    
     func resetCurrentDiscovery() { currentDiscovery = nil }
     
     func muteCurrentDiscovery() {
@@ -64,6 +68,11 @@ class JinyDiscoveryManager {
         identifiedDiscoveries.append(discovery)
         delegate?.addDiscoveryIdToMutedList(id: discovery.id!)
         currentDiscovery = nil
+    }
+    
+    func addToIdentifiedList(_ discovery:JinyDiscovery) {
+        if identifiedDiscoveries.contains(discovery) { identifiedDiscoveries = identifiedDiscoveries.filter { $0 != discovery } }
+        identifiedDiscoveries.append(discovery)
     }
     
     func getMutedDiscoveries() -> Array<JinyDiscovery> {

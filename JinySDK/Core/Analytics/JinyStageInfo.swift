@@ -15,9 +15,9 @@ class JinyStageInfo:Codable {
     var is_success:Bool
     
     init(stage:JinyStage) {
-        stage_id = String(stage.stageId)
-        stage_name = stage.stageName
-        stage_type = stage.stageType.rawValue
+        stage_id = String(stage.id!)
+        stage_name = stage.name!
+        stage_type = stage.type.rawValue
         is_success = stage.isSuccess
     }
     

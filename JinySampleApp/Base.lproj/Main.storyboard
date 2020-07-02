@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4RR-74-41g">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
+        <deployment version="4352" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -143,7 +143,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1047.8260869565217" y="99.776785714285708"/>
+            <point key="canvasLocation" x="1055" y="-1361"/>
         </scene>
         <!--Place View Controller-->
         <scene sceneID="mOy-WD-saw">
@@ -197,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tgi-lk-vBM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2048" y="-322"/>
+            <point key="canvasLocation" x="3299" y="-1037"/>
         </scene>
         <!--Login Option View Controller-->
         <scene sceneID="bD5-Jg-VHa">
@@ -263,7 +263,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EAP-vz-sQx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2048" y="406"/>
+            <point key="canvasLocation" x="1381" y="-668"/>
         </scene>
         <!--Search Hotel View Controller-->
         <scene sceneID="zNj-0z-kBL">
@@ -335,7 +335,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I33-nx-Eom" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1048" y="888"/>
+            <point key="canvasLocation" x="1945" y="-1624"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Iwa-fh-uOt">
@@ -402,7 +402,42 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="00U-pD-Kzm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2909" y="-291"/>
+            <point key="canvasLocation" x="2219" y="-668"/>
+        </scene>
+        <!--Single Webview View Controller-->
+        <scene sceneID="RZw-yX-WFV">
+            <objects>
+                <viewController id="taj-rf-WnA" customClass="SingleWebviewViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Gv7-9M-2g1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bu8-bW-3KS">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bu8-bW-3KS" firstAttribute="top" secondItem="Kam-Cz-Brb" secondAttribute="top" id="J7f-41-4MI"/>
+                            <constraint firstItem="Kam-Cz-Brb" firstAttribute="trailing" secondItem="bu8-bW-3KS" secondAttribute="trailing" id="aov-wp-aFk"/>
+                            <constraint firstItem="Kam-Cz-Brb" firstAttribute="bottom" secondItem="bu8-bW-3KS" secondAttribute="bottom" id="n8I-3d-UiN"/>
+                            <constraint firstItem="bu8-bW-3KS" firstAttribute="leading" secondItem="Kam-Cz-Brb" secondAttribute="leading" id="ph5-7c-7Zl"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Kam-Cz-Brb"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="rMo-gx-y52"/>
+                    <connections>
+                        <outlet property="webview" destination="bu8-bW-3KS" id="twx-Cq-Rep"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Lez-TG-vfO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1238" y="520"/>
         </scene>
         <!--Automatic View Controller-->
         <scene sceneID="EmM-iV-Pbf">
@@ -464,7 +499,98 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uSz-R2-ht0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3914" y="338"/>
+            <point key="canvasLocation" x="1922" y="179"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Y9A-ru-qUi">
+            <objects>
+                <viewController id="4Ix-eZ-QZn" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EeB-8A-2V0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7C9-nf-zgW">
+                                <rect key="frame" x="111.5" y="428" width="191" height="40"/>
+                                <color key="backgroundColor" red="0.38431372549999998" green="0.37647058820000001" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="jvo-BO-B8c"/>
+                                </constraints>
+                                <state key="normal" title="Native Views">
+                                    <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="RXk-rd-DrM"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6p-an-COq">
+                                <rect key="frame" x="111.5" y="488" width="191" height="40"/>
+                                <color key="backgroundColor" red="0.38431372549999998" green="0.37647058820000001" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="cwy-6r-KV0"/>
+                                </constraints>
+                                <state key="normal" title="Hybrid Views">
+                                    <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4hp-Lw-mM1">
+                                <rect key="frame" x="111.5" y="308" width="191" height="40"/>
+                                <color key="backgroundColor" red="0.38431372549999998" green="0.37647058820000001" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="19x-me-3n2"/>
+                                </constraints>
+                                <state key="normal" title="Multiple Web Views">
+                                    <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wj2-8n-97q">
+                                <rect key="frame" x="111.5" y="368" width="191" height="40"/>
+                                <color key="backgroundColor" red="0.38431372549999998" green="0.37647058820000001" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="6s5-Jn-SMX"/>
+                                </constraints>
+                                <state key="normal" title="Web View">
+                                    <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="taj-rf-WnA" kind="show" id="IEm-d3-9qd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z07-bu-x7z">
+                                <rect key="frame" x="111.5" y="548" width="191" height="40"/>
+                                <color key="backgroundColor" red="0.38431372549999998" green="0.37647058820000001" blue="0.3921568627" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="7Vk-ll-pKS"/>
+                                </constraints>
+                                <state key="normal" title="Native View Inside Webview">
+                                    <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="4hp-Lw-mM1" firstAttribute="leading" secondItem="Wj2-8n-97q" secondAttribute="leading" id="30g-Zn-ko7"/>
+                            <constraint firstItem="z07-bu-x7z" firstAttribute="top" secondItem="x6p-an-COq" secondAttribute="bottom" constant="20" id="5Zu-sH-oOD"/>
+                            <constraint firstItem="Wj2-8n-97q" firstAttribute="centerX" secondItem="7C9-nf-zgW" secondAttribute="centerX" id="AIP-TQ-2Dy"/>
+                            <constraint firstItem="z07-bu-x7z" firstAttribute="leading" secondItem="x6p-an-COq" secondAttribute="leading" id="DaE-as-yLc"/>
+                            <constraint firstItem="x6p-an-COq" firstAttribute="leading" secondItem="7C9-nf-zgW" secondAttribute="leading" id="MtE-D9-zfn"/>
+                            <constraint firstItem="Wj2-8n-97q" firstAttribute="leading" secondItem="7C9-nf-zgW" secondAttribute="leading" id="NU2-2o-dIw"/>
+                            <constraint firstItem="4hp-Lw-mM1" firstAttribute="centerX" secondItem="Wj2-8n-97q" secondAttribute="centerX" id="Tqo-J6-7j9"/>
+                            <constraint firstItem="x6p-an-COq" firstAttribute="centerX" secondItem="7C9-nf-zgW" secondAttribute="centerX" id="UDo-Ue-u7x"/>
+                            <constraint firstItem="7C9-nf-zgW" firstAttribute="top" secondItem="Wj2-8n-97q" secondAttribute="bottom" constant="20" id="ULQ-jy-qIO"/>
+                            <constraint firstItem="Wj2-8n-97q" firstAttribute="top" secondItem="4hp-Lw-mM1" secondAttribute="bottom" constant="20" id="ZTm-gX-aMc"/>
+                            <constraint firstItem="x6p-an-COq" firstAttribute="top" secondItem="7C9-nf-zgW" secondAttribute="bottom" constant="20" id="bcd-LK-Qoa"/>
+                            <constraint firstItem="7C9-nf-zgW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Hhi-lw-Qy2" secondAttribute="leading" constant="20" id="fJF-r7-YOL"/>
+                            <constraint firstItem="7C9-nf-zgW" firstAttribute="centerY" secondItem="EeB-8A-2V0" secondAttribute="centerY" id="h7f-oy-HhP"/>
+                            <constraint firstItem="z07-bu-x7z" firstAttribute="centerX" secondItem="x6p-an-COq" secondAttribute="centerX" id="ivT-NM-ARf"/>
+                            <constraint firstItem="7C9-nf-zgW" firstAttribute="centerX" secondItem="EeB-8A-2V0" secondAttribute="centerX" id="vue-Po-T2Z"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Hhi-lw-Qy2"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="JbP-1h-cG0"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GF2-uR-aVr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="286" y="100"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="XES-Uq-14T">
@@ -477,16 +603,16 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="tCP-6n-Vlh"/>
+                        <segue destination="4Ix-eZ-QZn" kind="relationship" relationship="rootViewController" id="ezR-TB-nZd"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b28-aH-OcH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="99.776785714285708"/>
+            <point key="canvasLocation" x="-446" y="100"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="B0J-Ed-B1f"/>
-        <segue reference="Cik-br-1gi"/>
+        <segue reference="v9b-IL-YUg"/>
+        <segue reference="YFK-kB-g51"/>
     </inferredMetricsTieBreakers>
 </document>

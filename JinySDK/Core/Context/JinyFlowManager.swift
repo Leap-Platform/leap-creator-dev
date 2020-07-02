@@ -57,11 +57,8 @@ class JinyFlowManager {
     
     func removeStage(_ stage:JinyStage) {
         for flow in flowsArray {
-            for page in flow.nativePages {
-                page.nativeStages = page.nativeStages.filter { $0 != stage }
-            }
-            for page in flow.webPages {
-                page.webStages = page.webStages.filter { $0 != stage}
+            for page in flow.pages {
+                page.stages = page.stages.filter { $0 != stage }
             }
         }
     }

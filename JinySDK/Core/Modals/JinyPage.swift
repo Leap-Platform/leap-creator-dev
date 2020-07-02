@@ -12,54 +12,8 @@ enum JinyPageType:String {
     case Normal = "Normal"
 }
 
+
 class JinyPage {
-    let pageId:Int
-    let pageName:String
-    let pageType:JinyPageType
-    var shouldCheckPreviousId:Bool
-    
-    
-    init(withPageDict pageDict:Dictionary<String,Any>) {
-        pageId = pageDict["page_id"] as? Int ?? -1
-        pageName = pageDict["page_name"] as? String ?? ""
-        pageType = .Normal
-        shouldCheckPreviousId = pageDict["should_check_prev_id"] as? Bool ?? false
-    }
-}
-
-class JinyNativePage : JinyPage {
-    
-    var pageIdentifers:Array<JinyNativeIdentifer> = []
-    var nativeStages:Array<JinyNativeStage> = []
-    
-    override init(withPageDict pageDict: Dictionary<String, Any>) {
-        super.init(withPageDict: pageDict)
-        if let pageIdDictsArrays = pageDict["page_identifiers"] as? Array<Array<Dictionary<String,Any>>> {
-            for pageIdDictArray in pageIdDictsArrays {
-                for pageIdDict in pageIdDictArray {
-                    pageIdentifers.append(JinyNativeIdentifer(withDict: pageIdDict))
-                }
-            }
-        }
-        if let nativeStagesDictArray = pageDict["jiny_native_stages"] as? Array<Dictionary<String,Any>> {
-            for nativeStageDict in nativeStagesDictArray {
-                nativeStages.append(JinyNativeStage(withStageDict: nativeStageDict))
-            }
-        }
-    }
-}
-
-class JinyWebPage : JinyPage {
-    var pageIdentifers:Array<String>?
-    var webStages:Array<JinyWebStage> = []
-    override init(withPageDict pageDict: Dictionary<String, Any>) {
-        pageIdentifers = pageDict["page_identifiers"] as? Array<String>
-        super.init(withPageDict: pageDict)
-    }
-}
-
-
-class JinyPageObject {
     
     let id:Int?
     let name:String?
@@ -69,7 +23,7 @@ class JinyPageObject {
     let mustHavePreviousPage:Bool?
     let nativeIdentifiers:Array<String>
     let webIdentifiers:Array<String>
-    var stages:Array<JinyNewStage> = []
+    var stages:Array<JinyStage> = []
     
     
     init(withDict pageDict:Dictionary<String,Any>) {
@@ -82,16 +36,16 @@ class JinyPageObject {
         nativeIdentifiers = pageDict["native_identifiers"] as? Array<String> ?? []
         webIdentifiers = pageDict["web_identifiers"] as? Array<String> ?? []
         if let stagesDictsArray = pageDict["stages"] as? Array<Dictionary<String,Any>> {
-            for stageDict in stagesDictsArray { stages.append(JinyNewStage(withDict: stageDict)) }
+            for stageDict in stagesDictsArray { stages.append(JinyStage(withDict: stageDict)) }
         }
         
     }
     
 }
 
-extension JinyPageObject:Equatable {
+extension JinyPage:Equatable {
     
-    static func == (lhs:JinyPageObject, rhs:JinyPageObject) -> Bool {
+    static func == (lhs:JinyPage, rhs:JinyPage) -> Bool {
         return lhs.id == rhs.id && lhs.name == rhs.name
     }
     

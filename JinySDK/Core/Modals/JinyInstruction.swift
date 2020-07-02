@@ -11,11 +11,13 @@ import Foundation
 class JinyInstruction {
     
     var soundName:String?
-    var pointer:Dictionary<String,Any>?
+    var pointer:JinyPointerIdentifier?
     
     init(withDict instructionDict:Dictionary<String,Any>) {
         soundName = instructionDict["sound_name"] as? String
-        pointer = instructionDict["pointer"] as? Dictionary<String,Any>
+        if let pointerDict = instructionDict["pointer"] as? Dictionary<String,Any> {
+            pointer = JinyPointerIdentifier(withDict: pointerDict)
+        }
     }
     
 }
