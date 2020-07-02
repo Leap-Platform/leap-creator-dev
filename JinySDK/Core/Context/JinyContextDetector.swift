@@ -128,8 +128,8 @@ extension JinyContextDetector {
     private func getChildren(_ currentView:UIView) -> [UIView] {
         var subviewArray:[UIView] = []
         subviewArray.append(currentView)
-        let childrenToCheck = (currentView.window == UIApplication.shared.keyWindow) ? getVisibleChildren(currentView.subviews) : currentView.subviews
-        
+        var childrenToCheck = (currentView.window == UIApplication.shared.keyWindow) ? getVisibleChildren(currentView.subviews) : currentView.subviews
+        childrenToCheck = childrenToCheck.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains("Jiny") }
         for subview in childrenToCheck {
             subviewArray.append(contentsOf: getChildren(subview))
         }
