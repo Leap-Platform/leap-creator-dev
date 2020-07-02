@@ -271,86 +271,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
     func isSuccessStagePerformed() {
         flowManager?.popLastFlow()
     }
-    
-    //    func newWebStageIdentified(_ stage: JinyWebStage, _ rect: CGRect?) {
-    //        flowManager?.updateFlowArrayAndResetCounter()
-    //        uiManager?.presentJinyButton()
-    //        guard let audio = getCurrentAudio() else { return }
-    //        guard checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
-    //            stageManager?.resetCurrentStage()
-    //            return
-    //        }
-    //        if stage.stageType == .Branch {
-    //            guard let branchInfo = stage.branchInfo else { return }
-    //            uiManager?.presentFlowSelector(branchInfo.branchFlows, branchInfo.branchTitle)
-    //        } else {
-    //
-    //            guard let pointerType = stage.pointerIdentifer?.pointerType else {
-    //                uiManager?.playSound()
-    //                return
-    //            }
-    //            let stageType = stage.stageType
-    //            guard let viewRect = rect else { return }
-    //            guard let audio = getCurrentAudio() else { return }
-    //            guard checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
-    //                stageManager?.resetCurrentStage()
-    //                return
-    //            }
-    //            uiManager?.presentPointer(ofPointerType: pointerType, forStageType: stageType, toRect: viewRect)
-    //        }
-    //    }
-    //
-    //    func newNativeStageIdentified(_ stage: JinyNativeStage, _ view: UIView?) {
-    //        flowManager?.updateFlowArrayAndResetCounter()
-    //        uiManager?.presentJinyButton()
-    //        uiManager?.removeAllViews()
-    //        guard let audio = getCurrentAudio() else { return }
-    //        guard checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
-    //            stageManager?.resetCurrentStage()
-    //            return
-    //        }
-    //        if stage.stageType == .Branch {
-    //            guard let branchInfo = stage.branchInfo else { return }
-    //            uiManager?.presentFlowSelector(branchInfo.branchFlows, branchInfo.branchTitle)
-    //        } else {
-    //            guard let pointerType = stage.pointerIdentfier?.pointerType else {
-    //                uiManager?.playSound()
-    //                return
-    //            }
-    //            let stageType = stage.stageType
-    //            guard let ptrView = view else {
-    //                uiManager?.playSound()
-    //                return
-    //            }
-    //            guard let audio = getCurrentAudio() else { return }
-    //            guard checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
-    //                stageManager?.resetCurrentStage()
-    //                return
-    //            }
-    //            sendContextInfoEvent()
-    //            uiManager?.presentPointer(ofPointerType: pointerType, forStageType: stageType, toView: ptrView)
-    //        }
-    //    }
-    //
-    //    func sameWebStageIdentified(_ stage: JinyWebStage, _ rect: CGRect?) {
-    //        if stage.stageType == .Branch { return }
-    //        guard let viewRect = rect else { return }
-    //        uiManager?.updateRect(viewRect)
-    //    }
-    //
-    //    func sameNativeStageIdentified(_ stage: JinyNativeStage, _ view: UIView?) {}
-    //
-    //    func noStageIdentified() {
-    //        uiManager?.removeAllViews()
-    //
-    //    }
-    //
-    //    func removeStage(_ stage: JinyStage) {
-    ////        flowManager?.removeStage(stage)
-    //    }
-    
-    
-    
+
 }
 
 
@@ -508,7 +429,7 @@ extension JinyContextManager:JinyUIManagerDelegate {
     
     // MARK: - Flow Selector Methods
     func subFlowSelected(_ flow:JinyFlow) {
-        //        flowManager?.addNewFlow(flow.copy(), true)
+        flowManager?.addNewFlow(flow.copy(), true)
     }
     
     
@@ -543,12 +464,16 @@ extension JinyContextManager {
     
     // MARK: Trigger Methods
     func checkForContextualDiscovery() {
-        var tempDiscovery:JinyDiscovery?
-        guard let identifiedDiscoveries = discoveryManager?.discoveriesForContextCheck() else { return }
-        guard let hierarchy = contextDetector?.fetchViewHierarchy() else { return }
+        guard let identifiedDiscoveries = discoveryManager?.discoveriesForContextCheck(),  identifiedDiscoveries.count > 0 else {
+            discoveryManager?.discoveryNotFound()
+            return
+        }
+        guard let hierarchy = contextDetector?.fetchViewHierarchy() else {
+            discoveryManager?.discoveryNotFound()
+            return
+        }
         contextDetector?.identifyDiscoveryToLaunch(discoveries: identifiedDiscoveries, hierarchy: hierarchy, discoveryIdentified: { (discovery) in
             if discovery != nil {
-                tempDiscovery = discovery
                 self.discoveryManager?.discoveryFound(discovery!)
                 return
             }
@@ -574,33 +499,6 @@ extension JinyContextManager {
                 self.contextDetector?.findPageFromPages(pages, hierarchy: hierarchy, pageCheckComplete: checkComplete!)
             }
         })
-        
-        
-        
-        //        var tempTrigger:JinyTrigger?
-        //        guard let identifiedTriggers = triggerManager?.getTriggersToCheckForContextualTriggering() else { return }
-        //        guard let viewHierarchy = contextDetector?.fetchViewHierarchy() else { return }
-        //        for trigger in identifiedTriggers.reversed() {
-        //            let flowIndexes = trigger.flowIndexes
-        //            let flowsIdentified = configuration.flows.filter{ flowIndexes.contains($0.id) }
-        //            if flowsIdentified.count == 0 { continue }
-        //            for flow in flowsIdentified {
-        ////                if let _ = contextDetector?.findCurrentNativePage(flow.nativePages, viewHierarchy) {
-        ////                    tempTrigger = trigger
-        ////                    break
-        ////                }
-        ////                if let _ = contextDetector?.findCurrentWebPage(flow.webPages, viewHierarchy) {
-        ////                    tempTrigger = trigger
-        ////                    break
-        ////                }
-        //            }
-        //            if tempTrigger != nil { break }
-        //        }
-        //        guard let triggerIdentified = tempTrigger else {
-        //            triggerManager?.noTriggerFound()
-        //            return
-        //        }
-        //        triggerManager?.triggerFound(triggerIdentified)
     }
     
     func getPagesForDiscovery(_ discovery:JinyDiscovery) -> Array<JinyPage> {
