@@ -155,7 +155,7 @@ extension JinyContextDetector {
 // MARK: - DISCOVERY DETECTION
 extension JinyContextDetector {
     
-    private func identifyDiscoveryToLaunch(discoveries:Array<JinyDiscovery>, hierarchy:[UIView], discoveryIdentified:@escaping(_ discoveryIdentified:JinyDiscovery?)->Void) {
+     func identifyDiscoveryToLaunch(discoveries:Array<JinyDiscovery>, hierarchy:[UIView], discoveryIdentified:@escaping(_ discoveryIdentified:JinyDiscovery?)->Void) {
         
         // Get all webviews in hierarchy
         let webviews = hierarchy.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }

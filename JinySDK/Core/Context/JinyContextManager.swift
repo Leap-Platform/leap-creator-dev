@@ -47,7 +47,6 @@ class JinyContextManager {
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery
     func start() {
         discoveryManager?.setAllDiscoveries(configuration.discoveries)
-        //        triggerManager?.setAllTriggers(config.triggers)
         contextDetector?.start()
     }
     
@@ -76,7 +75,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     }
     
     func noDiscoveryIdentified() {
-        
+        checkForContextualDiscovery()
     }
     
     // MARK: - Page Methods
@@ -170,11 +169,11 @@ extension JinyContextManager:JinyContextDetectorDelegate {
 extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func getMutedDiscoveryIds() -> Array<Int> {
-        return JinySharedInformation.shared.getMutedTriggerIds()
+        return JinySharedInformation.shared.getMutedDiscoveryIds()
     }
     
     func addDiscoveryIdToMutedList(id: Int) {
-        JinySharedInformation.shared.addToMutedTrigger(id)
+        JinySharedInformation.shared.addToMutedDiscovery(id)
     }
     
     func newDiscoveryIdentified(discovery: JinyDiscovery) {
@@ -183,14 +182,12 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
             let dm = discoveryManager, !dm.getMutedDiscoveries().contains(discovery)
             else {
                 discoveryManager?.addToIdentifiedList(discovery)
-                discoveryManager?.resetCurrentDiscovery()
                 uiManager?.presentJinyButton()
                 return
         }
         
         guard let audio = getCurrentAudio(), checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
             discoveryManager?.addToIdentifiedList(discovery)
-            discoveryManager?.resetCurrentDiscovery()
             uiManager?.presentJinyButton()
             return
         }
@@ -482,6 +479,7 @@ extension JinyContextManager:JinyUIManagerDelegate {
     
     func discoveryMuted() {
         discoveryManager?.muteCurrentDiscovery()
+        discoveryManager?.resetCurrentDiscovery()
         contextDetector?.start()
     }
     
@@ -544,7 +542,41 @@ extension JinyContextManager:JinyAnalyticsManagerDelegate {
 extension JinyContextManager {
     
     // MARK: Trigger Methods
-    func checkForContextualTrigger() {
+    func checkForContextualDiscovery() {
+        var tempDiscovery:JinyDiscovery?
+        guard let identifiedDiscoveries = discoveryManager?.discoveriesForContextCheck() else { return }
+        guard let hierarchy = contextDetector?.fetchViewHierarchy() else { return }
+        contextDetector?.identifyDiscoveryToLaunch(discoveries: identifiedDiscoveries, hierarchy: hierarchy, discoveryIdentified: { (discovery) in
+            if discovery != nil {
+                tempDiscovery = discovery
+                self.discoveryManager?.discoveryFound(discovery!)
+                return
+            }
+            else {
+                var counter = 0
+                var checkComplete:((_: JinyPage?)->Void)?
+                checkComplete = { page in
+                    if page != nil {
+                        self.discoveryManager?.discoveryFound(identifiedDiscoveries[counter])
+                    }
+                    else {
+                        counter += 1
+                        if counter >= identifiedDiscoveries.count {
+                            self.discoveryManager?.discoveryNotFound()
+                        }
+                        else {
+                            let pages = self.getPagesForDiscovery(identifiedDiscoveries[counter])
+                            self.contextDetector?.findPageFromPages(pages, hierarchy: hierarchy, pageCheckComplete: checkComplete!)
+                        }
+                    }
+                }
+                let pages = self.getPagesForDiscovery(identifiedDiscoveries[counter])
+                self.contextDetector?.findPageFromPages(pages, hierarchy: hierarchy, pageCheckComplete: checkComplete!)
+            }
+        })
+        
+        
+        
         //        var tempTrigger:JinyTrigger?
         //        guard let identifiedTriggers = triggerManager?.getTriggersToCheckForContextualTriggering() else { return }
         //        guard let viewHierarchy = contextDetector?.fetchViewHierarchy() else { return }
@@ -571,6 +603,17 @@ extension JinyContextManager {
         //        triggerManager?.triggerFound(triggerIdentified)
     }
     
+    func getPagesForDiscovery(_ discovery:JinyDiscovery) -> Array<JinyPage> {
+        let flowIds = discovery.flowIds
+        let flows = flowIds.map { (id) -> JinyFlow? in
+            return self.configuration.flows.first { (tempFlow) -> Bool in
+                id == tempFlow.id!
+            }
+        }.filter { $0 != nil} as! Array<JinyFlow>
+        var pages:Array<JinyPage> = []
+        for flow in flows { pages.append(contentsOf: flow.pages) }
+        return pages
+    }
     
     // MARK: Stage Methods
     func proceedIfStageIsBranch(_ stage:JinyStage) {

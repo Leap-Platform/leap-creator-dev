@@ -37,7 +37,7 @@ class JinyDiscoveryManager {
     
     func getCompletedDiscoveries() -> Array<JinyDiscovery> { return completedDiscoveriesInSession }
     
-    func discoveriesForContextCheck() -> Array<JinyDiscovery> { return (identifiedDiscoveries + completedDiscoveriesInSession).reversed() }
+    func discoveriesForContextCheck() -> Array<JinyDiscovery> { return (getMutedDiscoveries() + completedDiscoveriesInSession + identifiedDiscoveries ).reversed() }
     
     func discoveryFound(_ discovery:JinyDiscovery) {
         let previousDiscovery = currentDiscovery

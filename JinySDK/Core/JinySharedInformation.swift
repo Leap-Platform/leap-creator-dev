@@ -92,28 +92,28 @@ extension JinySharedInformation {
 
 extension JinySharedInformation {
      
-    func addToMutedTrigger(_ triggerId:Int) {
-        var mutedTriggersList = prefs.array(forKey: "muted_triggers") as? Array<Int> ?? []
-        guard !mutedTriggersList.contains(triggerId) else { return }
-        mutedTriggersList.append(triggerId)
-        prefs.set(mutedTriggersList, forKey: "muted_triggers")
+    func addToMutedDiscovery(_ discoveryId:Int) {
+        var mutedDiscoveryList = prefs.array(forKey: "muted_discoveries") as? Array<Int> ?? []
+        guard !mutedDiscoveryList.contains(discoveryId) else { return }
+        mutedDiscoveryList.append(discoveryId)
+        prefs.set(mutedDiscoveryList, forKey: "muted_discoveries")
         prefs.synchronize()
             
     }
     
-    func removeFromMutedTrigger(_ triggerId:Int) {
-        guard var mutedTriggersList = prefs.array(forKey: "muted_triggers") as? Array<Int>, mutedTriggersList.contains(triggerId) else { return }
-        mutedTriggersList = mutedTriggersList.filter{ $0 != triggerId }
-        prefs.set(mutedTriggersList, forKey: "muted_triggers")
+    func removeFromMuteDiscovery(_ discoveryId:Int) {
+        guard var mutedDiscoveryList = prefs.array(forKey: "muted_discoveries") as? Array<Int>, mutedDiscoveryList.contains(discoveryId) else { return }
+        mutedDiscoveryList = mutedDiscoveryList.filter{ $0 != discoveryId }
+        prefs.set(mutedDiscoveryList, forKey: "muted_discoveries")
         prefs.synchronize()
     }
     
-    func getMutedTriggerIds() ->Array <Int> {
-        return prefs.array(forKey: "muted_triggers") as? Array<Int> ?? []
+    func getMutedDiscoveryIds() ->Array <Int> {
+        return prefs.array(forKey: "muted_discoveries") as? Array<Int> ?? []
     }
     
-    private func unmuteAllTrigers() {
-        prefs.set([], forKey: "muted_triggers")
+    private func unmuteAllDiscoveries() {
+        prefs.set([], forKey: "muted_discoveries")
         prefs.synchronize()
     }
     
@@ -134,7 +134,7 @@ extension JinySharedInformation {
     func unmuteJiny() {
         mute = false
         setPrefMute()
-        unmuteAllTrigers()
+        unmuteAllDiscoveries()
     }
     
     private func checkForMuteInPref() -> Bool {
