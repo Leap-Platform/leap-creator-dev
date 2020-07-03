@@ -146,12 +146,16 @@ extension JinyAuthInternal:PTChannelDelegate {
         print(command)
         if command["command"] == "startMirroring" {
             startStreaming()
-        } else if command["command"] == "capture" {
-            
+        } else if command["command"] == "SCREENSHOT" {
+            var hierString:String?
             let hier = captureHierarchy()
+            if let hierData = try? JSONSerialization.data(withJSONObject: hier, options: .prettyPrinted) {
+                hierString = String.init(data: hierData, encoding: .utf8)
+            }
             let image = captureScreenshot()
-            let imageData = image?.jpegData(compressionQuality: 0.6)
-            let dict:Dictionary<String,Any> = ["image":imageData as Any, "hierarchy":hier]
+            let imageData = image?.jpegData(compressionQuality: 0.6)?.base64EncodedString(options: .lineLength64Characters)
+            let payload:Dictionary<String,String> = ["image":imageData!, "hierarchy":hierString!]
+            let dict = ["payload":payload, "session_id": (command["session_id"]!), "payload_type":(command["command"]!)] as [String : Any]
             let screenData = NSKeyedArchiver.archivedData(withRootObject: dict) as NSData
             self.sendData(data: screenData.createReferencingDispatchData(), type: 102)
             
