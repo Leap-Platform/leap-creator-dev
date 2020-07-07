@@ -108,7 +108,11 @@ class JinyPointer: CAShapeLayer {
         presentPointer()
     }
     
-    func presentPointer(toRect:CGRect) {
+    func presentPointer(toRect:CGRect, inView:UIView?) {
+        
+    }
+    
+    func updateRect(newRect:CGRect, inView:UIView?) {
         
     }
     
@@ -179,8 +183,24 @@ class JinyFingerRipplePointer:JinyPointer {
         self.pointerDelegate?.pointerPresented()
     }
     
-    override func presentPointer(toRect: CGRect) {
-        
+    override func presentPointer(toRect: CGRect, inView:UIView?) {
+        self.inView = inView
+        let toViewFrame = toRect
+        let y = toViewFrame.midY - 15
+        let x = toViewFrame.midX - 21
+        self.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        inView?.layer.addSublayer(self)
+        self.zPosition = 10
+        startAnimation()
+        self.pointerDelegate?.pointerPresented()
+    }
+    
+    override func updateRect(newRect: CGRect, inView: UIView?) {
+        self.inView = inView
+        let toViewFrame = newRect
+        let y = toViewFrame.midY - 15
+        let x = toViewFrame.midX - 21
+        self.frame = CGRect(x: x, y: y, width: 42, height: 54)
     }
     
     override func presentPointer(view: UIView) {
@@ -265,6 +285,7 @@ class JinyFingerRipplePointer:JinyPointer {
     
     
     override func removePointer() {
+        
         toView?.layer.removeObserver(self, forKeyPath: "position")
         super.removePointer()
     }
@@ -310,7 +331,7 @@ class JinyHighlightPointer:JinyPointer {
         presentPointer()
     }
     
-    override func presentPointer(toRect: CGRect) {
+    override func presentPointer(toRect: CGRect, inView:UIView?) {
         
     }
     
@@ -397,7 +418,7 @@ class JinyHighlightManualSequencePointer:JinyHighlightPointer {
         presentPointer()
     }
     
-    override func presentPointer(toRect: CGRect) {
+    override func presentPointer(toRect: CGRect, inView:UIView?) {
         
     }
     

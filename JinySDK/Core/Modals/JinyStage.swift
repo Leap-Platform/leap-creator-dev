@@ -29,76 +29,65 @@ enum JinySearchType {
     case Tag
 }
 
+
 class JinyStage {
     
-    let stageId:Int
-    let stageName:String
-    let stageType:JinyStageType
-    let soundName:String?
+    let id:Int?
+    let name:String?
+    let isWeb:Bool
+    let type:JinyStageType
+    let frequencyPerFlow:Int
+    let weight:Int
     let isSuccess:Bool
-    var frequencyPerFlow:Int
-    var branchInfo:JinyBranchInfo?
+    let nativeIdentifiers:Array<String>
+    let webIdentifiers:Array<String>
+    let branchInfo:JinyBranchInfo?
+    let instruction:JinyInstruction?
     
-    init(withStageDict stageDict:Dictionary<String,Any>) {
-        stageId = stageDict["stage_id"] as? Int ?? -1
-        stageName = stageDict["stage_name"] as? String ?? ""
-        switch stageDict["stage_type"] as? String {
-        case "NORMAL":
-            stageType = .Normal
-        case "MANUAL_SEQUENCE":
-            stageType = .ManualSequence
-        case "BRANCH":
-            stageType = .Branch
-        case "LINK":
-            stageType = .Link
-        case "SEQUENCE":
-            stageType = .Sequence
-        default:
-            stageType = .Normal
-        }
-        soundName = stageDict["sound_name"] as? String
-        isSuccess = stageDict["is_success"] as? Bool ?? false
+    init(withDict stageDict:Dictionary<String,Any>) {
+        
+        id = stageDict["id"] as? Int
+        name = stageDict["name"] as? String
+        isWeb = stageDict["is_web"] as? Bool ?? false
+        if let typeString = stageDict["type"] as? String { type = JinyStageType(rawValue: typeString) ?? .Normal }
+        else { type = .Normal }
         frequencyPerFlow = stageDict["frequency_per_flow"] as? Int ?? -1
-        if let branchInfoDict = stageDict["branch_info"] as? Dictionary<String,Any> {
-            branchInfo = JinyBranchInfo(withBranchInfo: branchInfoDict)
+        weight = stageDict["weight"] as? Int ?? 1
+        isSuccess = stageDict["is_success"] as? Bool ?? false
+        nativeIdentifiers = stageDict["native_identifiers"] as? Array<String> ?? []
+        webIdentifiers = stageDict["web_identifiers"] as? Array<String> ?? []
+        
+        if type == .Branch {
+            if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> { branchInfo = JinyBranchInfo(withDict: branchDict) }
+            else { branchInfo = nil }
+        }
+        else { branchInfo = nil }
+        if let instructionDict = stageDict["instruction"] as? Dictionary<String,Any> {
+            instruction = JinyInstruction(withDict: instructionDict)
+        } else {
+            instruction = nil
         }
     }
     
 }
-
-class JinyNativeStage : JinyStage {
-    
-    var stageIdentifiers:Array<JinyNativeIdentifer> = []
-    var pointerIdentfier:JinyNativeIdentifer?
-    
-    override init(withStageDict stageDict: Dictionary<String, Any>) {
-        if let pointerDict = stageDict["pointer_identifier"] as? Dictionary<String,Any> {
-            pointerIdentfier = JinyNativeIdentifer(withDict: pointerDict)
-        }
-        if let stageIdDictsArray = stageDict["stage_identifiers"] as? Array<Dictionary<String,Any>> {
-            for stageIdDict in stageIdDictsArray {
-                stageIdentifiers.append(JinyNativeIdentifer(withDict: stageIdDict))
-            }
-        }
-        super.init(withStageDict: stageDict)
-    }
-}
-
-class JinyWebStage : JinyStage {
-    
-    var pointerIdentifer:JinyIdentifier?
-    
-    override init(withStageDict stageDict: Dictionary<String, Any>) {
-        if let pointerDict = stageDict["pointer_idetifier"] as? Dictionary<String,Any> {
-            pointerIdentifer = JinyIdentifier(withDict: pointerDict)
-        }
-        super.init(withStageDict: stageDict)
-    }
-}
-
 
 extension JinyStage:Equatable {
+    
     static func == (lhs:JinyStage, rhs:JinyStage) -> Bool {
-        return lhs.stageId == rhs.stageId && lhs.stageName == rhs.stageName
+        return lhs.id == rhs.id && lhs.name == rhs.name
     }
+    
+}
+
+
+class JinyBranchInfo {
+    
+    let branchTitle:Dictionary<String,Any>
+    let branchFlows:Array<Int>
+    
+    init(withDict branchInfoDict:Dictionary<String,Any>) {
+        branchTitle = branchInfoDict["branch_title"] as? Dictionary<String,String> ?? [:]
+        branchFlows = branchInfoDict["branch_flows"] as? Array<Int> ?? []
+    }
+    
 }

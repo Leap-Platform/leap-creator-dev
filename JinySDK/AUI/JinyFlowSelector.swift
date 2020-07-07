@@ -190,7 +190,7 @@ extension JinyFlowSelector:UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.FlowSelector.placeCellIdentifier, for: indexPath)
-        cell.textLabel?.text = (flowListArray[indexPath.row].flowOptions[Constants.FlowSelector.languageCode] as? Dictionary<String, Any>)?[Constants.FlowSelector.displayText] as? String
+        cell.textLabel?.text = flowListArray[indexPath.row].flowText["hin"]
         cell.textLabel?.textColor = UIColor(red: 0.22, green: 0.22, blue: 0.22, alpha: 1.00)
         cell.separatorInset = UIEdgeInsets(top: 0, left: 54, bottom: 0, right: 54)
         return cell

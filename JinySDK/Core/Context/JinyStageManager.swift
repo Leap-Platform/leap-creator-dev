@@ -10,12 +10,14 @@ import Foundation
 import UIKit
 
 protocol JinyStageManagerDelegate {
-    func newWebStageIdentified(_ stage:JinyWebStage,_ rect:CGRect?)
-    func newNativeStageIdentified(_ stage:JinyNativeStage, _ view:UIView?)
-    func sameWebStageIdentified(_ stage:JinyWebStage, _ rect:CGRect?)
-    func sameNativeStageIdentified(_ stage:JinyNativeStage, _ view:UIView?)
+//    func newWebStageIdentified(_ stage:JinyWebStage,_ rect:CGRect?)
+//    func newNativeStageIdentified(_ stage:JinyNativeStage, _ view:UIView?)
+//    func sameWebStageIdentified(_ stage:JinyWebStage, _ rect:CGRect?)
+//    func sameNativeStageIdentified(_ stage:JinyNativeStage, _ view:UIView?)
+    func newStageFound(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
+    func sameStageFound(_ stage:JinyStage, newRect:CGRect?, webviewForRect:UIView?)
     func removeStage(_ stage:JinyStage)
-    func noStageIdentified()
+    func noStageFound()
     func isSuccessStagePerformed()
 }
 
@@ -38,7 +40,7 @@ class JinyStageManager {
     
     func getArrayOfStagesToCheck() -> Array<JinyStage> { return stagesToCheck }
     
-    func setCurrentStage(_ stage:JinyStage?, view:UIView?, rect:CGRect?) {
+    func setCurrentStage(_ stage:JinyStage?, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
         
         let previousStage = currentStage
         currentStage = stage
@@ -55,19 +57,14 @@ class JinyStageManager {
         
         // If previous stage is not present and a new stage was identified, inform delegate
         if previousStage == nil {
-            if let webstage = currentStage as? JinyWebStage  {
-                delegate.newWebStageIdentified(webstage,rect)
-            }
-            else if let nativeStage = currentStage as? JinyNativeStage {
-                delegate.newNativeStageIdentified(nativeStage,view)
-            }
+            delegate.newStageFound(stage!, view: view, rect: rect, webviewForRect: webviewForRect)
             return
         }
         
         // If current stage and previous stage are present, check if it is the same
         // If same inform delegate same stage identifed
         if currentStage == previousStage {
-            sameStage(currentStage!, view, rect)
+            sameStage(currentStage!, view, rect, webviewForRect)
             return
         }
         
@@ -81,33 +78,23 @@ class JinyStageManager {
         }
         
         // If previous stage is not isSuccess, identify current stage as new stage
-        
-        if let webstage = currentStage as? JinyWebStage  {
-            delegate.newWebStageIdentified(webstage,rect)
-        }
-        else if let nativeStage = currentStage as? JinyNativeStage {
-            delegate.newNativeStageIdentified(nativeStage,view)
-        }
+        delegate.newStageFound(stage!, view: view, rect: rect, webviewForRect: webviewForRect)
+       
     }
     
     // Called in case to reidentify same stage as new stage next time
     func resetCurrentStage() { currentStage = nil }
     
-    func sameStage (_ newStage:JinyStage, _ view:UIView?, _ rect:CGRect?) {
-        if let webstage = newStage as? JinyWebStage  {
-            delegate.sameWebStageIdentified(webstage,rect)
-        }
-        else if let nativeStage = newStage as? JinyNativeStage {
-           delegate.sameNativeStageIdentified(nativeStage,view)
-        }
+    func sameStage (_ newStage:JinyStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?) {
+        delegate.sameStageFound(newStage, newRect: rect, webviewForRect: webviewForRect)
     }
     
     func getCurrentStage() -> JinyStage? { return currentStage }
     
     func stagePerformed(_ stage:JinyStage) {
-        if stageTracker[stage.stageName] == nil { stageTracker[stage.stageName] = 0 }
-        stageTracker[stage.stageName]!  += 1
-        if stageTracker[stage.stageName] == stage.frequencyPerFlow { delegate.removeStage(stage) }
+        if stageTracker[stage.name!] == nil { stageTracker[stage.name!] = 0 }
+        stageTracker[stage.name!]!  += 1
+        if stageTracker[stage.name!] == stage.frequencyPerFlow { delegate.removeStage(stage) }
     }
 
     

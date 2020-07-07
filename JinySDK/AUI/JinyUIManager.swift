@@ -67,16 +67,17 @@ class JinyUIManager:NSObject {
         pointer.presentPointer(view: toView)
     }
     
-    func presentPointer(ofPointerType:JinyPointerType, forStageType:JinyStageType, toRect:CGRect) {
+    func presentPointer(ofPointerType:JinyPointerType, forStageType:JinyStageType, toRect:CGRect, inView:UIView?) {
         removeAllViews()
         ptr = getPointerType(stageType: forStageType, pointerType: ofPointerType)
         guard let pointer = ptr else { return }
         pointer.pointerDelegate = self
-        pointer.presentPointer(toRect: toRect)
+        pointer.presentPointer(toRect: toRect, inView: inView)
     }
     
-    func updateRect(_ updatedRect:CGRect) {
-        
+    func updateRect(_ updatedRect:CGRect, inView:UIView?) {
+        guard let pointer = ptr else { return }
+        pointer.updateRect(newRect: updatedRect, inView: inView)
     }
     
     func presentFlowSelector(_ flows:Array<JinyFlow>, _ title:Dictionary<String,Any>) {
@@ -90,7 +91,7 @@ class JinyUIManager:NSObject {
         var pointer:JinyPointer?
         switch stageType {
         case .Normal:
-            if pointerType == .Normal { pointer = JinyFingerRipplePointer()}
+            if pointerType == .Normal || pointerType == .None { pointer = JinyFingerRipplePointer()}
             else if pointerType == .NegativeUI { pointer = JinyHighlightManualSequencePointer() }
         case .Sequence:
             pointer = JinyHighlightPointer()
@@ -102,11 +103,11 @@ class JinyUIManager:NSObject {
         return pointer
     }
     
-    func presentDiscovery(trigger:JinyTrigger, _ langCode:String) {
+    func presentBottomDiscovery(discovery:JinyDiscovery, _ langCode:String) {
         dismissJinyButton()
         removeAllViews()
-        if trigger.mode == .Single {
-            guard let discoveryInfo = trigger.discoveryInfo else { return }
+        if discovery.triggerMode == .Single {
+            guard let discoveryInfo = discovery.discoveryInfo else { return }
             if discoveryInfo.type == .Bottom{
                 let header = (discoveryInfo.triggerText[langCode])?[0] ?? ""
                 var langArray = delegate.getLanguages()
@@ -273,7 +274,7 @@ extension JinyUIManager:JinyBottomDiscoveryDelegate {
     func discoveryPresentedWithOptInButton(_ button:UIButton) {
         delegate.discoveryPresented()
         presentPointer(ofPointerType: .Normal, forStageType: .Normal, toView: button)
-        playSound()
+//        playSound()
     }
     
     func discoverySheetDismissed() {

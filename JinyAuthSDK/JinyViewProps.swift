@@ -98,6 +98,8 @@ class JinyViewProps:Codable {
             
         } else if let button = view as? UIButton {
             text = button.currentTitle
+        } else if let label = view as? UILabel {
+            text = label.text
         }
         var childViews = view.subviews
         childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }

@@ -15,7 +15,7 @@ class JinyInternal:NSObject {
     var announcement: AVAudioPlayer? = nil
     private var apikey:String
     var ptr:JinyPointer?
-    var jinyConfig:JinyConfig?
+    var jinyConfiguration:JinyConfig?
     var contextManager:JinyContextManager?
     var audioManager:JinyAudioManager
     
@@ -73,14 +73,14 @@ extension JinyInternal {
 extension JinyInternal {
     
     func fetchConfig() {
-        let url = URL(string: "http://dashboard.jiny.mockable.io/getIosData")
+        let url = URL(string: "http://dashboard.jiny.mockable.io/newIosData")
         var req = URLRequest(url: url!)
         req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
         let session = URLSession.shared
         let configTask = session.dataTask(with: req) { (data, response, error) in
             guard let resultData = data else { return }
             guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
-            self.jinyConfig = JinyConfig(withConfig: configDict)
+            self.jinyConfiguration = JinyConfig(withDict: configDict)
             self.setupDefaultLanguage()
             self.startContextDetection()
             self.soundDownload()
@@ -90,7 +90,7 @@ extension JinyInternal {
     }
     
     func setupDefaultLanguage() {
-        guard let config = self.jinyConfig else { return }
+        guard let config = self.jinyConfiguration else { return }
         if let lang = JinySharedInformation.shared.getLanguage() {
             for language in config.languages { if lang == language.localeId { return } }
         }
@@ -128,7 +128,7 @@ extension JinyInternal {
                         stageSounds.append(sound)
                     }
                 }
-                self.jinyConfig?.sounds = stageSounds
+                self.jinyConfiguration?.sounds = stageSounds
                 self.soundDownload()
             } catch {
                 print("Error")
@@ -147,9 +147,9 @@ extension JinyInternal {
 extension JinyInternal {
     
     func startContextDetection() {
-        guard let config = self.jinyConfig else { return }
+        guard let configuartion = self.jinyConfiguration else { return }
         DispatchQueue.main.async {
-            self.contextManager = JinyContextManager(config: config)
+            self.contextManager = JinyContextManager(config: configuartion)
             self.contextManager?.audioManagerDelegate = self.audioManager
             self.contextManager?.initialize()
         }
@@ -160,15 +160,15 @@ extension JinyInternal {
 extension JinyInternal:JinyAudioManagerDelegate {
     
     func getDefaultSounds() -> Array<JinySound> {
-        return jinyConfig?.defaultSounds ?? []
+        return jinyConfiguration?.defaultSounds ?? []
     }
     
     func getDiscoverySounds() -> Array<JinySound> {
-        return jinyConfig?.discoverySounds ?? []
+        return jinyConfiguration?.discoverySounds ?? []
     }
     
     func getStageSounds() -> Array<JinySound> {
-        return jinyConfig?.sounds ?? []
+        return jinyConfiguration?.sounds ?? []
     }
     
 }
