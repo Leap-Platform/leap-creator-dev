@@ -41,7 +41,7 @@ class JinyStage {
     let isSuccess:Bool
     let nativeIdentifiers:Array<String>
     let webIdentifiers:Array<String>
-    let branchInfo:JinyNewBranchInfo?
+    let branchInfo:JinyBranchInfo?
     let instruction:JinyInstruction?
     
     init(withDict stageDict:Dictionary<String,Any>) {
@@ -58,7 +58,7 @@ class JinyStage {
         webIdentifiers = stageDict["web_identifiers"] as? Array<String> ?? []
         
         if type == .Branch {
-            if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> { branchInfo = JinyNewBranchInfo(withDict: branchDict) }
+            if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> { branchInfo = JinyBranchInfo(withDict: branchDict) }
             else { branchInfo = nil }
         }
         else { branchInfo = nil }
@@ -80,7 +80,7 @@ extension JinyStage:Equatable {
 }
 
 
-class JinyNewBranchInfo {
+class JinyBranchInfo {
     
     let branchTitle:Dictionary<String,Any>
     let branchFlows:Array<Int>
