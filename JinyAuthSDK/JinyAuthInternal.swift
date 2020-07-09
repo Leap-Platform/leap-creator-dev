@@ -144,7 +144,7 @@ extension JinyAuthInternal:PTChannelDelegate {
         
         let command = NSKeyedUnarchiver.unarchiveObject(with: data) as! Dictionary<String,String>
         print(command)
-        if command["command"] == "startMirroring" {
+        if command["command"] == "STARTMIRRORING" {
             startStreaming()
         } else if command["command"] == "SCREENSHOT" {
             var hierString:String?

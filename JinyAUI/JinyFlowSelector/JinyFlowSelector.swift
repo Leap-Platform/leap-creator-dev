@@ -8,27 +8,27 @@
 
 import UIKit
 
-protocol JinyFlowSelectorDelegate {
-    func failedToSetupFlowSelector(selectorView:JinyFlowSelector)
-    func flowSelectorPresented(selectorView:JinyFlowSelector)
-    func flowSelected(_ subflow:JinyFlow)
-    func selectorViewRemoved(selectorView:JinyFlowSelector)
+protocol JinyFlowSelectorDelegate:AnyObject {
+    func failedToSetupFlowSelector()
+    func flowSelectorPresented()
+    func flowSelected(_ flowSelectedAtIndex:Int)
+    func selectorViewRemoved()
     func closeButtonClicked()
 }
 
 class JinyFlowSelector: UIView {
     
-    let flowListArray:Array<JinyFlow>
-    let branchTitle:Dictionary<String,Any>
+    let flowListArray:Array<String>
+    let branchTitle:String
     let backdrop:UIView
     let flowListView:UITableView
     let headerView:UIView
     let holderView:UIView
     let closeButton:UIButton
-    let delegate:JinyFlowSelectorDelegate
+    weak var delegate:JinyFlowSelectorDelegate?
     
     
-    init(withDelegate selectorDelegate:JinyFlowSelectorDelegate, listOfFlows flowList:Array<JinyFlow>, branchTitle title:Dictionary<String,Any>) {
+    init(withDelegate selectorDelegate:JinyFlowSelectorDelegate, listOfFlows flowList:Array<String>, branchTitle title:String) {
         backdrop = UIView()
         flowListView = UITableView()
         headerView = UIView()
@@ -50,7 +50,7 @@ extension JinyFlowSelector {
     
     func setupView() {
         guard let parentView = UIApplication.shared.keyWindow ?? UIApplication.shared.windows.last, flowListArray.count > 0 else {
-            delegate.failedToSetupFlowSelector(selectorView: self)
+            delegate?.failedToSetupFlowSelector()
             return
         }
         
@@ -63,14 +63,14 @@ extension JinyFlowSelector {
         let bottomConst = NSLayoutConstraint(item: parentView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0)
         NSLayoutConstraint.activate([leadingConst, trailingConst, topConst, bottomConst])
         
-        flowListView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.FlowSelector.placeCellIdentifier)
+        flowListView.register(UITableViewCell.self, forCellReuseIdentifier: "place")
         
         setupBackdrop()
         setupHolderView()
         setupHeaderView()
         setupFlowList()
         setupCloseButton()
-        delegate.flowSelectorPresented(selectorView: self)
+        delegate?.flowSelectorPresented()
     }
     
     func setupBackdrop() {
@@ -124,7 +124,7 @@ extension JinyFlowSelector {
     func setupHeaderView() {
         
         let title = UILabel()
-        title.text = (branchTitle[Constants.FlowSelector.languageCode] as? Dictionary<String,Any>)?[Constants.FlowSelector.displayText] as? String
+        title.text = branchTitle
         title.textColor = UIColor.white
         title.textAlignment = .center
         title.font = UIFont.systemFont(ofSize: 16)
@@ -171,13 +171,13 @@ extension JinyFlowSelector {
     }
     
     @objc func closeButtonClicked() {
-        delegate.closeButtonClicked()
+        delegate?.closeButtonClicked()
         dismissView()
     }
     
     func dismissView() {
         self.removeFromSuperview()
-        delegate.selectorViewRemoved(selectorView: self)
+        delegate?.selectorViewRemoved()
     }
     
 }
@@ -189,8 +189,8 @@ extension JinyFlowSelector:UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.FlowSelector.placeCellIdentifier, for: indexPath)
-        cell.textLabel?.text = flowListArray[indexPath.row].flowText["hin"]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "place]", for: indexPath)
+        cell.textLabel?.text = flowListArray[indexPath.row]
         cell.textLabel?.textColor = UIColor(red: 0.22, green: 0.22, blue: 0.22, alpha: 1.00)
         cell.separatorInset = UIEdgeInsets(top: 0, left: 54, bottom: 0, right: 54)
         return cell
@@ -205,17 +205,8 @@ extension JinyFlowSelector:UITableViewDataSource {
 extension JinyFlowSelector:UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate.flowSelected(flowListArray[indexPath.row])
+        delegate?.flowSelected(indexPath.row)
         dismissView()
     }
     
-}
-
-
-extension Constants {
-    struct FlowSelector {
-        static let placeCellIdentifier = "place"
-        static let languageCode = "hin"
-        static let displayText = "displayed_text"
-    }
 }
