@@ -658,3 +658,26 @@ extension JinyContextManager {
     }
     
 }
+
+
+extension JinyContextManager {
+    
+    func flowSelectorPresented() {}
+    
+    func flowSelectorFlowSelected(atIndex: Int) {
+        guard let currentStage = stageManager?.getCurrentStage(),
+            let branchInfo = currentStage.branchInfo,
+            atIndex < branchInfo.branchFlows.count else { return }
+        let subFlowId = branchInfo.branchFlows[atIndex]
+        let subFlow = configuration!.flows.first { (tempFlow) -> Bool in
+            tempFlow.id! == subFlowId
+        }
+        guard let subFlowSelected = subFlow else { return }
+        flowManager?.addNewFlow(subFlowSelected, true)
+    }
+    
+    func flowSelectorDismissed() {
+        
+    }
+    
+}

@@ -53,6 +53,10 @@ import UIKit
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
     
+    func flowSelectorPresented()
+    func flowSelectorFlowSelected(atIndex:Int)
+    func flowSelectorDismissed()
+    
 }
 
 

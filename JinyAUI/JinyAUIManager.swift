@@ -57,7 +57,6 @@ extension JinyAUIManager:JinyAUIManagerDelegate {
     @objc func jinyButtonTap() { uiManagerCallBack?.jinyTapped() }
     
     func presentBottomDiscovery(header: String, optInText: String, optOutText: String, languages:Array<String>) {
-        
         bottomDiscovery = JinyBottomDiscovery(withDelegate: self, header: header, jinyLanguages: languages, optIn: optInText, optOut: optOutText, color: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
         bottomDiscovery?.presentBottomDiscovery()
         
@@ -68,7 +67,12 @@ extension JinyAUIManager:JinyAUIManagerDelegate {
     }
     
     func presentFlowSelector(branchTitle: String, flowTitles: Array<String>) {
-        
+        if jinyFlowSelector != nil {
+            jinyFlowSelector?.dismissView()
+            jinyFlowSelector = nil
+        }
+        jinyFlowSelector = JinyFlowSelector(withDelegate: self, listOfFlows: flowTitles, branchTitle: branchTitle)
+        jinyFlowSelector?.setupView()
     }
     
     func presentPointer(toView: UIView, ofType: JinyPointerStyle) {
@@ -233,4 +237,21 @@ extension JinyAUIManager:JinyOptionPanelDelegate {
     
     func optionPanelCloseClicked() { uiManagerCallBack?.optionPanelClosed() }
     
+}
+
+extension JinyAUIManager:JinyFlowSelectorDelegate {
+    
+    func failedToSetupFlowSelector() { uiManagerCallBack?.flowSelectorDismissed() }
+    
+    func flowSelectorPresented() {
+        uiManagerCallBack?.flowSelectorPresented()
+        playAudio()
+    }
+    
+    func flowSelected(_ flowSelectedAtIndex: Int) { uiManagerCallBack?.flowSelectorFlowSelected(atIndex:flowSelectedAtIndex) }
+    
+    func selectorViewRemoved() { uiManagerCallBack?.flowSelectorDismissed() }
+    
+    func closeButtonClicked() { uiManagerCallBack?.flowSelectorDismissed() }
+
 }
