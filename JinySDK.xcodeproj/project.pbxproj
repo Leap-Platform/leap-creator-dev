@@ -579,7 +579,12 @@
 		D0592E79241FA6E3007782A8 /* JinySDK */ = {
 			isa = PBXGroup;
 			children = (
-				D071662524629BED001937EE /* Core */,
+				D0084C862486812B0082508C /* Modals */,
+				D0ABD0042481154C0069FA67 /* Analytics */,
+				D071662B24629C7E001937EE /* Utils */,
+				D071662924629C69001937EE /* Context */,
+				D03E45102420DE1500A43FEA /* JinyInternal.swift */,
+				D0ABD037248145F60069FA67 /* JinySharedInformation.swift */,
 				D0592E7A241FA6E3007782A8 /* JinySDK.h */,
 				D0592E7B241FA6E3007782A8 /* Info.plist */,
 				D0592E91241FAA3D007782A8 /* Jiny.swift */,
@@ -602,19 +607,6 @@
 				D0592E94241FAD99007782A8 /* UIKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D071662524629BED001937EE /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				D0084C862486812B0082508C /* Modals */,
-				D0ABD0042481154C0069FA67 /* Analytics */,
-				D071662B24629C7E001937EE /* Utils */,
-				D071662924629C69001937EE /* Context */,
-				D03E45102420DE1500A43FEA /* JinyInternal.swift */,
-				D0ABD037248145F60069FA67 /* JinySharedInformation.swift */,
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		D071662924629C69001937EE /* Context */ = {
