@@ -13,18 +13,18 @@ import JinySDK
     
     @objc public static let shared = JinyAUI()
     private var token:String?
-    private var uiManager:JinyAUIManager
+    private var auiManager:JinyAUIManager
     
     
     private override init() {
-        uiManager = JinyAUIManager()
+        auiManager = JinyAUIManager()
         super.init()
     }
     
     @objc public func initialize(withToken apiKey:String) {
         token = apiKey
         guard token != nil, token != "" else { fatalError("Empty token. Token cannot be empty") }
-        uiManager.uiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: uiManager)
+        auiManager.auiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
     
 }

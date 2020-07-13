@@ -14,7 +14,7 @@ import UIKit
     case NegativeUI
 }
 
-@objc public protocol JinyAUIManagerDelegate:NSObjectProtocol {
+@objc public protocol JinyAUIHandler:NSObjectProtocol {
     
     func playAudio()
     func presentJinyButton()
@@ -31,7 +31,7 @@ import UIKit
     func removeAllViews()
 }
 
-@objc public protocol JinyAUIManagerCallbackDelegate:NSObjectProtocol {
+@objc public protocol JinyAUICallback:NSObjectProtocol {
     func getAudioFilePath() -> String?
     func getLanguages() -> Array<String>
     
@@ -73,12 +73,12 @@ import UIKit
         super.init()
     }
     
-    @objc public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:JinyAUIManagerDelegate?) -> JinyAUIManagerCallbackDelegate? {
+    @objc public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:JinyAUIHandler?) -> JinyAUICallback? {
         assert(token != "", "Incorrect token")
         self.apiKey = token
         self.isTest = isTest
         self.jinyInternal = JinyInternal.init(self.apiKey!, uiManager: uiManager)
-        return self.jinyInternal?.auiMangerCallback()
+        return self.jinyInternal?.auiCallback()
     }
     
     @objc public func enable(_ enable:Bool) { sdkEnabled = enable }

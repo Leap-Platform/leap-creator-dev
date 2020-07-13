@@ -8,17 +8,15 @@
 
 import Foundation
 import UIKit
-import AVFoundation
 import AdSupport
 
 class JinyInternal:NSObject {
-    var announcement: AVAudioPlayer? = nil
     private var apikey:String
     var jinyConfiguration:JinyConfig?
     var contextManager:JinyContextManager
     var audioManager:JinyAudioManager
     
-    init(_ token : String, uiManager:JinyAUIManagerDelegate?) {
+    init(_ token : String, uiManager:JinyAUIHandler?) {
         self.apikey = token
         audioManager = JinyAudioManager()
         self.contextManager = JinyContextManager(withUIHandler: uiManager)
@@ -30,7 +28,7 @@ class JinyInternal:NSObject {
         fetchConfig()
     }
     
-    func auiMangerCallback() -> JinyAUIManagerCallbackDelegate? {
+    func auiCallback() -> JinyAUICallback? {
         return self.contextManager
     }
     

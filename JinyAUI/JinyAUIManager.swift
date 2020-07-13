@@ -13,7 +13,7 @@ import AVFoundation
 
 class JinyAUIManager:NSObject {
     
-    weak var uiManagerCallBack:JinyAUIManagerCallbackDelegate?
+    weak var auiManagerCallBack:JinyAUICallback?
     
     var audioPlayer:AVAudioPlayer?
     var pointer:JinyPointer?
@@ -26,10 +26,10 @@ class JinyAUIManager:NSObject {
     
 }
 
-extension JinyAUIManager:JinyAUIManagerDelegate {
+extension JinyAUIManager:JinyAUIHandler {
     
     func playAudio() {
-        guard let file = uiManagerCallBack?.getAudioFilePath() else { return }
+        guard let file = auiManagerCallBack?.getAudioFilePath() else { return }
         let fm = FileManager.default
         guard fm.fileExists(atPath: file) else { return }
         let audioURL = URL.init(fileURLWithPath: file)
@@ -54,7 +54,7 @@ extension JinyAUIManager:JinyAUIManagerDelegate {
         NSLayoutConstraint.activate([bottomConst, trailingConst])
     }
     
-    @objc func jinyButtonTap() { uiManagerCallBack?.jinyTapped() }
+    @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
     
     func presentBottomDiscovery(header: String, optInText: String, optOutText: String, languages:Array<String>) {
         bottomDiscovery = JinyBottomDiscovery(withDelegate: self, header: header, jinyLanguages: languages, optIn: optInText, optOut: optOutText, color: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
@@ -156,7 +156,7 @@ extension JinyAUIManager:JinyPointerDelegate {
     
     func pointerPresented() { playAudio() }
     
-    func nextClicked() { uiManagerCallBack?.stagePerformed() }
+    func nextClicked() { auiManagerCallBack?.stagePerformed() }
     
     func pointerRemoved() { }
 }
@@ -165,7 +165,7 @@ extension JinyAUIManager:AVAudioPlayerDelegate {
  
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if pointer != nil {
-            if pointer!.isMember(of: JinyHighlightPointer.self) { uiManagerCallBack?.stagePerformed() }
+            if pointer!.isMember(of: JinyHighlightPointer.self) { auiManagerCallBack?.stagePerformed() }
         }
     }
     
@@ -178,18 +178,18 @@ extension JinyAUIManager:JinyBottomDiscoveryDelegate {
     
     func discoveryPresentedWithOptInButton(_ button: UIButton) {
         presentPointer(toView: button, ofType: .FingerRipple)
-        uiManagerCallBack?.discoveryPresented()
+        auiManagerCallBack?.discoveryPresented()
     }
     
-    func discoverySheetDismissed() { uiManagerCallBack?.discoveryMuted() }
+    func discoverySheetDismissed() { auiManagerCallBack?.discoveryMuted() }
     
-    func optOutButtonClicked() { uiManagerCallBack?.discoveryMuted() }
+    func optOutButtonClicked() { auiManagerCallBack?.discoveryMuted() }
     
-    func optInButtonClicked() { uiManagerCallBack?.discoveryOptedInFlow(atIndex: 0) }
+    func optInButtonClicked() { auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0) }
     
     func discoveryLanguageButtonClicked() {
-        guard let langs = uiManagerCallBack?.getLanguages() else {
-            uiManagerCallBack?.discoveryReset()
+        guard let langs = auiManagerCallBack?.getLanguages() else {
+            auiManagerCallBack?.discoveryReset()
             return
         }
         presentLanguagePanel(languages: langs)
@@ -200,58 +200,58 @@ extension JinyAUIManager:JinyBottomDiscoveryDelegate {
 
 extension JinyAUIManager:JinyLanguagePanelDelegate {
     
-    func languagePanelPresented() { uiManagerCallBack?.languagePanelOpened() }
+    func languagePanelPresented() { auiManagerCallBack?.languagePanelOpened() }
     
     func failedToPresentLanguagePanel() {}
     
-    func indexOfLanguageSelected(_ languageIndex: Int) { uiManagerCallBack?.languagePanelLanguageSelected(atIndex: languageIndex) }
+    func indexOfLanguageSelected(_ languageIndex: Int) { auiManagerCallBack?.languagePanelLanguageSelected(atIndex: languageIndex) }
     
-    func languagePanelCloseClicked() { uiManagerCallBack?.languagePanelClosed() }
+    func languagePanelCloseClicked() { auiManagerCallBack?.languagePanelClosed() }
     
-    func languagePanelSwipeDismissed() { uiManagerCallBack?.languagePanelClosed() }
+    func languagePanelSwipeDismissed() { auiManagerCallBack?.languagePanelClosed() }
     
-    func languagePanelTappedOutside() { uiManagerCallBack?.languagePanelClosed() }
+    func languagePanelTappedOutside() { auiManagerCallBack?.languagePanelClosed() }
 
 }
 
 
 extension JinyAUIManager:JinyOptionPanelDelegate {
     
-    func failedToShowOptionPanel() { uiManagerCallBack?.optionPanelClosed() }
+    func failedToShowOptionPanel() { auiManagerCallBack?.optionPanelClosed() }
     
-    func optionPanelPresented() { uiManagerCallBack?.optionPanelOpened() }
+    func optionPanelPresented() { auiManagerCallBack?.optionPanelOpened() }
     
-    func muteButtonClicked() { uiManagerCallBack?.optionPanelMuteClicked() }
+    func muteButtonClicked() { auiManagerCallBack?.optionPanelMuteClicked() }
     
-    func repeatButtonClicked() { uiManagerCallBack?.optionPanelRepeatClicked() }
+    func repeatButtonClicked() { auiManagerCallBack?.optionPanelRepeatClicked() }
     
     func chooseLanguageButtonClicked() {
-        guard let langs = uiManagerCallBack?.getLanguages() else {
-            uiManagerCallBack?.optionPanelClosed()
+        guard let langs = auiManagerCallBack?.getLanguages() else {
+            auiManagerCallBack?.optionPanelClosed()
             return
         }
         presentLanguagePanel(languages: langs)
     }
     
-    func optionPanelDismissed() { uiManagerCallBack?.optionPanelClosed() }
+    func optionPanelDismissed() { auiManagerCallBack?.optionPanelClosed() }
     
-    func optionPanelCloseClicked() { uiManagerCallBack?.optionPanelClosed() }
+    func optionPanelCloseClicked() { auiManagerCallBack?.optionPanelClosed() }
     
 }
 
 extension JinyAUIManager:JinyFlowSelectorDelegate {
     
-    func failedToSetupFlowSelector() { uiManagerCallBack?.flowSelectorDismissed() }
+    func failedToSetupFlowSelector() { auiManagerCallBack?.flowSelectorDismissed() }
     
     func flowSelectorPresented() {
-        uiManagerCallBack?.flowSelectorPresented()
+        auiManagerCallBack?.flowSelectorPresented()
         playAudio()
     }
     
-    func flowSelected(_ flowSelectedAtIndex: Int) { uiManagerCallBack?.flowSelectorFlowSelected(atIndex:flowSelectedAtIndex) }
+    func flowSelected(_ flowSelectedAtIndex: Int) { auiManagerCallBack?.flowSelectorFlowSelected(atIndex:flowSelectedAtIndex) }
     
-    func selectorViewRemoved() { uiManagerCallBack?.flowSelectorDismissed() }
+    func selectorViewRemoved() { auiManagerCallBack?.flowSelectorDismissed() }
     
-    func closeButtonClicked() { uiManagerCallBack?.flowSelectorDismissed() }
+    func closeButtonClicked() { auiManagerCallBack?.flowSelectorDismissed() }
 
 }

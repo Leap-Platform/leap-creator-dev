@@ -7,7 +7,12 @@
 		<key>JinyAUI.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>2</integer>
+		</dict>
+		<key>JinyAUITests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
 		</dict>
 		<key>JinyAuthSDK.xcscheme_^#shared#^_</key>
 		<dict>
@@ -22,7 +27,7 @@
 		<key>JinySDKUniversal.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>4</integer>
 		</dict>
 		<key>JinySampleApp.xcscheme_^#shared#^_</key>
 		<dict>

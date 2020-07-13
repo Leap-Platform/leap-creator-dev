@@ -24,12 +24,12 @@ class JinyContextManager:NSObject {
     private var stageManager:JinyStageManager?
     private var analyticsManager:JinyAnalyticsManager?
     private var configuration:JinyConfig?
-    private weak var auiManager:JinyAUIManagerDelegate?
+    private weak var auiHandler:JinyAUIHandler?
     
     var audioManagerDelegate:JinyContextManagerAudioDelegate?
     
-    init(withUIHandler uiHandler:JinyAUIManagerDelegate?) {
-        auiManager = uiHandler
+    init(withUIHandler uiHandler:JinyAUIHandler?) {
+        auiHandler = uiHandler
     }
     
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
@@ -405,18 +405,18 @@ extension JinyContextManager {
 extension JinyContextManager {
     
     func presentOnlyJinyButton() {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         aui.keepOnlyJinyButtonIfPresent()
         aui.presentJinyButton()
     }
     
     func noContextIdentfied() {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         aui.removeAllViews()
     }
     
     func presentBottomDiscovery(_ discovery:JinyDiscovery) {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         aui.removeAllViews()
         let langCode = JinySharedInformation.shared.getLanguage() ?? "hin"
         let info  = discovery.discoveryInfo!
@@ -431,7 +431,7 @@ extension JinyContextManager {
     }
     
     func presentPointer(stage:JinyStage, view:UIView?, rect:CGRect?, inWebView:UIView?) {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         let stageType = stage.type
         guard let pointer = stage.instruction?.pointer else {
             stageIdentifiedWithNoRelevantPointer()
@@ -456,12 +456,12 @@ extension JinyContextManager {
     }
     
     func updatePointer(rect:CGRect?, inWebview:UIView?) {
-        guard let aui = auiManager, let newRect = rect else { return }
+        guard let aui = auiHandler, let newRect = rect else { return }
         aui.updatePointerRect(newRect: newRect, inView: inWebview)
     }
     
     func presentOptionPanel() {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         let langCode = JinySharedInformation.shared.getLanguage() ?? "hin"
         guard let language = configuration!.languages.first(where: { (temp) -> Bool in
             temp.localeId == langCode
@@ -470,12 +470,12 @@ extension JinyContextManager {
     }
     
     func presentLanguagePanel() {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         aui.presentLanguagePanel(languages: getLanguages())
     }
     
     func presentFlowSelectorForStage(_ stage:JinyStage) {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         guard let branchInfo = stage.branchInfo else {
             stageManager?.resetCurrentStage()
             return
@@ -493,13 +493,13 @@ extension JinyContextManager {
     }
     
     func stageIdentifiedWithNoRelevantPointer() {
-        guard let aui = auiManager else { return }
+        guard let aui = auiHandler else { return }
         aui.playAudio()
     }
     
 }
 
-extension JinyContextManager:JinyAUIManagerCallbackDelegate {
+extension JinyContextManager:JinyAUICallback {
     
     func stagePerformed() {
         guard let state = contextDetector?.getState(), state == .Stage else { return }
