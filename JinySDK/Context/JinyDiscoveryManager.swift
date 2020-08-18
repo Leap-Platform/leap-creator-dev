@@ -18,11 +18,22 @@ protocol JinyDiscoveryManagerDelegate:AnyObject {
     func noContextualDiscoveryIdentified()
 }
 
+class JinyDiscoveryEventTrigger {
+    let discovery:JinyDiscovery
+    let timer:Timer?
+    
+    init(_ discovery:JinyDiscovery, _ timer:Timer) {
+        self.discovery = discovery
+        self.timer = timer
+    }
+}
 
 class JinyDiscoveryManager {
     
     private weak var delegate:JinyDiscoveryManagerDelegate?
     private var allDiscoveries:Array<JinyDiscovery> = []
+    private var timerArray:Array<Timer> = []
+    private var toBeTriggered:Array<JinyDiscoveryEventTrigger> = []
     private var completedDiscoveriesInSession:Array<JinyDiscovery> = []
     private var identifiedDiscoveries:Array<JinyDiscovery> = [] //Muted in current session
     private var currentDiscovery:JinyDiscovery?
@@ -39,11 +50,49 @@ class JinyDiscoveryManager {
     
     func discoveriesForContextCheck() -> Array<JinyDiscovery> { return (getMutedDiscoveries() + completedDiscoveriesInSession + identifiedDiscoveries ).reversed() }
     
-    func discoveryFound(_ discovery:JinyDiscovery) {
-        let previousDiscovery = currentDiscovery
-        currentDiscovery = discovery
-        if previousDiscovery == currentDiscovery { delegate?.sameDiscoveryIdentified(discovery: discovery) }
-        else { delegate?.newDiscoveryIdentified(discovery: discovery) }
+    func discoveriesFound(_ discoveries:Array<JinyDiscovery>) {
+        
+        for trig in toBeTriggered {
+            if discoveries.contains(trig.discovery) { continue }
+            else { toBeTriggered = toBeTriggered.filter { $0.discovery == trig.discovery} }
+        }
+        
+        
+        for discovery in discoveries {
+            let discoveriesAlreadyPresent = toBeTriggered.map { (eventTrigger) -> JinyDiscovery in
+                return eventTrigger.discovery
+            }
+            if discoveriesAlreadyPresent.contains(discovery) {continue}
+            else {
+                if discovery.trigger["delay"] != nil {
+                    let delay = discovery.trigger["delay"] as! Int
+                    if #available(iOS 10.0, *) {
+                        let timer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false) { (timer) in
+                            timer.invalidate()
+                            self.currentDiscovery = discovery
+                            self.delegate?.newDiscoveryIdentified(discovery: discovery)
+                            self.cancelAllTimers()
+                        }
+                        RunLoop.current.add(timer, forMode: .default)
+                        toBeTriggered.append(JinyDiscoveryEventTrigger(discovery, timer))
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                }
+            }
+           
+        }
+//        let previousDiscovery = currentDiscovery
+//        currentDiscovery = discoveries[0]
+//        if previousDiscovery == currentDiscovery { delegate?.sameDiscoveryIdentified(discovery: discoveries[0]) }
+//        else { delegate?.newDiscoveryIdentified(discovery: discoveries[0]) }
+    }
+    
+    func cancelAllTimers() {
+        for evtTrigger in toBeTriggered {
+            evtTrigger.timer?.invalidate()
+        }
+        toBeTriggered.removeAll()
     }
     
     func discoveryNotFound() {

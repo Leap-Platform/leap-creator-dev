@@ -8,26 +8,28 @@
 
 import Foundation
 import UIKit
-import AVFoundation
 import AdSupport
 
 class JinyInternal:NSObject {
-    var announcement: AVAudioPlayer? = nil
     private var apikey:String
-    var ptr:JinyPointer?
     var jinyConfiguration:JinyConfig?
-    var contextManager:JinyContextManager?
+    var contextManager:JinyContextManager
     var audioManager:JinyAudioManager
     
-    init(_ token : String) {
+    init(_ token : String, uiManager:JinyAUIHandler?) {
         self.apikey = token
         audioManager = JinyAudioManager()
+        self.contextManager = JinyContextManager(withUIHandler: uiManager)
         super.init()
         audioManager.delegate = self
         JinySharedInformation.shared.setAPIKey(apikey)
         JinySharedInformation.shared.setSessionId()
         addObservers()
         fetchConfig()
+    }
+    
+    func auiCallback() -> JinyAUICallback? {
+        return self.contextManager
     }
     
 }
@@ -147,11 +149,11 @@ extension JinyInternal {
 extension JinyInternal {
     
     func startContextDetection() {
-        guard let configuartion = self.jinyConfiguration else { return }
+        guard let configuration = self.jinyConfiguration else { return }
         DispatchQueue.main.async {
-            self.contextManager = JinyContextManager(config: configuartion)
-            self.contextManager?.audioManagerDelegate = self.audioManager
-            self.contextManager?.initialize()
+            
+            self.contextManager.audioManagerDelegate = self.audioManager
+            self.contextManager.initialize(withConfig: configuration)
         }
     }
 }
