@@ -31,6 +31,7 @@ class JinyDiscovery {
     var nativeIdentifiers:Array<String>
     var webIdentifiers:Array<String>
     var instruction:JinyInstruction?
+    var trigger:Dictionary<String,Any>
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
         id = discoveryDict["id"] as? Int
@@ -52,6 +53,7 @@ class JinyDiscovery {
         if let instructionDict = discoveryDict["instruction"] as? Dictionary<String,Any> {
             instruction = JinyInstruction(withDict: instructionDict)
         }
+        trigger = discoveryDict["trigger"] as? Dictionary<String,Any> ?? [:]
     }
     
 }
