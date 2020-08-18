@@ -70,8 +70,9 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return discoveryManager?.getDiscoveriesToCheck() ?? []
     }
     
-    func discoveryIdentified(discovery: JinyDiscovery) {
-        discoveryManager?.discoveryFound(discovery)
+    
+    func discoveriesIdentified(discoveries: Array<JinyDiscovery>) {
+        discoveryManager?.discoveriesFound(discoveries)
     }
     
     func noDiscoveryIdentified() {
@@ -148,6 +149,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
             presentOnlyJinyButton()
             return
         }
+        contextDetector?.stop()
         switch info.type {
         case .Bottom:
             presentBottomDiscovery(discovery)
@@ -293,9 +295,9 @@ extension JinyContextManager {
             discoveryManager?.discoveryNotFound()
             return
         }
-        contextDetector?.identifyDiscoveryToLaunch(discoveries: identifiedDiscoveries, hierarchy: hierarchy, discoveryIdentified: { (discovery) in
-            if discovery != nil {
-                self.discoveryManager?.discoveryFound(discovery!)
+        contextDetector?.identifyDiscoveryToLaunch(discoveries: identifiedDiscoveries, hierarchy: hierarchy, discoveriesIdentified: { (discoveriesPassed) in
+            if discoveriesPassed.count != 0 {
+                self.discoveryManager?.discoveriesFound(discoveriesPassed)
                 return
             }
             else {
@@ -303,7 +305,7 @@ extension JinyContextManager {
                 var checkComplete:((_: JinyPage?)->Void)?
                 checkComplete = { page in
                     if page != nil {
-                        self.discoveryManager?.discoveryFound(identifiedDiscoveries[counter])
+                        self.discoveryManager?.discoveriesFound([identifiedDiscoveries[counter]])
                     }
                     else {
                         counter += 1
@@ -581,8 +583,8 @@ extension JinyContextManager {
             contextDetector?.start()
             return
         }
-        flowManager?.addNewFlow(flowToProceed.copy(), false)
         contextDetector?.switchState()
+        flowManager?.addNewFlow(flowToProceed.copy(), false)
         discoveryManager?.completedCurrentDiscovery()
         contextDetector?.start()
     }

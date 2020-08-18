@@ -17,7 +17,7 @@ protocol JinyContextDetectorDelegate {
     func getNativeIdentifier(identifierId:String) -> JinyNativeIdentifier?
     
     func getDiscoveriesToCheck()->Array<JinyDiscovery>
-    func discoveryIdentified(discovery:JinyDiscovery)
+    func discoveriesIdentified(discoveries:Array<JinyDiscovery>)
     func noDiscoveryIdentified()
     
     func getCurrentFlow() -> JinyFlow?
@@ -81,8 +81,8 @@ extension JinyContextDetector {
                 delegate.noDiscoveryIdentified()
                 return
             }
-            identifyDiscoveryToLaunch(discoveries: discoveriesToCheck, hierarchy: allViews) { (discovery) in
-                if discovery != nil { self.delegate.discoveryIdentified(discovery: discovery!)}
+            identifyDiscoveryToLaunch(discoveries: discoveriesToCheck, hierarchy: allViews) { (discoveries) in
+                if discoveries.count > 0 {self.delegate.discoveriesIdentified(discoveries: discoveries)}
                 else { self.delegate.noDiscoveryIdentified() }
             }
             
@@ -155,8 +155,8 @@ extension JinyContextDetector {
 // MARK: - DISCOVERY DETECTION
 extension JinyContextDetector {
     
-     func identifyDiscoveryToLaunch(discoveries:Array<JinyDiscovery>, hierarchy:[UIView], discoveryIdentified:@escaping(_ discoveryIdentified:JinyDiscovery?)->Void) {
-        
+     func identifyDiscoveryToLaunch(discoveries:Array<JinyDiscovery>, hierarchy:[UIView], discoveriesIdentified:@escaping(_ discoveryIdentified:Array<JinyDiscovery>)->Void) {
+                
         // Get all webviews in hierarchy
         let webviews = hierarchy.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }
         
@@ -165,18 +165,18 @@ extension JinyContextDetector {
         if discoveriesWithWebIdentifiers.count == 0 {
             // If no discovery has web identifiers, check for native identifiers only
             let identifiedDisccovery = identifyNativeDiscovery(discoveries: discoveries, hierarchy: hierarchy)
-            discoveryIdentified(identifiedDisccovery)
+            discoveriesIdentified(identifiedDisccovery)
         } else {
             // Check if webview is present in current hierarchy, if not skip to native check only
             if webviews.count == 0 {
                 // No webviews in current hierarchy, check for native
                 let discoveriesWithOnlyNativeIds = discoveries.filter{ $0.webIdentifiers.count == 0 && $0.nativeIdentifiers.count > 0 }
                 guard discoveriesWithOnlyNativeIds.count > 0 else {
-                    discoveryIdentified(nil)
+                    discoveriesIdentified([])
                     return
                 }
                 let identifiedDiscovery = identifyNativeDiscovery(discoveries: discoveriesWithOnlyNativeIds, hierarchy: hierarchy)
-                discoveryIdentified(identifiedDiscovery)
+                discoveriesIdentified(identifiedDiscovery)
             } else {
                 // Webviews and webidentifiers present
                 // Get discoveryids whose webidentifiers can be found
@@ -198,32 +198,20 @@ extension JinyContextDetector {
                             discoveriesPassed.append(discovery)
                         }
                     }
-                    var identifiedDiscovery:JinyDiscovery?
-                    var maxWeight = 0
-                    for discovery in discoveriesPassed {
-                        if (identifiedDiscovery == nil) || (discovery.weight > maxWeight) {
-                            identifiedDiscovery = discovery
-                            maxWeight = discovery.weight
-                        }
-                    }
-                    discoveryIdentified(identifiedDiscovery)
+                    discoveriesIdentified(discoveriesPassed)
                 }
                 
             }
         }
     }
     
-    private func identifyNativeDiscovery(discoveries:Array<JinyDiscovery>, hierarchy:Array<UIView>) -> JinyDiscovery? {
-        var identifiedDiscovery:JinyDiscovery?
-        var maxWeight:Int = 0
+    private func identifyNativeDiscovery(discoveries:Array<JinyDiscovery>, hierarchy:Array<UIView>) -> Array<JinyDiscovery> {
+        var discoveriesIdentified:Array<JinyDiscovery> = []
         for discovery in discoveries {
             let isIdentfiable = isDiscoveryFoundInNativeHierarchy(discovery: discovery, hierarcy: hierarchy)
-            if (isIdentfiable && identifiedDiscovery == nil) || (isIdentfiable && discovery.weight > maxWeight) {
-                identifiedDiscovery = discovery
-                maxWeight = discovery.weight
-            }
+            if isIdentfiable { discoveriesIdentified.append(discovery) }
         }
-        return identifiedDiscovery
+        return discoveriesIdentified
     }
     
     private func isDiscoveryFoundInNativeHierarchy(discovery:JinyDiscovery, hierarcy:Array<UIView>) -> Bool {
