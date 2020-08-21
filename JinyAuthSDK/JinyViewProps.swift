@@ -103,6 +103,13 @@ class JinyViewProps:Codable {
         }
         var childViews = view.subviews
         childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
+        childViews = childViews.filter{
+            guard let superview = $0.superview else { return true }
+            let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
+            guard let keyWindow = UIApplication.shared.keyWindow else { return true }
+            if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
+            return true
+        }
         if view.window == UIApplication.shared.keyWindow {
             let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
             for child in childrenToCheck { children.append(JinyViewProps(view: child)) }

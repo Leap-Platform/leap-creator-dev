@@ -130,6 +130,13 @@ extension JinyContextDetector {
         subviewArray.append(currentView)
         var childrenToCheck = (currentView.window == UIApplication.shared.keyWindow) ? getVisibleChildren(currentView.subviews) : currentView.subviews
         childrenToCheck = childrenToCheck.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains("Jiny") }
+        childrenToCheck = childrenToCheck.filter{
+            guard let superview = $0.superview else { return true }
+            let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
+            guard let keyWindow = UIApplication.shared.keyWindow else { return true }
+            if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
+            return true
+        }
         for subview in childrenToCheck {
             subviewArray.append(contentsOf: getChildren(subview))
         }
