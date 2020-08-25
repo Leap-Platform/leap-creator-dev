@@ -12,7 +12,7 @@ class JinyConfig {
     
     var webIdentifiers:Dictionary<String,JinyWebIdentifier> = [:]
     var nativeIdentifiers:Dictionary<String,JinyNativeIdentifier> = [:]
-    var assists:Array<Dictionary<String,Any>> = []
+    var assists:Array<JinyAssist> = []
     var flows:Array<JinyFlow> = []
     var analytics:Dictionary<String,Any> = [:]
     var params:Dictionary<String,Any> = [:]
@@ -66,6 +66,12 @@ class JinyConfig {
         if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
             for discoveryDict in discoveryDictsArray {
                 discoveries.append(JinyDiscovery(withDict: discoveryDict))
+            }
+        }
+        
+        if let assistsDictsArray = configDict["assists"] as? Array<Dictionary<String,Any>> {
+            for assistDict in assistsDictsArray {
+                assists.append(JinyAssist(withDict: assistDict))
             }
         }
         
