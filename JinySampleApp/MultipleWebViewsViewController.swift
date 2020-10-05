@@ -8,11 +8,16 @@
 
 import UIKit
 import WebKit
+import JinyAUI
 
 class MultipleWebViewsViewController: UIViewController {
     
     @IBOutlet weak var webview1:WKWebView!
     @IBOutlet weak var webview2:WKWebView!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        JinyAUI.shared.addIdentifier(identifier: "clicks", value: 1)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

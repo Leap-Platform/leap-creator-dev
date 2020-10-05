@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4RR-74-41g">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4RR-74-41g">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment version="4352" identifier="iOS"/>
@@ -305,7 +305,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KhS-Wg-UqL">
                                 <rect key="frame" x="120" y="493" width="174" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <accessibility key="accessibilityConfiguration" label="search"/>
+                                <accessibility key="accessibilityConfiguration" label="hotel_search"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="hqk-y9-Fzc"/>
                                 </constraints>
@@ -313,13 +313,23 @@
                                     <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Number Of Guests" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f87-On-oEc">
+                                <rect key="frame" x="133" y="306" width="148.5" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done"/>
+                                <connections>
+                                    <outlet property="delegate" destination="6Io-3k-ebA" id="Ujy-Xk-6sr"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="JtF-yw-gyd" firstAttribute="top" secondItem="2oR-dx-bGK" secondAttribute="bottom" constant="20" id="83b-wz-cvI"/>
+                            <constraint firstItem="f87-On-oEc" firstAttribute="centerX" secondItem="nXo-yH-4Kk" secondAttribute="centerX" id="Gdj-ae-a0i"/>
                             <constraint firstItem="KhS-Wg-UqL" firstAttribute="centerX" secondItem="nXo-yH-4Kk" secondAttribute="centerX" id="IhI-He-S1T"/>
                             <constraint firstItem="JtF-yw-gyd" firstAttribute="centerY" secondItem="nXo-yH-4Kk" secondAttribute="centerY" id="KDa-eA-LSG"/>
                             <constraint firstItem="JtF-yw-gyd" firstAttribute="centerX" secondItem="nXo-yH-4Kk" secondAttribute="centerX" id="KW3-IT-ijX"/>
+                            <constraint firstItem="2oR-dx-bGK" firstAttribute="top" secondItem="f87-On-oEc" secondAttribute="bottom" constant="8" id="Oc7-eg-kQf"/>
                             <constraint firstItem="KhS-Wg-UqL" firstAttribute="top" secondItem="JtF-yw-gyd" secondAttribute="bottom" constant="25" id="lK7-iQ-zoV"/>
                             <constraint firstItem="2oR-dx-bGK" firstAttribute="centerX" secondItem="nXo-yH-4Kk" secondAttribute="centerX" id="oEX-wp-6jS"/>
                             <constraint firstItem="JtF-yw-gyd" firstAttribute="leading" secondItem="7Ix-XV-qKm" secondAttribute="leading" constant="120" id="py3-2A-T38"/>
@@ -331,11 +341,12 @@
                     <connections>
                         <outlet property="dateOfJourney" destination="JtF-yw-gyd" id="6B4-A5-r5t"/>
                         <outlet property="destination" destination="2oR-dx-bGK" id="I6X-i2-CTw"/>
+                        <outlet property="numberOfGuests" destination="f87-On-oEc" id="dYx-P2-kAP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I33-nx-Eom" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3129" y="-1937"/>
+            <point key="canvasLocation" x="3128.985507246377" y="-1937.2767857142856"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="Iwa-fh-uOt">
@@ -664,6 +675,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="v9b-IL-YUg"/>
-        <segue reference="YFK-kB-g51"/>
+        <segue reference="Cik-br-1gi"/>
     </inferredMetricsTieBreakers>
 </document>

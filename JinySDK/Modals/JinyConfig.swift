@@ -20,11 +20,13 @@ class JinyConfig {
     var defaultSounds:Array<JinySound> = []
     var discoverySounds:Array<JinySound> = []
     var discoveries:Array<JinyDiscovery> = []
-    var feature:Dictionary<String,Any> = [:]
+    var feature:JinyFeature?
     var supportedAppLocales:Array<String> = []
     var webViewList:Array<Dictionary<String,Any>> = []
     var sounds:Array<JinySound> = []
-    
+    var discSounds:Dictionary<String,Any> = [:]
+    var defSounds:Dictionary<String,Any> = [:]
+    var auiContent:Dictionary<String,Any> = [:]
     
     init(withDict dataDict:Dictionary<String,Any>) {
         
@@ -55,10 +57,12 @@ class JinyConfig {
         }
         
         if let discoverySoundsDict = configDict["discovery_sounds"] as? Dictionary<String,Any> {
+            discSounds = discoverySoundsDict
             discoverySounds = processSoundDict(dict: discoverySoundsDict)
         }
         
         if let defaultSoundsDict = configDict["default_sounds"] as? Dictionary<String,Any> {
+            defSounds = defaultSoundsDict
             defaultSounds = processSoundDict(dict: defaultSoundsDict)
             
         }
@@ -73,6 +77,14 @@ class JinyConfig {
             for assistDict in assistsDictsArray {
                 assists.append(JinyAssist(withDict: assistDict))
             }
+        }
+        
+        if let featureDict = configDict["feature"] as? Dictionary<String,Any> {
+            feature = JinyFeature(withDict: featureDict)
+        }
+        
+        if let auiContentDict = configDict["aui_content"] as? Dictionary<String,Any> {
+            auiContent = auiContentDict
         }
         
         supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []

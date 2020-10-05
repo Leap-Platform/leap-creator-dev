@@ -56,6 +56,53 @@ import Foundation
 //}
 
 
+class JinyAssistEventIdentifiers {
+    
+    var triggerOnAnchorClick:Bool
+    var delay:Float?
+    
+    init(withDict eventDict:Dictionary<String,Any>) {
+        triggerOnAnchorClick = eventDict["triggerOnAnchorClick"] as? Bool ?? false
+        delay = eventDict["delay"] as? Float
+    }
+    
+}
+
+class JinyAssistInfo {
+    var layoutInfo:Dictionary<String,Any>
+    var htmlUrl:String?
+    var contentUrls:Array<String>
+    var highlightClickable:Bool
+    var autoScroll:Bool
+    var autoFocus:Bool
+    var type:JinyPointerStyle?
+    var identifier:String?
+    
+    init(withDict infoDict:Dictionary<String,Any>) {
+        layoutInfo = infoDict["layout_info"] as? Dictionary<String,Any> ?? [:]
+        htmlUrl = infoDict["html_url"] as? String
+        contentUrls = infoDict["content_urls"] as? Array<String> ?? []
+        highlightClickable = infoDict["highlight_clickable"] as? Bool ?? false
+        autoScroll = infoDict["auto_scroll"] as? Bool ?? false
+        autoFocus = infoDict["auto_focus"] as? Bool ?? false
+        type = .FingerRipple
+        identifier = infoDict["identifier"] as? String
+    }
+}
+
+class JinyAssistInstruction {
+    var soundName:String
+    var assistInfo:JinyAssistInfo?
+    
+    init(withDict instructionDict:Dictionary<String,Any>) {
+        soundName = instructionDict["sound_name"] as? String ?? ""
+        if let assistInfoDict = instructionDict["assist_info"] as? Dictionary<String,Any> {
+            assistInfo = JinyAssistInfo(withDict: assistInfoDict)
+        }
+    }
+    
+}
+
 class JinyAssist {
     
     var assistId:Int
@@ -66,9 +113,11 @@ class JinyAssist {
     var frequencyPerApp:Int
     var nativeIdentifiers:Array<String>
     var webIdentifiers:Array<String>
-    var eventIdentifiers:Dictionary<String,Any>
-    var instructions:Dictionary<String,Any>
+    var eventIdentifiers:JinyAssistEventIdentifiers?
+    var instruction:JinyAssistInstruction?
     var isWeb:Bool
+    var instructionInfoDict:Dictionary<String,Any>?
+
     
     init(withDict assistDict:Dictionary<String,Any>) {
         assistId = assistDict["id"] as? Int ?? -1
@@ -84,9 +133,15 @@ class JinyAssist {
         }
         nativeIdentifiers = assistDict["native_identifiers"] as? Array<String> ?? []
         webIdentifiers = assistDict["web_identifiers"] as? Array<String> ?? []
-        eventIdentifiers = assistDict["event_identifiers"] as? Dictionary<String,Any> ?? [:]
+        if let eventDict = assistDict["event_identifiers"] as? Dictionary<String,Any> {
+            eventIdentifiers = JinyAssistEventIdentifiers(withDict: eventDict)
+        }
         isWeb = assistDict["is_web"] as? Bool ?? false
-        instructions = assistDict["instruction"] as? Dictionary<String,Any> ?? [:]
+        if let instructionDict = assistDict["instruction"] as? Dictionary<String,Any>{
+            instruction = JinyAssistInstruction(withDict: instructionDict)
+            instructionInfoDict = instructionDict
+        }
+        print(instructionInfoDict)
     }
 }
 
@@ -113,7 +168,8 @@ extension JinyAssist {
         copy.eventIdentifiers = self.eventIdentifiers
         copy.webIdentifiers = self.webIdentifiers
         copy.nativeIdentifiers = self.nativeIdentifiers
-        copy.instructions = self.instructions
+        copy.instruction = self.instruction
+        copy.instructionInfoDict = self.instructionInfoDict
         return copy
     }
     

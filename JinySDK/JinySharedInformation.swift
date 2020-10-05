@@ -150,6 +150,61 @@ extension JinySharedInformation {
     
 }
 
+extension JinySharedInformation {
+    
+    func discoveryPresented(discoveryId:Int) {
+        if prefs.dictionary(forKey: "jiny_discovery_count") == nil {
+            let discList:Dictionary<String,Int> = [:]
+            prefs.set(discList, forKey: "jiny_discovery_count")
+        }
+        guard var discList = prefs.dictionary(forKey: "jiny_discovery_count") as? Dictionary<String,Int> else { return }
+        if discList[String(discoveryId)] == nil {
+            discList[String(discoveryId)] = 1
+        } else {
+            discList[String(discoveryId)] = discList[String(discoveryId)]! + 1
+        }
+        prefs.set(discList,forKey: "jiny_discovery_count")
+        prefs.synchronize()
+    }
+    
+    func getDiscoveryCount() -> Dictionary<String,Int> {
+        return prefs.dictionary(forKey: "jiny_discovery_count") as? Dictionary<String,Int> ?? [:]
+    }
+    
+    func discoveryDismissed(discoveryId:Int) {
+        if prefs.dictionary(forKey: "jiny_discovery_dismiss_count") == nil {
+            let discDismissList:Dictionary<String,Int> = [:]
+            prefs.set(discDismissList, forKey: "jiny_discovery_dismiss_count")
+        }
+        guard var discDismissList = prefs.dictionary(forKey: "jiny_discovery_dismiss_count") as? Dictionary<String,Int> else { return }
+        if discDismissList[String(discoveryId)] == nil { discDismissList[String(discoveryId)] = 1 }
+        else { discDismissList[String(discoveryId)] = discDismissList[String(discoveryId)]! + 1 }
+        prefs.set(discDismissList, forKey: "jiny_discovery_dismiss_count")
+        prefs.synchronize()
+    }
+    
+    func getDiscoveryDismissCount() -> Dictionary<String, Int> {
+        return prefs.dictionary(forKey: "jiny_discovery_dismiss_count") as? Dictionary<String,Int> ?? [:]
+    }
+    
+    func flowCompletedFor(discoveryId:Int) {
+           if prefs.dictionary(forKey: "jiny_discovery_flow_count") == nil {
+               let discDismissList:Dictionary<String,Int> = [:]
+               prefs.set(discDismissList, forKey: "jiny_discovery_flow_count")
+           }
+           guard var discDismissList = prefs.dictionary(forKey: "jiny_discovery_flow_count") as? Dictionary<String,Int> else { return }
+           if discDismissList[String(discoveryId)] == nil { discDismissList[String(discoveryId)] = 1 }
+           else { discDismissList[String(discoveryId)] = discDismissList[String(discoveryId)]! + 1 }
+           prefs.set(discDismissList, forKey: "jiny_discovery_flow_count")
+           prefs.synchronize()
+       }
+       
+       func getDiscoveryFlowCount() -> Dictionary<String, Int> {
+           return prefs.dictionary(forKey: "jiny_discovery_flow_count") as? Dictionary<String,Int> ?? [:]
+       }
+    
+}
+
 
 // MARK: - AUDIO STATUS
 extension JinySharedInformation {

@@ -27,4 +27,8 @@ import JinySDK
         auiManager.auiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
     
+    @objc public func addIdentifier(identifier:String, value:Any) {
+        auiManager.addIdentifier(identifier: identifier, value: value)
+    }
+    
 }

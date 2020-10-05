@@ -14,6 +14,43 @@ enum JinyTriggerMode:String {
     case Multi  =   "MULTI_FLOW_TRIGGER"
 }
 
+class JinyTaggedEventCondition {
+    
+    let identifier:String
+    let value:String
+    let type:String
+    let condition:String
+    
+    init(withDict dict:Dictionary<String,Any>) {
+        identifier = dict["identifier"] as? String ?? ""
+        value = dict["value"] as? String ?? ""
+        type = dict["type"] as? String ?? ""
+        condition = dict["condition"] as? String ?? ""
+    }
+    
+}
+
+class JinyTaggedEvent {
+    
+    var orConditions:Array<Array<JinyTaggedEventCondition>> = []
+    var action:String?
+    
+    init(withDict taggedDict:Dictionary<String,Any>) {
+        action = taggedDict["action"] as? String
+        if let eventsDictArray = taggedDict["events"] as? Array<Array<Dictionary<String,Any>>>{
+            for andConditionsArray in eventsDictArray {
+                var andConditions:Array<JinyTaggedEventCondition> = []
+                for andCondition in andConditionsArray {
+                    andConditions.append(JinyTaggedEventCondition(withDict: andCondition))
+                }
+                orConditions.append(andConditions)
+            }
+        }
+        
+    }
+    
+}
+
 class JinyDiscovery {
     
     var id:Int?
@@ -32,6 +69,9 @@ class JinyDiscovery {
     var webIdentifiers:Array<String>
     var instruction:JinyInstruction?
     var trigger:Dictionary<String,Any>
+    var taggedEvents:JinyTaggedEvent?
+    var seenFrequency:Dictionary<String,Int>?
+    var instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
         id = discoveryDict["id"] as? Int
@@ -51,9 +91,14 @@ class JinyDiscovery {
         nativeIdentifiers = discoveryDict["native_identifiers"] as? Array<String> ?? []
         webIdentifiers = discoveryDict["web_identifiers"] as? Array<String> ?? []
         if let instructionDict = discoveryDict["instruction"] as? Dictionary<String,Any> {
+            instructionInfoDict = instructionDict
             instruction = JinyInstruction(withDict: instructionDict)
         }
         trigger = discoveryDict["trigger"] as? Dictionary<String,Any> ?? [:]
+        if let taggedEventsDict = discoveryDict["tagged_events"] as? Dictionary<String,Any> {
+            taggedEvents = JinyTaggedEvent(withDict: taggedEventsDict)
+        }
+        seenFrequency = discoveryDict["seen_frequency"] as? Dictionary<String,Int>
     }
     
 }

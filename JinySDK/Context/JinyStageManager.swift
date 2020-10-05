@@ -91,6 +91,10 @@ class JinyStageManager {
     
     func getCurrentStage() -> JinyStage? { return currentStage }
     
+    func currentStageViewPresented() {
+        
+    }
+    
     func stagePerformed(_ stage:JinyStage) {
         if stageTracker[stage.name!] == nil { stageTracker[stage.name!] = 0 }
         stageTracker[stage.name!]!  += 1

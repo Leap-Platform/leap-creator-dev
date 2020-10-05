@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import JinySDK
 import AVFoundation
+import AdSupport
 
 class JinyAUIManager:NSObject {
     
@@ -22,25 +23,154 @@ class JinyAUIManager:NSObject {
     var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
     var jinyFlowSelector:JinyFlowSelector?
+    var synthesizer:AVSpeechSynthesizer?
+    var utterance:AVSpeechUtterance?
+    let audioSession = AVAudioSession.sharedInstance()
+    var mediaManager:JinyMediaManager?
+    var soundsJson:Dictionary<String,Any>?
     
+    func addIdentifier(identifier:String, value:Any) {
+        auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
+    }
     
 }
 
 extension JinyAUIManager:JinyAUIHandler {
     
-    func playAudio() {
-        guard let file = auiManagerCallBack?.getAudioFilePath() else { return }
-        let fm = FileManager.default
-        guard fm.fileExists(atPath: file) else { return }
-        let audioURL = URL.init(fileURLWithPath: file)
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: audioURL, fileTypeHint: AVFileType.mp3.rawValue)
-            audioPlayer?.delegate = self
-            audioPlayer?.volume = 1.0
-            audioPlayer?.play()
-        } catch {
-            print(error.localizedDescription)
+    func startMediaFetch() {
+        mediaManager = JinyMediaManager(withDelegate: self)
+        guard let callback = auiManagerCallBack else { return }
+        let initialSounds = callback.getDefaultMedia()
+        
+        if let defaultSoundsDict = initialSounds["default_sounds"] {
+            startDefaultSoundDownload(defaultSoundsDict)
         }
+        if let discoverySoundsDict = initialSounds["discovery_sounds"] {
+            startDefaultSoundDownload(discoverySoundsDict)
+        }
+        if let auiContentDict = initialSounds["aui_content"] {
+            if let baseUrl = auiContentDict["base_url"] as? String, let contents = auiContentDict["content"] as? Array<String> {
+                for content in contents {
+                    let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
+                    mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
+                }
+            }
+        }
+        fetchSoundConfig()
+    }
+    
+    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView) {
+        guard let soundName = instruction["sound_name"] as? String else { return }
+        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        if let type = assistInfo["type"] as? String {
+            auiManagerCallBack?.willPresentView()
+            switch type {
+            case "POPUP":
+                let jinyPopup = JinyPopup(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
+                jinyPopup.showPopup()
+            case "DRAWER":
+                let jinyDrawer = JinyDrawer(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
+                jinyDrawer.showDrawer()
+            case "FULLSCREEN":
+                let jinyFullScreen = JinyFullScreen(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
+                jinyFullScreen.showFullScreen()
+            case "BOTTOM_SHEET":
+                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
+                jinyBottomSheet.showBottomSheet()
+            default:
+                break
+            }
+            auiManagerCallBack?.didPresentView()
+        }
+        
+    }
+    
+    func performInstrcution(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?) {
+        guard let soundName = instruction["sound_name"] as? String else { return }
+        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        if let type = assistInfo["type"] as? String {
+            auiManagerCallBack?.willPresentView()
+            switch type {
+            case "POPUP":
+                let jinyPopup = JinyPopup(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
+                jinyPopup.showPopup()
+            case "DRAWER":
+                let jinyDrawer = JinyDrawer(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
+                jinyDrawer.showDrawer()
+            case "FULLSCREEN":
+                let jinyFullScreen = JinyFullScreen(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
+                jinyFullScreen.showFullScreen()
+            case "BOTTOM_SHEET":
+                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo)
+                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
+                jinyBottomSheet.showBottomSheet()
+            default:
+                break
+            }
+            auiManagerCallBack?.didPresentView()
+        }
+    }
+    
+    func updateRect(rect:CGRect, inWebView:UIView?) {
+        
+    }
+    
+    func playAudio() {
+        self.auiManagerCallBack?.willPlayAudio()
+        if let tts = auiManagerCallBack?.tryTTS() {
+            synthesizer = AVSpeechSynthesizer()
+            synthesizer?.delegate = self
+            utterance = AVSpeechUtterance(string: tts)
+            utterance!.voice = AVSpeechSynthesisVoice(language: "hi-IN")
+            utterance!.rate = 0.4
+            do {
+                try audioSession.setCategory(.playback, options: [.duckOthers])
+                try audioSession.setActive(true)
+            } catch {
+                
+            }
+            synthesizer!.speak(utterance!)
+        } else {
+            guard let file = auiManagerCallBack?.getAudioFilePath() else { return }
+            let fm = FileManager.default
+            guard fm.fileExists(atPath: file) else { return }
+            let audioURL = URL.init(fileURLWithPath: file)
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: audioURL, fileTypeHint: AVFileType.mp3.rawValue)
+                audioPlayer?.delegate = self
+                audioPlayer?.volume = 1.0
+                do {
+                    try audioSession.setCategory(.playback, options: [.duckOthers])
+                    try audioSession.setActive(true)
+                } catch {
+                    
+                }
+                audioPlayer?.play()
+                
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
+        
+    }
+    
+    
+    func playTTS(withLangCode:String) {
+        
     }
     
     func presentJinyButton() {
@@ -71,6 +201,7 @@ extension JinyAUIManager:JinyAUIHandler {
             jinyFlowSelector?.dismissView()
             jinyFlowSelector = nil
         }
+        self.auiManagerCallBack?.willPresentView()
         jinyFlowSelector = JinyFlowSelector(withDelegate: self, listOfFlows: flowTitles, branchTitle: branchTitle)
         jinyFlowSelector?.setupView()
     }
@@ -87,6 +218,7 @@ extension JinyAUIManager:JinyAUIHandler {
             break
         }
         pointer?.pointerDelegate = self
+        self.auiManagerCallBack?.willPresentView()
         pointer?.presentPointer(view: toView)
     }
     
@@ -102,6 +234,7 @@ extension JinyAUIManager:JinyAUIHandler {
             break
         }
         pointer?.pointerDelegate = self
+        self.auiManagerCallBack?.willPresentView()
         pointer?.presentPointer(toRect: toRect, inView: inView)
     }
     
@@ -145,6 +278,7 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func removeAllViews() {
+        
         keepOnlyJinyButtonIfPresent()
         dismissJinyButton()
     }
@@ -152,26 +286,75 @@ extension JinyAUIManager:JinyAUIHandler {
 }
 
 
-extension JinyAUIManager:JinyPointerDelegate {
+// MARK: - Media Fetch And Handling
+extension JinyAUIManager {
     
-    func pointerPresented() { playAudio() }
-    
-    func nextClicked() { auiManagerCallBack?.stagePerformed() }
-    
-    func pointerRemoved() { }
-}
-
-extension JinyAUIManager:AVAudioPlayerDelegate {
- 
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if pointer != nil {
-            if pointer!.isMember(of: JinyHighlightPointer.self) { auiManagerCallBack?.stagePerformed() }
+    func startDefaultSoundDownload(_ dict:Dictionary<String,Any>) {
+        let langCode = auiManagerCallBack?.getLanguageCode()
+        if let baseUrl = dict["base_url"] as? String, let code = langCode {
+            if let allLangSoundsDict = dict["jiny_sounds"] as? Dictionary<String,Any>,
+                let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> {
+                for soundDict in soundsDictArray {
+                    if let url = soundDict["url"] as? String{
+                        let sound = JinySound(baseUrl: baseUrl, location: url, code: code, info: soundDict)
+                        mediaManager?.startDownload(forMedia: sound, atPriority: .normal)
+                    }
+                    
+                }
+            }
         }
     }
     
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+    func fetchSoundConfig() {
+        let url = URL(string: "http://dashboard.jiny.mockable.io/sounds")
+        var req = URLRequest(url: url!)
+        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
+        let session = URLSession.shared
+        let configTask = session.dataTask(with: req) { (data, response, error) in
+            guard let resultData = data else {
+                self.fetchSoundConfig()
+                return
+            }
+            do {
+                let audioDict = try JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as! Dictionary<String,Any>
+                guard let dataDict = audioDict["data"] as? Dictionary<String,Any> else { return }
+                let _ = dataDict["base_url"] as? String
+                guard let jinySoundsJson = dataDict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return }
+                self.soundsJson = jinySoundsJson
+                self.startStageSoundDownload()
+            } catch {
+                print("Error")
+                return
+            }
+        }
+        configTask.resume()
     }
     
+    func startStageSoundDownload() {
+        guard let code = auiManagerCallBack?.getLanguageCode() else { return }
+        guard let soundDictsArray = self.soundsJson?[code] as? Array<Dictionary<String,Any>> else { return }
+        for soundDict in soundDictsArray {
+            let sound = JinySound(baseUrl: soundDict["url"] as! String, location: "", code: code, info: soundDict)
+            mediaManager?.startDownload(forMedia: sound, atPriority: .low)
+        }
+    }
+    
+    
+}
+
+
+extension JinyAUIManager:JinyPointerDelegate {
+    
+    func pointerPresented() {
+        self.auiManagerCallBack?.didPresentView()
+        playAudio()
+    }
+    
+    func nextClicked() { auiManagerCallBack?.stagePerformed() }
+    
+    func pointerRemoved() {
+        
+    }
 }
 
 extension JinyAUIManager:JinyBottomDiscoveryDelegate {
@@ -179,15 +362,26 @@ extension JinyAUIManager:JinyBottomDiscoveryDelegate {
     func discoveryPresentedWithOptInButton(_ button: UIButton) {
         presentPointer(toView: button, ofType: .FingerRipple)
         auiManagerCallBack?.discoveryPresented()
+        auiManagerCallBack?.didPresentView()
     }
     
-    func discoverySheetDismissed() { auiManagerCallBack?.discoveryMuted() }
+    func discoverySheetDismissed() {
+        auiManagerCallBack?.discoveryMuted()
+        auiManagerCallBack?.didDismissView()
+    }
     
-    func optOutButtonClicked() { auiManagerCallBack?.discoveryMuted() }
+    func optOutButtonClicked() {
+        auiManagerCallBack?.discoveryMuted()
+        auiManagerCallBack?.didDismissView()
+    }
     
-    func optInButtonClicked() { auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0) }
+    func optInButtonClicked() {
+        auiManagerCallBack?.didDismissView()
+        auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0)
+    }
     
     func discoveryLanguageButtonClicked() {
+        auiManagerCallBack?.didDismissView()
         guard let langs = auiManagerCallBack?.getLanguages() else {
             auiManagerCallBack?.discoveryReset()
             return
@@ -197,10 +391,11 @@ extension JinyAUIManager:JinyBottomDiscoveryDelegate {
     
 }
 
-
 extension JinyAUIManager:JinyLanguagePanelDelegate {
     
-    func languagePanelPresented() { auiManagerCallBack?.languagePanelOpened() }
+    func languagePanelPresented() {
+        auiManagerCallBack?.languagePanelOpened()
+    }
     
     func failedToPresentLanguagePanel() {}
     
@@ -211,9 +406,8 @@ extension JinyAUIManager:JinyLanguagePanelDelegate {
     func languagePanelSwipeDismissed() { auiManagerCallBack?.languagePanelClosed() }
     
     func languagePanelTappedOutside() { auiManagerCallBack?.languagePanelClosed() }
-
+    
 }
-
 
 extension JinyAUIManager:JinyOptionPanelDelegate {
     
@@ -253,5 +447,32 @@ extension JinyAUIManager:JinyFlowSelectorDelegate {
     func selectorViewRemoved() { auiManagerCallBack?.flowSelectorDismissed() }
     
     func closeButtonClicked() { auiManagerCallBack?.flowSelectorDismissed() }
+    
+}
 
+extension JinyAUIManager:AVAudioPlayerDelegate {
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        self.auiManagerCallBack?.didPlayAudio()
+        if pointer != nil {
+            if pointer!.isMember(of: JinyHighlightPointer.self) { auiManagerCallBack?.stagePerformed() }
+        }
+    }
+    
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        self.auiManagerCallBack?.didPlayAudio()
+    }
+    
+}
+
+extension JinyAUIManager:AVSpeechSynthesizerDelegate {
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        auiManagerCallBack?.didPlayAudio()
+    }
+    
+}
+
+extension JinyAUIManager:JinyMediaManagerDelegate {
+    
 }
