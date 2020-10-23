@@ -64,14 +64,17 @@ class ProtocolManager: JinySocketListener {
     }
     
     func sendJoinRoomRequest(roomId: String)->Void{
-        let json: [String: String] = [
-            "room": "\(roomId)",
-            "action": "join",
-            "source": "android"
-        ]
+//        let json: [String: String] = [
+//            "room": "\(roomId)",
+//            "action": "join",
+//            "source": "android"
+//        ]
         
-        let data = (try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted))!
-        webSocketTask?.write(data: data)
+        let json = "{ \"room\": \"\(roomId)\", \"action\": \"join\",\"source\": \"android\"}"
+        //let data = (try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted))!
+        webSocketTask?.write(string: json, completion: {
+            print("Connecting to room ID :: \(roomId)")
+        })
     }
 }
 

@@ -22,6 +22,7 @@ class StreamingManager {
     var image: UIImage?
     let PACKET_SIZE: Int = 10000
     var streamingTask: DispatchWorkItem?
+    var previousImage: UIImage?
     
     init(context: UIApplication){
         self.context = context
@@ -45,7 +46,7 @@ class StreamingManager {
     }
     
     func sendStreamingData(image: UIImage){
-        let imageEncode: String = (self.image?.jpegData(compressionQuality: 0.2)?.base64EncodedString())!
+        let imageEncode: String = (self.image?.jpegData(compressionQuality: 0.1)?.base64EncodedString())!
         let splittedString = imageEncode.components(withMaxLength: 10000)
        // self.sendScreenshotData(encodedString: imageEncode)
         let room = self.roomId as String?
@@ -54,68 +55,16 @@ class StreamingManager {
             guard let roomId = room else {
                 return
             }
-            let message = "{ \"room\": \" \(roomId) \", \"message\": \" \(sub) \", \"action\": \"message\", \"type\": \"image\", \"source\": \"android\",\"id\":\"\(roomId)\",\"end\": \"\(end)\" }"
-            webSocket?.write(string: message, completion: {
+            let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\"}"
+            let payload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
+            
+            webSocket?.write(string: payload, completion: {
                 print("End :: \(end)")
+                self.previousImage = self.image
             })
             
         }
     }
-    
-//    func sendScreenshotData(encodedString: String){
-//        var len = encodedString.count
-//        var iterator = 0
-//
-//        var lastPacketStartIndex: Int = 0
-//
-//        for iterator in stride(from: 0, to: len, by: PACKET_SIZE) {
-//            if iterator + PACKET_SIZE >= len {
-//                lastPacketStartIndex = iterator
-//                break
-//            }
-//            let range = iterator..<iterator + PACKET_SIZE
-//            var packetString = encodedString[range]
-//
-//            let payload: [String: Any] = [
-//                "dataPacket": "\(packetString)",
-//                "commandType": "SCREENSTREAM",
-//                "end":"false",
-//                "room":"\(self.roomId)",
-//                "message": [
-//                    "key":"value"
-//                ],
-//                "action":"message",
-//                "source":"android"
-//            ]
-//
-//            guard let jsonifiedData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed),
-//                  let jsonString = String(data: jsonifiedData, encoding: .utf8) else { return }
-//            webSocket?.write(string: jsonString, completion: {
-//                print("Written Individual packets! ")
-//            })
-//        }
-//
-//        let lastPacketRange = lastPacketStartIndex..<encodedString.count
-//        var lastPacket = encodedString[lastPacketRange]
-//
-//        let payload: [String: Any] = [
-//            "dataPacket": "\(lastPacket)",
-//            "commandType": "SCREENSTREAM",
-//            "end":"true",
-//            "room":"\(self.roomId)",
-//            "message":[
-//                "key":"value"
-//            ],
-//            "action":"message",
-//            "source":"android"
-//        ]
-//
-//        guard let jsonifiedData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed),
-//              let jsonString = String(data: jsonifiedData, encoding: .utf8) else { return }
-//        webSocket?.write(string: jsonString, completion: {
-//            print("Sent last packet! ")
-//        })
-//    }
 }
 
 extension String {
