@@ -26,6 +26,13 @@
 		B6153A47253E9945008CA08F /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A46253E9945008CA08F /* ProtocolManager.swift */; };
 		B6153A51253E9A59008CA08F /* MasterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A50253E9A59008CA08F /* MasterManager.swift */; };
 		B6153A5B253E9FC5008CA08F /* AppIdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A5A253E9FC5008CA08F /* AppIdManager.swift */; };
+		B64FCAFF25408173008BB342 /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCAFE25408173008BB342 /* TopViewController.swift */; };
+		B64FCB0825418D8E008BB342 /* JinyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0850078242CC081007889B1 /* JinyUtils.swift */; };
+		B64FCB232541C8AA008BB342 /* ScreenCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB222541C8A9008BB342 /* ScreenCaptureManager.swift */; };
+		B64FCB2D2541C8DF008BB342 /* StreamingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB2C2541C8DF008BB342 /* StreamingManager.swift */; };
+		B64FCB382541D460008BB342 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = B64FCB372541D460008BB342 /* Starscream */; };
+		B64FCB422541D620008BB342 /* JinySocketMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB412541D61F008BB342 /* JinySocketMessageDelegate.swift */; };
+		B64FCB542542B95F008BB342 /* ScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB532542B95E008BB342 /* ScreenHelper.swift */; };
 		D0084C882486814D0082508C /* JinyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* JinyConfig.swift */; };
 		D0084C8A2486817B0082508C /* JinySound.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C892486817B0082508C /* JinySound.swift */; };
 		D0084C8C248681A30082508C /* JinyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* JinyFlow.swift */; };
@@ -251,6 +258,11 @@
 		B6153A46253E9945008CA08F /* ProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolManager.swift; sourceTree = "<group>"; };
 		B6153A50253E9A59008CA08F /* MasterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterManager.swift; sourceTree = "<group>"; };
 		B6153A5A253E9FC5008CA08F /* AppIdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdManager.swift; sourceTree = "<group>"; };
+		B64FCAFE25408173008BB342 /* TopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
+		B64FCB222541C8A9008BB342 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
+		B64FCB2C2541C8DF008BB342 /* StreamingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingManager.swift; sourceTree = "<group>"; };
+		B64FCB412541D61F008BB342 /* JinySocketMessageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySocketMessageDelegate.swift; sourceTree = "<group>"; };
+		B64FCB532542B95E008BB342 /* ScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHelper.swift; sourceTree = "<group>"; };
 		D0084C872486814D0082508C /* JinyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyConfig.swift; sourceTree = "<group>"; };
 		D0084C892486817B0082508C /* JinySound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySound.swift; sourceTree = "<group>"; };
 		D0084C8B248681A30082508C /* JinyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlow.swift; sourceTree = "<group>"; };
@@ -378,6 +390,7 @@
 			files = (
 				D077C92524B9B34C001A04DF /* WebKit.framework in Frameworks */,
 				D077C92424B9B346001A04DF /* UIKit.framework in Frameworks */,
+				B64FCB382541D460008BB342 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +493,11 @@
 				B6153A46253E9945008CA08F /* ProtocolManager.swift */,
 				B6153A50253E9A59008CA08F /* MasterManager.swift */,
 				B6153A5A253E9FC5008CA08F /* AppIdManager.swift */,
+				B64FCAFE25408173008BB342 /* TopViewController.swift */,
+				B64FCB222541C8A9008BB342 /* ScreenCaptureManager.swift */,
+				B64FCB2C2541C8DF008BB342 /* StreamingManager.swift */,
+				B64FCB412541D61F008BB342 /* JinySocketMessageDelegate.swift */,
+				B64FCB532542B95E008BB342 /* ScreenHelper.swift */,
 			);
 			path = JinyAuthSDK;
 			sourceTree = "<group>";
@@ -814,6 +832,9 @@
 			dependencies = (
 			);
 			name = JinyAuthSDK;
+			packageProductDependencies = (
+				B64FCB372541D460008BB342 /* Starscream */,
+			);
 			productName = JinyAuthSDK;
 			productReference = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1028,6 +1049,9 @@
 				Base,
 			);
 			mainGroup = D0592E6D241FA6E3007782A8;
+			packageReferences = (
+				B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */,
+			);
 			productRefGroup = D0592E78241FA6E3007782A8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1150,11 +1174,17 @@
 			files = (
 				D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */,
 				B6153A47253E9945008CA08F /* ProtocolManager.swift in Sources */,
+				B64FCB422541D620008BB342 /* JinySocketMessageDelegate.swift in Sources */,
+				B64FCB542542B95F008BB342 /* ScreenHelper.swift in Sources */,
 				B6153A3D253E9933008CA08F /* PermissionManager.swift in Sources */,
+				B64FCB0825418D8E008BB342 /* JinyUtils.swift in Sources */,
+				B64FCB232541C8AA008BB342 /* ScreenCaptureManager.swift in Sources */,
 				B6153A33253E98DB008CA08F /* BeaconManager.swift in Sources */,
 				D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */,
 				D049F5F7249D242000372324 /* JinyAuth.swift in Sources */,
+				B64FCAFF25408173008BB342 /* TopViewController.swift in Sources */,
 				B6153A5B253E9FC5008CA08F /* AppIdManager.swift in Sources */,
+				B64FCB2D2541C8DF008BB342 /* StreamingManager.swift in Sources */,
 				B6153A51253E9A59008CA08F /* MasterManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2017,6 +2047,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B64FCB372541D460008BB342 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D0592E6E241FA6E3007782A8 /* Project object */;
 }

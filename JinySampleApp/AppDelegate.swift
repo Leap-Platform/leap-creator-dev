@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 //        JinyAUI.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
 //        let _ = Jiny.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36", isTesting: false, uiManager: nil)
-       
+        
         JinyAuth.instance.initialize(application: application, withToken: "Api key passed ")
         return true
     }
