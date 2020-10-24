@@ -12,6 +12,9 @@ import Foundation
 class JinyAnalyticsEvent:Codable {
     
     var id:String
+    var jiny_custom_events:JinyCustomEvent?
+    var jiny_crash_event:Dictionary<String,String>?
+    var jiny_standard_event:JinyStandardEvent?
     var jiny_session_id:String
     var client_id:String
     var jiny_menu_item_click_info:JinyMenuItemClickInfo?
@@ -25,7 +28,7 @@ class JinyAnalyticsEvent:Codable {
     var device_info:JinyDeviceInfo
     var google_user_info:JinyAppleIdInfo
     var output_type_info:JinyOutputTypeInfo?
-    var time_info:JinyTimeInfo
+    var jiny_timestamp:JinyTimeInfo
     var timestamp:String
     var jiny_lambda_info:JinyLambdaInfo?
     var context_type_info:JinyContextTypeInfo?
@@ -46,7 +49,7 @@ class JinyAnalyticsEvent:Codable {
         device_info = JinyDeviceInfo()
         pilot_info = JinyPilotInfo()
         timestamp = Date.getTimeStamp()
-        time_info = JinyTimeInfo(ts: timestamp)
+        jiny_timestamp = JinyTimeInfo(ts: timestamp)
     }
     
     

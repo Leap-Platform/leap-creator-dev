@@ -1,0 +1,210 @@
+//
+//  JinyNotification.swift
+//  JinyDemo
+//
+//  Created by mac on 07/10/20.
+//  Copyright © 2020 Jiny. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import WebKit
+
+/// JinyNotification - A Web KeyWindowAssist AUI Component class to show a webview Notification over a window.
+public class JinyNotification: JinyKeyWindowAssist {
+    
+    /// alignment property for Notification - top and bottom
+    public var alignment: JinyAlignmentType = .top
+        
+    public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+        super.init(withDict: assistDict, iconDict: iconDict)
+                                
+        if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
+            
+            self.alignment = JinyAlignmentType(rawValue: alignment) ?? .top
+        }
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeRight.direction = .right
+        self.webView.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeRight.direction = .left
+        self.webView.addGestureRecognizer(swipeLeft)
+
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeDown.direction = .down
+        self.webView.addGestureRecognizer(swipeDown)
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeUp.direction = .up
+        self.webView.addGestureRecognizer(swipeUp)
+        
+        inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
+        
+        self.webView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 1))
+    }
+    
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// call the method to configure constraints for the component and to load the content to display.
+    public func showNotification() {
+        
+        configureWebView()
+        
+        show()
+    }
+    
+    /// overrides configureWebView() method. sets enter animation and constraints
+    override func configureWebView() {
+        
+        self.webView.isUserInteractionEnabled = true
+        
+        self.webView.scrollView.isScrollEnabled = false
+        
+        self.assistInfo?.layoutInfo?.enterAnimation = self.alignment == .top ? "slide_down" : "slide_up"
+                
+        if self.alignment == .top || self.alignment == .bottom {
+        
+            configureWebViewForNotification(alignment: self.alignment)
+        
+        } else {
+            
+           print("There is no other alignment for notification except top and bottom")
+        }
+    }
+    
+    /// This is a custom configuration of constraints for the Notification component.
+    /// - Parameters:
+    ///   - alignment: the alignment of the webview whether it is top or bottom.
+    private func configureWebViewForNotification(alignment: JinyAlignmentType) {
+        
+        inView?.addSubview(self.webView)
+                                
+        // Setting Constraints to WebView
+        
+        webView.translatesAutoresizingMaskIntoConstraints = false
+                        
+        let attributeType: NSLayoutConstraint.Attribute = alignment == .top ? .top : .bottom
+        
+        let constant = alignment == .top ? 24 : -24
+        
+        inView?.addConstraint(NSLayoutConstraint(item: webView, attribute: attributeType, relatedBy: .equal, toItem: inView, attribute: attributeType, multiplier: 1, constant: CGFloat(constant)))
+        
+        inView?.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: inView, attribute: .trailing, multiplier: 1, constant: -24))
+        
+        inView?.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: inView, attribute: .leading, multiplier: 1, constant: 24))
+    }
+    
+    /// Set height constraint for the Notification.
+    /// - Parameters:
+    ///   - height: Height of the content of the webview.
+    private func configureHeightConstraint(height: CGFloat) {
+        
+        self.webView.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: height))
+    }
+    
+    public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
+            if let height = value as? CGFloat {
+                                
+                self?.configureHeightConstraint(height: height)
+                
+                if self?.alignment == .top {
+                    
+                    self?.configureJinyIconView(superView: self!.inView!, toItemView: webView, alignmentType: .bottom)
+                
+                } else {
+                    
+                    self?.configureJinyIconView(superView: self!.inView!, toItemView: webView, alignmentType: .top)
+                }
+            }
+        })
+    }
+    
+    /// animates the webview according to the direction of swipe gesture.
+    /// - Parameters:
+    ///   - gesture: type of gesture recognizer, primarily the direction of the swipe.
+    @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+
+            switch (swipeGesture.direction, self.alignment) {
+                
+            case (.right, .top), (.right, .bottom):
+                                
+                UIView.animate(withDuration: 0.15, animations: {
+                    
+                  self.jinyIconView.alpha = 0
+                    
+                  self.webView.frame.origin.x = UIScreen.main.bounds.width
+                    
+                  self.delegate?.didExitAnimation()
+                    
+                }) { (success) in
+                    
+                    self.webView.removeFromSuperview()
+                    
+                    self.delegate?.didDismissAssist()
+                }
+                
+            case (.down, .bottom):
+                
+                UIView.animate(withDuration: 0.15, animations: {
+                    
+                  self.jinyIconView.alpha = 0
+                    
+                  self.webView.frame.origin.y = UIScreen.main.bounds.height
+                    
+                  self.delegate?.didExitAnimation()
+                    
+                }) { (success) in
+                    
+                    self.webView.removeFromSuperview()
+                    
+                    self.delegate?.didDismissAssist()
+                }
+                
+            case (.left, .top), (.left, .bottom):
+                
+                UIView.animate(withDuration: 0.15, animations: {
+                    
+                  self.jinyIconView.alpha = 0
+                    
+                  self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                    
+                  self.delegate?.didExitAnimation()
+                    
+                }) { (success) in
+                    
+                    self.webView.removeFromSuperview()
+                    
+                    self.delegate?.didDismissAssist()
+                }
+                
+            case (.up, .top):
+                
+                UIView.animate(withDuration: 0.15, animations: {
+                    
+                  self.jinyIconView.alpha = 0
+                    
+                  self.webView.frame.origin.y = -(UIScreen.main.bounds.height)
+                    
+                  self.delegate?.didExitAnimation()
+                    
+                }) { (success) in
+                    
+                    self.webView.removeFromSuperview()
+                    
+                    self.delegate?.didDismissAssist()
+                }
+                
+            default:
+                break
+            }
+        }
+    }
+}

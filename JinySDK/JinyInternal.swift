@@ -64,11 +64,6 @@ extension JinyInternal {
     }
 }
 
-// MARK: - GENERATE AND RETRIEVE SESSION ID
-
-extension JinyInternal {
-    
-}
 
 // MARK: - FETCH CONFIGURATION AND AUDIO DOWNLOAD
 
@@ -85,8 +80,8 @@ extension JinyInternal {
             self.jinyConfiguration = JinyConfig(withDict: configDict)
             self.setupDefaultLanguage()
             self.startContextDetection()
-            self.soundDownload()
-            self.fetchAudio()
+//            self.soundDownload()
+//            self.fetchAudio()
         }
         configTask.resume()
     }

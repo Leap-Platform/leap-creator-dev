@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import JinyAUI
 
 class HomeViewController: UIViewController {
     
@@ -80,7 +81,10 @@ class HomeViewController: UIViewController {
 extension HomeViewController:PlacesDelegate {
     
     func placeSelected(_ place: String, _ isSource: Bool) {
-        if isSource { source.setTitle(place, for: .normal) }
+        if isSource {
+            source.setTitle(place, for: .normal)
+            JinyAUI.shared.addIdentifier(identifier: "source", value: place)
+        }
         else {destination.setTitle(place, for: .normal)}
     }
     

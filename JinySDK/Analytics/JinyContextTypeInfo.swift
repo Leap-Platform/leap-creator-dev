@@ -13,12 +13,13 @@ class JinyContextTypeInfo:Codable {
     
     var flow_info:JinyFlowInfo
     var page_info:JinyPageInfo
-    var stage_info:JinyStageInfo
+    var stage_info:JinyStageInfo?
     
-    init(flow:JinyFlow, subFlow:JinyFlow?, page:JinyPage, stage:JinyStage) {
+    init(flow:JinyFlow, subFlow:JinyFlow?, page:JinyPage, stage:JinyStage?) {
         flow_info = JinyFlowInfo(flow: flow, subFlow: subFlow)
         page_info = JinyPageInfo(page: page)
-        stage_info = JinyStageInfo(stage: stage)
+        if let stageData = stage { stage_info = JinyStageInfo(stage: stageData) }
+        
     }
     
 }

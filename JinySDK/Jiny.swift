@@ -16,7 +16,15 @@ import UIKit
 
 @objc public protocol JinyAUIHandler:NSObjectProtocol {
     
+    func startMediaFetch()
+    func performInstruction(instruction:Dictionary<String,Any>, inView:UIView)
+    func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?)
+    func performInstruction(instruction:Dictionary<String,Any>)
+    func updateRect(rect:CGRect, inWebView:UIView?)
+    func updateView(inView:UIView)
+    
     func playAudio()
+    func playTTS(withLangCode:String)
     func presentJinyButton()
     func presentBottomDiscovery(header:String, optInText:String, optOutText:String, languages:Array<String>)
     func presentPingDiscovery()
@@ -32,8 +40,23 @@ import UIKit
 }
 
 @objc public protocol JinyAUICallback:NSObjectProtocol {
+    
+    func getDefaultMedia() -> Dictionary<String,Dictionary<String,Any>>
+    
+    func triggerEvent(identifier:String, value:Any)
+    
+    func tryTTS() -> String?
     func getAudioFilePath() -> String?
+    func getTTSText() -> String?
     func getLanguages() -> Array<String>
+    func getLanguageCode() -> String
+    
+    func willPresentView()
+    func didPresentView()
+    func willPlayAudio()
+    func didPlayAudio()
+    func failedToPerform()
+    func didDismissView()
     
     func stagePerformed()
     

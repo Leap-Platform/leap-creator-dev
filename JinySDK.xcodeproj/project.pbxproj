@@ -33,6 +33,7 @@
 		D00B8F68249B2988006F4CA1 /* JinyAuthSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D00B8F58249B2988006F4CA1 /* JinyAuthSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D00B8F6B249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
 		D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D00E859A24F51914000D8E5B /* JinyAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E859924F51914000D8E5B /* JinyAssist.swift */; };
 		D02E8A7024A8DF1E00374DE8 /* JinyIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */; };
 		D032C57C24B6FF11006E8F2B /* JinyLanguageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB062492C600004FFD99 /* JinyLanguageButton.swift */; };
 		D032C57E24B6FF35006E8F2B /* JinyBottomDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB072492C600004FFD99 /* JinyBottomDiscoveryView.swift */; };
@@ -73,6 +74,9 @@
 		D049F5F7249D242000372324 /* JinyAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F6249D242000372324 /* JinyAuth.swift */; };
 		D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */; };
 		D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04BBA362472832000DF9716 /* LoginOptionViewController.swift */; };
+		D0521CA124F6401F00EEE719 /* JinyAssistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */; };
+		D0521CA324F6434E00EEE719 /* JinyEventDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA224F6434E00EEE719 /* JinyEventDetector.swift */; };
+		D0521CA524F8ECF900EEE719 /* JinyFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA424F8ECF900EEE719 /* JinyFeature.swift */; };
 		D0592E81241FA6E3007782A8 /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
 		D0592E86241FA6E3007782A8 /* JinySDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0592E85241FA6E3007782A8 /* JinySDKTests.swift */; };
 		D0592E88241FA6E3007782A8 /* JinySDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* JinySDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -94,6 +98,11 @@
 		D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */; };
 		D0850079242CC081007889B1 /* JinyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0850078242CC081007889B1 /* JinyUtils.swift */; };
 		D08C079B247FBFD40026F068 /* JinyAnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08C079A247FBFD40026F068 /* JinyAnalyticsManager.swift */; };
+		D0938E0E251DD67100FD462E /* JinyMediaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E0D251DD67000FD462E /* JinyMediaManager.swift */; };
+		D0938E10251DD7AB00FD462E /* JinyNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E0F251DD7AB00FD462E /* JinyNetworking.swift */; };
+		D0938E12251DD8E900FD462E /* JinyMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E11251DD8E900FD462E /* JinyMedia.swift */; };
+		D0938E13251E1BAC00FD462E /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C91E24B9B2BF001A04DF /* AdSupport.framework */; };
+		D099B0D0254055B500E66ED6 /* UIWebviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */; };
 		D09C722E246A987A0060E054 /* JinyFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722D246A987A0060E054 /* JinyFlowManager.swift */; };
 		D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* JinyStageManager.swift */; };
 		D0ABD0062481155F0069FA67 /* JinyAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */; };
@@ -122,6 +131,35 @@
 		D0ABD034248126820069FA67 /* JinySDKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD033248126820069FA67 /* JinySDKInfo.swift */; };
 		D0ABD038248145F60069FA67 /* JinySharedInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD037248145F60069FA67 /* JinySharedInformation.swift */; };
 		D0B205B32494DDEE00C69775 /* FlightSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */; };
+		D0B792C92542F86300DB94DD /* JinyCustomEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B792C82542F86300DB94DD /* JinyCustomEvent.swift */; };
+		D0B792CB2542F8F600DB94DD /* JinyStandardEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B792CA2542F8F600DB94DD /* JinyStandardEvent.swift */; };
+		D0B7932B2543186D00DB94DD /* AssistInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793092543186D00DB94DD /* AssistInfo.swift */; };
+		D0B7932C2543186D00DB94DD /* IconInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7930A2543186D00DB94DD /* IconInfo.swift */; };
+		D0B7932D2543186D00DB94DD /* JinyAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7930B2543186D00DB94DD /* JinyAssist.swift */; };
+		D0B7932E2543186D00DB94DD /* JinyBeacon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7930F2543186D00DB94DD /* JinyBeacon.swift */; };
+		D0B7932F2543186D00DB94DD /* JinyPulsator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793102543186D00DB94DD /* JinyPulsator.swift */; };
+		D0B793302543186D00DB94DD /* JinyNativeAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793112543186D00DB94DD /* JinyNativeAssist.swift */; };
+		D0B793312543186D00DB94DD /* Jiny+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793132543186D00DB94DD /* Jiny+UIView.swift */; };
+		D0B793322543186D00DB94DD /* Jiny+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793142543186D00DB94DD /* Jiny+UIColor.swift */; };
+		D0B793332543186D00DB94DD /* Jiny+CALayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793152543186D00DB94DD /* Jiny+CALayer.swift */; };
+		D0B793342543186D00DB94DD /* LayoutInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793162543186D00DB94DD /* LayoutInfo.swift */; };
+		D0B793352543186D00DB94DD /* JinyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931A2543186D00DB94DD /* JinyLabel.swift */; };
+		D0B793362543186D00DB94DD /* JinySpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931B2543186D00DB94DD /* JinySpot.swift */; };
+		D0B793372543186D00DB94DD /* JinyHighlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931C2543186D00DB94DD /* JinyHighlight.swift */; };
+		D0B793382543186D00DB94DD /* JinyToolTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931D2543186D00DB94DD /* JinyToolTip.swift */; };
+		D0B793392543186D00DB94DD /* JinyInViewAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931E2543186D00DB94DD /* JinyInViewAssist.swift */; };
+		D0B7933A2543186D00DB94DD /* JinyKeyWindowAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793202543186D00DB94DD /* JinyKeyWindowAssist.swift */; };
+		D0B7933B2543186D00DB94DD /* JinyDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793222543186D00DB94DD /* JinyDrawer.swift */; };
+		D0B7933C2543186D00DB94DD /* JinyFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793232543186D00DB94DD /* JinyFullScreen.swift */; };
+		D0B7933D2543186D00DB94DD /* JinyNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793242543186D00DB94DD /* JinyNotification.swift */; };
+		D0B7933E2543186D00DB94DD /* JinyPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793252543186D00DB94DD /* JinyPopup.swift */; };
+		D0B7933F2543186D00DB94DD /* JinyBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793262543186D00DB94DD /* JinyBottomSheet.swift */; };
+		D0B793402543186D00DB94DD /* JinySlideIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793272543186D00DB94DD /* JinySlideIn.swift */; };
+		D0B793412543186D00DB94DD /* JinyWebAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793282543186D00DB94DD /* JinyWebAssist.swift */; };
+		D0B793422543186D00DB94DD /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793292543186D00DB94DD /* Style.swift */; };
+		D0B793432543186D00DB94DD /* JinyIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7932A2543186D00DB94DD /* JinyIconView.swift */; };
+		D0B793452544217500DB94DD /* JinyAssistInfoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793442544217500DB94DD /* JinyAssistInfoType.swift */; };
+		D0B793472544237800DB94DD /* JinyDiscoveryInfoEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793462544237800DB94DD /* JinyDiscoveryInfoEvent.swift */; };
 		D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC371C249DCF24002648FF /* JinyViewProps.swift */; };
 		D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC371E249DFB41002648FF /* AutomaticViewController.swift */; };
 		D0BC372B249DFF60002648FF /* PTUSBHub.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC3721249DFF60002648FF /* PTUSBHub.m */; };
@@ -263,6 +301,7 @@
 		D00B8F5E249B2988006F4CA1 /* JinyAuthSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JinyAuthSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D00B8F65249B2988006F4CA1 /* JinyAuthSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthSDKTests.swift; sourceTree = "<group>"; };
 		D00B8F67249B2988006F4CA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D00E859924F51914000D8E5B /* JinyAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyAssist.swift; sourceTree = "<group>"; };
 		D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIdentifier.swift; sourceTree = "<group>"; };
 		D032C59B24B74C72006E8F2B /* JinyAUIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAUIUtils.swift; sourceTree = "<group>"; };
 		D03E44E02420AABA00A43FEA /* Jiny Sample App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jiny Sample App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,6 +326,9 @@
 		D049F5F6249D242000372324 /* JinyAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuth.swift; sourceTree = "<group>"; };
 		D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthInternal.swift; sourceTree = "<group>"; };
 		D04BBA362472832000DF9716 /* LoginOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOptionViewController.swift; sourceTree = "<group>"; };
+		D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAssistManager.swift; sourceTree = "<group>"; };
+		D0521CA224F6434E00EEE719 /* JinyEventDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyEventDetector.swift; sourceTree = "<group>"; };
+		D0521CA424F8ECF900EEE719 /* JinyFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFeature.swift; sourceTree = "<group>"; };
 		D0592E77241FA6E3007782A8 /* JinySDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JinySDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0592E7A241FA6E3007782A8 /* JinySDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JinySDK.h; sourceTree = "<group>"; };
 		D0592E7B241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -329,6 +371,10 @@
 		D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWebviewViewController.swift; sourceTree = "<group>"; };
 		D0850078242CC081007889B1 /* JinyUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyUtils.swift; sourceTree = "<group>"; };
 		D08C079A247FBFD40026F068 /* JinyAnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAnalyticsManager.swift; sourceTree = "<group>"; };
+		D0938E0D251DD67000FD462E /* JinyMediaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyMediaManager.swift; sourceTree = "<group>"; };
+		D0938E0F251DD7AB00FD462E /* JinyNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyNetworking.swift; sourceTree = "<group>"; };
+		D0938E11251DD8E900FD462E /* JinyMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyMedia.swift; sourceTree = "<group>"; };
+		D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWebviewViewController.swift; sourceTree = "<group>"; };
 		D09C722D246A987A0060E054 /* JinyFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowManager.swift; sourceTree = "<group>"; };
 		D09C722F246A98860060E054 /* JinyStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyStageManager.swift; sourceTree = "<group>"; };
 		D09C7231247174400060E054 /* JinyFlowSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowSelector.swift; sourceTree = "<group>"; };
@@ -358,6 +404,35 @@
 		D0ABD033248126820069FA67 /* JinySDKInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySDKInfo.swift; sourceTree = "<group>"; };
 		D0ABD037248145F60069FA67 /* JinySharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySharedInformation.swift; sourceTree = "<group>"; };
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
+		D0B792C82542F86300DB94DD /* JinyCustomEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyCustomEvent.swift; sourceTree = "<group>"; };
+		D0B792CA2542F8F600DB94DD /* JinyStandardEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyStandardEvent.swift; sourceTree = "<group>"; };
+		D0B793092543186D00DB94DD /* AssistInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssistInfo.swift; sourceTree = "<group>"; };
+		D0B7930A2543186D00DB94DD /* IconInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconInfo.swift; sourceTree = "<group>"; };
+		D0B7930B2543186D00DB94DD /* JinyAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyAssist.swift; sourceTree = "<group>"; };
+		D0B7930F2543186D00DB94DD /* JinyBeacon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyBeacon.swift; sourceTree = "<group>"; };
+		D0B793102543186D00DB94DD /* JinyPulsator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyPulsator.swift; sourceTree = "<group>"; };
+		D0B793112543186D00DB94DD /* JinyNativeAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyNativeAssist.swift; sourceTree = "<group>"; };
+		D0B793132543186D00DB94DD /* Jiny+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Jiny+UIView.swift"; sourceTree = "<group>"; };
+		D0B793142543186D00DB94DD /* Jiny+UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Jiny+UIColor.swift"; sourceTree = "<group>"; };
+		D0B793152543186D00DB94DD /* Jiny+CALayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Jiny+CALayer.swift"; sourceTree = "<group>"; };
+		D0B793162543186D00DB94DD /* LayoutInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutInfo.swift; sourceTree = "<group>"; };
+		D0B7931A2543186D00DB94DD /* JinyLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyLabel.swift; sourceTree = "<group>"; };
+		D0B7931B2543186D00DB94DD /* JinySpot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinySpot.swift; sourceTree = "<group>"; };
+		D0B7931C2543186D00DB94DD /* JinyHighlight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyHighlight.swift; sourceTree = "<group>"; };
+		D0B7931D2543186D00DB94DD /* JinyToolTip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyToolTip.swift; sourceTree = "<group>"; };
+		D0B7931E2543186D00DB94DD /* JinyInViewAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyInViewAssist.swift; sourceTree = "<group>"; };
+		D0B793202543186D00DB94DD /* JinyKeyWindowAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyKeyWindowAssist.swift; sourceTree = "<group>"; };
+		D0B793222543186D00DB94DD /* JinyDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyDrawer.swift; sourceTree = "<group>"; };
+		D0B793232543186D00DB94DD /* JinyFullScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyFullScreen.swift; sourceTree = "<group>"; };
+		D0B793242543186D00DB94DD /* JinyNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyNotification.swift; sourceTree = "<group>"; };
+		D0B793252543186D00DB94DD /* JinyPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyPopup.swift; sourceTree = "<group>"; };
+		D0B793262543186D00DB94DD /* JinyBottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyBottomSheet.swift; sourceTree = "<group>"; };
+		D0B793272543186D00DB94DD /* JinySlideIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinySlideIn.swift; sourceTree = "<group>"; };
+		D0B793282543186D00DB94DD /* JinyWebAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyWebAssist.swift; sourceTree = "<group>"; };
+		D0B793292543186D00DB94DD /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		D0B7932A2543186D00DB94DD /* JinyIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyIconView.swift; sourceTree = "<group>"; };
+		D0B793442544217500DB94DD /* JinyAssistInfoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAssistInfoType.swift; sourceTree = "<group>"; };
+		D0B793462544237800DB94DD /* JinyDiscoveryInfoEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDiscoveryInfoEvent.swift; sourceTree = "<group>"; };
 		D0BC371C249DCF24002648FF /* JinyViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyViewProps.swift; sourceTree = "<group>"; };
 		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
 		D0BC3721249DFF60002648FF /* PTUSBHub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUSBHub.m; sourceTree = "<group>"; };
@@ -452,6 +527,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0FDAC3224B4A70600D9332B /* JinySDK.framework in Frameworks */,
+				D0938E13251E1BAC00FD462E /* AdSupport.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +537,7 @@
 		D0084C862486812B0082508C /* Modals */ = {
 			isa = PBXGroup;
 			children = (
+				D00E859924F51914000D8E5B /* JinyAssist.swift */,
 				D0084C872486814D0082508C /* JinyConfig.swift */,
 				D0084C892486817B0082508C /* JinySound.swift */,
 				D0084C8B248681A30082508C /* JinyFlow.swift */,
@@ -472,6 +549,7 @@
 				D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */,
 				D084A13524AA0BB40093E8AB /* JinyInstruction.swift */,
 				D084A13724AAF2CA0093E8AB /* JinyParams.swift */,
+				D0521CA424F8ECF900EEE719 /* JinyFeature.swift */,
 			);
 			path = Modals;
 			sourceTree = "<group>";
@@ -548,6 +626,7 @@
 				D0BC371E249DFB41002648FF /* AutomaticViewController.swift */,
 				D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */,
 				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
+				D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */,
 			);
 			path = JinySampleApp;
 			sourceTree = "<group>";
@@ -662,6 +741,8 @@
 				D09C722D246A987A0060E054 /* JinyFlowManager.swift */,
 				D09C722F246A98860060E054 /* JinyStageManager.swift */,
 				D084A13924AB58810093E8AB /* JinyDiscoveryManager.swift */,
+				D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */,
+				D0521CA224F6434E00EEE719 /* JinyEventDetector.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
@@ -752,8 +833,116 @@
 				D0ABD02F248125AB0069FA67 /* JinyExperimentInfo.swift */,
 				D0ABD031248125F90069FA67 /* JinyClickInfo.swift */,
 				D0ABD033248126820069FA67 /* JinySDKInfo.swift */,
+				D0B792C82542F86300DB94DD /* JinyCustomEvent.swift */,
+				D0B792CA2542F8F600DB94DD /* JinyStandardEvent.swift */,
+				D0B793442544217500DB94DD /* JinyAssistInfoType.swift */,
+				D0B793462544237800DB94DD /* JinyDiscoveryInfoEvent.swift */,
 			);
 			path = Analytics;
+			sourceTree = "<group>";
+		};
+		D0B793082543186D00DB94DD /* JinyAUIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793092543186D00DB94DD /* AssistInfo.swift */,
+				D0B7930A2543186D00DB94DD /* IconInfo.swift */,
+				D0B7930B2543186D00DB94DD /* JinyAssist.swift */,
+				D0B7930C2543186D00DB94DD /* JinyNativeAssist */,
+				D0B793122543186D00DB94DD /* Extensions */,
+				D0B793162543186D00DB94DD /* LayoutInfo.swift */,
+				D0B793172543186D00DB94DD /* JinyWebAssist */,
+				D0B793292543186D00DB94DD /* Style.swift */,
+				D0B7932A2543186D00DB94DD /* JinyIconView.swift */,
+			);
+			path = JinyAUIComponents;
+			sourceTree = "<group>";
+		};
+		D0B7930C2543186D00DB94DD /* JinyNativeAssist */ = {
+			isa = PBXGroup;
+			children = (
+				D0B7930D2543186D00DB94DD /* Components */,
+				D0B793112543186D00DB94DD /* JinyNativeAssist.swift */,
+			);
+			path = JinyNativeAssist;
+			sourceTree = "<group>";
+		};
+		D0B7930D2543186D00DB94DD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D0B7930E2543186D00DB94DD /* JinyBeacon */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		D0B7930E2543186D00DB94DD /* JinyBeacon */ = {
+			isa = PBXGroup;
+			children = (
+				D0B7930F2543186D00DB94DD /* JinyBeacon.swift */,
+				D0B793102543186D00DB94DD /* JinyPulsator.swift */,
+			);
+			path = JinyBeacon;
+			sourceTree = "<group>";
+		};
+		D0B793122543186D00DB94DD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793132543186D00DB94DD /* Jiny+UIView.swift */,
+				D0B793142543186D00DB94DD /* Jiny+UIColor.swift */,
+				D0B793152543186D00DB94DD /* Jiny+CALayer.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D0B793172543186D00DB94DD /* JinyWebAssist */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793182543186D00DB94DD /* JinyInViewAssist */,
+				D0B7931F2543186D00DB94DD /* JinyKeyWindowAssist */,
+				D0B793282543186D00DB94DD /* JinyWebAssist.swift */,
+			);
+			path = JinyWebAssist;
+			sourceTree = "<group>";
+		};
+		D0B793182543186D00DB94DD /* JinyInViewAssist */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793192543186D00DB94DD /* Components */,
+				D0B7931E2543186D00DB94DD /* JinyInViewAssist.swift */,
+			);
+			path = JinyInViewAssist;
+			sourceTree = "<group>";
+		};
+		D0B793192543186D00DB94DD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D0B7931A2543186D00DB94DD /* JinyLabel.swift */,
+				D0B7931B2543186D00DB94DD /* JinySpot.swift */,
+				D0B7931C2543186D00DB94DD /* JinyHighlight.swift */,
+				D0B7931D2543186D00DB94DD /* JinyToolTip.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		D0B7931F2543186D00DB94DD /* JinyKeyWindowAssist */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793202543186D00DB94DD /* JinyKeyWindowAssist.swift */,
+				D0B793212543186D00DB94DD /* Components */,
+			);
+			path = JinyKeyWindowAssist;
+			sourceTree = "<group>";
+		};
+		D0B793212543186D00DB94DD /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793222543186D00DB94DD /* JinyDrawer.swift */,
+				D0B793232543186D00DB94DD /* JinyFullScreen.swift */,
+				D0B793242543186D00DB94DD /* JinyNotification.swift */,
+				D0B793252543186D00DB94DD /* JinyPopup.swift */,
+				D0B793262543186D00DB94DD /* JinyBottomSheet.swift */,
+				D0B793272543186D00DB94DD /* JinySlideIn.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		D0BC3720249DFF60002648FF /* peertalk */ = {
@@ -774,6 +963,7 @@
 		D0FDAC2324B48B3C00D9332B /* JinyAUI */ = {
 			isa = PBXGroup;
 			children = (
+				D0B793082543186D00DB94DD /* JinyAUIComponents */,
 				D032C59A24B74C5B006E8F2B /* JinyAUIUtils */,
 				D032C59224B7008D006E8F2B /* JinyFlowSelector */,
 				D032C59024B70061006E8F2B /* JinyButton */,
@@ -787,6 +977,9 @@
 				D0FDAC2524B48B3C00D9332B /* Info.plist */,
 				D0FDAC3024B4A49700D9332B /* JinyAUI.swift */,
 				D0FDAC3724B4BF7100D9332B /* JinyAUIManager.swift */,
+				D0938E0D251DD67000FD462E /* JinyMediaManager.swift */,
+				D0938E0F251DD7AB00FD462E /* JinyNetworking.swift */,
+				D0938E11251DD8E900FD462E /* JinyMedia.swift */,
 			);
 			path = JinyAUI;
 			sourceTree = "<group>";
@@ -1002,7 +1195,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1170;
 				ORGANIZATIONNAME = "Aravind GS";
 				TargetAttributes = {
 					D00B8F55249B2988006F4CA1 = {
@@ -1201,6 +1394,7 @@
 				D03E44E72420AABA00A43FEA /* HomeViewController.swift in Sources */,
 				D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */,
 				D0BC9ED824AE243000CE5364 /* MultipleWebViewsViewController.swift in Sources */,
+				D099B0D0254055B500E66ED6 /* UIWebviewViewController.swift in Sources */,
 				D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */,
 				D03E44E32420AABA00A43FEA /* AppDelegate.swift in Sources */,
 				D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */,
@@ -1234,17 +1428,22 @@
 				D071662F24629D5D001937EE /* JinyContextManager.swift in Sources */,
 				D0084C882486814D0082508C /* JinyConfig.swift in Sources */,
 				D0ABD022248122A80069FA67 /* JinyTimeInfo.swift in Sources */,
+				D0B792CB2542F8F600DB94DD /* JinyStandardEvent.swift in Sources */,
 				D0ABD00C248117760069FA67 /* JinyCallbacksInfo.swift in Sources */,
 				D0084C90248681F90082508C /* JinyStage.swift in Sources */,
 				D0ABD00A248116D30069FA67 /* JinyBottomActivityStateInfo.swift in Sources */,
 				D0084C8A2486817B0082508C /* JinySound.swift in Sources */,
+				D0521CA324F6434E00EEE719 /* JinyEventDetector.swift in Sources */,
 				D03E45132420F75400A43FEA /* JinyNetworking.swift in Sources */,
 				D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */,
 				D0ABD024248123350069FA67 /* JinyLambdaInfo.swift in Sources */,
+				D0B793472544237800DB94DD /* JinyDiscoveryInfoEvent.swift in Sources */,
 				D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */,
 				D0ABD034248126820069FA67 /* JinySDKInfo.swift in Sources */,
+				D0521CA124F6401F00EEE719 /* JinyAssistManager.swift in Sources */,
 				D0ABD02A248124250069FA67 /* JinyPageInfo.swift in Sources */,
 				D0ABD02C248124D50069FA67 /* JinyStageInfo.swift in Sources */,
+				D0521CA524F8ECF900EEE719 /* JinyFeature.swift in Sources */,
 				D0ABD01824811FEB0069FA67 /* JinyDiscoveryItemClickInfo.swift in Sources */,
 				D08C079B247FBFD40026F068 /* JinyAnalyticsManager.swift in Sources */,
 				D0592E92241FAA3D007782A8 /* Jiny.swift in Sources */,
@@ -1255,9 +1454,11 @@
 				D0ABD02E248125390069FA67 /* JinyPilotInfo.swift in Sources */,
 				D0ABD01A248120C90069FA67 /* JinyClientPreference.swift in Sources */,
 				D0ABD0202481221E0069FA67 /* JinyOutputTypeInfo.swift in Sources */,
+				D00E859A24F51914000D8E5B /* JinyAssist.swift in Sources */,
 				D02E8A7024A8DF1E00374DE8 /* JinyIdentifier.swift in Sources */,
 				D0ABD038248145F60069FA67 /* JinySharedInformation.swift in Sources */,
 				D0ABD0262481237E0069FA67 /* JinyContextTypeInfo.swift in Sources */,
+				D0B793452544217500DB94DD /* JinyAssistInfoType.swift in Sources */,
 				D0ABD01624811B060069FA67 /* JinyDiscoveryExpInfo.swift in Sources */,
 				D09C722E246A987A0060E054 /* JinyFlowManager.swift in Sources */,
 				D084A13824AAF2CA0093E8AB /* JinyParams.swift in Sources */,
@@ -1273,6 +1474,7 @@
 				D071662D24629D3E001937EE /* JinyContextDetector.swift in Sources */,
 				D04356C32498CB7C00B90276 /* JinyLanguage.swift in Sources */,
 				D084A13624AA0BB40093E8AB /* JinyInstruction.swift in Sources */,
+				D0B792C92542F86300DB94DD /* JinyCustomEvent.swift in Sources */,
 				D0ABD01E248121A50069FA67 /* JinyAppleIdInfo.swift in Sources */,
 				D0ABD028248123D60069FA67 /* JinyFlowInfo.swift in Sources */,
 				D0084C92248682A80082508C /* JinyDiscovery.swift in Sources */,
@@ -1300,21 +1502,49 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0B793372543186D00DB94DD /* JinyHighlight.swift in Sources */,
+				D0B793382543186D00DB94DD /* JinyToolTip.swift in Sources */,
+				D0B7933B2543186D00DB94DD /* JinyDrawer.swift in Sources */,
+				D0B793412543186D00DB94DD /* JinyWebAssist.swift in Sources */,
+				D0B793312543186D00DB94DD /* Jiny+UIView.swift in Sources */,
 				D032C59424B700B4006E8F2B /* JinyMainButton.swift in Sources */,
+				D0B7932F2543186D00DB94DD /* JinyPulsator.swift in Sources */,
 				D032C57C24B6FF11006E8F2B /* JinyLanguageButton.swift in Sources */,
 				D032C58124B6FF35006E8F2B /* JinySwipeDismiss.swift in Sources */,
+				D0B793302543186D00DB94DD /* JinyNativeAssist.swift in Sources */,
+				D0938E10251DD7AB00FD462E /* JinyNetworking.swift in Sources */,
+				D0B793322543186D00DB94DD /* Jiny+UIColor.swift in Sources */,
 				D0FDAC3124B4A49700D9332B /* JinyAUI.swift in Sources */,
+				D0B7933D2543186D00DB94DD /* JinyNotification.swift in Sources */,
+				D0938E12251DD8E900FD462E /* JinyMedia.swift in Sources */,
+				D0B793402543186D00DB94DD /* JinySlideIn.swift in Sources */,
+				D0B793352543186D00DB94DD /* JinyLabel.swift in Sources */,
 				D032C58624B6FF35006E8F2B /* JinyOptionPanel.swift in Sources */,
+				D0B7933F2543186D00DB94DD /* JinyBottomSheet.swift in Sources */,
+				D0B793432543186D00DB94DD /* JinyIconView.swift in Sources */,
+				D0B7932C2543186D00DB94DD /* IconInfo.swift in Sources */,
 				D032C59324B700B0006E8F2B /* JinyFlowSelector.swift in Sources */,
 				D032C58224B6FF35006E8F2B /* JinyDragRect.swift in Sources */,
+				D0938E0E251DD67100FD462E /* JinyMediaManager.swift in Sources */,
 				D032C59C24B74C72006E8F2B /* JinyAUIUtils.swift in Sources */,
 				D032C58424B6FF35006E8F2B /* JinyLanguagePanel.swift in Sources */,
+				D0B7933C2543186D00DB94DD /* JinyFullScreen.swift in Sources */,
 				D032C57F24B6FF35006E8F2B /* JinyOptInButton.swift in Sources */,
+				D0B7933A2543186D00DB94DD /* JinyKeyWindowAssist.swift in Sources */,
+				D0B793362543186D00DB94DD /* JinySpot.swift in Sources */,
 				D032C58024B6FF35006E8F2B /* JinyPoweredBy.swift in Sources */,
 				D032C57E24B6FF35006E8F2B /* JinyBottomDiscoveryView.swift in Sources */,
 				D0FDAC3824B4BF7100D9332B /* JinyAUIManager.swift in Sources */,
+				D0B793422543186D00DB94DD /* Style.swift in Sources */,
+				D0B7932E2543186D00DB94DD /* JinyBeacon.swift in Sources */,
 				D032C58524B6FF35006E8F2B /* JinyOptionPanelButton.swift in Sources */,
+				D0B793332543186D00DB94DD /* Jiny+CALayer.swift in Sources */,
 				D032C58324B6FF35006E8F2B /* JinyLanguageRow.swift in Sources */,
+				D0B7932B2543186D00DB94DD /* AssistInfo.swift in Sources */,
+				D0B7932D2543186D00DB94DD /* JinyAssist.swift in Sources */,
+				D0B793342543186D00DB94DD /* LayoutInfo.swift in Sources */,
+				D0B7933E2543186D00DB94DD /* JinyPopup.swift in Sources */,
+				D0B793392543186D00DB94DD /* JinyInViewAssist.swift in Sources */,
 				D032C59524B700BA006E8F2B /* JinyPointer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1741,8 +1971,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1768,8 +2000,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1850,6 +2084,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
 				INFOPLIST_FILE = JinyAUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1869,6 +2104,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
 				INFOPLIST_FILE = JinyAUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -19,6 +19,7 @@ class JinyFlowManager {
     private let delegate:JinyFlowManagerDelegate
     private var flowsArray:Array<JinyFlow> = []
     private var indexFromLast:Int = 0
+    private var startedFromDiscovery:Int?
     
     init(_ flowDelegate:JinyFlowManagerDelegate) {
         delegate = flowDelegate
@@ -26,8 +27,11 @@ class JinyFlowManager {
     
     func getFlowsToCheck() -> Array<JinyFlow> { return flowsArray }
     
-    func addNewFlow(_ flow:JinyFlow, _ isBranch:Bool) {
-        if !isBranch{ flowsArray.removeAll()}
+    func addNewFlow(_ flow:JinyFlow, _ isBranch:Bool,_ disId:Int?) {
+        if !isBranch{
+            startedFromDiscovery = disId
+            flowsArray.removeAll()
+        }
         flowsArray.append(flow)
     }
     
@@ -52,6 +56,8 @@ class JinyFlowManager {
         let _ = flowsArray.popLast()
         if flowsArray.count == 0 { delegate.noActiveFlows() }
     }
+    
+    func getDiscoveryId() -> Int? { return startedFromDiscovery }
     
     func resetFlowsArray () { flowsArray = [] }
     

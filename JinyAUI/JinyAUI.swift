@@ -18,6 +18,7 @@ import JinySDK
     
     private override init() {
         auiManager = JinyAUIManager()
+        auiManager.addKeyboardObservers()
         super.init()
     }
     
@@ -25,6 +26,10 @@ import JinySDK
         token = apiKey
         guard token != nil, token != "" else { fatalError("Empty token. Token cannot be empty") }
         auiManager.auiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
+    }
+    
+    @objc public func addIdentifier(identifier:String, value:Any) {
+        auiManager.addIdentifier(identifier: identifier, value: value)
     }
     
 }

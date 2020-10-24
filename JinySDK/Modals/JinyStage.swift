@@ -43,6 +43,7 @@ class JinyStage {
     let webIdentifiers:Array<String>
     let branchInfo:JinyBranchInfo?
     let instruction:JinyInstruction?
+    let instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
@@ -64,8 +65,10 @@ class JinyStage {
         else { branchInfo = nil }
         if let instructionDict = stageDict["instruction"] as? Dictionary<String,Any> {
             instruction = JinyInstruction(withDict: instructionDict)
+            instructionInfoDict = instructionDict
         } else {
             instruction = nil
+            instructionInfoDict = nil
         }
     }
     
