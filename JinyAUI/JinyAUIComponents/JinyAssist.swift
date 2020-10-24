@@ -1,6 +1,6 @@
 //
 //  JinyAssist.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 01/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -9,8 +9,35 @@
 import Foundation
 import UIKit
 
+// The type that has methods which is used by the developer when certain action gets called.
+public protocol JinyAssistDelegate: class {
+    
+    /// going to present the AUIComponent.
+    func willPresentAssist()
+    
+    /// AUIComponent is successfully presented.
+    func didPresentAssist()
+    
+    /// failed to present AUIComponent
+    func failedToPresentAssist()
+    
+    /// AUIComponent is successfully dismissed.
+    func didDismissAssist()
+    
+    /// A webview action when user interacts and the callback dictionary is passed as a param.
+    func didSendAction(dict: Dictionary<String, Any>)
+    
+    /// This method is called when the first set of animation exits, usually after 180ms.
+    func didExitAnimation()
+    
+    /// This method is called when the jinyIcon is tapped.
+    func didTapAssociatedJinyIcon()
+}
+
 // The type that has properties and methods which is used by each AUIComponent when necessary
 public protocol JinyAssist {
+    
+    var delegate: JinyAssistDelegate? { get set }
     
     /// style for the AUIComponent
     var style: Style? { get set }

@@ -1,6 +1,6 @@
 //
 //  JinyKeyWindowAssist.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 02/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -10,10 +10,25 @@ import Foundation
 import UIKit
 import WebKit
 
+/// A super class for the JinyKeyWindowAssist AUI Components.
 public class JinyKeyWindowAssist: JinyWebAssist {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)        
+    /// source view of the AUIComponent that is relatively positioned.
+    weak var inView: UIView?
+    
+    /// - Parameters:
+    ///   - assistDict: A dictionary value for the type AssistInfo.
+    public init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+        super.init(frame: CGRect.zero)
+        
+        self.assistInfo = AssistInfo(withDict: assistDict)
+        
+        guard let iconDict = iconDict else {
+            
+            return
+        }
+        
+        self.iconInfo = IconInfo(withDict: iconDict)
     }
     
     required public init?(coder: NSCoder) {        
@@ -52,13 +67,15 @@ public class JinyKeyWindowAssist: JinyWebAssist {
         }
         
         self.isHidden = true
+        
+        self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
+        
+        self.addSubview(webView)
     }
     
     /// Method to configure WebView
     func configureWebView() {
-        
-        self.addSubview(webView)
-        
+                
         // Setting Corner Radius to curve at the corners
         
         switch assistInfo?.layoutInfo?.layoutAlignment {
@@ -104,7 +121,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
         
         if assistInfo?.layoutInfo?.outsideDismiss ?? false {
         
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "")
+            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
         }
     }
 }

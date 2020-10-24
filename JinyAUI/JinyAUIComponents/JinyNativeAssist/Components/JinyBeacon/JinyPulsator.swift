@@ -1,6 +1,6 @@
 //
 //  JinyPulsator.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 22/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -19,12 +19,31 @@ import QuartzCore
 
 internal let kPulseAnimationKey = "pulse"
 
+/// A protocol to implement animation callbacks.
+protocol JinyPulsatorDelegate: class {
+    
+    /// called when the animation has started.
+    func didStartAnimation()
+    
+    /// called when the animation has stopped.
+    func didStopAnimation()
+}
+
+/// JinyBeacon's layer class to implement pulse.
 class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
 
+    /// CALayer object.
     let pulse = CALayer()
+    
+    /// animation group object for the layer.
     fileprivate var animationGroup: CAAnimationGroup!
+    
+    /// alpha value for the layer.
     fileprivate var alpha: CGFloat = 0.45
     
+    weak var pulsatorDelegate: JinyPulsatorDelegate?
+    
+    /// background color for the layer.
     override open var backgroundColor: CGColor? {
         didSet {
             pulse.backgroundColor = backgroundColor
@@ -37,6 +56,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         }
     }
     
+    /// repeat count of the pulses.
     override open var repeatCount: Float {
         didSet {
             if let animationGroup = animationGroup {
@@ -167,6 +187,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         updatePulse()
     }
     
+    /// Configures animation group.
     fileprivate func setupAnimationGroup() {
         let scaleAnimation = CABasicAnimation(keyPath: "transform.scale.xy")
         scaleAnimation.fromValue = fromValueForRadius
@@ -188,6 +209,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         animationGroup.delegate = self
     }
     
+    /// Updates pulse.
     fileprivate func updatePulse() {
         let diameter: CGFloat = radius * 2
         pulse.bounds = CGRect(
@@ -197,11 +219,13 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         pulse.backgroundColor = backgroundColor
     }
     
+    /// Updates instance delay.
     fileprivate func updateInstanceDelay() {
         guard numPulse >= 1 else { fatalError() }
         instanceDelay = (animationDuration + pulseInterval) / Double(numPulse)
     }
     
+    /// Recreated a layer of the same type.
     fileprivate func recreate() {
         guard animationGroup != nil else { return }        // Not need to be recreated.
         stop()
@@ -254,6 +278,9 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         if let keys = pulse.animationKeys(), keys.count > 0 {
             pulse.removeAllAnimations()
         }
+        
+        pulsatorDelegate?.didStopAnimation()
+        
         pulse.removeFromSuperlayer()
         
         if autoRemove {
@@ -261,5 +288,10 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         }
         
         animationCompletionBlock?()
+    }
+    
+    public func animationDidStart(_ anim: CAAnimation) {
+        
+        pulsatorDelegate?.didStartAnimation()
     }
 }

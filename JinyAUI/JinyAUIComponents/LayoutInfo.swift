@@ -1,6 +1,6 @@
 //
 //  LayoutInfo.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 01/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -26,7 +26,7 @@ public class LayoutInfo {
     public var outsideDismiss: Bool?
     
     /// An integer value to set time delay in ms
-    public var autoDismissDelay: Float?
+    public var autoDismissDelay: Float
     
     /// - Parameters:
     ///   - layoutDict: A dictionary for the type LayoutInfo.
@@ -41,7 +41,7 @@ public class LayoutInfo {
             self.style = Style(withDict: [:])
         }
         
-        if let outsideDismiss = (layoutDict["dismiss_action"] as? Dictionary<String,Any>)?["outside_dismiss"] as? Bool {
+        if let outsideDismiss = layoutDict["outside_dismiss"] as? Bool {
             
             self.outsideDismiss = outsideDismiss
         }
@@ -61,7 +61,7 @@ public class LayoutInfo {
             self.layoutAlignment = alignment
         }
         
-        self.autoDismissDelay = layoutDict["auto_dismiss_delay"] as? Float
+        self.autoDismissDelay = (layoutDict["auto_dismiss_delay"] as? Float ?? 0)/1000
     }
 }
 

@@ -1,6 +1,6 @@
 //
 //  Jiny+UIColor.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 08/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -11,6 +11,9 @@ import UIKit
 
 public extension UIColor {
 
+    /// returns string from UIColor.
+    /// - Parameters:
+    ///   - color: color of type UIColor.
     class func stringFromUIColor(color: UIColor) -> String {
         
         let components = color.cgColor.components
@@ -34,6 +37,9 @@ public extension UIColor {
         return "[\(result[0] ?? 0), \(result[1] ?? 0), \(result[2] ?? 0), \(result[result.count-1] ?? 0.0)]"
     }
     
+    /// returns color from color string.
+    /// - Parameters:
+    ///   - string: string of color.
     class func colorFromString(string: String) -> UIColor {
         
         let componentsString = string.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")

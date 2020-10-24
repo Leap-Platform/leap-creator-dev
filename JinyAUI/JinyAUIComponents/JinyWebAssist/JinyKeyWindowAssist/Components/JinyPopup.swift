@@ -1,6 +1,6 @@
 //
 //  JinyPopup.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 02/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -10,27 +10,20 @@ import Foundation
 import UIKit
 import WebKit
 
+/// JinyPopup - A Web KeyWindowAssist AUI Component class to show a popup on a window.
 public class JinyPopup: JinyKeyWindowAssist {
-    
-    public init(withDict assistDict: Dictionary<String,Any>) {
-        super.init(frame: CGRect.zero)
-        
-        self.assistInfo = AssistInfo(withDict: assistDict)
-    }
-    
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     /// call the method to configure constraints for the component and to load the content to display.
     public func showPopup() {
+        
+        UIApplication.shared.keyWindow?.addSubview(self)
         
         configureOverlayView()
         
         configureWebView()
         
         configureWebViewForPopup()
-        
+                    
         show()
     }
     
@@ -49,6 +42,8 @@ public class JinyPopup: JinyKeyWindowAssist {
     }
     
     /// Set height constraint for the popup.
+    /// - Parameters:
+    ///   - height: Height of the content of the webview.
     private func configureHeightConstraint(height: CGFloat) {
         
         self.webView.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: height))
@@ -60,6 +55,8 @@ public class JinyPopup: JinyKeyWindowAssist {
             if let height = value as? CGFloat {
                                 
                 self?.configureHeightConstraint(height: height)
+                
+                self?.configureJinyIconView(superView: self!, toItemView: self!.webView, alignmentType: .bottom)
             }
         })
     }

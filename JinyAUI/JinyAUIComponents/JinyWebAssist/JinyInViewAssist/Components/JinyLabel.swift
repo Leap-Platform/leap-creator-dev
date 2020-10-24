@@ -1,6 +1,6 @@
 //
 //  JinyLabel.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 23/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -10,27 +10,21 @@ import Foundation
 import UIKit
 import WebKit
 
+/// JinyLabel - A Web InViewAssist AUI Component class to show label on a view.
 public class JinyLabel: JinyInViewAssist {
     
-    weak var toView: UIView?
-    
-    private weak var inView: UIView?
-    
-    public init(withDict assistDict: Dictionary<String,Any>, labelToView: UIView) {
-        super.init(frame: CGRect.zero)
-                
-        self.assistInfo = AssistInfo(withDict: assistDict)
+    /// presents label after setting up view, when show() webview content is called and the delegate is called back.
+    func presentLabel() {
         
-        toView = labelToView
+        setupView()
+        
+        show()
     }
     
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func present() {
+    /// sets up toView, inView and webView.
+    func setupView() {
         
-        guard toView != nil else { fatalError("no element to point to") }
+      guard toView != nil else { fatalError("no element to point to") }
         
         if inView == nil {
             
@@ -43,14 +37,18 @@ public class JinyLabel: JinyInViewAssist {
         
         inView?.addSubview(self)
         
-        self.addSubview(webView)
-        
-        show()
+        configureWebView()
     }
     
+    /// sets alignment of the JinyLabel.
     func setAlignment() {
         
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to: inView)
+        guard let toViewSuperView = toView?.superview else {
+            
+            return
+        }
+        
+        let globalToViewFrame = toViewSuperView.convert(toView!.frame, to: inView)
                 
         switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topCenter {
             
@@ -108,12 +106,10 @@ public class JinyLabel: JinyInViewAssist {
         }
     }
     
+    /// configures label when webview delegate is called, configures based on the callback.
     private func configureLabel() {
         
         setAlignment()
-        
-        self.clipsToBounds = true
-        self.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
         
          // To set stroke color and width
         
@@ -130,6 +126,8 @@ public class JinyLabel: JinyInViewAssist {
             
             self.layer.borderWidth = 0.0
         }
+        
+        self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -144,5 +142,17 @@ public class JinyLabel: JinyInViewAssist {
         webView.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
         self.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
         configureLabel()
+    }
+    
+    public override func performEnterAnimation(animation: String) {
+        
+        self.webView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        
+        UIView.animate(withDuration: 0.04) {
+            
+            self.webView.transform = CGAffineTransform.identity
+            
+            self.delegate?.didPresentAssist()
+        }
     }
 }

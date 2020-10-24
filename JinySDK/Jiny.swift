@@ -19,7 +19,9 @@ import UIKit
     func startMediaFetch()
     func performInstruction(instruction:Dictionary<String,Any>, inView:UIView)
     func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?)
+    func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
+    func updateView(inView:UIView)
     
     func playAudio()
     func playTTS(withLangCode:String)

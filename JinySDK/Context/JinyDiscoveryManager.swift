@@ -16,8 +16,8 @@ protocol JinyDiscoveryManagerDelegate:AnyObject {
     func addDiscoveryIdToMutedList(id:Int)
     func getTriggeredEvents() -> Dictionary<String,Any>
     
-    func newDiscoveryIdentified(discovery:JinyDiscovery)
-    func sameDiscoveryIdentified(discovery:JinyDiscovery)
+    func newDiscoveryIdentified(discovery:JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
+    func sameDiscoveryIdentified(discovery:JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func noContextualDiscoveryIdentified()
     func startFlow(id:Int, disId:Int)
 }
@@ -113,7 +113,7 @@ class JinyDiscoveryManager {
                         let timer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false) { (timer) in
                             timer.invalidate()
                             self.currentDiscovery = discoveryObj.0
-                            self.delegate?.newDiscoveryIdentified(discovery: discoveryObj.0)
+                            self.delegate?.newDiscoveryIdentified(discovery: discoveryObj.0, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3)
                             self.cancelAllTimers()
                         }
                         RunLoop.current.add(timer, forMode: .default)
@@ -131,7 +131,7 @@ class JinyDiscoveryManager {
                 else {
                     if self.currentDiscovery == nil {
                         self.currentDiscovery = discoveryObj.0
-                        self.delegate?.newDiscoveryIdentified(discovery: discoveryObj.0)
+                        self.delegate?.newDiscoveryIdentified(discovery: discoveryObj.0, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3)
                         self.cancelAllTimers()
                     }
                 }
@@ -164,7 +164,10 @@ class JinyDiscoveryManager {
     
     func getCurrentDiscovery() -> JinyDiscovery? { return currentDiscovery }
     
-    func resetCurrentDiscovery() { currentDiscovery = nil }
+    func resetCurrentDiscovery() {
+        currentDiscovery = nil
+        
+    }
     
     func muteCurrentDiscovery() {
         guard let discovery = currentDiscovery else { return }
@@ -198,7 +201,7 @@ class JinyDiscoveryManager {
 extension JinyDiscoveryManager:JinyEventDetectorDelegate {
     
     func clickDetected(view: UIView?, point: CGPoint) {
-        var discoveriesThatCanFire:Array<JinyDiscovery> = []
+        var discoveriesThatCanFire:Array<JinyDiscoveryEventTrigger> = []
         for discoveryEvent in toBeTriggered {
             var isAnchorClick:Bool = false
             if discoveryEvent.discovery.isWeb {
@@ -216,24 +219,24 @@ extension JinyDiscoveryManager:JinyEventDetectorDelegate {
                 if view == nil || discoveryEvent.anchorView == nil { continue }
                 if view == discoveryEvent.anchorView { isAnchorClick = true }
             }
-            if isAnchorClick { discoveriesThatCanFire.append(discoveryEvent.discovery) }
+            if isAnchorClick { discoveriesThatCanFire.append(discoveryEvent) }
         }
-        var selectedDis:JinyDiscovery?
+        var selectedDis:JinyDiscoveryEventTrigger?
         var maxWeight = 0
         for dis in discoveriesThatCanFire {
-            if dis.weight > maxWeight {
+            if dis.discovery.weight > maxWeight {
                 selectedDis = dis
-                maxWeight = dis.weight
+                maxWeight = dis.discovery.weight
             }
         }
         guard let fireDis = selectedDis else { return }
-        if fireDis.trigger["optinOnAnchorClick"] as? Bool ?? false{
+        if fireDis.discovery.trigger["optinOnAnchorClick"] as? Bool ?? false{
             currentDiscovery = nil
             cancelAllTimers()
-            delegate?.startFlow(id: fireDis.flowIds[0], disId:fireDis.id!)
-        } else if fireDis.trigger["triggerOnAnchorClick"] as? Bool ?? false {
-            currentDiscovery = fireDis
-            delegate?.newDiscoveryIdentified(discovery: fireDis)
+            delegate?.startFlow(id: fireDis.discovery.flowIds[0], disId: fireDis.discovery.id!)
+        } else if fireDis.discovery.trigger["triggerOnAnchorClick"] as? Bool ?? false {
+            currentDiscovery = fireDis.discovery
+            self.delegate?.newDiscoveryIdentified(discovery: fireDis.discovery, view: fireDis.anchorView, rect: fireDis.anchorRect, webview: fireDis.anchorWebView)
             cancelAllTimers()
         }
         
@@ -243,24 +246,24 @@ extension JinyDiscoveryManager:JinyEventDetectorDelegate {
         let tagDiscoveries = toBeTriggered.filter { (disObj) -> Bool in
             return disObj.hasTaggedEvent
         }
-        var discoveriesPassingCheck:Array<JinyDiscovery> = []
+        var discoveriesPassingCheck:Array<JinyDiscoveryEventTrigger> = []
         for discoveryObj in tagDiscoveries {
             let discovery = discoveryObj.discovery
             if discovery.taggedEvents == nil { return }
             if discovery.taggedEvents!.action != "enable" { return }
             let isPassing:Bool = checkOrConditions(conditions: discovery.taggedEvents!.orConditions, events: events)
-            if isPassing { discoveriesPassingCheck.append(discovery) }
+            if isPassing { discoveriesPassingCheck.append(discoveryObj) }
         }
-        var selectedDiscovery:JinyDiscovery? = nil
+        var selectedDiscovery:JinyDiscoveryEventTrigger? = nil
         var maxWeight = 0
-        for discovery in discoveriesPassingCheck {
-            if discovery.weight > maxWeight {
-                selectedDiscovery = discovery
-                maxWeight = discovery.weight
+        for discoveryObj in discoveriesPassingCheck {
+            if discoveryObj.discovery.weight > maxWeight {
+                selectedDiscovery = discoveryObj
+                maxWeight = discoveryObj.discovery.weight
             }
         }
         guard let launchDiscovery = selectedDiscovery else { return }
-        delegate?.newDiscoveryIdentified(discovery: launchDiscovery)
+        self.delegate?.newDiscoveryIdentified(discovery: launchDiscovery.discovery, view: launchDiscovery.anchorView, rect: launchDiscovery.anchorRect, webview: launchDiscovery.anchorWebView)
     }
     
     func checkOrConditions(conditions:Array<Array<JinyTaggedEventCondition>>, events:Dictionary<String,Any>) -> Bool {

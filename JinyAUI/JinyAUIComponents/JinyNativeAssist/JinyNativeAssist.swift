@@ -1,6 +1,6 @@
 //
 //  JinyNativeAssist.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 02/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -9,41 +9,47 @@
 import Foundation
 import UIKit
 
-class JinyNativeAssist: UIView, JinyAssist {
+/// A super class for the JinyNativeAssist AUI Components.
+public class JinyNativeAssist: UIView, JinyAssist {
     
-    var style: Style?
+    public weak var delegate: JinyAssistDelegate?
     
-    var assistInfo: AssistInfo?
+    public var style: Style?
     
-    func applyStyle(style: Style) {
+    public var assistInfo: AssistInfo?
+    
+    public func applyStyle(style: Style) {
         
     }
     
-    func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
+    public func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
         
     }
     
-    func updateLayout(alignment: String, anchorBounds: CGRect?) {
+    public func updateLayout(alignment: String, anchorBounds: CGRect?) {
         
     }
     
-    func show() {
+    public func show() {
+      
+        delegate?.didPresentAssist()
+    }
+    
+    public func performEnterAnimation(animation: String) {
         
     }
     
-    func performEnterAnimation(animation: String) {
+    public func hide(withAnim: Bool) {
         
     }
     
-    func hide(withAnim: Bool) {
+    public func performExitAnimation(animation: String) {
         
+        delegate?.didExitAnimation()
     }
     
-    func performExitAnimation(animation: String) {
-        
-    }
-    
-    func remove() {
-        
+    public func remove() {
+       
+        delegate?.didDismissAssist()
     }
 }

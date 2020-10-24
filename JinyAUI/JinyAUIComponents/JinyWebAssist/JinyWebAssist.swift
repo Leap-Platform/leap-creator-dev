@@ -1,6 +1,6 @@
 //
 //  JinyWebAssist.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 02/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -10,10 +10,13 @@ import Foundation
 import UIKit
 import WebKit
 
+/// A super class for the JinyWebAssist AUI Components.
 public class JinyWebAssist: UIView, JinyAssist {
     
     /// webView to load html content.
     var webView = WKWebView()
+    
+    var jinyIconView = JinyIconView()
     
     /// preferences property for webview of type WKPreferences.
     let preferences = WKPreferences()
@@ -23,6 +26,8 @@ public class JinyWebAssist: UIView, JinyAssist {
     
     /// property to load content from local storage.
     public var appLocale = String()
+    
+    public var iconInfo: IconInfo?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,6 +57,8 @@ public class JinyWebAssist: UIView, JinyAssist {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public weak var delegate: JinyAssistDelegate?
+    
     public var style: Style?
     
     public var assistInfo: AssistInfo?
@@ -70,8 +77,6 @@ public class JinyWebAssist: UIView, JinyAssist {
                 webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
             }
             
-            performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "")
-            
             return
         }
         
@@ -79,9 +84,7 @@ public class JinyWebAssist: UIView, JinyAssist {
         let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = documentPath.appendingPathComponent(fileName)
         let req = URLRequest(url: filePath)
-        webView.load(req)
-        
-        performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "")
+        webView.load(req)        
     }
     
     public func updateLayout(alignment: String, anchorBounds: CGRect?) {
@@ -91,6 +94,8 @@ public class JinyWebAssist: UIView, JinyAssist {
     public func show() {
             
         setContent(htmlUrl: self.assistInfo?.htmlUrl ?? "", appLocale: self.appLocale, contentFileUriMap: nil)
+        
+        delegate?.willPresentAssist()
     }
     
     /// method to perform enter animation.
@@ -106,33 +111,78 @@ public class JinyWebAssist: UIView, JinyAssist {
                 
                 let xPosition = webView.frame.origin.x
                 
-                webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                   webView.frame.origin.x = -(UIScreen.main.bounds.width)
                 
-                UIView.animate(withDuration: 1.5) {
+                   self.jinyIconView.alpha = 0
+                
+                   let alpha = self.alpha
+                
+                   self.alpha = 0
+                
+                   UIView.animate(withDuration: 0.18, animations: {
                     
-                    self.webView.frame.origin.x = xPosition
-                }
+                      self.alpha = alpha
+                   
+                      self.webView.frame.origin.x = xPosition
+                    
+                   }) { (_) in
+                    
+                      UIView.animate(withDuration: 0.04) {
+                        
+                         self.jinyIconView.alpha = 1
+                        
+                         self.delegate?.didPresentAssist()
+                      }
+                   }
                 
             case JinyLayoutAnimationType.slideLeft.rawValue:
                 
                 let xPosition = webView.frame.origin.x
                 
-                webView.frame.origin.x = (UIScreen.main.bounds.width)
+                   webView.frame.origin.x = (UIScreen.main.bounds.width)
                 
-                UIView.animate(withDuration: 1.5) {
+                   jinyIconView.alpha = 0
+                
+                   let alpha = self.alpha
+                
+                   self.alpha = 0
+                
+                   UIView.animate(withDuration: 0.18, animations: {
                     
-                    self.webView.frame.origin.x = xPosition
-                }
+                      self.alpha = alpha
+                   
+                      self.webView.frame.origin.x = xPosition
+                    
+                   }) { (_) in
+                    
+                      UIView.animate(withDuration: 0.04) {
+                        
+                          self.jinyIconView.alpha = 1
+                        
+                          self.delegate?.didPresentAssist()
+                      }
+                   }
                 
             case JinyLayoutAnimationType.slideTop.rawValue:
                 
                 let yPosition = webView.frame.origin.y
                 
-                webView.frame.origin.y = (UIScreen.main.bounds.height)
+                webView.frame.origin.y = (UIScreen.main.bounds.height) + (UIScreen.main.bounds.height/2)
                 
-                UIView.animate(withDuration: 1.5) {
+                jinyIconView.alpha = 0
+                
+                UIView.animate(withDuration: 0.2, animations: {
                     
-                    self.webView.frame.origin.y = yPosition
+                   self.webView.frame.origin.y = yPosition
+                                        
+                }) { (_) in
+                    
+                    UIView.animate(withDuration: 0.04) {
+                        
+                        self.jinyIconView.alpha = 1
+                        
+                        self.delegate?.didPresentAssist()
+                    }
                 }
                 
             case JinyLayoutAnimationType.slideBottom.rawValue:
@@ -141,21 +191,53 @@ public class JinyWebAssist: UIView, JinyAssist {
                 
                 webView.frame.origin.y = -(UIScreen.main.bounds.height)
                 
-                UIView.animate(withDuration: 1.5) {
+                jinyIconView.alpha = 0
+                
+                UIView.animate(withDuration: 0.2, animations: {
                     
                     self.webView.frame.origin.y = yPosition
+                    
+                }) { (_) in
+                    
+                    UIView.animate(withDuration: 0.04) {
+                        
+                       self.jinyIconView.alpha = 1
+                        
+                       self.delegate?.didPresentAssist()
+                    }
                 }
                 
             case JinyLayoutAnimationType.zoomIn.rawValue:
                 
-                self.webView.transform = CGAffineTransform(scaleX: 0, y: 0)
+                let alpha = self.alpha
                 
-                UIView.animate(withDuration: 1.0) {
-                  
-                   self.webView.transform = CGAffineTransform.identity
+                self.alpha = 0
+                
+                jinyIconView.alpha = 0
+                
+                self.webView.alpha = 0
+                
+                self.webView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                
+                UIView.animate(withDuration: 0.08, animations: {
+                    
+                    self.alpha = alpha
+                    
+                }) { (_) in
+                    
+                    UIView.animate(withDuration: 0.04) {
+                        
+                        self.webView.alpha = 1
+                        
+                        self.webView.transform = CGAffineTransform.identity
+                        
+                        self.jinyIconView.alpha = 1
+                        
+                        self.delegate?.didPresentAssist()
+                    }
                 }
                 
-            default: self.remove()
+            default: self.delegate?.didPresentAssist()
                 
             }
         }
@@ -174,67 +256,91 @@ public class JinyWebAssist: UIView, JinyAssist {
             
             switch animation {
                 
-            case JinyLayoutAnimationType.slideRight.rawValue:
-                
-                UIView.animate(withDuration: 1.5) {
-                    
-                    self.webView.frame.origin.x = (UIScreen.main.bounds.width)
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                    
-                    self.remove()
-                }
-                
             case JinyLayoutAnimationType.slideLeft.rawValue:
                 
-                UIView.animate(withDuration: 1.5) {
+                UIView.animate(withDuration: 0.18, animations: {
                     
+                    self.jinyIconView.alpha = 0
+                                        
                     self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                    
+                    self.delegate?.didExitAnimation()
+                    
+                }) { (_) in
+                    
+                    UIView.animate(withDuration: 0.04) {
+                        
+                        self.alpha = 0
+                        
+                        self.remove()
+                        
+                        self.jinyIconView.removeFromSuperview()
+                    }
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                    
-                    self.remove()
-                }
+            case JinyLayoutAnimationType.slideRight.rawValue:
                 
-            case JinyLayoutAnimationType.slideTop.rawValue:
-                
-                UIView.animate(withDuration: 1.5) {
+                UIView.animate(withDuration: 0.18, animations: {
                     
-                    self.webView.frame.origin.y = -(UIScreen.main.bounds.height)
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                    self.jinyIconView.alpha = 0
+                                        
+                    self.webView.frame.origin.x = (UIScreen.main.bounds.width)
                     
-                    self.remove()
+                    self.delegate?.didExitAnimation()
+                    
+                }) { (_) in
+                    
+                    UIView.animate(withDuration: 0.04) {
+                        
+                        self.alpha = 0
+                        
+                        self.remove()
+                        
+                        self.jinyIconView.removeFromSuperview()
+                    }
                 }
                 
             case JinyLayoutAnimationType.slideBottom.rawValue:
-            
-                UIView.animate(withDuration: 1.5) {
                 
+                UIView.animate(withDuration: 0.18, animations: {
+                    
+                    self.jinyIconView.alpha = 0
+                    
                     self.webView.frame.origin.y = (UIScreen.main.bounds.height)
-                }
-            
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                
-                    self.remove()
+                    
+                    self.delegate?.didExitAnimation()
+                    
+                }) { (_) in
+                    
+                    UIView.animate(withDuration: 0.08) {
+                        
+                        self.alpha = 0
+                        
+                        self.remove()
+                        
+                        self.jinyIconView.removeFromSuperview()
+                    }
                 }
                 
             case JinyLayoutAnimationType.fadeOut.rawValue:
-                
-                UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+                                
+                UIView.animate(withDuration: 0.18, delay: 0, options: .curveEaseOut, animations: {
+                    
+                    self.jinyIconView.alpha = 0
                     
                     self.webView.alpha = 0
                     
                     self.alpha = 0
+                    
+                    self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
                     if success {
                         
                         self.remove()
+                        
+                        self.jinyIconView.removeFromSuperview()
                     }
                 }
                 
@@ -249,9 +355,62 @@ public class JinyWebAssist: UIView, JinyAssist {
     }
     
     public func remove() {
-        
+      
         self.removeFromSuperview()
         
+        delegate?.didDismissAssist()
+    }
+    
+    @objc func jinyIconButtonTapped(button: UIButton) {
+        
+        self.delegate?.didTapAssociatedJinyIcon()
+    }
+    
+    /// method to configure JinyIconView constraints.
+    /// - Parameters:
+    ///   - superView: view to which JinyIconView is added.
+    ///   - toItemView: JinyIconView constraints set w.r.t this view.
+    ///   - alignmentType: whether it is top or bottom.
+    func configureJinyIconView(superView: UIView, toItemView: UIView, alignmentType: JinyAlignmentType) {
+        
+        guard let enabled = iconInfo?.isEnabled, enabled else {
+            
+            return
+        }
+                        
+        superView.addSubview(jinyIconView)
+        
+        jinyIconView.iconButton.addTarget(self, action: #selector(jinyIconButtonTapped(button:)), for: .touchUpInside)
+        
+        jinyIconView.iconBackgroundColor = UIColor.colorFromString(string: iconInfo?.backgroundColor ?? UIColor.stringFromUIColor(color: .blue))
+                
+        self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        var attributeType1: NSLayoutConstraint.Attribute = .leading
+        
+        var attributeType2: NSLayoutConstraint.Attribute = .top
+        
+        var attributeType3: NSLayoutConstraint.Attribute = .bottom
+        
+        var distance: CGFloat = self.jinyIconView.iconGap
+        
+        if !(iconInfo?.isLeftAligned ?? false) {
+
+            attributeType1 = .trailing
+        }
+        
+        if alignmentType == .top {
+            
+            attributeType2 = .bottom
+            
+            attributeType3 = .top
+            
+            distance = -self.jinyIconView.iconGap
+        }
+                
+        superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: 0))
+        
+        superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
     }
 
     /// call the method internally when webView didFinish navigation called
@@ -278,6 +437,13 @@ extension JinyWebAssist: WKNavigationDelegate {
         self.isHidden = false
                 
         didFinish(webView, didFinish: navigation)
+                
+        performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
+    }
+    
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        
+        delegate?.failedToPresentAssist()
     }
 }
 
@@ -295,6 +461,8 @@ extension JinyWebAssist: WKScriptMessageHandler {
         
         print(dict)
         
+        delegate?.didSendAction(dict: dict)
+        
         if let urlString = dictBody["external_url"] as? String, let url = URL(string: urlString) {
 
             if #available(iOS 10.0, *) {
@@ -308,7 +476,7 @@ extension JinyWebAssist: WKScriptMessageHandler {
         
         if close {
             
-           self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "")
+           self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
         }
     }
 }

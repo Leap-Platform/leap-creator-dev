@@ -42,6 +42,37 @@ class JinyJSMaker {
         return "("+finalCheck+").toString()"
     }
     
+    class func createAttributeCheckScript(for identifier:JinyWebIdentifier) -> String? {
+        
+        var attributeScript = ""
+        let querySelector = getElementScript(identifier)
+        if let innerHTML = identifier.innerHtml {
+            if let localeInnerHTML = innerHTML["ang"] {
+                let innerHTMLCheck = "(" + querySelector + ".innerHTML === " + "\"\(localeInnerHTML)\"" + ") && "
+                attributeScript += innerHTMLCheck
+            }
+        }
+        
+        if let innerText = identifier.innerText {
+            if let localeInnerText = innerText["ang"] {
+                let innerTextCheck = "(" + querySelector + ".innerText === " + "\"\(localeInnerText)\"" + ") && "
+                attributeScript += innerTextCheck
+            }
+        }
+        
+        if let value = identifier.value {
+            if let localeValue = value["ang"] {
+                let valueCheck = "(" + querySelector + ".value === " + "\"\(localeValue)\"" + ") && "
+                attributeScript += valueCheck
+            }
+        }
+        attributeScript = String(attributeScript.dropLast(4))
+        if attributeScript == "" { return nil }
+        attributeScript = "(" + attributeScript + ")"
+        return attributeScript
+        
+    }
+    
     class func calculateBoundsScript(_ id:JinyWebIdentifier) -> String {
         let baseJs = getElementScript(id)
         let rect = baseJs + ".getBoundingClientRect()"
@@ -53,13 +84,13 @@ class JinyJSMaker {
         return finalQuery
     }
     
-    private class func getElementScript(_ id:JinyWebIdentifier) -> String {
+    class func getElementScript(_ id:JinyWebIdentifier) -> String {
         var baseJs = "document.querySelectorAll('"
         baseJs += id.tagName
         
         if let attributes = id.attributes, let localeAttrs = attributes["ang"] {
             localeAttrs.forEach { (attr, value) in
-                 baseJs += "[\(attr)=\"\(value)\"]"
+                baseJs += "[\(attr)=\"\(value)\"]"
             }
         }
         

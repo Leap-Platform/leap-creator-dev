@@ -1,6 +1,6 @@
 //
 //  Style.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 01/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -50,6 +50,11 @@ public class Style {
             self.bgColor = "default"
         }
         
+        if let elevation = styleDict["elevation"] as? Double {
+            
+            self.elevation = elevation
+        }
+        
         if let cornerRadius = styleDict["cornerRadius"] as? Double {
             
             self.cornerRadius = cornerRadius
@@ -73,6 +78,11 @@ public class Style {
         if let strokeWidth = styleDict["strokeWidth"] as? Double {
             
             self.strokeWidth = strokeWidth
+        }
+        
+        if let contentTransparent = styleDict["contentTransparent"] as? Bool {
+            
+            self.isContentTransparent = contentTransparent
         }
     }
 }

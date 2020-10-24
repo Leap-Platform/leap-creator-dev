@@ -1,6 +1,6 @@
 //
 //  JinyBeacon.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 22/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -9,50 +9,94 @@
 import Foundation
 import UIKit
 
-public class JinyBeacon: JinyInViewAssist {
+/// JinyBeacon - A native AUI Component class to point out a view.
+public class JinyBeacon: JinyNativeAssist {
     
+    /// source view to which the component to pointed to.
     weak var toView: UIView?
     
+    /// source view of the toView for which the component is relatively positioned.
     private weak var inView: UIView?
-        
+     
+    /// Radius of the beacon's pulse, range of pulsating.
     public var radius: Double = 10
     
+    /// JinyBeacon's custom layer (CAReplicatorLayer) class.
     let pulsator = JinyPulsator()
     
-    public init(withDict assistDict: Dictionary<String,Any>, beaconToView: UIView) {
+    /// - Parameters:
+    ///   - assistDict: A dictionary value for the type AssistInfo.
+    ///   - toView: source view to which the tooltip is attached.
+    public init(withDict assistDict: Dictionary<String,Any>, toView: UIView) {
         super.init(frame: CGRect.zero)
                 
         self.assistInfo = AssistInfo(withDict: assistDict)
         
-        toView = beaconToView        
+        self.toView = toView
     }
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func present() {
+    /// presents beacon after setting up view, setting up alignment and when start() method called.
+    func presentBeacon() {
         
-        pulsator.backgroundColor = UIColor.colorFromString(string: assistInfo?.layoutInfo?.style.bgColor ?? "black").cgColor
+        delegate?.willPresentAssist()
+        
+        setupView()
+                
+        setAlignment()
+        
+        show()
+    }
+    
+    public override func show() {
+        
+        pulsator.pulsatorDelegate = self
+        
+        pulsator.start()
+    }
+    
+    public override func remove() {
+        
+        pulsator.stop()
+        
+        inView?.layer.sublayers?.removeAll()
+        
+        super.remove()
+    }
+    
+    /// sets up customised JinyBeacon's class, toView and inView.
+    func setupView() {
+        
+       pulsator.backgroundColor = UIColor.colorFromString(string: assistInfo?.layoutInfo?.style.bgColor ?? "black").cgColor
         pulsator.radius = CGFloat(radius)
         pulsator.numPulse = 3
         
-        guard toView != nil else { fatalError("no element to point to") }
+        guard toView != nil else {
+            
+            delegate?.failedToPresentAssist()
+            
+            fatalError("no element to point to")
+        }
         
         if inView == nil {
             
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
+            guard let _ = toView?.superview else {
+                
+                delegate?.failedToPresentAssist()
+                
+                fatalError("View not in valid hierarchy or is window view")
+            }
             
             inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
         }
         
         inView?.layer.addSublayer(pulsator)
-                
-        setAlignment()
-        
-        pulsator.start()
     }
     
+    /// Sets alignment of the component (JinyBeacon).
     func setAlignment() {
         
         let globalToViewFrame = toView!.superview!.convert(toView!.frame, to: inView)
@@ -111,5 +155,18 @@ public class JinyBeacon: JinyInViewAssist {
             
             pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)/2, y: globalToViewFrame.origin.y + (globalToViewFrame.height)/2)
         }
+    }
+}
+
+extension JinyBeacon: JinyPulsatorDelegate {
+    
+    func didStartAnimation() {
+        
+        super.show()        
+    }
+    
+    func didStopAnimation() {
+        
+        super.performExitAnimation(animation: "")
     }
 }

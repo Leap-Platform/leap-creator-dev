@@ -1,6 +1,6 @@
 //
 //  JinyBottomSheet.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 11/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -10,23 +10,28 @@ import Foundation
 import UIKit
 import WebKit
 
+/// JinyBottomSheet - A Web KeyWindowAssist AUI Component class to show a bottomSheet over a window.
 public class JinyBottomSheet: JinyKeyWindowAssist {
         
-    public init(withDict assistDict: Dictionary<String,Any>) {
-        super.init(frame: CGRect.zero)
-                
-        var assistDict = assistDict
-        
+    public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+        super.init(withDict: assistDict, iconDict: iconDict)
+                        
         if let layoutInfo = assistDict["layoutInfo"] as? Dictionary<String, Any> {
             
            var layoutInfo = layoutInfo
             
            layoutInfo["alignment"] = "bottom"
-            
-           assistDict["layoutInfo"] = layoutInfo
+                        
+           self.assistInfo?.layoutInfo = LayoutInfo(withDict: layoutInfo)
         }
         
-        self.assistInfo = AssistInfo(withDict: assistDict)
+        setAnimationType()
+    }
+    
+    private func setAnimationType() {
+        
+        assistInfo?.layoutInfo?.enterAnimation = "slide_up"
+        assistInfo?.layoutInfo?.exitAnimation = "slide_down"
     }
     
     required public init?(coder: NSCoder) {
@@ -35,6 +40,8 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
     
     /// call the method to configure constraints for the component and to load the content to display.
     public func showBottomSheet() {
+        
+        UIApplication.shared.keyWindow?.addSubview(self)
         
         configureOverlayView()
         
@@ -64,6 +71,8 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
     }
     
     /// Set height constraint for the bottomSheet.
+    /// - Parameters:
+    ///   - height: Height of the content of the webview.
     private func configureHeightConstraint(height: CGFloat) {
         
         let proportionalHeight = (((self.assistInfo?.layoutInfo?.style.maxHeight ?? 80.0) * Double(self.frame.height)) / 100)
@@ -81,7 +90,13 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
         webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
             if let height = value as? CGFloat {
                 
+                DispatchQueue.main.async {
+                
                 self?.configureHeightConstraint(height: height)
+                
+                self?.configureJinyIconView(superView: self!, toItemView: self!.webView, alignmentType: .top)
+                    
+                }
             }
         })
     }

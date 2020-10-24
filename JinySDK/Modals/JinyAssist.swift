@@ -117,7 +117,7 @@ class JinyAssist {
     var instruction:JinyAssistInstruction?
     var isWeb:Bool
     var instructionInfoDict:Dictionary<String,Any>?
-
+    
     
     init(withDict assistDict:Dictionary<String,Any>) {
         assistId = assistDict["id"] as? Int ?? -1
@@ -141,7 +141,6 @@ class JinyAssist {
             instruction = JinyAssistInstruction(withDict: instructionDict)
             instructionInfoDict = instructionDict
         }
-        print(instructionInfoDict)
     }
 }
 

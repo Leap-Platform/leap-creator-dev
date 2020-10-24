@@ -1,6 +1,6 @@
 //
 //  AssistInfo.swift
-//  AUIComponents
+//  JinyDemo
 //
 //  Created by mac on 01/09/20.
 //  Copyright © 2020 Jiny. All rights reserved.
@@ -42,6 +42,11 @@ public class AssistInfo {
         if let anchorClickable = assistDict["anchor_clickable"] as? Bool {
             
            self.anchorClickable = anchorClickable
+        }
+        
+        if let extraProps = assistDict["extra_props"] as? Dictionary<String, Any> {
+            
+            self.extraProps = ExtraProps(props: extraProps)
         }
         
         self.htmlUrl = assistDict["html_url"] as? String

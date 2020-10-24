@@ -11,11 +11,13 @@ import UIKit
 import JinySDK
 import AVFoundation
 import AdSupport
+import WebKit
 
 class JinyAUIManager:NSObject {
     
     weak var auiManagerCallBack:JinyAUICallback?
     
+    var keyboardHeight:Float = 0
     var audioPlayer:AVAudioPlayer?
     var pointer:JinyPointer?
     var bottomDiscovery:JinyBottomDiscovery?
@@ -26,13 +28,68 @@ class JinyAUIManager:NSObject {
     var synthesizer:AVSpeechSynthesizer?
     var utterance:AVSpeechUtterance?
     let audioSession = AVAudioSession.sharedInstance()
+    var currentAssist:JinyAssist?
     var mediaManager:JinyMediaManager?
     var soundsJson:Dictionary<String,Any>?
+    var scrollArrow:UIButton?
+    var currentInstruction:Dictionary<String,Any>?
+    weak var currentTargetView:UIView?
+    var currentTargetRect:CGRect?
+    weak var currentWebView:UIView?
+    var jinyButtonBottomConstraint:NSLayoutConstraint?
+    var scrollArrowBottomConstraint:NSLayoutConstraint?
     
     func addIdentifier(identifier:String, value:Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
     }
     
+}
+
+extension JinyAUIManager {
+    
+    func addKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    @objc func keyboardDidShow(_ notification:NSNotification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = Float(keyboardRectangle.height)
+            if let targetView = currentTargetView {
+                if isViewHiddenByKeyboard(targetView) {
+                    showArrow()
+                    scrollArrowBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
+                    scrollArrow?.updateConstraints()
+                }
+            }
+        }
+        if jinyButton != nil {
+            jinyButtonBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
+            jinyButton?.updateConstraints()
+        }
+    }
+    
+    @objc func keyboardDidHide(_ notification:NSNotification) {
+        keyboardHeight = 0
+        guard let assistInfo = currentInstruction?["assist_info"] as? Dictionary<String,Any>, let autoScroll = assistInfo["auto_scroll"] as? Bool else {
+            return
+        }
+        if autoScroll {
+            scrollArrow?.removeFromSuperview()
+            scrollArrow = nil
+        }
+        else if let targetView = currentTargetView {
+            if !isViewHiddenByKeyboard(targetView) {
+                scrollArrow?.removeFromSuperview()
+                scrollArrow = nil
+            }
+        }
+        if jinyButton != nil {
+            jinyButtonBottomConstraint?.constant = 20.0
+            jinyButton?.updateConstraints()
+        }
+    }
 }
 
 extension JinyAUIManager:JinyAUIHandler {
@@ -60,7 +117,14 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView) {
-        guard let soundName = instruction["sound_name"] as? String else { return }
+        
+        currentInstruction = instruction
+        currentTargetView = inView
+        currentWebView = nil
+        currentTargetRect = nil
+        
+        
+//        guard let _ = instruction["sound_name"] as? String else { return }
         guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
@@ -68,6 +132,22 @@ extension JinyAUIManager:JinyAUIHandler {
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
             switch type {
+                
+            case "FINGER_POINTER":
+                if !isViewInVisibleArea(view: inView) {
+                    if let autoscroll = assistInfo["auto_scroll"] as? Bool {
+                        let scrollViews = getScrollViews(inView)
+                        if scrollViews.count > 0 {
+                            if autoscroll { makeViewVisible(scrollViews, false) }
+                            else { showArrow() }
+                        }
+                    } else {
+                        showArrow()
+                    }
+                }
+                
+                pointer = JinyFingerRipplePointer()
+                pointer?.presentPointer(view: inView)
             case "POPUP":
                 let jinyPopup = JinyPopup(withDict: assistInfo)
                 UIApplication.shared.keyWindow?.addSubview(jinyPopup)
@@ -93,7 +173,11 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func performInstrcution(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?) {
-        guard let soundName = instruction["sound_name"] as? String else { return }
+        currentInstruction = instruction
+        currentTargetView = nil
+        currentWebView = inWebview
+        currentTargetRect = rect
+        guard let _ = instruction["sound_name"] as? String else { return }
         guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
@@ -101,31 +185,111 @@ extension JinyAUIManager:JinyAUIHandler {
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
             switch type {
-            case "POPUP":
-                let jinyPopup = JinyPopup(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
-                jinyPopup.showPopup()
-            case "DRAWER":
-                let jinyDrawer = JinyDrawer(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
-                jinyDrawer.showDrawer()
-            case "FULLSCREEN":
-                let jinyFullScreen = JinyFullScreen(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
-                jinyFullScreen.showFullScreen()
-            case "BOTTOM_SHEET":
-                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
-                jinyBottomSheet.showBottomSheet()
+                
+            case "FINGER_POINTER":
+                if !isRectInVisbleArea(rect: rect, inView: inWebview!) {
+                    if let autoscroll = assistInfo["auto_scroll"] as? Bool {
+                        if autoscroll {
+                            if let _ = inWebview as? UIWebView {
+                                
+                            } else if let wkweb = inWebview as? WKWebView {
+                                wkweb.scrollView.scrollRectToVisible(rect, animated: false)
+                            }
+                        }
+                        else {
+                            
+                        }
+                    } else {
+                        
+                    }
+                }
+                
+                pointer = JinyFingerRipplePointer()
+                pointer?.presentPointer(toRect: rect, inView: inWebview)
             default:
-                break
+                performKeyWindowInstruction(instruction: instruction)
             }
             auiManagerCallBack?.didPresentView()
         }
     }
     
+    func performInstruction(instruction:Dictionary<String,Any>) {
+        currentInstruction = instruction
+        currentTargetView = nil
+        currentWebView = nil
+        currentTargetRect = nil
+        guard let _ = instruction["sound_name"] as? String else { return }
+        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        if let type = assistInfo["type"] as? String {
+            auiManagerCallBack?.willPresentView()
+            switch type {
+                
+            case "FINGER_POINTER":
+                auiManagerCallBack?.failedToPerform()
+                break
+            default:
+                performKeyWindowInstruction(instruction: instruction)
+            }
+            auiManagerCallBack?.didPresentView()
+        }
+    }
+    
+    func performKeyWindowInstruction(instruction:Dictionary<String,Any>) {
+        guard let _ = instruction["sound_name"] as? String else { return }
+        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
+        if let type = assistInfo["type"] as? String {
+            auiManagerCallBack?.willPresentView()
+            switch type {
+            case "POPUP":
+                let jinyPopup = JinyPopup(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyPopup
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
+                jinyPopup.showPopup()
+            case "DRAWER":
+                let jinyDrawer = JinyDrawer(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyDrawer
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
+                jinyDrawer.showDrawer()
+            case "FULLSCREEN":
+                let jinyFullScreen = JinyFullScreen(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyFullScreen
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
+                jinyFullScreen.showFullScreen()
+            case "BOTTOM_SHEET":
+                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyBottomSheet
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
+                jinyBottomSheet.showBottomSheet()
+            default:
+                break
+            }
+            currentAssist?.delegate = self
+        }
+    }
+    
     func updateRect(rect:CGRect, inWebView:UIView?) {
         
+    }
+    
+    func updateView(inView view:UIView) {
+        if isViewInVisibleArea(view: view) {
+            if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
+            else {
+                scrollArrow?.removeFromSuperview()
+                scrollArrow = nil
+            }
+        } else { if scrollArrow ==  nil { showArrow() } }
     }
     
     func playAudio() {
@@ -175,13 +339,14 @@ extension JinyAUIManager:JinyAUIHandler {
     
     func presentJinyButton() {
         guard jinyButton == nil, jinyButton?.window == nil else { return }
-        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
+//        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
+        jinyButton = JinyMainButton(withThemeColor: .blue)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
         jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
-        let bottomConst = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
+        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
         let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
-        NSLayoutConstraint.activate([bottomConst, trailingConst])
+        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
     }
     
     @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
@@ -278,8 +443,10 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func removeAllViews() {
-        
-        keepOnlyJinyButtonIfPresent()
+        pointer?.removePointer()
+        pointer = nil
+        currentAssist?.remove()
+        currentAssist = nil
         dismissJinyButton()
     }
     
@@ -474,5 +641,120 @@ extension JinyAUIManager:AVSpeechSynthesizerDelegate {
 }
 
 extension JinyAUIManager:JinyMediaManagerDelegate {
+    
+}
+
+extension JinyAUIManager {
+    
+    func isViewInVisibleArea(view:UIView) -> Bool {
+        let viewFrame = view.frame
+        let windowFrame = UIApplication.shared.keyWindow?.frame
+        let viewFrameWRTToWindowFrame = view.superview!.convert(viewFrame, to: nil)
+        return windowFrame!.contains(viewFrameWRTToWindowFrame)
+    }
+    
+    func isRectInVisbleArea(rect:CGRect, inView:UIView) -> Bool {
+        return true
+    }
+    
+    func isViewHiddenByKeyboard(_ view:UIView) -> Bool {
+        guard keyboardHeight > 0 else { return false }
+        let viewWRTWindow = view.superview!.convert(view.frame, to: nil)
+        return viewWRTWindow.origin.y > (UIApplication.shared.keyWindow!.frame.height - CGFloat(keyboardHeight))
+    }
+    
+    func getScrollViews(_ forView:UIView) -> Array<UIView> {
+        var scrollViews:Array<UIView> = [forView]
+        guard var tempView = forView.superview else { return scrollViews }
+        while !tempView.isKind(of: UIWindow.self) {
+            if let scrollView = tempView as? UIScrollView { scrollViews.append(scrollView) }
+            tempView = tempView.superview!
+        }
+        return scrollViews
+    }
+    
+    func makeViewVisible(_ nestedScrolls:Array<UIView>,_ animated:Bool) {
+        for i in 0..<nestedScrolls.count-1 {
+            let parentView = nestedScrolls[nestedScrolls.count - 1 - i]
+            let childView = nestedScrolls[nestedScrolls.count - 1 - i - 1]
+            if let scroller = parentView as? UIScrollView {
+                let childViewRectWRTParent = childView.superview!.convert(childView.frame, to: scroller)
+                scroller.scrollRectToVisible(childViewRectWRTParent, animated: animated)
+            }
+        }
+    }
+    
+    func showArrow() {
+        if scrollArrow != nil {
+            scrollArrow?.removeFromSuperview()
+            scrollArrow = nil
+        }
+        scrollArrow = UIButton(frame: .zero)
+        scrollArrow?.backgroundColor = UIColor.green
+        scrollArrow?.layer.cornerRadius = 20
+        scrollArrow?.layer.masksToBounds = true
+        scrollArrow?.setTitle("↓", for: .normal)
+        scrollArrow?.addTarget(self, action: #selector(arrowClicked), for: .touchUpInside)
+        let currentVC = UIApplication.getCurrentVC()
+        let superView = currentVC!.view
+        superView!.addSubview(scrollArrow!)
+        scrollArrow?.translatesAutoresizingMaskIntoConstraints = false
+        
+        let leadingConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .leading, relatedBy: .equal, toItem: superView!, attribute: .leading, multiplier: 1, constant: 20)
+        scrollArrowBottomConstraint = NSLayoutConstraint(item: superView!, attribute: .bottom, relatedBy: .equal, toItem: scrollArrow!, attribute: .bottom, multiplier: 1, constant: 20)
+        let heightConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
+        let widthConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
+        NSLayoutConstraint.activate([leadingConstraint, scrollArrowBottomConstraint!, heightConstraint, widthConstraint])
+        
+        
+    }
+    
+    @objc func arrowClicked() {
+        let nestedScrolls = getScrollViews(currentTargetView!)
+        makeViewVisible(nestedScrolls, true)
+        let currentVc = UIApplication.getCurrentVC()
+        let view = currentVc!.view!
+        view.endEditing(true)
+        scrollArrow?.removeFromSuperview()
+        scrollArrow = nil
+    }
+}
+
+
+extension JinyAUIManager:JinyAssistDelegate {
+    func willPresentAssist() {
+        
+    }
+    
+    func didPresentAssist() {
+        
+    }
+    
+    func failedToPresentAssist() {
+        
+    }
+    
+    func didDismissAssist() {
+        
+    }
+    
+    func didSendAction(dict: Dictionary<String, Any>) {
+        if let body = dict["body"] as? Dictionary<String,Any> {
+            if let opt_in = body["opt_in"] as? Bool {
+                if opt_in{
+                    auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0)
+                }
+            }
+        }
+    }
+    
+    func didExitAnimation() {
+        
+    }
+    
+    func didTapAssociatedJinyIcon() {
+        auiManagerCallBack?.jinyTapped()
+    }
+    
     
 }
