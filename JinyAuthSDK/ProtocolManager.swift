@@ -21,8 +21,8 @@ class ProtocolManager: JinySocketListener {
         
     }
     
-    
 
+    // variables used 
     let CASE_SCREENSHOT: String? = "SCREENSHOT"
     let CASE_SCREENSTREAM: String? = "SCREENSTREAM"
     let CASE_PING: String? = "PING"
@@ -57,21 +57,14 @@ class ProtocolManager: JinySocketListener {
     
     func openSocketConnection()->Void{
         let url: URL = URL(string: "ws://15.206.167.18:4000/ws")!
-        var urlRequest = URLRequest(url: url)
+        let urlRequest = URLRequest(url: url)
         webSocketTask = WebSocket(request: urlRequest)
         webSocketTask?.delegate = self.jinySocketMessageDelegate
         webSocketTask?.connect()
     }
     
     func sendJoinRoomRequest(roomId: String)->Void{
-//        let json: [String: String] = [
-//            "room": "\(roomId)",
-//            "action": "join",
-//            "source": "android"
-//        ]
-        
         let json = "{ \"room\": \"\(roomId)\", \"action\": \"join\",\"source\": \"android\"}"
-        //let data = (try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted))!
         webSocketTask?.write(string: json, completion: {
             print("Connecting to room ID :: \(roomId)")
         })

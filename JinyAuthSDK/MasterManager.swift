@@ -8,7 +8,12 @@
 
 import UIKit
 
-class MasterManager: ProtocolListener, PermissionListener, BeaconListener, AppIdListener {
+class MasterManager: ProtocolListener,
+                     PermissionListener,
+                     BeaconListener,
+                     AppIdListener {
+    
+    //Beacon Listeners
     func onBeaconSuccess(roomId: String, status: Any) {
         print("Room is \(roomId)")
         print("Status is \(status)")
@@ -21,6 +26,7 @@ class MasterManager: ProtocolListener, PermissionListener, BeaconListener, AppId
         }
     }
     
+    // Permission Listeners
     func onPermissionStatusUpdation(permission: String) {
         if permission == PERMISSION_GRANTED {
             self.protocolManager?.start(roomId: (self.beaconManager?.roomId) as! String)
@@ -41,9 +47,9 @@ class MasterManager: ProtocolListener, PermissionListener, BeaconListener, AppId
     func onBeaconFailure() {
     }
     
-    
+    // App ID fetch Listeners
     func onIdFound() -> String {
-        return ""
+        return appIdManager?.appStoreId
     }
     
    
@@ -58,10 +64,10 @@ class MasterManager: ProtocolListener, PermissionListener, BeaconListener, AppId
     let PERMISSION_GRANTED: String = "GRANTED"
     var appId: String?
     
-    
     init(application: UIApplication, key: String) {
         self.apiKey = key
         self.application = application
+        addObservers()
     }
     
     func initialiseComponents(){
@@ -73,10 +79,37 @@ class MasterManager: ProtocolListener, PermissionListener, BeaconListener, AppId
     }
     
     func start(){
-        self.appId = "7da70a20-7bfa-4b34-8f79-fa20d30c2d8e"
+        self.appId = "0655dfd2-7d70-4bac-89dd-01aa003129e8"
         beaconManager?.start(appId: self.appId!)
     }
     
     
 }
 
+extension MasterManager{
+    
+    private func addObservers() {
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(appLaunched), name: UIApplication.didFinishLaunchingNotification, object: nil)
+        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        nc.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+    }
+    
+    @objc private func appLaunched(){
+        print("App Launched")
+    }
+    
+    @objc private func appWillEnterForeground(){
+        print("App will enter foreground" )
+    }
+    
+    @objc private func appDidEnterBackground(){
+        print("App Did enter background ")
+    }
+    
+    @objc private func appWillTerminate(){
+        print("App will terminate ")
+    }
+    
+}

@@ -60,19 +60,21 @@ class PermissionManager{
     //Update the permission action to Alfred Server by POST
     func updatePermissionToServer(permission: String, status:Bool, appId: String){
         
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(Constants.API_KEY)/device/\(appId)")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/0655dfd2-7d70-4bac-89dd-01aa003129e8/device/\(appId)")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(Constants.API_KEY , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue("0655dfd2-7d70-4bac-89dd-01aa003129e8" , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
         
-        let json: [String: String] = [
-            "permissionStatus" : "\(permission)"
-        ]
+//        let json: [String: String] = [
+//            "permissionStatus" : "\(permission)"
+//        ]
         
-        let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
-        urlRequest.httpBody = jsonData
+        let json = "{ \"permissionStatus\": \"\(permission)\"}"
+        var data = Data(json.utf8)
+       // let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
+        urlRequest.httpBody = data
     
         let permissionUpdateStatus = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             if let response = response {

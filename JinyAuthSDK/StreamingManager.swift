@@ -13,7 +13,7 @@ import Starscream
 class StreamingManager {
     
     let ONE_SECOND: Double = 1.0
-    let FRAME_RATE: Double = 24
+    let FRAME_RATE: Double = 30
     
     var context: UIApplication
     var roomId: String?
@@ -38,7 +38,8 @@ class StreamingManager {
     }
     
     func startStreaming(){
-        self.image = ScreenHelper.captureScreenshot()
+        self.image = self.resizeImage(image: (ScreenHelper.captureScreenshot()!))
+//        self.image = ScreenHelper.captureScreenshot()
         DispatchQueue.global().async {
             self.sendStreamingData(image: self.image!)
             DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND/self.FRAME_RATE), execute: self.streamingTask!)
@@ -46,7 +47,7 @@ class StreamingManager {
     }
     
     func sendStreamingData(image: UIImage){
-        let imageEncode: String = (self.image?.jpegData(compressionQuality: 0.1)?.base64EncodedString())!
+        let imageEncode: String = (self.image?.jpegData(compressionQuality: 0.8)?.base64EncodedString())!
         let splittedString = imageEncode.components(withMaxLength: 10000)
        // self.sendScreenshotData(encodedString: imageEncode)
         let room = self.roomId as String?
@@ -64,6 +65,44 @@ class StreamingManager {
             })
             
         }
+    }
+    
+    func resizeImage(image: UIImage) -> UIImage {
+        var actualHeight: Float = Float(image.size.height)
+        var actualWidth: Float = Float(image.size.width)
+        let maxHeight: Float = 300.0
+        let maxWidth: Float = 400.0
+        var imgRatio: Float = actualWidth / actualHeight
+        let maxRatio: Float = maxWidth / maxHeight
+        let compressionQuality: Float = 0.5
+        //50 percent compression
+
+        if actualHeight > maxHeight || actualWidth > maxWidth {
+            if imgRatio < maxRatio {
+                //adjust width according to maxHeight
+                imgRatio = maxHeight / actualHeight
+                actualWidth = imgRatio * actualWidth
+                actualHeight = maxHeight
+            }
+            else if imgRatio > maxRatio {
+                //adjust height according to maxWidth
+                imgRatio = maxWidth / actualWidth
+                actualHeight = imgRatio * actualHeight
+                actualWidth = maxWidth
+            }
+            else {
+                actualHeight = maxHeight
+                actualWidth = maxWidth
+            }
+        }
+
+        let rect = CGRect(x: 0.0, y: 0.0, width: CGFloat(actualWidth), height: CGFloat(actualHeight))
+        UIGraphicsBeginImageContext(rect.size)
+        image.draw(in: rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        let imageData = img!.jpegData(compressionQuality: CGFloat(compressionQuality))
+        UIGraphicsEndImageContext()
+        return UIImage(data: imageData!)!
     }
 }
 

@@ -10,16 +10,19 @@ import UIKit
 
 class JinyAuthInternal {
     
-    public var apiKey:String?
-    public var masterManager: MasterManager?
-    public var applicationContext: UIApplication
-   
+    var apiKey:String?
+    var masterManager: MasterManager?
+    var applicationContext: UIApplication
+    var appDelegate: UIApplicationDelegate
+    
     init(application: UIApplication, apiKey : String) {
     
         self.applicationContext = application
         self.apiKey = apiKey
         self.masterManager = MasterManager(application: applicationContext, key: apiKey)
+        self.appDelegate = UIApplication.shared.delegate!
     }
+    
     
     func start(application: UIApplication, token : String){
         
@@ -27,11 +30,6 @@ class JinyAuthInternal {
         masterManager?.initialiseComponents()
         masterManager?.start()
     }
-    
-    private var screenshotTimer:Timer?
-    
-    
-    
 }
     
 extension String {

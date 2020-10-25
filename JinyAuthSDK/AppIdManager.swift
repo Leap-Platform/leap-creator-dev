@@ -10,8 +10,16 @@ import UIKit
 
 class AppIdManager{
     
+    var appStoreId: String?
+    var appIdFetchListener: AppIdListener
+    
     init(appIdListener: AppIdListener, applicationcontext: UIApplication){
-        
+        self.appIdFetchListener = appIdListener
+    }
+    
+    @objc func findAppStoreId()->Void{
+
+
     }
 }
 
