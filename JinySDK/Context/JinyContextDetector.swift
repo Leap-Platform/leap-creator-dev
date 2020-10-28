@@ -88,113 +88,11 @@ extension JinyContextDetector {
     @objc private func fetchViews() {
         let allViews = fetchViewHierarchy()
         findIdentifiersPassing(inHierarchy: allViews) { (passingNativeIds, passingWebIds) in
-            switch self.state {
-            case .Discovery:
-                let assistFound = self.detectAssist(passingNativeIds: passingNativeIds, passingWebIds: passingWebIds)
-                
-                if assistFound != nil {
-                    guard let identifier = assistFound!.instruction?.assistInfo?.identifier else {
-                        self.delegate.assistFound(assist: assistFound!, view: nil, rect: nil, webview: nil)
-                        return
-                    }
-                    if assistFound!.isWeb {
-                        guard let webId = self.delegate.getWebIdentifier(identifierId:identifier) else {
-                            self.delegate.assistFound(assist: assistFound!, view: nil, rect: nil, webview: nil)
-                            return
-                        }
-                        self.getRectForIdentifier(id: webId, webviews:allViews.filter{$0.isKind(of: WKWebView.self) || $0.isKind(of: UIWebView.self) }) { (rect, webview) in
-                            self.delegate.assistFound(assist: assistFound!, view: nil, rect: rect, webview: webview)
-                        }
-                    } else {
-                        guard let views = self.getViewsForIdentifer(identifierId: identifier, hierarchy: allViews) else {
-                            self.delegate.assistFound(assist: assistFound!, view: nil, rect: nil, webview: nil)
-                            return
-                        }
-                        if views.count > 0 { self.delegate.assistFound(assist: assistFound!, view: views.first, rect: nil, webview: nil)}
-                        else { self.delegate.assistFound(assist: assistFound!, view: nil, rect: nil, webview: nil) }
-                    }
-                }
-                else {
-                    self.delegate.assistNotFound()
-                    let discoveriesIdentified = self.findDiscoveries(passingNativeIds: passingNativeIds, passingWebIds: passingWebIds)
-                    if discoveriesIdentified.count == 0{ self.delegate.noDiscoveryIdentified() }
-                    else {
-                        var discoveryObjectArray:Array<(JinyDiscovery, UIView?, CGRect?, UIView?)> = []
-                        let discoveriesWithNativeAnchor = discoveriesIdentified.filter{ $0.isWeb == false }
-                        let discoveriesWithWebAnchor = discoveriesIdentified.filter{ $0.isWeb == true }
-                        for discovery in discoveriesWithNativeAnchor {
-                            let identifier = discovery.discoveryInfo?.identifier
-                            let anchorViews = self.getViewsForIdentifer(identifierId: identifier ?? "empty", hierarchy: allViews)
-                            discoveryObjectArray.append((discovery, anchorViews?.first, nil, nil))
-                            
-                        }
-                        let webViews = allViews.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }
-                        if webViews.count > 0 && discoveriesWithWebAnchor.count > 0 {
-                            var counter = 0
-                            var resultCompletion:((_ :CGRect?, _ :UIView?)->Void)?
-                            resultCompletion = { rect, webview in
-                                discoveryObjectArray.append( (discoveriesWithWebAnchor[counter], nil, rect, webview) )
-                                counter += 1
-                                
-                                if counter < discoveriesWithWebAnchor.count {
-                                    let webIdentifier = self.delegate.getWebIdentifier(identifierId: discoveriesWithWebAnchor[counter].discoveryInfo?.identifier ?? "")
-                                    self.getRectForIdentifier(id: webIdentifier!, webviews: webViews, rectCalculated: resultCompletion!)
-                                } else {
-                                    self.delegate.discoveriesIdentified(discoveries: discoveryObjectArray)
-                                }
-                            }
-                            let webIdentifier = self.delegate.getWebIdentifier(identifierId: discoveriesWithWebAnchor[counter].discoveryInfo?.identifier ?? "")
-                            self.getRectForIdentifier(id: webIdentifier!, webviews: webViews, rectCalculated: resultCompletion!)
-                            
-                        } else {
-                            self.delegate.discoveriesIdentified(discoveries: discoveryObjectArray)
-                        }
-                        
-                    }
-                }
-                
-            case .Stage:
-                
-                guard let flow = self.delegate.getCurrentFlow() else {
-                    self.delegate.pageNotIdentified()
-                    return
-                }
-                if let page = self.findPage(pages: flow.pages, webIds: passingWebIds, nativeIds: passingNativeIds) {
-                    self.delegate.pageIdentified(page)
-                    if let stage = self.findStage(stages: page.stages, webIds: passingWebIds, nativeIds: passingNativeIds) {
-                        if let identifier = stage.instruction?.assistInfo?.identifier {
-                            if stage.isWeb {
-                                if let webId = self.delegate.getWebIdentifier(identifierId: identifier) {
-                                    self.getRectForIdentifier(id: webId, webviews:allViews.filter{$0.isKind(of: WKWebView.self) || $0.isKind(of: UIWebView.self) }) { (rect, webview) in
-                                        self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: rect, webviewForRect: webview)
-                                    }
-                                } else {
-                                    self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-                                }
-                            } else {
-                                if let _ = self.delegate.getNativeIdentifier(identifierId: identifier) {
-                                    guard let views = self.getViewsForIdentifer(identifierId: identifier, hierarchy: allViews) else {
-                                        self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-                                        return
-                                    }
-                                    if views.count > 0 { self.delegate.stageIdentified(stage, pointerView: views.first, pointerRect: nil, webviewForRect: nil)}
-                                    else { self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil) }
-                                } else {
-                                    self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-                                }
-                            }
-                        } else {
-                            self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-                        }
-                        
-                    } else { self.delegate.stageNotIdentified() }
-                } else { self.delegate.pageNotIdentified() }
-            }
+            self.findAUIElement(in: allViews, withPassing: passingWebIds, passingNativeIds)
         }
-
     }
     
-    func fetchViewHierarchy() -> [UIView] {
+    private func fetchViewHierarchy() -> [UIView] {
         var views:[UIView] = []
         var allWindows:Array<UIWindow> = []
         allWindows = UIApplication.shared.windows
@@ -237,12 +135,8 @@ extension JinyContextDetector {
         }
         return visibleViews
     }
-}
-
-
-extension JinyContextDetector {
     
-    func findIdentifiersPassing(inHierarchy hierarchy:Array<UIView>, passingIds:@escaping (_ passingNativeIds:Array<String>, _ passingWebIds:Array<String>)->Void) {
+    private func findIdentifiersPassing(inHierarchy hierarchy:Array<UIView>, passingIds:@escaping (_ passingNativeIds:Array<String>, _ passingWebIds:Array<String>)->Void) {
         let allNativeIds = delegate.getAllNativeIds()
         let allWebIds = delegate.getAllWebIds()
         
@@ -255,8 +149,93 @@ extension JinyContextDetector {
                 passingIds(passingNativeIds, passedWebIds)
             }
         }
+    }
+}
+
+// MARK: - ASSIST/DISCOVERY/STAGE CHECKING
+extension JinyContextDetector {
+    
+    private func findAUIElement(in allViews:Array<UIView>, withPassing webIds:Array<String>,_ nativeIds:Array<String>) {
+        switch state {
+        case .Discovery:
+            checkForAssistOrDiscovery(in: allViews, withPassing: webIds, nativeIds)
+        case .Stage:
+            checkForStage(in: allViews, withPassing: webIds, nativeIds, forFlow: delegate.getCurrentFlow())
+        }
+    }
+    
+    private func isAUIElementPassing(_ passedWebIds:Array<String>,_ passedNativedIds:Array<String>,_ toCheckWebIds:Array<String>,_ toCheckNativeIds:Array<String>) -> Bool {
         
+        if toCheckNativeIds.count > 0 { if !(Set(toCheckNativeIds).isSubset(of: Set(passedNativedIds)))  { return false} }
+        if toCheckWebIds.count > 0 { if !(Set(toCheckWebIds).isSubset(of: Set(passedWebIds)))  { return false} }
         
+        return true
+    }
+    
+    private func checkForAssistOrDiscovery(in allViews:Array<UIView>, withPassing webIds:Array<String>,_ nativeIds:Array<String>) {
+        if let assistDetected = detectAssist(passingNativeIds: nativeIds, passingWebIds: webIds) {
+            getViewOrRect(allView: allViews, id: assistDetected.instruction?.assistInfo?.identifier, isWeb: assistDetected.isWeb) { (view, rect, webview) in
+                self.delegate.assistFound(assist: assistDetected, view: view, rect: rect, webview: webview)
+            }
+        }
+        else {
+            self.delegate.assistNotFound()
+            let discoveriesIdentified = findDiscoveries(passingNativeIds: nativeIds, passingWebIds: webIds)
+            guard discoveriesIdentified.count > 0 else {
+                self.delegate.noDiscoveryIdentified()
+                return
+            }
+            var discoveryObj:Array<(JinyDiscovery, UIView?, CGRect?, UIView?)> = []
+            var counter = 0
+            var rectCalculateCompletion:((UIView?,CGRect?,UIView?)-> Void)?
+            rectCalculateCompletion = { view, rect, webview in
+                discoveryObj.append((discoveriesIdentified[counter],view,rect,webview))
+                counter += 1
+                if discoveriesIdentified.count == counter {
+                    self.delegate.discoveriesIdentified(discoveries: discoveryObj)
+                } else {
+                    self.getViewOrRect(allView: allViews, id: discoveriesIdentified[counter].instruction?.assistInfo?.identifier, isWeb: discoveriesIdentified[counter].isWeb, targetCheckCompleted: rectCalculateCompletion!)
+                }
+            }
+            
+            getViewOrRect(allView: allViews, id: discoveriesIdentified[counter].instruction?.assistInfo?.identifier, isWeb: discoveriesIdentified[counter].isWeb, targetCheckCompleted: rectCalculateCompletion!)
+        }
+    }
+    
+    private func checkForStage(in allViews:Array<UIView>, withPassing webIds:Array<String>,_ nativeIds:Array<String>, forFlow:JinyFlow?) {
+        guard let flow = forFlow, let page = findPage(pages: flow.pages, webIds: webIds, nativeIds: nativeIds) else {
+            delegate.pageNotIdentified()
+            return
+        }
+        delegate.pageIdentified(page)
+        if let stage = findStage(stages: page.stages, webIds: webIds, nativeIds: nativeIds) {
+            getViewOrRect(allView: allViews, id: stage.instruction?.assistInfo?.identifier, isWeb: stage.isWeb) { (view, rect, webview) in
+                self.delegate.stageIdentified(stage, pointerView: view, pointerRect: rect, webviewForRect: webview)
+            }
+        } else { checkForStage(in: allViews, withPassing: webIds, nativeIds, forFlow: delegate.getParentFlow()) }
+    }
+    
+    private func getViewOrRect(allView:Array<UIView>,id:String?, isWeb:Bool, targetCheckCompleted:@escaping(_:UIView?,_:CGRect?, UIView?)->Void) {
+        guard let identifier = id else {
+            targetCheckCompleted (nil, nil, nil)
+            return
+        }
+        if isWeb {
+            guard let webId = delegate.getWebIdentifier(identifierId: identifier) else {
+                targetCheckCompleted(nil, nil, nil)
+                return
+            }
+            getRectForIdentifier(id: webId, webviews: allView.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }) { (rect, webview) in
+                targetCheckCompleted(nil, rect, webview)
+            }
+        } else {
+            guard let _ = delegate.getNativeIdentifier(identifierId: identifier) else {
+                targetCheckCompleted(nil, nil, nil)
+                return
+            }
+            let views = getViewsForIdentifer(identifierId: identifier, hierarchy: allView)
+            targetCheckCompleted(views?.first, nil, nil)
+        }
     }
     
 }
@@ -265,27 +244,12 @@ extension JinyContextDetector {
 // MARK: - ASSIST DETECTION
 extension JinyContextDetector {
     
-    func detectAssist(passingNativeIds:Array<String>, passingWebIds:Array<String>) -> JinyAssist? {
+    private func detectAssist(passingNativeIds:Array<String>, passingWebIds:Array<String>) -> JinyAssist? {
         var assistFound:JinyAssist?
         var maxWeight:Int = 0
-        
         let assists = delegate.getAllAssistsToCheck()
         for assist in assists {
-            var isIdentified = true
-            for webId in assist.webIdentifiers {
-                if !passingWebIds.contains(webId) {
-                    isIdentified = false
-                    break
-                }
-            }
-            if !isIdentified { continue }
-            for nativeId in assist.nativeIdentifiers {
-                if !passingNativeIds.contains(nativeId) {
-                    isIdentified = false
-                    break
-                }
-            }
-            if isIdentified && assist.weight > maxWeight {
+            if isAUIElementPassing(passingWebIds, passingNativeIds, assist.webIdentifiers, assist.nativeIdentifiers) && assist.weight > maxWeight {
                 assistFound = assist
                 maxWeight = assist.weight
             }
@@ -298,233 +262,14 @@ extension JinyContextDetector {
 // MARK: - DISCOVERY DETECTION
 extension JinyContextDetector {
     
-    func findDiscoveries(passingNativeIds:Array<String>, passingWebIds:Array<String>) -> Array<JinyDiscovery> {
-        var passingDiscoveries:Array<JinyDiscovery> = []
+    private func findDiscoveries(passingNativeIds:Array<String>, passingWebIds:Array<String>) -> Array<JinyDiscovery> {
         let discoveries = delegate.getDiscoveriesToCheck()
-        for discovery in discoveries {
-            var isPassing = true
-            for nativeId in discovery.nativeIdentifiers {
-                if !passingNativeIds.contains(nativeId) {
-                    isPassing = false
-                    break
-                }
-            }
-            if !isPassing { continue }
-            for webId in discovery.webIdentifiers {
-                if !passingWebIds.contains(webId) {
-                    isPassing = false
-                    break
-                }
-            }
-            if isPassing { passingDiscoveries.append(discovery) }
-        }
-        
+        let passingDiscoveries = discoveries.filter({ (checkDiscovery) -> Bool in
+            return isAUIElementPassing(passingWebIds, passingNativeIds, checkDiscovery.webIdentifiers, checkDiscovery.nativeIdentifiers)
+        })
         return passingDiscoveries
     }
     
-    func identifyDiscoveryToLaunch(discoveries:Array<JinyDiscovery>, hierarchy:[UIView], discoveriesIdentified:@escaping(_ discoveryIdentified:Array<JinyDiscovery>)->Void) {
-        
-        // Get all webviews in hierarchy
-        let webviews = hierarchy.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }
-        
-        // Get all discoveries with webidentifiers
-        let discoveriesWithWebIdentifiers = discoveries.filter{ $0.webIdentifiers.count != 0 }
-        if discoveriesWithWebIdentifiers.count == 0 {
-            // If no discovery has web identifiers, check for native identifiers only
-            let identifiedDisccovery = identifyNativeDiscovery(discoveries: discoveries, hierarchy: hierarchy)
-            discoveriesIdentified(identifiedDisccovery)
-        } else {
-            // Check if webview is present in current hierarchy, if not skip to native check only
-            if webviews.count == 0 {
-                // No webviews in current hierarchy, check for native
-                let discoveriesWithOnlyNativeIds = discoveries.filter{ $0.webIdentifiers.count == 0 && $0.nativeIdentifiers.count > 0 }
-                guard discoveriesWithOnlyNativeIds.count > 0 else {
-                    discoveriesIdentified([])
-                    return
-                }
-                let identifiedDiscovery = identifyNativeDiscovery(discoveries: discoveriesWithOnlyNativeIds, hierarchy: hierarchy)
-                discoveriesIdentified(identifiedDiscovery)
-            } else {
-                // Webviews and webidentifiers present
-                // Get discoveryids whose webidentifiers can be found
-                var dict: Dictionary<Int,Array<String>> = [:]
-                for discovery in discoveriesWithWebIdentifiers {
-                    dict[discovery.id!] = discovery.webIdentifiers
-                }
-                getElementsPassingWebIdCheck(input: dict, webviews: webviews) { (idsPassingDict) in
-                    let idsPassing = idsPassingDict["ids"] ?? []
-                    // Check discoveries whose webidentifiers passed and which has no webidentifiers
-                    var discoveriesPassed = discoveries.filter{ $0.nativeIdentifiers.count == 0 && idsPassing.contains($0.id!)}
-                    
-                    // Get list of discoveries which did passed web identifiers check and has native identifiers. Also get discoveries with native identifiers only
-                    let discoveriesToCheck = discoveries.filter{ (!discoveriesPassed.contains($0)) && ($0.nativeIdentifiers.count > 0) }
-                    
-                    for discovery in discoveriesToCheck {
-                        if self.isDiscoveryFoundInNativeHierarchy(discovery: discovery, hierarcy: hierarchy) {
-                            //Add to discoveriesPassed list if all discovery was identified
-                            discoveriesPassed.append(discovery)
-                        }
-                    }
-                    discoveriesIdentified(discoveriesPassed)
-                }
-                
-            }
-        }
-    }
-    
-    private func identifyNativeDiscovery(discoveries:Array<JinyDiscovery>, hierarchy:Array<UIView>) -> Array<JinyDiscovery> {
-        var discoveriesIdentified:Array<JinyDiscovery> = []
-        for discovery in discoveries {
-            let isIdentfiable = isDiscoveryFoundInNativeHierarchy(discovery: discovery, hierarcy: hierarchy)
-            if isIdentfiable { discoveriesIdentified.append(discovery) }
-        }
-        return discoveriesIdentified
-    }
-    
-    private func isDiscoveryFoundInNativeHierarchy(discovery:JinyDiscovery, hierarcy:Array<UIView>) -> Bool {
-        for nativeIdentifier in discovery.nativeIdentifiers {
-            let matchingViews = getViewsForIdentifer(identifierId: nativeIdentifier, hierarchy: hierarcy)
-            if matchingViews?.count == 0 || matchingViews == nil { return false }
-        }
-        return true
-    }
-    
-}
-
-
-// MARK: - PAGE DETECTION
-extension JinyContextDetector {
-    
-    func findPageFromPages(_ pages:Array<JinyPage>, hierarchy:Array<UIView>, pageCheckComplete:@escaping(_ : JinyPage?)->Void) {
-        let webviews = hierarchy.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }
-        let pagesWithWebIds = pages.filter{ $0.webIdentifiers.count > 0 }
-        
-        if webviews.count == 0 || pagesWithWebIds.count == 0 {
-            //Do native check only
-            var passingPages:Array<JinyPage> = []
-            let pagesWithNativeIdsOnly = pages.filter{ $0.webIdentifiers.count == 0 && $0.nativeIdentifiers.count > 0 }
-            for page in pagesWithNativeIdsOnly {
-                if isNativeIds(page.nativeIdentifiers, identifiableIn: hierarchy) { passingPages.append(page) }
-            }
-            var pageIdentified:JinyPage?
-            var maxWeight = 0
-            for passingPage in passingPages {
-                if pageIdentified == nil || passingPage.weight > maxWeight {
-                    pageIdentified = passingPage
-                    maxWeight = passingPage.weight
-                }
-            }
-            pageCheckComplete(pageIdentified)
-        } else {
-            // Do native & webcheck
-            var dict: Dictionary<Int,Array<String>> = [:]
-            for page in pagesWithWebIds {
-                dict[page.id!] = page.webIdentifiers
-            }
-            getElementsPassingWebIdCheck(input: dict, webviews: webviews) { (passingIdsDict) in
-                let passingIds = passingIdsDict["ids"] ?? []
-                var pagesPassed = pages.filter{ passingIds.contains($0.id!) && $0.nativeIdentifiers.count == 0 }
-                let pagesToBeChecked = pages.filter{ (!pagesPassed.contains($0)) && ($0.nativeIdentifiers.count > 0) }
-                for page in pagesToBeChecked {
-                    if self.isNativeIds(page.nativeIdentifiers, identifiableIn: hierarchy) { pagesPassed.append(page) }
-                }
-                var identifiedPage:JinyPage?
-                var maxWeight = 0
-                for page in pagesPassed {
-                    if (identifiedPage == nil) || (page.weight > maxWeight) {
-                        identifiedPage = page
-                        maxWeight = page.weight
-                    }
-                }
-                pageCheckComplete(identifiedPage)
-            }
-            
-        }
-    }
-}
-
-
-// MARK: - STAGE DETECTION
-extension JinyContextDetector {
-    
-    private func findStageFromStages(_ stages:Array<JinyStage>, hierarchy:Array<UIView>, completedStageCheck:@escaping(_ : JinyStage?)->Void) {
-        let webviews = hierarchy.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }
-        let stagesWithWebIds = stages.filter{ $0.webIdentifiers.count > 0 }
-        
-        if webviews.count == 0 || stagesWithWebIds.count == 0 {
-            //Do native check only
-            var passingStages:Array<JinyStage> = []
-            let stagesWithNativeIdsOnly = stages.filter{ $0.webIdentifiers.count == 0 && $0.nativeIdentifiers.count > 0 }
-            for stage in stagesWithNativeIdsOnly {
-                if isNativeIds(stage.nativeIdentifiers, identifiableIn: hierarchy) { passingStages.append(stage) }
-            }
-            var stageIdentified:JinyStage?
-            var maxWeight = 0
-            for passingStage in passingStages {
-                if stageIdentified == nil || passingStage.weight > maxWeight {
-                    stageIdentified = passingStage
-                    maxWeight = passingStage.weight
-                }
-            }
-            completedStageCheck(stageIdentified)
-        } else {
-            // Do native & webcheck
-            var dict: Dictionary<Int,Array<String>> = [:]
-            for stage in stagesWithWebIds {
-                dict[stage.id!] = stage.webIdentifiers
-            }
-            getElementsPassingWebIdCheck(input: dict, webviews: webviews) { (passingIdsDict) in
-                let passingIds = passingIdsDict["ids"] ?? []
-                var stagesPassed = stages.filter{ passingIds.contains($0.id!) && $0.nativeIdentifiers.count == 0 }
-                let stagesToBeChecked = stages.filter{ (!stagesPassed.contains($0)) && ($0.nativeIdentifiers.count > 0) }
-                for stage in stagesToBeChecked {
-                    if self.isNativeIds(stage.nativeIdentifiers, identifiableIn: hierarchy) { stagesPassed.append(stage) }
-                }
-                var identifiedStage:JinyStage?
-                var maxWeight = 0
-                for stage in stagesPassed {
-                    if (identifiedStage == nil) || (stage.weight > maxWeight) {
-                        identifiedStage = stage
-                        maxWeight = stage.weight
-                    }
-                }
-                completedStageCheck(identifiedStage)
-            }
-            
-        }
-    }
-    
-    private func getViewOrRectForPointer(_ stage:JinyStage, _ hierarchy:Array<UIView>) {
-        //        guard let pointerInfo = stage.instruction?.ass, let identifier = pointerInfo.identifier else {
-        //            delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-        //            return
-        //        }
-        //        var pointer:Any? = nil
-        //        if pointerInfo.isWeb {
-        //            pointer = delegate.getWebIdentifier(identifierId: identifier)
-        //        } else {
-        //            pointer = delegate.getNativeIdentifier(identifierId: identifier)
-        //        }
-        //        guard pointer != nil else {
-        //            delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-        //            return
-        //        }
-        //        if let _ = pointer as? JinyNativeIdentifier {
-        //            let views = getViewsForIdentifer(identifierId: identifier, hierarchy: hierarchy) ?? []
-        //            delegate.stageIdentified(stage, pointerView: views.first, pointerRect: nil, webviewForRect: nil)
-        //        } else if let webId = pointer as? JinyWebIdentifier {
-        //            let webviews = hierarchy.filter{ $0.isKind(of: WKWebView.self) || $0.isKind(of: UIWebView.self) }
-        //            if webviews.count > 0 {
-        //                getRectForIdentifier(id: webId, webviews: webviews) { (rectCalculated, forWebView) in
-        //                    if rectCalculated != nil { (self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: rectCalculated, webviewForRect: forWebView)) }
-        //                    else { self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil) }
-        //                }
-        //            } else { delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil) }
-        //
-        //        } else {
-        //            self.delegate.stageIdentified(stage, pointerView: nil, pointerRect: nil, webviewForRect: nil)
-        //        }
-    }
 }
 
 
@@ -532,27 +277,14 @@ extension JinyContextDetector {
 extension JinyContextDetector {
     
     private func getNativeIdentifiersPassing(_ identifiers:Array<String>, inHierarchy allView:Array<UIView>) -> Array<String> {
-        var idsPassing:Array<String> = []
-        for id in identifiers {
-            if let views = getViewsForIdentifer(identifierId: id, hierarchy: allView) {
-                if views.count > 0 {
-                    idsPassing.append(id)
-                }
-            }
+        let passingIds = identifiers.filter { (checkIdentifier) -> Bool in
+            let views = getViewsForIdentifer(identifierId: checkIdentifier, hierarchy: allView)
+            return views?.count ?? 0 > 0
         }
-        return idsPassing
+        return passingIds
     }
     
-    private func isNativeIds(_ identifierIds:Array<String>, identifiableIn hierarchy:Array<UIView>) -> Bool {
-        var isPassing:Bool = true
-        for id in identifierIds {
-            let viewsForIdentifier = getViewsForIdentifer(identifierId: id, hierarchy: hierarchy)
-            isPassing = isPassing && (viewsForIdentifier?.count ?? 0 > 0)
-        }
-        return isPassing
-    }
-    
-    func getViewsForIdentifer(identifierId:String, hierarchy:Array<UIView>) -> Array<UIView>? {
+    private func getViewsForIdentifer(identifierId:String, hierarchy:Array<UIView>) -> Array<UIView>? {
         guard let identifier = delegate.getNativeIdentifier(identifierId: identifierId) else { return nil }
         guard let params = identifier.idParameters else { return nil }
         var anchorViews = hierarchy
@@ -637,14 +369,11 @@ extension JinyContextDetector {
 // MARK: - PAGE CHECK
 extension JinyContextDetector {
     
-    func findPage(pages:Array<JinyPage>, webIds:Array<String>, nativeIds:Array<String>) -> JinyPage? {
+    private func findPage(pages:Array<JinyPage>, webIds:Array<String>, nativeIds:Array<String>) -> JinyPage? {
         var pageIdentified:JinyPage?
         var maxWeight = 0
         for page in pages {
-            var isPassing:Bool = true
-            if page.nativeIdentifiers.count > 0 { isPassing = isPassing && Set(page.nativeIdentifiers).isSubset(of: Set(nativeIds)) }
-            if page.webIdentifiers.count > 0 { isPassing = isPassing && Set(page.webIdentifiers).isSubset(of: Set(webIds)) }
-            if isPassing && page.weight > maxWeight {
+            if isAUIElementPassing(webIds, nativeIds, page.webIdentifiers, page.nativeIdentifiers) && page.weight > maxWeight {
                 pageIdentified = page
                 maxWeight = page.weight
             }
@@ -657,14 +386,11 @@ extension JinyContextDetector {
 // MARK: - STAGE CHECK
 extension JinyContextDetector {
     
-    func findStage(stages:Array<JinyStage>, webIds:Array<String>, nativeIds:Array<String>) -> JinyStage? {
+    private func findStage(stages:Array<JinyStage>, webIds:Array<String>, nativeIds:Array<String>) -> JinyStage? {
         var stageIdentified:JinyStage?
         var maxWeight = 0
         for stage in stages {
-            var isPassing:Bool = true
-            if stage.nativeIdentifiers.count > 0 { isPassing = isPassing && Set(stage.nativeIdentifiers).isSubset(of: Set(nativeIds)) }
-            if stage.webIdentifiers.count > 0 { isPassing = isPassing && Set(stage.webIdentifiers).isSubset(of: Set(webIds)) }
-            if isPassing && stage.weight > maxWeight {
+            if isAUIElementPassing(webIds, nativeIds, stage.webIdentifiers, stage.nativeIdentifiers) && stage.weight > maxWeight{
                 stageIdentified = stage
                 maxWeight = stage.weight
             }
@@ -676,88 +402,7 @@ extension JinyContextDetector {
 // MARK: - WEB IDENTFIER CHECK
 extension JinyContextDetector {
     
-    func getElementsPassingWebIdCheck(input:Dictionary<Int, Array<String>>, webviews:Array<UIView>, idsPassing:@escaping(_ :Dictionary<String,Array<Int>>) -> Void) {
-        var allIdentifierIdsToCheck:Array<String> = []
-        input.forEach { (jinyFeatureId, webIds) in
-            for webId in webIds {
-                if !allIdentifierIdsToCheck.contains(webId) { allIdentifierIdsToCheck.append(webId) }
-            }
-        }
-        var passingIds:Array<Int> = []
-        checkListOfIdentifiers(allIdentifierIdsToCheck, in: webviews) { (identifierStatuses) in
-            input.forEach { (jinyElementId, identifierIdsArray) in
-                var isIdPassing = true
-                for identifierId in identifierIdsArray {
-                    isIdPassing = isIdPassing && (identifierStatuses[identifierId] ?? false)
-                }
-                if isIdPassing { passingIds.append(jinyElementId) }
-            }
-            idsPassing(["ids":passingIds])
-        }
-    }
-    
-    func checkListOfIdentifiers(_ identifierIds:Array<String>, in webviews:Array<UIView>, completedCheck:@escaping(_ : Dictionary<String,Bool>)->Void) {
-        
-        var identifierStatus:Dictionary<String,Bool> = [:]
-        var counter = 0
-        
-        //Recursive closure to make async js execution sync by processing one identifier at a time
-        var identifierCheck:((_: Bool)->Void)?
-        identifierCheck = { isPresent in
-            identifierStatus[identifierIds[counter]] = isPresent
-            counter += 1
-            if counter < identifierIds.count { self.isWebIdentifier(identifierIds[counter], presentIn: webviews, identifierChecked: identifierCheck!) }
-            else {
-                completedCheck(identifierStatus)
-                
-            }
-        }
-        
-        isWebIdentifier(identifierIds[counter], presentIn: webviews, identifierChecked: identifierCheck!)
-    }
-    
-    func isWebIdentifier(_ identifier:String, presentIn webviews:Array<UIView>, identifierChecked:@escaping(_ : Bool)->Void) {
-        
-        var counter = 0
-        var checkCompletion:((_ : Bool) -> Void)?
-        // Recursive closure for each webview to handle asynchronous js execution synchronusly
-        checkCompletion = { isPresent in
-            if isPresent { identifierChecked(true) }
-            else {
-                counter += 1
-                if counter < webviews.count { self.isWebIdentifier(identifier, inCurrentWebview: webviews[counter], individualWebviewCheckComplete: checkCompletion!)}
-                else { identifierChecked(false) }
-            }
-        }
-        
-        isWebIdentifier(identifier, inCurrentWebview: webviews[0], individualWebviewCheckComplete: checkCompletion!)
-        
-    }
-    
-    func isWebIdentifier(_ identfier:String, inCurrentWebview:UIView, individualWebviewCheckComplete:@escaping(_ : Bool)->Void) {
-        
-        if let webIdObj = delegate.getWebIdentifier(identifierId: identfier) {
-            let query = JinyJSMaker.createJSScript(for: webIdObj)
-            if let wk = inCurrentWebview as? WKWebView {
-                wk.evaluateJavaScript(query) { (res, err) in
-                    
-                    if identfier == "goib_source" {
-                        
-                    }
-                    if let resString = res as? String {
-                        individualWebviewCheckComplete((resString as NSString).boolValue)
-                    }
-                }
-            } else if let uiweb = inCurrentWebview as? UIWebView {
-                if let resString = uiweb.stringByEvaluatingJavaScript(from: query) {
-                    individualWebviewCheckComplete((resString as NSString).boolValue)
-                } else { individualWebviewCheckComplete(false) }
-                
-            }
-        } else { individualWebviewCheckComplete(false) }
-    }
-    
-    func getRectForIdentifier(id:JinyWebIdentifier, webviews:Array<UIView>, rectCalculated:@escaping(_ :CGRect?, _ :UIView?)->Void) {
+    private func getRectForIdentifier(id:JinyWebIdentifier, webviews:Array<UIView>, rectCalculated:@escaping(_ :CGRect?, _ :UIView?)->Void) {
         let boundsScript = JinyJSMaker.calculateBoundsScript(id)
         var counter = 0
         
@@ -815,7 +460,7 @@ extension JinyContextDetector {
         
     }
     
-    func getPassingWebIds(_ webIds:Array<String>, inAllWebviews:Array<UIView>, completion: @escaping(_ passingIds:Array<String>)->Void) {
+    private func getPassingWebIds(_ webIds:Array<String>, inAllWebviews:Array<UIView>, completion: @escaping(_ passingIds:Array<String>)->Void) {
         
         var counter = 0
         var passingWebIds:Array<String> = []
@@ -832,7 +477,7 @@ extension JinyContextDetector {
         
     }
     
-    func getPassingWebIds(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ passingIds:Array<String>)->Void) {
+    private func getPassingWebIds(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ passingIds:Array<String>)->Void) {
         getElementsPresent(webIds, inSingleWebview: inSingleWebview) { (presentWebIds) in
             if presentWebIds.count > 0 {
                 self.getElementsPassingAttributes(presentWebIds, inSingleWebview: inSingleWebview) { (passingWebIds) in
@@ -843,7 +488,7 @@ extension JinyContextDetector {
         
     }
     
-    func getElementsPresent(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ presentElements:Array<String>) -> Void ) {
+    private func getElementsPresent(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ presentElements:Array<String>) -> Void ) {
         
         //Create query to check if element is present
         var jsString = "["
@@ -885,7 +530,7 @@ extension JinyContextDetector {
         }
     }
     
-    func getElementsPassingAttributes(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ passingElements:Array<String>) -> Void ) {
+    private func getElementsPassingAttributes(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ passingElements:Array<String>) -> Void ) {
         var jsString = "["
         for (index,webId) in webIds.enumerated() {
             if index != 0 { jsString += "," }
@@ -924,6 +569,4 @@ extension JinyContextDetector {
             }
         }
     }
-    
-    
 }
