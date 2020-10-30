@@ -12,11 +12,8 @@ class BeaconManager {
     private static let TAG: String = " Jiny - BeaconManager "
     private let ALFRED_URL_LOCAL: String  = "http://192.168.1.3:8080"
     private let ALFRED_URL_DEV: String = "https://alfred-dev-0-0-1-gke.jiny.io"
-    private let API_KEY: String  = "626085ff-35d6-4779-bb12-6b6da2eb8838"
     
-    private let TESTKEY: String = "0655dfd2-7d70-4bac-89dd-01aa003129e8"
-    
-    let json = "{\"id\":\"0655dfd2-7d70-4bac-89dd-01aa003129e8\",\"name\":\"iPhone\",\"type\":\"ANDROID\",\"appApiKey\":\"0655dfd2-7d70-4bac-89dd-01aa003129e8\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
+    let json = "{\"id\":\"\(Constants.API_KEY)\",\"name\":\"iPhone\",\"type\":\"ANDROID\",\"appApiKey\":\"\(Constants.API_KEY)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
     
     var beaconListener: BeaconListener
     var appId: String?
@@ -52,7 +49,7 @@ class BeaconManager {
         let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue("0655dfd2-7d70-4bac-89dd-01aa003129e8", forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(Constants.API_KEY, forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "POST"
         
@@ -72,7 +69,7 @@ class BeaconManager {
         let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue("0655dfd2-7d70-4bac-89dd-01aa003129e8" , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(Constants.API_KEY , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
         

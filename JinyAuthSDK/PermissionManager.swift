@@ -10,11 +10,22 @@ import Foundation
 import UIKit
 
 
-class PermissionManager{
+class PermissionManager: AppStateProtocol{
+    func onApplicationInForeground() {
+        
+    }
+    
+    func onApplicationInBackground() {
+        
+    }
+    
+    func onApplicationInTermination() {
+        
+    }
+    
     
     let ALFRED_URL_LOCAL: String = "http://192.168.1.3:8080";
     let ALFRED_URL_DEV: String = "https://alfred-dev-0-0-1-gke.jiny.io";
-    let API_KEY: String = "626085ff-35d6-4779-bb12-6b6da2eb8838";
     var permissionListener: PermissionListener
     var application: UIApplication
     let permissionGranted: String = "PERMISSION_GRANTED"
@@ -30,7 +41,7 @@ class PermissionManager{
         //seek permission to allow communication to take place
         
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Streaming Permission ", message: "Do you allow your device to stream to Jiny's dashboard", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Streaming Permission ", message: "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
 
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
             
@@ -60,23 +71,19 @@ class PermissionManager{
     //Update the permission action to Alfred Server by POST
     func updatePermissionToServer(permission: String, status:Bool, appId: String){
         
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/0655dfd2-7d70-4bac-89dd-01aa003129e8/device/\(appId)")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(Constants.API_KEY)/device/\(appId)")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue("0655dfd2-7d70-4bac-89dd-01aa003129e8" , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(Constants.API_KEY , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
-        
-//        let json: [String: String] = [
-//            "permissionStatus" : "\(permission)"
-//        ]
-        
+  
         let json = "{ \"permissionStatus\": \"\(permission)\"}"
-        var data = Data(json.utf8)
+        let data = Data(json.utf8)
        // let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
         urlRequest.httpBody = data
     
-        let permissionUpdateStatus = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+        let _: Void = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             if let response = response {
                 print(response)
             }

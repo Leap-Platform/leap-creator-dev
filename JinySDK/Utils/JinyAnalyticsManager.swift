@@ -31,6 +31,7 @@ class JinyAnalyticsManager {
         var urlRequest = URLRequest(url: url)
         urlRequest.addValue(Constants.AnalyticsTemp.tempApiKey, forHTTPHeaderField: Constants.AnalyticsTemp.xClientId)
         urlRequest.addValue(Constants.AnalyticsTemp.contentTypeValue, forHTTPHeaderField: Constants.AnalyticsTemp.contentTypeKey)
+        urlRequest.addValue("1", forHTTPHeaderField: "x-experiment-code")
         urlRequest.httpMethod = "POST"
         guard let payload = generatePayload(event) else { return }
         guard let jsonData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else {

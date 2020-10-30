@@ -12,6 +12,7 @@ class SearchHotelViewController: UIViewController {
     
     @IBOutlet weak var destination:UIButton!
     @IBOutlet weak var dateOfJourney: UITextField!
+    @IBOutlet weak var numberOfGuests:UITextField!
     
     var datePicker: UIDatePicker!
        var toolBar: UIToolbar!
@@ -19,6 +20,7 @@ class SearchHotelViewController: UIViewController {
        override func viewDidLoad() {
            super.viewDidLoad()
            // Do any additional setup after loading the view.
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
            datePicker = UIDatePicker.init()
            datePicker.setDate(Date(), animated: true)
            datePicker.datePickerMode = .date
@@ -75,3 +77,29 @@ extension SearchHotelViewController:PlacesDelegate {
     
 }
 
+
+
+extension SearchHotelViewController:UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == numberOfGuests {
+            if let _ = string.rangeOfCharacter(from: NSCharacterSet.decimalDigits) {
+                  return true
+               } else {
+               return false
+            }
+        }
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @objc func dismissKeyboard() {
+        dateOfJourney.resignFirstResponder()
+        numberOfGuests.resignFirstResponder()
+    }
+    
+}

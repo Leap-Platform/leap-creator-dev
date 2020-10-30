@@ -10,7 +10,23 @@ import Foundation
 import UIKit
 import Starscream
 
-class ProtocolManager: JinySocketListener {
+class ProtocolManager: JinySocketListener, AppStateProtocol {
+    
+    func onApplicationInForeground() {
+        streamingManager?.onApplicationInForeground()
+        captureManager?.onApplicationInForeground()
+    }
+    
+    func onApplicationInBackground() {
+        streamingManager?.onApplicationInBackground()
+        captureManager?.onApplicationInBackground()
+    }
+    
+    func onApplicationInTermination() {
+        streamingManager?.stop()
+    }
+    
+    
     func onConnectionEstablished() {
         //write the command to join the room
         self.sendJoinRoomRequest(roomId: self.roomId!)
@@ -18,7 +34,17 @@ class ProtocolManager: JinySocketListener {
     }
     
     func onReceivePacket(id: String, type: String) {
-        
+        switch type {
+        case CASE_SCREENSHOT:
+            streamingManager?.stop()
+            captureManager?.capture(webSocket: self.webSocketTask!, room: self.roomId!)
+            break
+        case CASE_SCREENSTREAM:
+            streamingManager?.startStreaming()
+            break
+        default:
+         print("Default command - DO NOTHING !")
+        }
     }
     
 
@@ -28,7 +54,8 @@ class ProtocolManager: JinySocketListener {
     let CASE_PING: String? = "PING"
     let CASE_PONG: String? = "PONG"
 
-    let SOCKET_URL: String? = "ws://15.206.167.18:4000/ws"
+//    let SOCKET_URL: String? = "ws://15.206.167.18:4000/ws"
+    let SOCKET_URL: String? = "wss://raven.jiny.io/ws"
     
     var protocolListener: ProtocolListener
     var protocolContext: UIApplication
@@ -56,7 +83,7 @@ class ProtocolManager: JinySocketListener {
     }
     
     func openSocketConnection()->Void{
-        let url: URL = URL(string: "ws://15.206.167.18:4000/ws")!
+        let url: URL = URL(string: self.SOCKET_URL!)!
         let urlRequest = URLRequest(url: url)
         webSocketTask = WebSocket(request: urlRequest)
         webSocketTask?.delegate = self.jinySocketMessageDelegate
@@ -72,5 +99,6 @@ class ProtocolManager: JinySocketListener {
 }
 
 protocol ProtocolListener{
-    
+    func onSessionClosed()->Void
 }
+

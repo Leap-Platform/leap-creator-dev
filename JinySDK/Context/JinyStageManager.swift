@@ -14,6 +14,8 @@ protocol JinyStageManagerDelegate {
 //    func newNativeStageIdentified(_ stage:JinyNativeStage, _ view:UIView?)
 //    func sameWebStageIdentified(_ stage:JinyWebStage, _ rect:CGRect?)
 //    func sameNativeStageIdentified(_ stage:JinyNativeStage, _ view:UIView?)
+    func newPageIdentified(_ page:JinyPage)
+    func samePageIdentified(_ page:JinyPage)
     func newStageFound(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
     func sameStageFound(_ stage:JinyStage, newRect:CGRect?, webviewForRect:UIView?)
     func removeStage(_ stage:JinyStage)
@@ -32,7 +34,15 @@ class JinyStageManager {
         delegate = stageDelegate
     }
     
-    func setCurrentPage(_ page:JinyPage?) { currentPage = page }
+    func setCurrentPage(_ page:JinyPage?) {
+        if let identifiedPage = page  {
+            if identifiedPage == currentPage { delegate.samePageIdentified(identifiedPage) }
+            else { delegate.newPageIdentified(identifiedPage) }
+        }
+        currentPage = page
+        
+        
+    }
     
     func getCurrentPage() -> JinyPage? { return currentPage }
     
@@ -90,6 +100,10 @@ class JinyStageManager {
     }
     
     func getCurrentStage() -> JinyStage? { return currentStage }
+    
+    func currentStageViewPresented() {
+        
+    }
     
     func stagePerformed(_ stage:JinyStage) {
         if stageTracker[stage.name!] == nil { stageTracker[stage.name!] = 0 }

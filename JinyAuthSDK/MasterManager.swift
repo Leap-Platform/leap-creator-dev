@@ -12,12 +12,16 @@ class MasterManager: ProtocolListener,
                      PermissionListener,
                      BeaconListener,
                      AppIdListener {
+   
+    //Protocol Listener
+    func onSessionClosed() {
+        
+    }
+    
     
     //Beacon Listeners
     func onBeaconSuccess(roomId: String, status: Any) {
-        print("Room is \(roomId)")
-        print("Status is \(status)")
-        
+
         let roomStatus: String! = String(describing: status)
         // contains needs to change, it should be equals
         if roomStatus.contains(PERMISSION_NEEDED) {
@@ -35,7 +39,7 @@ class MasterManager: ProtocolListener,
         }
     }
     
-   
+   //Beacon Listeners
     func onPermissionGranted(permission: String, status: Bool) {
         self.permissionManager?.updatePermissionStatus(permission: PERMISSION_GRANTED, status: status, appId: self.appId!)
     }
@@ -47,12 +51,13 @@ class MasterManager: ProtocolListener,
     func onBeaconFailure() {
     }
     
+    
     // App ID fetch Listeners
     func onIdFound() -> String {
-        return appIdManager?.appStoreId
+        return (appIdManager?.appStoreId)!
     }
     
-   
+   //local variables
     var apiKey: String?
     var application: UIApplication
     var beaconManager: BeaconManager?
@@ -79,7 +84,7 @@ class MasterManager: ProtocolListener,
     }
     
     func start(){
-        self.appId = "0655dfd2-7d70-4bac-89dd-01aa003129e8"
+        self.appId = Constants.API_KEY
         beaconManager?.start(appId: self.appId!)
     }
     
@@ -97,19 +102,19 @@ extension MasterManager{
     }
     
     @objc private func appLaunched(){
-        print("App Launched")
     }
     
     @objc private func appWillEnterForeground(){
-        print("App will enter foreground" )
+        self.permissionManager = PermissionManager(application: UIApplication.shared, permissionListener: self)
+        self.protocolManager?.onApplicationInForeground()
     }
     
     @objc private func appDidEnterBackground(){
-        print("App Did enter background ")
+        self.protocolManager?.onApplicationInBackground()
     }
     
     @objc private func appWillTerminate(){
-        print("App will terminate ")
+        self.protocolManager?.onApplicationInTermination()
     }
     
 }

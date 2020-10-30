@@ -31,17 +31,22 @@ class JinySocketMessageDelegate: WebSocketDelegate{
            case .text(let text):
              print("received text: \(text)")
             
+            let data = text.data(using: .utf8)
+            let jsonData = try? JSONSerialization.jsonObject(with: (data)!,  options: []) as? [String: Any]
+            let id = (jsonData?["id"]) as! String
+            let typeOfPacket = (jsonData?["type"]) as! String
+            
+            self.jinySocketListener.onReceivePacket(id: id, type: typeOfPacket)
+            
            case .binary(let data):
              print("received data: \(data)")
+           
+        case .pong(let pongData): break
             
-           case .pong(let pongData):
-             print("received pong: \(pongData)")
-            
-           case .ping(let pingData):
-             print("received ping: \(pingData)")
+        case .ping(let pingData): break
             
            case .error(let error):
-             print("error \(error)")
+            print("error \(error)")
             
            case .viabilityChanged:
              print("viabilityChanged")
@@ -52,8 +57,8 @@ class JinySocketMessageDelegate: WebSocketDelegate{
            case .cancelled:
              print("cancelled")
            }
-        
     }
+
     
     
 }
