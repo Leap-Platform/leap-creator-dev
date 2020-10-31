@@ -60,7 +60,7 @@ class ScreenCaptureManager: AppStateProtocol{
         }
         
         DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: self.task!)
-
+        
     }
     
     func postMessage(payload: Dictionary<String, Any>)->Void{
@@ -77,13 +77,34 @@ class ScreenCaptureManager: AppStateProtocol{
             guard let roomId = room else {
                 return
             }
-        let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSHOT\",\"end\":\"\(end)\",\"index\":\"\(index)\",\"total\":\"\(length)\"}"
-        let splitPayload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
-
-        self.socket?.write(string: "splitPayload", completion: {
-            if end == "true"{
-          print("Captured payload End :: \(end)")
+            
+            let trimString = sub.replacingOccurrences(of: "\n", with: "")
+            
+            let message: Dictionary<String, Any> = [
+                "dataPacket":trimString,
+                "commandType":"SCREENSHOT",
+                "end":end,
+                "index":index,
+                "total":length
+            ]
+            
+            let splitPayload: Dictionary<String, Any> = [
+                "room":roomId,
+                "message": message,
+                "action":"message",
+                "source":"android"
+            ]
+            
+            
+            guard let splitData = try? JSONSerialization.data(withJSONObject: splitPayload, options: .prettyPrinted),
+                  let splitString = String(data: splitData, encoding: .utf8) else {
+                return
             }
+                        
+            self.socket?.write(string: splitString, completion: {
+                if end == "true"{
+                    //  print("Captured payload End :: \(end)")
+                }
             })
         }
     }

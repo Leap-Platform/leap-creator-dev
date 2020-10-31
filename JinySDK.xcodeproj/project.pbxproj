@@ -26,6 +26,7 @@
 		B6153A47253E9945008CA08F /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A46253E9945008CA08F /* ProtocolManager.swift */; };
 		B6153A51253E9A59008CA08F /* MasterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A50253E9A59008CA08F /* MasterManager.swift */; };
 		B6153A5B253E9FC5008CA08F /* AppIdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A5A253E9FC5008CA08F /* AppIdManager.swift */; };
+		B6429D7A254D948A00226DE5 /* HealthMonitorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6429D79254D948A00226DE5 /* HealthMonitorManager.swift */; };
 		B64FCAFF25408173008BB342 /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCAFE25408173008BB342 /* TopViewController.swift */; };
 		B64FCB0825418D8E008BB342 /* JinyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0850078242CC081007889B1 /* JinyUtils.swift */; };
 		B64FCB232541C8AA008BB342 /* ScreenCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB222541C8A9008BB342 /* ScreenCaptureManager.swift */; };
@@ -298,6 +299,7 @@
 		B6153A46253E9945008CA08F /* ProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolManager.swift; sourceTree = "<group>"; };
 		B6153A50253E9A59008CA08F /* MasterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterManager.swift; sourceTree = "<group>"; };
 		B6153A5A253E9FC5008CA08F /* AppIdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdManager.swift; sourceTree = "<group>"; };
+		B6429D79254D948A00226DE5 /* HealthMonitorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthMonitorManager.swift; sourceTree = "<group>"; };
 		B64FCAFE25408173008BB342 /* TopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
 		B64FCB222541C8A9008BB342 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
 		B64FCB2C2541C8DF008BB342 /* StreamingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingManager.swift; sourceTree = "<group>"; };
@@ -582,6 +584,7 @@
 				B64FCB532542B95E008BB342 /* ScreenHelper.swift */,
 				B6E276FC2542F6410094C491 /* Constants.swift */,
 				B6EC702A254C08FB0022452D /* AppStateProtocol.swift */,
+				B6429D79254D948A00226DE5 /* HealthMonitorManager.swift */,
 			);
 			path = JinyAuthSDK;
 			sourceTree = "<group>";
@@ -1381,6 +1384,7 @@
 				B64FCB0825418D8E008BB342 /* JinyUtils.swift in Sources */,
 				B64FCB232541C8AA008BB342 /* ScreenCaptureManager.swift in Sources */,
 				B6153A33253E98DB008CA08F /* BeaconManager.swift in Sources */,
+				B6429D7A254D948A00226DE5 /* HealthMonitorManager.swift in Sources */,
 				D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */,
 				D049F5F7249D242000372324 /* JinyAuth.swift in Sources */,
 				B64FCAFF25408173008BB342 /* TopViewController.swift in Sources */,

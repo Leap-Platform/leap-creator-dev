@@ -10,7 +10,11 @@ import Foundation
 import UIKit
 import Starscream
 
-class ProtocolManager: JinySocketListener, AppStateProtocol {
+class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener {
+    func onSessionClosed() {
+        
+    }
+    
     
     func onApplicationInForeground() {
         streamingManager?.onApplicationInForeground()
@@ -31,6 +35,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol {
         //write the command to join the room
         self.sendJoinRoomRequest(roomId: self.roomId!)
         self.streamingManager?.start(webSocket: webSocketTask!, roomId: self.roomId!)
+//        self.healthMonitor.start(webSocket: webSocketTask!, room: self.roomId!)
     }
     
     func onReceivePacket(id: String, type: String) {
@@ -64,6 +69,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol {
     var streamingManager: StreamingManager?
     var webSocketTask: WebSocket?
     var jinySocketMessageDelegate: JinySocketMessageDelegate?
+    var healthMonitor: HealthMonitorManager?
     
     init(protocolListener: ProtocolListener, context: UIApplication) {
         self.protocolListener = protocolListener
@@ -73,6 +79,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol {
     func setup(){
         self.captureManager = ScreenCaptureManager(context: self.protocolContext)
         self.streamingManager = StreamingManager(context: self.protocolContext)
+        self.healthMonitor = HealthMonitorManager(healthCheckListener: self)
         self.jinySocketMessageDelegate = JinySocketMessageDelegate(jinySocketListener: self)
     }
     
