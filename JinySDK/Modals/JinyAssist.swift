@@ -109,6 +109,7 @@ class JinyAssist {
     var name:String?
     var type:String?
     var weight:Int
+    var checkPoint:Bool
     var frequencyPerSession:Int
     var frequencyPerApp:Int
     var nativeIdentifiers:Array<String>
@@ -124,6 +125,7 @@ class JinyAssist {
         name = assistDict["name"] as? String ?? ""
         type = assistDict["type"] as? String
         weight = assistDict["weight"] as? Int ?? 1
+        checkPoint = assistDict["checkpoint"] as? Bool ?? false
         if let frequencyDict = assistDict["frequency"] as? Dictionary<String,Int> {
             frequencyPerSession = frequencyDict["per_session"] ?? -1
             frequencyPerApp = frequencyDict["per_session"] ?? -1

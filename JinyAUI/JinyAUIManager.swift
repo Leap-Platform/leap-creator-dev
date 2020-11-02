@@ -148,24 +148,8 @@ extension JinyAUIManager:JinyAUIHandler {
                 
                 pointer = JinyFingerRipplePointer()
                 pointer?.presentPointer(view: inView)
-            case "POPUP":
-                let jinyPopup = JinyPopup(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
-                jinyPopup.showPopup()
-            case "DRAWER":
-                let jinyDrawer = JinyDrawer(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
-                jinyDrawer.showDrawer()
-            case "FULLSCREEN":
-                let jinyFullScreen = JinyFullScreen(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
-                jinyFullScreen.showFullScreen()
-            case "BOTTOM_SHEET":
-                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
-                jinyBottomSheet.showBottomSheet()
             default:
-                break
+                performKeyWindowInstruction(instruction: instruction)
             }
             auiManagerCallBack?.didPresentView()
         }
@@ -739,6 +723,7 @@ extension JinyAUIManager:JinyAssistDelegate {
     }
     
     func didSendAction(dict: Dictionary<String, Any>) {
+        auiManagerCallBack?.didReceiveInstruction(dict: dict)
         if let body = dict["body"] as? Dictionary<String,Any> {
             if let opt_in = body["opt_in"] as? Bool {
                 if opt_in{

@@ -44,6 +44,7 @@ class JinyStage {
     let branchInfo:JinyBranchInfo?
     let instruction:JinyInstruction?
     let instructionInfoDict:Dictionary<String,Any>?
+    let checkpoint:Bool
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
@@ -70,6 +71,7 @@ class JinyStage {
             instruction = nil
             instructionInfoDict = nil
         }
+        checkpoint = stageDict["checkpoint"] as? Bool ?? false
     }
     
 }

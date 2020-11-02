@@ -12,5 +12,7 @@ class JinyCustomEvent:Codable {
     var context_info:JinyContextTypeInfo?
     var discovery_info:JinyDiscoveryInfoEvent?
     var assist_info:JinyAssistInfoType?
+    var content_action_info:JinyContentInfoAction?
+    var event_tag:String?
     
 }

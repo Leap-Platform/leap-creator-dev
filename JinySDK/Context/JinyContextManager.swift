@@ -64,16 +64,12 @@ class JinyContextManager:NSObject {
 // MARK: - SOUND DOWNLOAD INITIATION
 
 extension JinyContextManager {
-    
-    
     func startSoundDownload() {
         guard let aui = auiHandler else { return }
         DispatchQueue.global().async {
             aui.startMediaFetch()
         }
     }
-    
-    
 }
 
 // MARK: - CONTEXT DETECTOR DELEGATE METHODS
@@ -133,7 +129,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         discoveryManager?.discoveryNotFound()
     }
     
-    // MARK: - Page Methods
+    // MARK: - Flow Methods
     func getCurrentFlow() -> JinyFlow? {
         return flowManager?.getRelevantFlow(lookForParent: false)
     }
@@ -142,6 +138,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return flowManager?.getRelevantFlow(lookForParent: true)
     }
     
+    // MARK: - Page Methods
     func pageIdentified(_ page: JinyPage) {
         stageManager?.setArrayOfStagesFromPage(page.stages)
         stageManager?.setCurrentPage(page)
@@ -152,7 +149,6 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     func pageNotIdentified() {
         stageManager?.setCurrentPage(nil)
         stageManager?.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
-        noContextIdentfied()
     }
     
     
@@ -175,20 +171,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
 extension JinyContextManager:JinyAssistManagerDelegate {
     
     func performAssist(_ assist: JinyAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
-        //        let sound = getSoundFor(name: assist.instruction!.soundName, langCode: JinySharedInformation.shared.getLanguage() ?? "hin")
-        //        guard let soundToCheck = sound else {
-        //            assist.eventIdentifiers?.delay = 0
-        //            assistManager?.assistToBeTriggered = nil
-        //            return
-        //        }
-        //
-        //        if view != nil {
-        //            auiHandler?.presentPointer(toView: view!, ofType: .FingerRipple)
-        //            assistManager?.setCurrentAssist()
-        //        } else if rect != nil {
-        //            auiHandler?.presentPointer(toRect: rect!, inView: inWebview, ofType: .FingerRipple)
-        //            assistManager?.setCurrentAssist()
-        //        }
+        
         auiHandler?.removeAllViews()
         guard let instruction = assist.instructionInfoDict else { return }
         if let targetView = view {
@@ -197,6 +180,11 @@ extension JinyContextManager:JinyAssistManagerDelegate {
             auiHandler?.performInstrcution(instruction: instruction, rect: targetRect, inWebview: inWebview)
         }
         assistManager?.setCurrentAssist()
+        
+        let assistEvent = JinyAnalyticsEvent()
+        assistEvent.jiny_custom_events = JinyCustomEvent()
+        assistEvent.jiny_custom_events?.assist_info = JinyAssistInfoType(with: assist)
+        analyticsManager?.sendEvent(assistEvent)
     }
     
     func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) {
@@ -232,43 +220,6 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         
-        //        guard !JinySharedInformation.shared.isMuted(),
-        //            let dm = discoveryManager, !dm.getMutedDiscoveries().contains(discovery)
-        //            else {
-        //                discoveryManager?.addToIdentifiedList(discovery)
-        //                presentOnlyJinyButton()
-        //                return
-        //        }
-        //
-        //        var isTTS:Bool = false
-        //        if let soundName = discovery.instruction?.soundName, let langCode = JinySharedInformation.shared.getLanguage() {
-        //            if let sound = getSoundFor(name: soundName, langCode: langCode) {
-        //                isTTS = isTTSAvailable(sound: sound)
-        //            }
-        //        }
-        //
-        //        if !isTTS {
-        //            guard let audio = getCurrentAudio(), checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
-        //                discoveryManager?.addToIdentifiedList(discovery)
-        //                presentOnlyJinyButton()
-        //                return
-        //            }
-        //        }
-        //
-        //        guard let info = discovery.discoveryInfo else {
-        //            discoveryManager?.addToIdentifiedList(discovery)
-        //            presentOnlyJinyButton()
-        //            return
-        //        }
-        //        contextDetector?.stop()
-        //        switch info.type {
-        //        case .Bottom:
-        //            presentBottomDiscovery(discovery)
-        //        case .Ping:
-        //            break
-        //        default:
-        //            break
-        //        }
         auiHandler?.removeAllViews()
         discoveryManager?.setDiscovery(discovery)
         guard let instruction = discovery.instructionInfoDict else { return }
@@ -341,38 +292,6 @@ extension JinyContextManager:JinyStageManagerDelegate {
     }
     
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
-//        flowManager?.updateFlowArrayAndResetCounter()
-//        presentOnlyJinyButton()
-//        guard let audio = getCurrentAudio(), checkAndUpdateSoundDownloadPriority(audio, .veryHigh) else {
-//            stageManager?.resetCurrentStage()
-//            return
-//        }
-//        if stage.type != .Branch {
-//
-//            guard let instruction = stage.instruction, let _ = instruction.soundName else {
-//                stageManager?.resetCurrentStage()
-//                return
-//            }
-//            guard let ptrInfo = instruction.pointer else {
-//                stageIdentifiedWithNoRelevantPointer()
-//                return
-//            }
-//            if ptrInfo.isWeb {
-//                guard rect != nil else {
-//                    stageIdentifiedWithNoRelevantPointer()
-//                    return
-//                }
-//                presentPointer(stage: stage, view: view, rect: rect, inWebView: webviewForRect)
-//
-//            } else {
-//                guard view != nil else {
-//                    stageIdentifiedWithNoRelevantPointer()
-//                    return
-//                }
-//                presentPointer(stage: stage, view: view, rect: rect, inWebView: webviewForRect)
-//            }
-//
-//        }
         auiHandler?.removeAllViews()
         guard let instruction = stage.instructionInfoDict else { return }
         if let targetView = view {
@@ -401,12 +320,11 @@ extension JinyContextManager:JinyStageManagerDelegate {
     
     func sameStageFound(_ stage: JinyStage, newRect: CGRect?, webviewForRect:UIView?) {
         guard let rect =  newRect else { return }
-        updatePointer(rect: rect, inWebview: webviewForRect)
+        
     }
     
     func noStageFound() {
         auiHandler?.removeAllViews()
-        presentOnlyJinyButton()
     }
     
     func removeStage(_ stage: JinyStage) {
@@ -469,45 +387,6 @@ extension JinyContextManager:JinyAnalyticsManagerDelegate {
 extension JinyContextManager {
     
     // MARK: Trigger Methods
-    func checkForContextualDiscovery() {
-        guard let identifiedDiscoveries = discoveryManager?.discoveriesForContextCheck(),  identifiedDiscoveries.count > 0 else {
-            discoveryManager?.discoveryNotFound()
-            return
-        }
-        guard let hierarchy = contextDetector?.fetchViewHierarchy() else {
-            discoveryManager?.discoveryNotFound()
-            return
-        }
-        
-        
-        contextDetector?.identifyDiscoveryToLaunch(discoveries: identifiedDiscoveries, hierarchy: hierarchy, discoveriesIdentified: { (discoveriesPassed) in
-            if discoveriesPassed.count != 0 {
-                //                self.discoveryManager?.discoveriesFound(discoveriesPassed)
-                return
-            }
-            else {
-                var counter = 0
-                var checkComplete:((_: JinyPage?)->Void)?
-                checkComplete = { page in
-                    if page != nil {
-                        //                        self.discoveryManager?.discoveriesFound([identifiedDiscoveries[counter]])
-                    }
-                    else {
-                        counter += 1
-                        if counter >= identifiedDiscoveries.count {
-                            self.discoveryManager?.discoveryNotFound()
-                        }
-                        else {
-                            let pages = self.getPagesForDiscovery(identifiedDiscoveries[counter])
-                            self.contextDetector?.findPageFromPages(pages, hierarchy: hierarchy, pageCheckComplete: checkComplete!)
-                        }
-                    }
-                }
-                let pages = self.getPagesForDiscovery(identifiedDiscoveries[counter])
-                self.contextDetector?.findPageFromPages(pages, hierarchy: hierarchy, pageCheckComplete: checkComplete!)
-            }
-        })
-    }
     
     func getPagesForDiscovery(_ discovery:JinyDiscovery) -> Array<JinyPage> {
         let flowIds = discovery.flowIds
@@ -525,7 +404,6 @@ extension JinyContextManager {
     func proceedIfStageIsBranch(_ stage:JinyStage) {
         if stage.type != .Branch { return }
         guard let _ = stage.branchInfo else { return }
-        presentFlowSelectorForStage(stage)
     }
     
     // MARK: Audio Methods
@@ -584,114 +462,6 @@ extension JinyContextManager {
         let event = JinyAnalyticsEvent()
         event.context_type_info = JinyContextTypeInfo(flow: primaryFlow, subFlow: subFlow, page: currentPage, stage: currenStage)
         analyticsManager?.sendEvent(event)
-    }
-    
-}
-
-// MARK: - METHODS INVOKING AUI ELEMENTS
-extension JinyContextManager {
-    
-    func presentOnlyJinyButton() {
-        guard let aui = auiHandler else { return }
-        aui.keepOnlyJinyButtonIfPresent()
-        aui.presentJinyButton()
-    }
-    
-    func noContextIdentfied() {
-        guard let aui = auiHandler else { return }
-        aui.removeAllViews()
-    }
-    
-    func presentBottomDiscovery(_ discovery:JinyDiscovery) {
-        guard let aui = auiHandler else { return }
-        aui.removeAllViews()
-        let langCode = JinySharedInformation.shared.getLanguage() ?? "hin"
-        let info  = discovery.discoveryInfo!
-        let header = (info.triggerText[langCode] ?? []).first ?? ""
-        let optIn = info.optInText[langCode] ?? ""
-        let optOut = info.optOutText[langCode] ?? ""
-        let languageScripts = getLanguages()
-        aui.presentBottomDiscovery(header: header,
-                                   optInText: optIn,
-                                   optOutText: optOut,
-                                   languages: languageScripts)
-    }
-    
-    func presentPointer(stage:JinyStage, view:UIView?, rect:CGRect?, inWebView:UIView?) {
-//        guard let aui = auiHandler else { return }
-//        let stageType = stage.type
-//        guard let pointer = stage.instruction?.pointer else {
-//            stageIdentifiedWithNoRelevantPointer()
-//            return
-//        }
-//        var pointerStyle = JinyPointerStyle.FingerRipple
-//        if stageType == .Normal && pointer.type == .NegativeUI { pointerStyle = .NegativeUI }
-//        
-//        if pointer.isWeb {
-//            if rect == nil {
-//                stageIdentifiedWithNoRelevantPointer()
-//                return
-//            }
-//            aui.presentPointer(toRect: rect!, inView: inWebView, ofType: pointerStyle)
-//        } else {
-//            if view == nil {
-//                stageIdentifiedWithNoRelevantPointer()
-//                return
-//            }
-//            aui.presentPointer(toView: view!, ofType: pointerStyle)
-//        }
-    }
-    
-    func updatePointer(rect:CGRect?, inWebview:UIView?) {
-        guard let aui = auiHandler, let newRect = rect else { return }
-        aui.updatePointerRect(newRect: newRect, inView: inWebview)
-    }
-    
-    func presentOptionPanel() {
-        guard let aui = auiHandler else { return }
-        let langCode = JinySharedInformation.shared.getLanguage() ?? "hin"
-        guard let language = configuration!.languages.first(where: { (temp) -> Bool in
-            temp.localeId == langCode
-        }) ?? configuration!.languages.first else { return }
-        aui.presentOptionPanel(mute: language.muteText, repeatText: language.repeatText, language: (configuration?.languages.count)! > 1 ? language.changeLanguageText : nil)
-    }
-    
-    func presentLanguagePanel() {
-        guard let aui = auiHandler else { return }
-        aui.presentLanguagePanel(languages: getLanguages())
-    }
-    
-    func presentFlowSelectorForStage(_ stage:JinyStage) {
-        guard let aui = auiHandler else { return }
-        guard let branchInfo = stage.branchInfo else {
-            stageManager?.resetCurrentStage()
-            return
-        }
-        let langCode = JinySharedInformation.shared.getLanguage() ?? "hin"
-        let title = (branchInfo.branchTitle[langCode] as? String) ?? ""
-        let flowTitles = branchInfo.branchFlows.map { (flowId) -> String in
-            let currentFlow = configuration?.flows.first(where: { (flow) -> Bool in
-                flow.id! == flowId
-            })
-            return currentFlow?.flowText[langCode] ?? ""
-        }
-        
-        aui.presentFlowSelector(branchTitle: title, flowTitles: flowTitles)
-    }
-    
-    func stageIdentifiedWithNoRelevantPointer() {
-        
-        guard let aui = auiHandler else { return }
-        aui.playAudio()
-        //        guard let tts = configuration?.feature?.tts, tts.enabled,
-        //            let languages = tts.languages,
-        //            let langCode = JinySharedInformation.shared.getLanguage(),
-        //            let ttsCode = languages[langCode] else {
-        //                aui.playAudio()
-        //                return
-        //        }
-        //        aui.playTTS(withLangCode: ttsCode)
-        
     }
     
 }
@@ -820,6 +590,18 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
+    func didReceiveInstruction(dict: Dictionary<String, Any>) {
+        guard let body = dict["body"] as? Dictionary<String,Any> else { return }
+        let contentActionInfo = JinyAnalyticsEvent()
+        contentActionInfo.jiny_custom_events = JinyCustomEvent()
+        if discoveryManager?.getCurrentDiscovery() != nil {
+            contentActionInfo.jiny_custom_events?.discovery_info = JinyDiscoveryInfoEvent(withDiscovery: discoveryManager!.getCurrentDiscovery()!)
+        }
+        contentActionInfo.jiny_custom_events?.content_action_info = JinyContentInfoAction(with: body, type: (dict["type"] as? String) ?? "")
+        contentActionInfo.jiny_custom_events?.event_tag = "discovery_opt_in_event"
+        analyticsManager?.sendEvent(contentActionInfo)
+    }
+    
     func jinyTapped() {
         if JinySharedInformation.shared.isMuted() {
             if contextDetector?.getState() == .Stage {
@@ -837,10 +619,10 @@ extension JinyContextManager:JinyAUICallback {
                 discoveryManager?.resetCurrentDiscovery()
                 return
             }
-            presentBottomDiscovery(discovery)
             return
         case .Stage:
-            presentOptionPanel()
+            auiHandler?.presentOptionPanel(mute: "Mute", repeatText: "Repeat", language: "Change Language")
+            break
         }
     }
     
@@ -877,6 +659,11 @@ extension JinyContextManager {
             contextDetector?.start()
             return
         }
+        let flowOptIn = JinyAnalyticsEvent()
+        flowOptIn.jiny_custom_events = JinyCustomEvent()
+        flowOptIn.jiny_custom_events?.context_info = JinyContextTypeInfo(flow: flowToProceed, subFlow: nil, page: nil, stage: nil)
+        flowOptIn.jiny_custom_events?.event_tag = "jiny_flow_opt_in_event"
+        analyticsManager?.sendEvent(flowOptIn)
         contextDetector?.switchState()
         auiHandler?.removeAllViews()
         JinyEventDetector.shared.delegate = nil
@@ -933,11 +720,9 @@ extension JinyContextManager {
     func optionPanelClosed() {
         stageManager?.resetCurrentStage()
         contextDetector?.start()
-        presentOnlyJinyButton()
     }
     
     func optionPanelMuteClicked() {
-        noContextIdentfied()
         if contextDetector?.getState() == .Stage {
             stageManager?.resetCurrentStage()
             JinySharedInformation.shared.muteJiny()
@@ -950,7 +735,6 @@ extension JinyContextManager {
     func optionPanelRepeatClicked() {
         contextDetector?.start()
         guard let state = contextDetector?.getState(), state == .Stage else { return }
-        noContextIdentfied()
         stageManager?.resetCurrentStage()
         
     }

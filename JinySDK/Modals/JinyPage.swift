@@ -24,7 +24,7 @@ class JinyPage {
     let nativeIdentifiers:Array<String>
     let webIdentifiers:Array<String>
     var stages:Array<JinyStage> = []
-    
+    var checkpoint:Bool
     
     init(withDict pageDict:Dictionary<String,Any>) {
         id = pageDict["id"] as? Int
@@ -38,7 +38,7 @@ class JinyPage {
         if let stagesDictsArray = pageDict["stages"] as? Array<Dictionary<String,Any>> {
             for stageDict in stagesDictsArray { stages.append(JinyStage(withDict: stageDict)) }
         }
-        
+        checkpoint = pageDict["checkpoint"] as? Bool ?? false
     }
     
 }

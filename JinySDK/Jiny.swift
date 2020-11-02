@@ -57,6 +57,7 @@ import UIKit
     func didPlayAudio()
     func failedToPerform()
     func didDismissView()
+    func didReceiveInstruction(dict:Dictionary<String,Any>)
     
     func stagePerformed()
     

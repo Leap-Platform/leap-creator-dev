@@ -11,7 +11,7 @@ import Foundation
 
 class JinyAnalyticsEvent:Codable {
     
-    var id:String
+    var jiny_id:String
     var jiny_custom_events:JinyCustomEvent?
     var jiny_crash_event:Dictionary<String,String>?
     var jiny_standard_event:JinyStandardEvent?
@@ -41,7 +41,7 @@ class JinyAnalyticsEvent:Codable {
     
     init() {
         
-        id = String.generateUUIDString()
+        jiny_id = String.generateUUIDString()
         jiny_session_id = JinySharedInformation.shared.getSessionId()
         client_id = JinySharedInformation.shared.getAPIKey()
         client_preference = JinyClientPreference()
