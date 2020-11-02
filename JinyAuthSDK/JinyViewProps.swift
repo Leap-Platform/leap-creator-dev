@@ -18,7 +18,7 @@ class JinyViewBounds:Codable {
     var bottom:Float
     
     init(view:UIView) {
-        let rect = view.superview?.convert(view.frame, from: nil)
+        let rect = view.superview?.convert(view.frame, to: nil)
         left = Float(rect?.origin.x ?? 0)
         top = Float(rect?.origin.y ?? 0)
         right = left + Float(rect?.size.width ?? 0)
@@ -33,7 +33,7 @@ class JinyViewProps:Codable {
     var acc_label:String
     var acc_hint:String
     var tag:Int
-    var className:String
+    var class_name:String
     var node_index:Int
     var bounds:JinyViewBounds
     var placeholder:String?
@@ -62,7 +62,7 @@ class JinyViewProps:Codable {
         acc_label = view.accessibilityLabel ?? ""
         acc_hint = view.accessibilityHint ?? ""
         tag = view.tag
-        className = String(describing: type(of: view))
+        class_name = String(describing: type(of: view))
         node_index = view.superview?.subviews.firstIndex(of: view) ?? -1
         bounds = JinyViewBounds(view: view)
         is_focusable = view.canBecomeFocused

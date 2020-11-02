@@ -35,7 +35,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
         //write the command to join the room
         self.sendJoinRoomRequest(roomId: self.roomId!)
         self.streamingManager?.start(webSocket: webSocketTask!, roomId: self.roomId!)
-//        self.healthMonitor.start(webSocket: webSocketTask!, room: self.roomId!)
+        self.healthMonitor!.start(webSocket: webSocketTask!, room: self.roomId!)
     }
     
     func onReceivePacket(id: String, type: String) {
