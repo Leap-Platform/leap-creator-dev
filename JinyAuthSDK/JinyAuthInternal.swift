@@ -15,16 +15,16 @@ class JinyAuthInternal {
     var applicationContext: UIApplication
     var appDelegate: UIApplicationDelegate
     
-    init(application: UIApplication, apiKey : String) {
+    init(apiKey : String) {
     
-        self.applicationContext = application
+        self.applicationContext = UIApplication.shared
         self.apiKey = apiKey
-        self.masterManager = MasterManager(application: applicationContext, key: apiKey)
+        self.masterManager = MasterManager(key: apiKey)
         self.appDelegate = UIApplication.shared.delegate!
     }
     
     
-    func start(application: UIApplication, token : String){
+    func start(token : String){
         
         //begin sending beacons
         masterManager?.initialiseComponents()

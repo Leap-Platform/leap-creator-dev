@@ -71,7 +71,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     let SOCKET_URL: String? = "wss://raven.jiny.io/ws"
     
     var protocolListener: ProtocolListener
-    var protocolContext: UIApplication
+    var applicationInstance: UIApplication
     var roomId: String?
     var captureManager: ScreenCaptureManager?
     var streamingManager: StreamingManager?
@@ -79,14 +79,14 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     var jinySocketMessageDelegate: JinySocketMessageDelegate?
     var healthMonitor: HealthMonitorManager?
     
-    init(protocolListener: ProtocolListener, context: UIApplication) {
+    init(protocolListener: ProtocolListener) {
         self.protocolListener = protocolListener
-        self.protocolContext = context
+        self.applicationInstance = UIApplication.shared
     }
     
     func setup(){
-        self.captureManager = ScreenCaptureManager(context: self.protocolContext)
-        self.streamingManager = StreamingManager(context: self.protocolContext)
+        self.captureManager = ScreenCaptureManager()
+        self.streamingManager = StreamingManager()
         self.healthMonitor = HealthMonitorManager(healthCheckListener: self)
         self.jinySocketMessageDelegate = JinySocketMessageDelegate(jinySocketListener: self)
     }

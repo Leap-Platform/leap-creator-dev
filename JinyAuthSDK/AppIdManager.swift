@@ -13,7 +13,7 @@ class AppIdManager{
     var appStoreId: String?
     var appIdFetchListener: AppIdListener
     
-    init(appIdListener: AppIdListener, applicationcontext: UIApplication){
+    init(appIdListener: AppIdListener){
         self.appIdFetchListener = appIdListener
     }
     

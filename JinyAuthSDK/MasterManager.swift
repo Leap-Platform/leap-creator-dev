@@ -69,17 +69,17 @@ class MasterManager: ProtocolListener,
     let PERMISSION_GRANTED: String = "GRANTED"
     var appId: String?
     
-    init(application: UIApplication, key: String) {
+    init(key: String) {
         self.apiKey = key
-        self.application = application
+        self.application = UIApplication.shared
         addObservers()
     }
     
     func initialiseComponents(){
-        appIdManager = AppIdManager(appIdListener: self, applicationcontext: application)
+        appIdManager = AppIdManager(appIdListener: self)
         beaconManager = BeaconManager(beaconListener: self)
-        permissionManager = PermissionManager(application: self.application, permissionListener: self)
-        protocolManager = ProtocolManager(protocolListener: self, context: application)
+        permissionManager = PermissionManager(permissionListener: self)
+        protocolManager = ProtocolManager(protocolListener: self)
         protocolManager?.setup()
     }
     
@@ -105,7 +105,7 @@ extension MasterManager{
     }
     
     @objc private func appWillEnterForeground(){
-        self.permissionManager = PermissionManager(application: UIApplication.shared, permissionListener: self)
+        self.permissionManager = PermissionManager(permissionListener: self)
         self.protocolManager?.onApplicationInForeground()
     }
     

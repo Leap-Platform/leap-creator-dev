@@ -13,15 +13,11 @@ public class JinyAuth {
     public static let instance: JinyAuth = JinyAuth()
     private var authInternal:JinyAuthInternal?
     private var token:String?
-    private var applicationContext: UIApplication?
   
-    // JinyAuth.getInstance().initialise(<args>)
-
-    public func initialize(application: UIApplication, withToken apiKey:String) -> Void{
+    public func initialize(withToken apiKey:String) -> Void{
         token = apiKey
-        applicationContext = application
-        authInternal = JinyAuthInternal(application: application, apiKey: apiKey)
+        authInternal = JinyAuthInternal(apiKey: apiKey)
         authInternal?.apiKey = token
-        authInternal?.start(application: application, token: apiKey)
+        authInternal?.start(token: apiKey)
     }
 }

@@ -25,13 +25,13 @@ class ScreenCaptureManager: AppStateProtocol{
     }
     
     
-    var context: UIApplication
+    var applicationInstance: UIApplication
     var roomId: String?
     var socket: WebSocket?
     var task: DispatchWorkItem?
     
-    init(context: UIApplication){
-        self.context = context
+    init(){
+        self.applicationInstance = UIApplication.shared
     }
     
     func capture(webSocket: WebSocket, room: String)->Void{

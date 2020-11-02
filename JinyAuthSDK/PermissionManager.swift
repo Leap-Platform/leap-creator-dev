@@ -31,9 +31,9 @@ class PermissionManager: AppStateProtocol{
     let permissionGranted: String = "PERMISSION_GRANTED"
     let permissionRejected: String = "PERMISSION_REJECTED"
     
-    init(application: UIApplication, permissionListener: PermissionListener){
+    init(permissionListener: PermissionListener){
         self.permissionListener = permissionListener
-        self.application = application
+        self.application = UIApplication.shared
     }
     
     //call start in MasterManager
