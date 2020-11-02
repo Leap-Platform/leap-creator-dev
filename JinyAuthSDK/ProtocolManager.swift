@@ -47,8 +47,16 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
         case CASE_SCREENSTREAM:
             streamingManager?.startStreaming()
             break
+            
+        case CASE_PING:
+            healthMonitor?.sendPong()
+            break
+        case CASE_PONG:
+            healthMonitor?.receivePong()
+            break
         default:
          print("Default command - DO NOTHING !")
+            break
         }
     }
     

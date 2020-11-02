@@ -17,8 +17,8 @@ class HealthMonitorManager {
     var webSocket: WebSocket?
     var lastPongTime: Double?
     var pingTask: DispatchWorkItem?
-    let MAX_FAILED_ATTEMPTS = 2
-    let PING_INTERVAL = 5000
+    let MAX_FAILED_ATTEMPTS = 2.0
+    let PING_INTERVAL =  5.0
     
     init(healthCheckListener: HealthCheckListener){
         self.healthListener = healthCheckListener
@@ -44,7 +44,10 @@ class HealthMonitorManager {
             self.webSocket?.write(string: payload, completion: {
                 print("PING has been sent! ")
             })
+        }else{
+            self.healthListener.onSessionClosed()
         }
+        DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: self.pingTask! )
     }
     
     func sendPong(){
@@ -56,7 +59,11 @@ class HealthMonitorManager {
     }
     
     func isSessionActive()->Bool{
-        return (Int(NSTimeIntervalSince1970 - self.lastPongTime!) < self.MAX_FAILED_ATTEMPTS * self.PING_INTERVAL)
+        return ((NSTimeIntervalSince1970 - self.lastPongTime!) < self.MAX_FAILED_ATTEMPTS * self.PING_INTERVAL)
+    }
+    
+    func receivePong(){
+        lastPongTime = NSTimeIntervalSince1970
     }
 }
 
