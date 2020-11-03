@@ -45,7 +45,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
             captureManager?.capture(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_SCREENSTREAM:
-            streamingManager?.startStreaming()
+            self.streamingManager?.start(webSocket: webSocketTask!, roomId: self.roomId!)
             break
             
         case CASE_PING:
