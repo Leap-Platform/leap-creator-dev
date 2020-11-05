@@ -17,8 +17,8 @@ class JinyPageInfo:Codable {
     var checkpoint:Bool
     
     init(page:JinyPage) {
-        page_id = String(page.id!)
-        page_name = String(page.name!)
+        page_id = String(page.id)
+        page_name = String(page.name)
         if let currentVC = UIApplication.getCurrentVC() { client_activity_name = String(describing: type(of: currentVC)) }
         else { client_activity_name = "" }
         checkpoint = page.checkpoint

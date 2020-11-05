@@ -17,12 +17,12 @@ class JinyAssistInfoType:Codable {
     var checkpoint:Bool
     
     init(with assist:JinyAssist) {
-        id = String(assist.assistId)
-        name = String(assist.name ?? "")
+        id = String(assist.id)
+        name = assist.name
         detection_type = (assist.eventIdentifiers != nil) ? "event" : "context"
-        assist_type = "FINGER_RIPPLE"
+        assist_type = assist.type
         trigger_on_anchor_click = assist.eventIdentifiers?.triggerOnAnchorClick ?? false
-        checkpoint = assist.checkPoint
+        checkpoint = assist.checkpoint
     }
     
 }

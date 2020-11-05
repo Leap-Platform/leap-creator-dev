@@ -34,8 +34,8 @@ class JinyDiscoveryInfoEvent:Codable {
     let opt_in_on_anchor_click:Bool
     
     init(withDiscovery dis:JinyDiscovery) {
-        id = String(dis.id!)
-        name = dis.name ?? ""
+        id = String(dis.id)
+        name = dis.name
         type = (dis.triggerMode == .Multi) ? "multi_flow" : "single_flow"
         detection_type = (dis.taggedEvents != nil) ? "event" : "context"
         tagged_discovery = (dis.taggedEvents != nil)
@@ -44,9 +44,9 @@ class JinyDiscoveryInfoEvent:Codable {
             let assistType = assistInfo["type"] as? String {
             assist_type = assistType
         } else { assist_type = "" }
-        trigger_type = dis.trigger["type"] as? String ?? ""
-        trigger_delay = dis.trigger["delay"] as? Float ?? 0
-        trigger_on_anchor_click = dis.trigger["trigger_on_anchor_click"] as? Bool ?? false
-        opt_in_on_anchor_click = dis.trigger["opt_in_on_anchor_click"] as? Bool ?? false
+        trigger_type = dis.trigger?.type ?? ""
+        trigger_delay = dis.trigger?.delay ?? 0
+        trigger_on_anchor_click = dis.eventIdentifiers?.triggerOnAnchorClick ?? false
+        opt_in_on_anchor_click = dis.trigger?.optInOnAnchorClick ?? false
     }
 }

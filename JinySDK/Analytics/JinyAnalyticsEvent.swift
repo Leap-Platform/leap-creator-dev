@@ -20,7 +20,6 @@ class JinyAnalyticsEvent:Codable {
     var jiny_menu_item_click_info:JinyMenuItemClickInfo?
     var jiny_bottom_activity_stateInfo:JinyBottomActivityStateInfo?
     var jiny_callbacks_info:JinyCallbacksInfo?
-    var sound_info:JinySoundInfo?
     var language_info:JinyLanguageInfo?
     var discovery_icon_metrics:JinyDiscoveryIconMetrics?
     var jiny_discovery_item_click_info:JinyDiscoveryItemClickInfo?

@@ -41,6 +41,7 @@ class HomeViewController: UIViewController {
         dateOfJourney.inputAccessoryView = toolBar
         
         dateOfJourney.text = convertDateToString(Date())
+        
     }
 
     @IBAction func buttonClicked(_ sender: UIButton) {

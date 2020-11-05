@@ -16,8 +16,8 @@ class JinyStageInfo:Codable {
     var checkpoint:Bool
     
     init(stage:JinyStage) {
-        stage_id = String(stage.id!)
-        stage_name = stage.name!
+        stage_id = String(stage.id)
+        stage_name = stage.name
         stage_type = stage.type.rawValue
         is_success = stage.isSuccess
         checkpoint = stage.checkpoint

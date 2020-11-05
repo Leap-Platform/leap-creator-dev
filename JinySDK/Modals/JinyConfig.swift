@@ -13,20 +13,16 @@ class JinyConfig {
     var webIdentifiers:Dictionary<String,JinyWebIdentifier> = [:]
     var nativeIdentifiers:Dictionary<String,JinyNativeIdentifier> = [:]
     var assists:Array<JinyAssist> = []
-    var flows:Array<JinyFlow> = []
-    var analytics:Dictionary<String,Any> = [:]
-    var params:Dictionary<String,Any> = [:]
-    var languages:Array<JinyLanguage> = []
-    var defaultSounds:Array<JinySound> = []
-    var discoverySounds:Array<JinySound> = []
     var discoveries:Array<JinyDiscovery> = []
-    var feature:JinyFeature?
+    var flows:Array<JinyFlow> = []
+    var languages:Array<JinyLanguage> = []
     var supportedAppLocales:Array<String> = []
-    var webViewList:Array<Dictionary<String,Any>> = []
-    var sounds:Array<JinySound> = []
-    var discSounds:Dictionary<String,Any> = [:]
-    var defSounds:Dictionary<String,Any> = [:]
+    var discoverySounds:Dictionary<String,Any> = [:]
+    var defaultSounds:Dictionary<String,Any> = [:]
     var auiContent:Dictionary<String,Any> = [:]
+    
+    var params:Dictionary<String,Any> = [:]
+    var webViewList:Array<Dictionary<String,Any>> = []
     
     init(withDict dataDict:Dictionary<String,Any>) {
         
@@ -50,22 +46,13 @@ class JinyConfig {
             }
         }
         
-        if let languageDictsArray = configDict["languages"] as? Array<Dictionary<String,String>> {
+        if let languageDictsArray = configDict["languages"] as? Array<Dictionary<String,Any>> {
             for languageDict in languageDictsArray {
                 languages.append(JinyLanguage(withLanguageDict: languageDict))
             }
         }
         
-        if let discoverySoundsDict = configDict["discovery_sounds"] as? Dictionary<String,Any> {
-            discSounds = discoverySoundsDict
-            discoverySounds = processSoundDict(dict: discoverySoundsDict)
-        }
         
-        if let defaultSoundsDict = configDict["default_sounds"] as? Dictionary<String,Any> {
-            defSounds = defaultSoundsDict
-            defaultSounds = processSoundDict(dict: defaultSoundsDict)
-            
-        }
         
         if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
             for discoveryDict in discoveryDictsArray {
@@ -79,29 +66,11 @@ class JinyConfig {
             }
         }
         
-        if let featureDict = configDict["feature"] as? Dictionary<String,Any> {
-            feature = JinyFeature(withDict: featureDict)
-        }
-        
-        if let auiContentDict = configDict["aui_content"] as? Dictionary<String,Any> {
-            auiContent = auiContentDict
-        }
-        
+        discoverySounds = configDict["discovery_sounds"] as? Dictionary<String,Any> ?? [:]
+        defaultSounds = configDict["default_sounds"] as? Dictionary<String,Any> ?? [:]
+        auiContent = configDict["aui_content"] as? Dictionary<String,Any> ?? [:]
         supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []
         
     }
-    
-    private func processSoundDict(dict:Dictionary<String,Any>) -> Array<JinySound> {
-        let baseUrl = dict["base_url"] as? String
-        guard let jinySoundsDict = dict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return [] }
-        var soundsArray:Array<JinySound> = []
-        jinySoundsDict.forEach { (langCode,soundDictsArray) in
-            for soundDict in soundDictsArray {
-                soundsArray.append(JinySound(withSoundDict: soundDict, langCode: langCode, baseUrl: baseUrl))
-            }
-        }
-        return soundsArray
-    }
-    
     
 }

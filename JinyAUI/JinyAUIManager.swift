@@ -20,11 +20,9 @@ class JinyAUIManager:NSObject {
     var keyboardHeight:Float = 0
     var audioPlayer:AVAudioPlayer?
     var pointer:JinyPointer?
-    var bottomDiscovery:JinyBottomDiscovery?
     var optionPanel:JinyOptionPanel?
     var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
-    var jinyFlowSelector:JinyFlowSelector?
     var synthesizer:AVSpeechSynthesizer?
     var utterance:AVSpeechUtterance?
     let audioSession = AVAudioSession.sharedInstance()
@@ -116,7 +114,7 @@ extension JinyAUIManager:JinyAUIHandler {
         fetchSoundConfig()
     }
     
-    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView) {
+    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView, iconInfo:Dictionary<String,Any>) {
         
         currentInstruction = instruction
         currentTargetView = inView
@@ -151,12 +149,11 @@ extension JinyAUIManager:JinyAUIHandler {
             default:
                 performKeyWindowInstruction(instruction: instruction)
             }
-            auiManagerCallBack?.didPresentView()
         }
         
     }
     
-    func performInstrcution(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?) {
+    func performInstrcution(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?, iconInfo:Dictionary<String,Any>) {
         currentInstruction = instruction
         currentTargetView = nil
         currentWebView = inWebview
@@ -167,7 +164,6 @@ extension JinyAUIManager:JinyAUIHandler {
             return
         }
         if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
             switch type {
                 
             case "FINGER_POINTER":
@@ -193,8 +189,11 @@ extension JinyAUIManager:JinyAUIHandler {
             default:
                 performKeyWindowInstruction(instruction: instruction)
             }
-            auiManagerCallBack?.didPresentView()
         }
+    }
+    
+    func dismissCurrentAssist() {
+        
     }
     
     func performInstruction(instruction:Dictionary<String,Any>) {
@@ -208,7 +207,6 @@ extension JinyAUIManager:JinyAUIHandler {
             return
         }
         if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
             switch type {
                 
             case "FINGER_POINTER":
@@ -217,7 +215,6 @@ extension JinyAUIManager:JinyAUIHandler {
             default:
                 performKeyWindowInstruction(instruction: instruction)
             }
-            auiManagerCallBack?.didPresentView()
         }
     }
     
@@ -229,7 +226,6 @@ extension JinyAUIManager:JinyAUIHandler {
         }
         let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
         if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
             switch type {
             case "POPUP":
                 let jinyPopup = JinyPopup(withDict: assistInfo, iconDict: iconInfo)
@@ -276,164 +272,9 @@ extension JinyAUIManager:JinyAUIHandler {
         } else { if scrollArrow ==  nil { showArrow() } }
     }
     
-    func playAudio() {
-        self.auiManagerCallBack?.willPlayAudio()
-        if let tts = auiManagerCallBack?.tryTTS() {
-            synthesizer = AVSpeechSynthesizer()
-            synthesizer?.delegate = self
-            utterance = AVSpeechUtterance(string: tts)
-            utterance!.voice = AVSpeechSynthesisVoice(language: "hi-IN")
-            utterance!.rate = 0.4
-            do {
-                try audioSession.setCategory(.playback, options: [.duckOthers])
-                try audioSession.setActive(true)
-            } catch {
-                
-            }
-            synthesizer!.speak(utterance!)
-        } else {
-            guard let file = auiManagerCallBack?.getAudioFilePath() else { return }
-            let fm = FileManager.default
-            guard fm.fileExists(atPath: file) else { return }
-            let audioURL = URL.init(fileURLWithPath: file)
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: audioURL, fileTypeHint: AVFileType.mp3.rawValue)
-                audioPlayer?.delegate = self
-                audioPlayer?.volume = 1.0
-                do {
-                    try audioSession.setCategory(.playback, options: [.duckOthers])
-                    try audioSession.setActive(true)
-                } catch {
-                    
-                }
-                audioPlayer?.play()
-                
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        
-        
-    }
-    
-    
-    func playTTS(withLangCode:String) {
-        
-    }
-    
-    func presentJinyButton() {
-        guard jinyButton == nil, jinyButton?.window == nil else { return }
-//        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        jinyButton = JinyMainButton(withThemeColor: .blue)
-        guard let keyWindow = UIApplication.shared.keyWindow else { return }
-        keyWindow.addSubview(jinyButton!)
-        jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
-        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
-        let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
-        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
-    }
-    
-    @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
-    
-    func presentBottomDiscovery(header: String, optInText: String, optOutText: String, languages:Array<String>) {
-        bottomDiscovery = JinyBottomDiscovery(withDelegate: self, header: header, jinyLanguages: languages, optIn: optInText, optOut: optOutText, color: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        bottomDiscovery?.presentBottomDiscovery()
-        
-    }
-    
-    func presentPingDiscovery() {
-        
-    }
-    
-    func presentFlowSelector(branchTitle: String, flowTitles: Array<String>) {
-        if jinyFlowSelector != nil {
-            jinyFlowSelector?.dismissView()
-            jinyFlowSelector = nil
-        }
-        self.auiManagerCallBack?.willPresentView()
-        jinyFlowSelector = JinyFlowSelector(withDelegate: self, listOfFlows: flowTitles, branchTitle: branchTitle)
-        jinyFlowSelector?.setupView()
-    }
-    
-    func presentPointer(toView: UIView, ofType: JinyPointerStyle) {
-        pointer?.removePointer()
-        pointer = nil
-        switch ofType {
-        case .FingerRipple:
-            pointer = JinyFingerRipplePointer()
-            break
-        case .NegativeUI:
-            pointer = JinyHighlightManualSequencePointer()
-            break
-        }
-        pointer?.pointerDelegate = self
-        self.auiManagerCallBack?.willPresentView()
-        pointer?.presentPointer(view: toView)
-    }
-    
-    func presentPointer(toRect: CGRect, inView: UIView?, ofType: JinyPointerStyle) {
-        pointer?.removePointer()
-        pointer = nil
-        switch ofType {
-        case .FingerRipple:
-            pointer = JinyFingerRipplePointer()
-            break
-        case .NegativeUI:
-            pointer = JinyHighlightManualSequencePointer()
-            break
-        }
-        pointer?.pointerDelegate = self
-        self.auiManagerCallBack?.willPresentView()
-        pointer?.presentPointer(toRect: toRect, inView: inView)
-    }
-    
-    func updatePointerRect(newRect: CGRect, inView: UIView?) {
-        guard pointer != nil else { return }
-        pointer!.updateRect(newRect: newRect, inView: inView)
-    }
-    
-    func presentLanguagePanel(languages: Array<String>) {
-        removeAllViews()
-        languagePanel = JinyLanguagePanel(withDelegate: self, frame: .zero, languageTexts: languages, theme: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        languagePanel?.presentPanel()
-    }
-    
-    func presentOptionPanel(mute: String, repeatText: String, language: String?) {
-        removeAllViews()
-        optionPanel = JinyOptionPanel(withDelegate: self, repeatText: repeatText, muteText: mute, languageText: language)
-        optionPanel?.presentPanel()
-    }
-    
-    func dismissJinyButton() {
-        guard let mainButton = jinyButton, mainButton.superview != nil else { return }
-        mainButton.removeFromSuperview()
-        jinyButton = nil
-    }
-    
-    func keepOnlyJinyButtonIfPresent() {
-        
-        pointer?.removePointer()
-        pointer = nil
-        
-        bottomDiscovery?.dismissView { self.bottomDiscovery = nil }
-        
-        optionPanel?.dismissOptionPanel { self.optionPanel = nil }
-        
-        languagePanel?.dismissLanguagePanel { self.languagePanel = nil }
-        
-        jinyFlowSelector?.dismissView()
-        jinyFlowSelector = nil
-        
-    }
-    
     func removeAllViews() {
-        pointer?.removePointer()
-        pointer = nil
-        currentAssist?.remove()
-        currentAssist = nil
-        dismissJinyButton()
+        
     }
-    
 }
 
 
@@ -498,7 +339,6 @@ extension JinyAUIManager:JinyPointerDelegate {
     
     func pointerPresented() {
         self.auiManagerCallBack?.didPresentView()
-        playAudio()
     }
     
     func nextClicked() { auiManagerCallBack?.stagePerformed() }
@@ -508,45 +348,9 @@ extension JinyAUIManager:JinyPointerDelegate {
     }
 }
 
-extension JinyAUIManager:JinyBottomDiscoveryDelegate {
-    
-    func discoveryPresentedWithOptInButton(_ button: UIButton) {
-        presentPointer(toView: button, ofType: .FingerRipple)
-        auiManagerCallBack?.discoveryPresented()
-        auiManagerCallBack?.didPresentView()
-    }
-    
-    func discoverySheetDismissed() {
-        auiManagerCallBack?.discoveryMuted()
-        auiManagerCallBack?.didDismissView()
-    }
-    
-    func optOutButtonClicked() {
-        auiManagerCallBack?.discoveryMuted()
-        auiManagerCallBack?.didDismissView()
-    }
-    
-    func optInButtonClicked() {
-        auiManagerCallBack?.didDismissView()
-        auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0)
-    }
-    
-    func discoveryLanguageButtonClicked() {
-        auiManagerCallBack?.didDismissView()
-        guard let langs = auiManagerCallBack?.getLanguages() else {
-            auiManagerCallBack?.discoveryReset()
-            return
-        }
-        presentLanguagePanel(languages: langs)
-    }
-    
-}
-
 extension JinyAUIManager:JinyLanguagePanelDelegate {
     
-    func languagePanelPresented() {
-        auiManagerCallBack?.languagePanelOpened()
-    }
+    func languagePanelPresented() { auiManagerCallBack?.languagePanelOpened() }
     
     func failedToPresentLanguagePanel() {}
     
@@ -575,7 +379,6 @@ extension JinyAUIManager:JinyOptionPanelDelegate {
             auiManagerCallBack?.optionPanelClosed()
             return
         }
-        presentLanguagePanel(languages: langs)
     }
     
     func optionPanelDismissed() { auiManagerCallBack?.optionPanelClosed() }
@@ -584,30 +387,10 @@ extension JinyAUIManager:JinyOptionPanelDelegate {
     
 }
 
-extension JinyAUIManager:JinyFlowSelectorDelegate {
-    
-    func failedToSetupFlowSelector() { auiManagerCallBack?.flowSelectorDismissed() }
-    
-    func flowSelectorPresented() {
-        auiManagerCallBack?.flowSelectorPresented()
-        playAudio()
-    }
-    
-    func flowSelected(_ flowSelectedAtIndex: Int) { auiManagerCallBack?.flowSelectorFlowSelected(atIndex:flowSelectedAtIndex) }
-    
-    func selectorViewRemoved() { auiManagerCallBack?.flowSelectorDismissed() }
-    
-    func closeButtonClicked() { auiManagerCallBack?.flowSelectorDismissed() }
-    
-}
-
 extension JinyAUIManager:AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         self.auiManagerCallBack?.didPlayAudio()
-        if pointer != nil {
-            if pointer!.isMember(of: JinyHighlightPointer.self) { auiManagerCallBack?.stagePerformed() }
-        }
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
@@ -706,21 +489,13 @@ extension JinyAUIManager {
 
 
 extension JinyAUIManager:JinyAssistDelegate {
-    func willPresentAssist() {
-        
-    }
+    func willPresentAssist() { auiManagerCallBack?.willPresentView() }
     
-    func didPresentAssist() {
-        
-    }
+    func didPresentAssist() { auiManagerCallBack?.didPresentView() }
     
-    func failedToPresentAssist() {
-        
-    }
+    func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
-    func didDismissAssist() {
-        
-    }
+    func didDismissAssist() { auiManagerCallBack?.didDismissView() }
     
     func didSendAction(dict: Dictionary<String, Any>) {
         auiManagerCallBack?.didReceiveInstruction(dict: dict)
@@ -733,13 +508,9 @@ extension JinyAUIManager:JinyAssistDelegate {
         }
     }
     
-    func didExitAnimation() {
-        
-    }
+    func didExitAnimation() { auiManagerCallBack?.willDismissView() }
     
-    func didTapAssociatedJinyIcon() {
-        auiManagerCallBack?.jinyTapped()
-    }
+    func didTapAssociatedJinyIcon() { auiManagerCallBack?.jinyTapped() }
     
     
 }

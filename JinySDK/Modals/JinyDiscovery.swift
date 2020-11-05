@@ -8,97 +8,68 @@
 
 import Foundation
 
-enum JinyTriggerMode:String {
-    case None   =   "None"
-    case Single =   "SINGLE_FLOW_TRIGGER"
-    case Multi  =   "MULTI_FLOW_TRIGGER"
-}
-
-class JinyTaggedEventCondition {
-    
-    let identifier:String
-    let value:String
+class JinyTrigger {
     let type:String
-    let condition:String
+    let delay:Float?
+    let autoTrigger:Bool
+    let optInOnAnchorClick:Bool
     
-    init(withDict dict:Dictionary<String,Any>) {
-        identifier = dict["identifier"] as? String ?? ""
-        value = dict["value"] as? String ?? ""
-        type = dict["type"] as? String ?? ""
-        condition = dict["condition"] as? String ?? ""
+    init(with dict:Dictionary<String,Any>) {
+        type = dict["type"] as? String ?? "on_app_open"
+        delay = dict["delay"] as? Float
+        autoTrigger = dict["auto_trigger"] as? Bool ?? true
+        optInOnAnchorClick = dict["opt_in_on_anchor_click"] as? Bool ?? false
     }
     
 }
 
-class JinyTaggedEvent {
+class JinySeenFrequency {
+    let nSession:Int?
+    let nDismissedByUser:Int?
+    let nFlowCompleted:Int?
     
-    var orConditions:Array<Array<JinyTaggedEventCondition>> = []
-    var action:String?
-    
-    init(withDict taggedDict:Dictionary<String,Any>) {
-        action = taggedDict["action"] as? String
-        if let eventsDictArray = taggedDict["events"] as? Array<Array<Dictionary<String,Any>>>{
-            for andConditionsArray in eventsDictArray {
-                var andConditions:Array<JinyTaggedEventCondition> = []
-                for andCondition in andConditionsArray {
-                    andConditions.append(JinyTaggedEventCondition(withDict: andCondition))
-                }
-                orConditions.append(andConditions)
-            }
-        }
-        
+    init(with dict:Dictionary<String,Int>) {
+        nSession = dict["n_session"]
+        nDismissedByUser = dict["n_dismissed_by_user"]
+        nFlowCompleted = dict["n_flow_completed"]
     }
-    
 }
 
-class JinyDiscovery {
-    
-    var id:Int?
-    var name:String?
+class JinyDiscovery:JinyContext {
+
+    var enableIcon:Bool
     var triggerMode:JinyTriggerMode
     var autoStart:Bool
-    var weight:Int
-    var frequencyPerApp:Int?
-    var frequencyPerAppWithoutJiny:Int?
-    var frequencyPerSession:Int?
-    var frequencyPerSessionWithoutJiny:Int?
-    var isWeb:Bool
-    var discoveryInfo:JinyDiscoveryInfo?
-    var flowIds:Array<Int>
-    var nativeIdentifiers:Array<String>
-    var webIdentifiers:Array<String>
+    var frequency:JinyFrequency?
+    var flowId:Int?
     var instruction:JinyInstruction?
-    var trigger:Dictionary<String,Any>
-    var taggedEvents:JinyTaggedEvent?
-    var seenFrequency:Dictionary<String,Int>?
+    var trigger:JinyTrigger?
+    var seenFrequency:JinySeenFrequency?
+    var eventIdentifiers:JinyEventIdentifier?
     var instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
-        id = discoveryDict["id"] as? Int
-        name = discoveryDict["name"] as? String
-        triggerMode = JinyTriggerMode(rawValue: (discoveryDict["trigger_mode"] as? String ?? "None") ) ?? .None
+        triggerMode = JinyTriggerMode(rawValue: (discoveryDict["trigger_mode"] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
+        enableIcon = discoveryDict["enable_icon"] as? Bool ?? false
         autoStart = discoveryDict["auto_start"] as? Bool ?? false
-        weight = discoveryDict["weight"] as? Int ?? 1
-        frequencyPerApp = discoveryDict["frequency_per_app"] as? Int
-        frequencyPerAppWithoutJiny = discoveryDict["frequency_per_app_wo_jiny"] as? Int
-        frequencyPerSession = discoveryDict["frequency_per_session"] as? Int
-        frequencyPerSessionWithoutJiny = discoveryDict["frequency_per_session_wo_jiny"] as? Int
-        isWeb = discoveryDict["is_web"] as? Bool ?? false
-        flowIds = discoveryDict["flow_ids"] as? Array<Int> ?? []
-        if let discoveyInfoDict = discoveryDict["info"] as? Dictionary<String,Any> {
-            discoveryInfo = JinyDiscoveryInfo(discoveyInfoDict)
+        if let freqDict = discoveryDict["frequency"] as? Dictionary<String,Int> {
+            frequency = JinyFrequency(with: freqDict)
         }
-        nativeIdentifiers = discoveryDict["native_identifiers"] as? Array<String> ?? []
-        webIdentifiers = discoveryDict["web_identifiers"] as? Array<String> ?? []
+        flowId = discoveryDict["flow_id"] as? Int
         if let instructionDict = discoveryDict["instruction"] as? Dictionary<String,Any> {
             instructionInfoDict = instructionDict
             instruction = JinyInstruction(withDict: instructionDict)
         }
-        trigger = discoveryDict["trigger"] as? Dictionary<String,Any> ?? [:]
-        if let taggedEventsDict = discoveryDict["tagged_events"] as? Dictionary<String,Any> {
-            taggedEvents = JinyTaggedEvent(withDict: taggedEventsDict)
+        if let triggerDict = discoveryDict["trigger"] as? Dictionary<String,Any> {
+            trigger = JinyTrigger(with: triggerDict)
         }
-        seenFrequency = discoveryDict["seen_frequency"] as? Dictionary<String,Int>
+        if let seenDict = discoveryDict["seen_frequency"] as? Dictionary<String,Int> {
+            seenFrequency = JinySeenFrequency(with: seenDict)
+        }
+        if let eventIdentifierDict = discoveryDict["event_identifiers"] as? Dictionary<String,Any> {
+            eventIdentifiers = JinyEventIdentifier(withDict: eventIdentifierDict)
+        }
+        super.init(with: discoveryDict)
     }
     
 }
@@ -117,18 +88,23 @@ extension JinyDiscovery {
         let copy = JinyDiscovery(withDict: [:])
         copy.id = self.id
         copy.name = self.name
-        copy.triggerMode = self.triggerMode
-        copy.autoStart = self.autoStart
-        copy.isWeb = self.isWeb
-        copy.weight = self.weight
-        copy.frequencyPerApp = self.frequencyPerApp
-        copy.frequencyPerAppWithoutJiny = self.frequencyPerAppWithoutJiny
-        copy.frequencyPerSession = self.frequencyPerSession
-        copy.frequencyPerSessionWithoutJiny = self.frequencyPerSessionWithoutJiny
-        copy.discoveryInfo = self.discoveryInfo
         copy.webIdentifiers = self.webIdentifiers
         copy.nativeIdentifiers = self.nativeIdentifiers
+        copy.taggedEvents = self.taggedEvents
+        copy.isWeb = self.isWeb
+        copy.weight = self.weight
+        copy.checkpoint = self.checkpoint
+        
+        copy.enableIcon = self.enableIcon
+        copy.triggerMode = self.triggerMode
+        copy.autoStart = self.autoStart
+        copy.frequency = self.frequency
+        copy.flowId = self.flowId
+        copy.trigger = self.trigger
+        copy.seenFrequency = self.seenFrequency
         copy.instruction = self.instruction
+        copy.instructionInfoDict = self.instructionInfoDict
+        copy.eventIdentifiers = self.eventIdentifiers
         return copy
     }
     

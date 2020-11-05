@@ -65,6 +65,17 @@ class JinyAnalyticsManager {
 
 
 extension Constants {
+    struct Networking {
+        static let isExecuting = "isExecuting"
+        static let isFinished = "isFinished"
+        static let downloadQ = "Jiny Download Queue"
+        static let dataQ = "Jiny Data Queue"
+        static let downloadsFolder = "Jiny"
+        static let analyticsEndPoint = "https://dev.jiny.io/api/jiny/v2/sendAnalytics"
+    }
+}
+
+extension Constants {
     struct AnalyticsTemp {
         static let tempApiKey = "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36"
         static let xClientId = "x-client-id"

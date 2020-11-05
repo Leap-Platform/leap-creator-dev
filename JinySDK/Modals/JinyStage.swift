@@ -9,11 +9,9 @@
 import Foundation
 
 enum JinyStageType:String {
-    case Normal = "Normal"
-    case Sequence = "Sequence"
-    case ManualSequence = "Manual Sequence"
-    case Branch = "Branch"
-    case Link = "Link"
+    case Normal = "NORMAL"
+    case Sequence = "SEQUENCE"
+    case ManualSequence = "MANUAL_SEQUENCE"
 }
 
 enum JinyPointerType {
@@ -30,40 +28,23 @@ enum JinySearchType {
 }
 
 
-class JinyStage {
-    
-    let id:Int?
-    let name:String?
-    let isWeb:Bool
+class JinyStage:JinyContext {
+
     let type:JinyStageType
     let frequencyPerFlow:Int
-    let weight:Int
     let isSuccess:Bool
-    let nativeIdentifiers:Array<String>
-    let webIdentifiers:Array<String>
     let branchInfo:JinyBranchInfo?
     let instruction:JinyInstruction?
     let instructionInfoDict:Dictionary<String,Any>?
-    let checkpoint:Bool
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
-        id = stageDict["id"] as? Int
-        name = stageDict["name"] as? String
-        isWeb = stageDict["is_web"] as? Bool ?? false
-        if let typeString = stageDict["type"] as? String { type = JinyStageType(rawValue: typeString) ?? .Normal }
-        else { type = .Normal }
+        type = JinyStageType(rawValue: (stageDict["type"] as? String) ?? "NORMAL") ?? .Normal
         frequencyPerFlow = stageDict["frequency_per_flow"] as? Int ?? -1
-        weight = stageDict["weight"] as? Int ?? 1
         isSuccess = stageDict["is_success"] as? Bool ?? false
-        nativeIdentifiers = stageDict["native_identifiers"] as? Array<String> ?? []
-        webIdentifiers = stageDict["web_identifiers"] as? Array<String> ?? []
-        
-        if type == .Branch {
-            if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> { branchInfo = JinyBranchInfo(withDict: branchDict) }
-            else { branchInfo = nil }
-        }
-        else { branchInfo = nil }
+        if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> {
+            branchInfo = JinyBranchInfo(withDict: branchDict)
+        } else { branchInfo = nil }
         if let instructionDict = stageDict["instruction"] as? Dictionary<String,Any> {
             instruction = JinyInstruction(withDict: instructionDict)
             instructionInfoDict = instructionDict
@@ -71,7 +52,7 @@ class JinyStage {
             instruction = nil
             instructionInfoDict = nil
         }
-        checkpoint = stageDict["checkpoint"] as? Bool ?? false
+        super.init(with: stageDict)
     }
     
 }

@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// JinyContextDetectorDelegate is a protocol that is to be implemented by the class that needs to communicate with the JinyContextDetector class. This protocol provides callbacks regarding which discovery, page and stage is identifed. It also asks the delegate to provide the relevant flow/discoveries to check from.
-protocol JinyContextDetectorDelegate {
+protocol JinyContextDetectorDelegate:NSObjectProtocol {
     
     func getAllNativeIds() -> Array<String>
     func getAllWebIds() -> Array<String>
@@ -24,8 +24,8 @@ protocol JinyContextDetectorDelegate {
     func assistNotFound()
     
     func getDiscoveriesToCheck()->Array<JinyDiscovery>
-    func discoveriesIdentified(discoveries:Array<(JinyDiscovery, UIView?, CGRect?, UIView?)>)
-    func noDiscoveryIdentified()
+    func discoveriesFound(discoveries:Array<(JinyDiscovery, UIView?, CGRect?, UIView?)>)
+    func noDiscoveryFound()
     
     func getCurrentFlow() -> JinyFlow?
     func getParentFlow() -> JinyFlow?
@@ -42,18 +42,12 @@ enum JinyContextDetectionState {
     case Stage
 }
 
-enum JinyContexttDetectionSubstate {
-    case Assist
-    case Discovery
-}
-
 /// JinyContextDetector class fetches the discovery or flow to be detected  using its delegate and identifies the dsicovery or stage every 1 second. It informs it delegate which discovery, page, stage has been identified
 class JinyContextDetector {
     
-    private let delegate:JinyContextDetectorDelegate
+    private weak var delegate:JinyContextDetectorDelegate?
     private var contextTimer:Timer?
     private var state:JinyContextDetectionState = .Discovery
-    var substate:JinyContexttDetectionSubstate = .Assist
     
     init(withDelegate contextDetectorDelegate:JinyContextDetectorDelegate) {
         delegate = contextDetectorDelegate        
@@ -96,7 +90,7 @@ extension JinyContextDetector {
         var views:[UIView] = []
         var allWindows:Array<UIWindow> = []
         allWindows = UIApplication.shared.windows
-        let keyWindow = UIApplication.shared.keyWindow
+        let keyWindow = UIApplication.shared.windows.first { $0.isKeyWindow }
         if keyWindow != nil {
             if !allWindows.contains(keyWindow!) { allWindows.append(keyWindow!)}
         }
@@ -107,11 +101,11 @@ extension JinyContextDetector {
     private func getChildren(_ currentView:UIView) -> [UIView] {
         var subviewArray:[UIView] = []
         subviewArray.append(currentView)
-        var childrenToCheck = (currentView.window == UIApplication.shared.keyWindow) ? getVisibleChildren(currentView.subviews) : currentView.subviews
+        var childrenToCheck = (currentView.window == UIApplication.shared.windows.first { $0.isKeyWindow }) ? getVisibleChildren(currentView.subviews) : currentView.subviews
         childrenToCheck = childrenToCheck.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains("Jiny") }
         childrenToCheck = childrenToCheck.filter{
             guard let superview = $0.superview else { return true }
-            let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
+            let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.windows.first { $0.isKeyWindow })
             guard let keyWindow = UIApplication.shared.keyWindow else { return true }
             if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
             return true
@@ -137,8 +131,8 @@ extension JinyContextDetector {
     }
     
     private func findIdentifiersPassing(inHierarchy hierarchy:Array<UIView>, passingIds:@escaping (_ passingNativeIds:Array<String>, _ passingWebIds:Array<String>)->Void) {
-        let allNativeIds = delegate.getAllNativeIds()
-        let allWebIds = delegate.getAllWebIds()
+        let allNativeIds = delegate!.getAllNativeIds()
+        let allWebIds = delegate!.getAllWebIds()
         
         let passingNativeIds = getNativeIdentifiersPassing(allNativeIds, inHierarchy: hierarchy)
         
@@ -160,7 +154,7 @@ extension JinyContextDetector {
         case .Discovery:
             checkForAssistOrDiscovery(in: allViews, withPassing: webIds, nativeIds)
         case .Stage:
-            checkForStage(in: allViews, withPassing: webIds, nativeIds, forFlow: delegate.getCurrentFlow())
+            checkForStage(in: allViews, withPassing: webIds, nativeIds, forFlow: delegate!.getCurrentFlow())
         }
     }
     
@@ -175,14 +169,14 @@ extension JinyContextDetector {
     private func checkForAssistOrDiscovery(in allViews:Array<UIView>, withPassing webIds:Array<String>,_ nativeIds:Array<String>) {
         if let assistDetected = detectAssist(passingNativeIds: nativeIds, passingWebIds: webIds) {
             getViewOrRect(allView: allViews, id: assistDetected.instruction?.assistInfo?.identifier, isWeb: assistDetected.isWeb) { (view, rect, webview) in
-                self.delegate.assistFound(assist: assistDetected, view: view, rect: rect, webview: webview)
+                self.delegate!.assistFound(assist: assistDetected, view: view, rect: rect, webview: webview)
             }
         }
         else {
-            self.delegate.assistNotFound()
+            self.delegate!.assistNotFound()
             let discoveriesIdentified = findDiscoveries(passingNativeIds: nativeIds, passingWebIds: webIds)
             guard discoveriesIdentified.count > 0 else {
-                self.delegate.noDiscoveryIdentified()
+                self.delegate!.noDiscoveryFound()
                 return
             }
             var discoveryObj:Array<(JinyDiscovery, UIView?, CGRect?, UIView?)> = []
@@ -192,7 +186,7 @@ extension JinyContextDetector {
                 discoveryObj.append((discoveriesIdentified[counter],view,rect,webview))
                 counter += 1
                 if discoveriesIdentified.count == counter {
-                    self.delegate.discoveriesIdentified(discoveries: discoveryObj)
+                    self.delegate!.discoveriesFound(discoveries: discoveryObj)
                 } else {
                     self.getViewOrRect(allView: allViews, id: discoveriesIdentified[counter].instruction?.assistInfo?.identifier, isWeb: discoveriesIdentified[counter].isWeb, targetCheckCompleted: rectCalculateCompletion!)
                 }
@@ -204,15 +198,15 @@ extension JinyContextDetector {
     
     private func checkForStage(in allViews:Array<UIView>, withPassing webIds:Array<String>,_ nativeIds:Array<String>, forFlow:JinyFlow?) {
         guard let flow = forFlow, let page = findPage(pages: flow.pages, webIds: webIds, nativeIds: nativeIds) else {
-            delegate.pageNotIdentified()
+            delegate!.pageNotIdentified()
             return
         }
-        delegate.pageIdentified(page)
+        delegate!.pageIdentified(page)
         if let stage = findStage(stages: page.stages, webIds: webIds, nativeIds: nativeIds) {
             getViewOrRect(allView: allViews, id: stage.instruction?.assistInfo?.identifier, isWeb: stage.isWeb) { (view, rect, webview) in
-                self.delegate.stageIdentified(stage, pointerView: view, pointerRect: rect, webviewForRect: webview)
+                self.delegate!.stageIdentified(stage, pointerView: view, pointerRect: rect, webviewForRect: webview)
             }
-        } else { checkForStage(in: allViews, withPassing: webIds, nativeIds, forFlow: delegate.getParentFlow()) }
+        } else { checkForStage(in: allViews, withPassing: webIds, nativeIds, forFlow: delegate!.getParentFlow()) }
     }
     
     private func getViewOrRect(allView:Array<UIView>,id:String?, isWeb:Bool, targetCheckCompleted:@escaping(_:UIView?,_:CGRect?, UIView?)->Void) {
@@ -221,7 +215,7 @@ extension JinyContextDetector {
             return
         }
         if isWeb {
-            guard let webId = delegate.getWebIdentifier(identifierId: identifier) else {
+            guard let webId = delegate!.getWebIdentifier(identifierId: identifier) else {
                 targetCheckCompleted(nil, nil, nil)
                 return
             }
@@ -229,7 +223,7 @@ extension JinyContextDetector {
                 targetCheckCompleted(nil, rect, webview)
             }
         } else {
-            guard let _ = delegate.getNativeIdentifier(identifierId: identifier) else {
+            guard let _ = delegate!.getNativeIdentifier(identifierId: identifier) else {
                 targetCheckCompleted(nil, nil, nil)
                 return
             }
@@ -247,7 +241,7 @@ extension JinyContextDetector {
     private func detectAssist(passingNativeIds:Array<String>, passingWebIds:Array<String>) -> JinyAssist? {
         var assistFound:JinyAssist?
         var maxWeight:Int = 0
-        let assists = delegate.getAllAssistsToCheck()
+        let assists = delegate!.getAllAssistsToCheck()
         for assist in assists {
             if isAUIElementPassing(passingWebIds, passingNativeIds, assist.webIdentifiers, assist.nativeIdentifiers) && assist.weight > maxWeight {
                 assistFound = assist
@@ -263,7 +257,7 @@ extension JinyContextDetector {
 extension JinyContextDetector {
     
     private func findDiscoveries(passingNativeIds:Array<String>, passingWebIds:Array<String>) -> Array<JinyDiscovery> {
-        let discoveries = delegate.getDiscoveriesToCheck()
+        let discoveries = delegate!.getDiscoveriesToCheck()
         let passingDiscoveries = discoveries.filter({ (checkDiscovery) -> Bool in
             return isAUIElementPassing(passingWebIds, passingNativeIds, checkDiscovery.webIdentifiers, checkDiscovery.nativeIdentifiers)
         })
@@ -285,7 +279,7 @@ extension JinyContextDetector {
     }
     
     private func getViewsForIdentifer(identifierId:String, hierarchy:Array<UIView>) -> Array<UIView>? {
-        guard let identifier = delegate.getNativeIdentifier(identifierId: identifierId) else { return nil }
+        guard let identifier = delegate!.getNativeIdentifier(identifierId: identifierId) else { return nil }
         guard let params = identifier.idParameters else { return nil }
         var anchorViews = hierarchy
         if params.accId != nil { anchorViews = anchorViews.filter{ $0.accessibilityIdentifier == params.accId } }
@@ -494,7 +488,7 @@ extension JinyContextDetector {
         var jsString = "["
         for (index,webId) in webIds.enumerated() {
             if index != 0 { jsString += "," }
-            if let webIdentifier = delegate.getWebIdentifier(identifierId: webId) {
+            if let webIdentifier = delegate!.getWebIdentifier(identifierId: webId) {
                 let querySelectorCheck = "(" + JinyJSMaker.getElementScript(webIdentifier) + " != null" + ").toString()"
                 jsString += querySelectorCheck
             } else {
@@ -535,7 +529,7 @@ extension JinyContextDetector {
         for (index,webId) in webIds.enumerated() {
             if index != 0 { jsString += "," }
             var checkScript = ""
-            if let webIdentifier = delegate.getWebIdentifier(identifierId: webId) {
+            if let webIdentifier = delegate!.getWebIdentifier(identifierId: webId) {
                 if let attributeCheck = JinyJSMaker.createAttributeCheckScript(for: webIdentifier) {
                     checkScript += "(" + attributeCheck + ").toString()"
                 } else {

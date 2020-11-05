@@ -14,14 +14,11 @@ class JinyInternal:NSObject {
     private var apikey:String
     var jinyConfiguration:JinyConfig?
     var contextManager:JinyContextManager
-    var audioManager:JinyAudioManager
     
     init(_ token : String, uiManager:JinyAUIHandler?) {
         self.apikey = token
-        audioManager = JinyAudioManager()
         self.contextManager = JinyContextManager(withUIHandler: uiManager)
         super.init()
-        audioManager.delegate = self
         JinySharedInformation.shared.setAPIKey(apikey)
         JinySharedInformation.shared.setSessionId()
         addObservers()
@@ -29,7 +26,8 @@ class JinyInternal:NSObject {
     }
     
     func auiCallback() -> JinyAUICallback? {
-        return self.contextManager
+//        return self.contextManager
+        return nil
     }
     
 }
@@ -80,8 +78,6 @@ extension JinyInternal {
             self.jinyConfiguration = JinyConfig(withDict: configDict)
             self.setupDefaultLanguage()
             self.startContextDetection()
-//            self.soundDownload()
-//            self.fetchAudio()
         }
         configTask.resume()
     }
@@ -101,43 +97,6 @@ extension JinyInternal {
         JinySharedInformation.shared.setLanguage(defaultLang)
         
     }
-    
-    func fetchAudio() {
-        let url = URL(string: "http://dashboard.jiny.mockable.io/sounds")
-        var req = URLRequest(url: url!)
-        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
-        let session = URLSession.shared
-        let configTask = session.dataTask(with: req) { (data, response, error) in
-            guard let resultData = data else {
-                self.fetchAudio()
-                return
-            }
-            do {
-                let audioDict = try JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as! Dictionary<String,Any>
-                guard let dataDict = audioDict["data"] as? Dictionary<String,Any> else { return }
-                let baseUrl = dataDict["base_url"] as? String
-                guard let jinySoundsJson = dataDict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return }
-                // FIXME: Process sounds API
-                var stageSounds:Array<JinySound> = []
-                jinySoundsJson.forEach { (langCode, soundDictsArray) in
-                    for soundDict in soundDictsArray {
-                        let sound = JinySound(withSoundDict: soundDict, langCode: langCode, baseUrl: baseUrl)
-                        stageSounds.append(sound)
-                    }
-                }
-                self.jinyConfiguration?.sounds = stageSounds
-                self.soundDownload()
-            } catch {
-                print("Error")
-                return
-            }
-        }
-        configTask.resume()
-    }
-    
-    func soundDownload(){
-        audioManager.registerForDownload()
-    }
 }
 
 // MARK: - CONTEXT DETECTION METHODS
@@ -146,26 +105,7 @@ extension JinyInternal {
     func startContextDetection() {
         guard let configuration = self.jinyConfiguration else { return }
         DispatchQueue.main.async {
-            
-            self.contextManager.audioManagerDelegate = self.audioManager
             self.contextManager.initialize(withConfig: configuration)
         }
     }
-}
-
-
-extension JinyInternal:JinyAudioManagerDelegate {
-    
-    func getDefaultSounds() -> Array<JinySound> {
-        return jinyConfiguration?.defaultSounds ?? []
-    }
-    
-    func getDiscoverySounds() -> Array<JinySound> {
-        return jinyConfiguration?.discoverySounds ?? []
-    }
-    
-    func getStageSounds() -> Array<JinySound> {
-        return jinyConfiguration?.sounds ?? []
-    }
-    
 }

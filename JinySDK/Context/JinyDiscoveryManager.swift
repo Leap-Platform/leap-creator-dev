@@ -18,7 +18,7 @@ protocol JinyDiscoveryManagerDelegate:AnyObject {
     
     func newDiscoveryIdentified(discovery:JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func sameDiscoveryIdentified(discovery:JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
-    func noContextualDiscoveryIdentified()
+    func noDiscoveryIdentified()
     func startFlow(id:Int, disId:Int)
 }
 
@@ -71,13 +71,13 @@ class JinyDiscoveryManager {
             }
             
             guard let seenFreq = allowedDiscovery.seenFrequency else { return true }
-            if let nSessionCount = seenFreq["n_session"], let counter = seenDisc[String(allowedDiscovery.id!)] {
+            if let nSessionCount = seenFreq.nSession, let counter = seenDisc[String(allowedDiscovery.id)] {
                 if counter >= nSessionCount { return false}
             }
-            if let nUserDismissCount = seenFreq["n_dismiss_by_user"], let counter = discDismissCount[String(allowedDiscovery.id!)] {
+            if let nUserDismissCount = seenFreq.nDismissedByUser, let counter = discDismissCount[String(allowedDiscovery.id)] {
                 if counter >= nUserDismissCount { return false }
             }
-            if let nFlowCompleted = seenFreq["n_flow_completed"], let counter = flowCompletedCount[String(allowedDiscovery.id!)] {
+            if let nFlowCompleted = seenFreq.nFlowCompleted, let counter = flowCompletedCount[String(allowedDiscovery.id)] {
                 if counter >= nFlowCompleted { return false }
             }
             
@@ -107,8 +107,8 @@ class JinyDiscoveryManager {
             }
             if discoveriesAlreadyPresent.contains(discoveryObj.0) {continue}
             else {
-                if discoveryObj.0.trigger["delay"] != nil {
-                    let delay = discoveryObj.0.trigger["delay"] as! Int
+                if discoveryObj.0.trigger?.delay != nil {
+                    let delay = discoveryObj.0.trigger!.delay!
                     if #available(iOS 10.0, *) {
                         let timer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false) { (timer) in
                             timer.invalidate()
@@ -121,9 +121,9 @@ class JinyDiscoveryManager {
                     } else {
                         // Fallback on earlier versions
                     }
-                } else if (discoveryObj.0.trigger["triggerOnAnchorClick"] as? Bool ?? false) {
+                } else if (discoveryObj.0.eventIdentifiers?.triggerOnAnchorClick ?? false) {
                     toBeTriggered.append(JinyDiscoveryEventTrigger(discoveryObj.0, nil, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3))
-                } else if (discoveryObj.0.trigger["optinOnAnchorClick"] as? Bool ?? false) {
+                } else if (discoveryObj.0.trigger?.optInOnAnchorClick ?? false) {
                     toBeTriggered.append(JinyDiscoveryEventTrigger(discoveryObj.0, nil, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3))
                 } else if discoveryObj.0.taggedEvents != nil && discoveryObj.0.taggedEvents?.action == "enable" {
                     toBeTriggered.append(JinyDiscoveryEventTrigger(discoveryObj.0, nil, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3))
@@ -150,7 +150,7 @@ class JinyDiscoveryManager {
     
     func discoveryNotFound() {
         cancelAllTimers()   
-        delegate?.noContextualDiscoveryIdentified()
+        delegate?.noDiscoveryIdentified()
         currentDiscovery = nil
     }
     
@@ -172,7 +172,7 @@ class JinyDiscoveryManager {
     func muteCurrentDiscovery() {
         guard let discovery = currentDiscovery else { return }
         identifiedDiscoveries.append(discovery)
-        delegate?.addDiscoveryIdToMutedList(id: discovery.id!)
+        delegate?.addDiscoveryIdToMutedList(id: discovery.id)
         currentDiscovery = nil
     }
     
@@ -183,12 +183,12 @@ class JinyDiscoveryManager {
     
     func getMutedDiscoveries() -> Array<JinyDiscovery> {
         guard let mutedIds = delegate?.getMutedDiscoveryIds() else { return [] }
-        let mutedDiscoveries = allDiscoveries.filter{ mutedIds.contains($0.id!) }
+        let mutedDiscoveries = allDiscoveries.filter{ mutedIds.contains($0.id) }
         return mutedDiscoveries
     }
     
     func currentDiscoveryPresented() {
-        JinySharedInformation.shared.discoveryPresented(discoveryId: currentDiscovery!.id!)
+        JinySharedInformation.shared.discoveryPresented(discoveryId: currentDiscovery!.id)
     }
     
     func receivedTaggedEvent(taggedEvents:Dictionary<String,Any>) {
@@ -230,11 +230,12 @@ extension JinyDiscoveryManager:JinyEventDetectorDelegate {
             }
         }
         guard let fireDis = selectedDis else { return }
-        if fireDis.discovery.trigger["optinOnAnchorClick"] as? Bool ?? false{
+        if fireDis.discovery.trigger?.optInOnAnchorClick ?? false {
             currentDiscovery = nil
             cancelAllTimers()
-            delegate?.startFlow(id: fireDis.discovery.flowIds[0], disId: fireDis.discovery.id!)
-        } else if fireDis.discovery.trigger["triggerOnAnchorClick"] as? Bool ?? false {
+            guard let flowId = fireDis.discovery.flowId else { return }
+            delegate?.startFlow(id: flowId, disId: fireDis.discovery.id)
+        } else if fireDis.discovery.eventIdentifiers?.triggerOnAnchorClick ?? false {
             currentDiscovery = fireDis.discovery
             self.delegate?.newDiscoveryIdentified(discovery: fireDis.discovery, view: fireDis.anchorView, rect: fireDis.anchorRect, webview: fireDis.anchorWebView)
             cancelAllTimers()

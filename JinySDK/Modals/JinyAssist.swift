@@ -56,93 +56,30 @@ import Foundation
 //}
 
 
-class JinyAssistEventIdentifiers {
-    
-    var triggerOnAnchorClick:Bool
-    var delay:Float?
-    
-    init(withDict eventDict:Dictionary<String,Any>) {
-        triggerOnAnchorClick = eventDict["triggerOnAnchorClick"] as? Bool ?? false
-        delay = eventDict["delay"] as? Float
-    }
-    
-}
 
-class JinyAssistInfo {
-    var layoutInfo:Dictionary<String,Any>
-    var htmlUrl:String?
-    var contentUrls:Array<String>
-    var highlightClickable:Bool
-    var autoScroll:Bool
-    var autoFocus:Bool
-    var type:JinyPointerStyle?
-    var identifier:String?
-    
-    init(withDict infoDict:Dictionary<String,Any>) {
-        layoutInfo = infoDict["layout_info"] as? Dictionary<String,Any> ?? [:]
-        htmlUrl = infoDict["html_url"] as? String
-        contentUrls = infoDict["content_urls"] as? Array<String> ?? []
-        highlightClickable = infoDict["highlight_clickable"] as? Bool ?? false
-        autoScroll = infoDict["auto_scroll"] as? Bool ?? false
-        autoFocus = infoDict["auto_focus"] as? Bool ?? false
-        type = .FingerRipple
-        identifier = infoDict["identifier"] as? String
-    }
-}
 
-class JinyAssistInstruction {
-    var soundName:String
-    var assistInfo:JinyAssistInfo?
+class JinyAssist:JinyContext {
     
-    init(withDict instructionDict:Dictionary<String,Any>) {
-        soundName = instructionDict["sound_name"] as? String ?? ""
-        if let assistInfoDict = instructionDict["assist_info"] as? Dictionary<String,Any> {
-            assistInfo = JinyAssistInfo(withDict: assistInfoDict)
-        }
-    }
-    
-}
-
-class JinyAssist {
-    
-    var assistId:Int
-    var name:String?
-    var type:String?
-    var weight:Int
-    var checkPoint:Bool
-    var frequencyPerSession:Int
-    var frequencyPerApp:Int
-    var nativeIdentifiers:Array<String>
-    var webIdentifiers:Array<String>
-    var eventIdentifiers:JinyAssistEventIdentifiers?
-    var instruction:JinyAssistInstruction?
-    var isWeb:Bool
+    var type:String
+    var frequency:JinyFrequency?
+    var eventIdentifiers:JinyEventIdentifier?
+    var instruction:JinyInstruction?
     var instructionInfoDict:Dictionary<String,Any>?
     
     
     init(withDict assistDict:Dictionary<String,Any>) {
-        assistId = assistDict["id"] as? Int ?? -1
-        name = assistDict["name"] as? String ?? ""
-        type = assistDict["type"] as? String
-        weight = assistDict["weight"] as? Int ?? 1
-        checkPoint = assistDict["checkpoint"] as? Bool ?? false
+        type = assistDict["type"] as? String ?? "NORMAL"
         if let frequencyDict = assistDict["frequency"] as? Dictionary<String,Int> {
-            frequencyPerSession = frequencyDict["per_session"] ?? -1
-            frequencyPerApp = frequencyDict["per_session"] ?? -1
-        } else {
-            frequencyPerSession = -1
-            frequencyPerApp = -1
+            frequency = JinyFrequency(with: frequencyDict)
         }
-        nativeIdentifiers = assistDict["native_identifiers"] as? Array<String> ?? []
-        webIdentifiers = assistDict["web_identifiers"] as? Array<String> ?? []
         if let eventDict = assistDict["event_identifiers"] as? Dictionary<String,Any> {
-            eventIdentifiers = JinyAssistEventIdentifiers(withDict: eventDict)
+            eventIdentifiers = JinyEventIdentifier(withDict: eventDict)
         }
-        isWeb = assistDict["is_web"] as? Bool ?? false
         if let instructionDict = assistDict["instruction"] as? Dictionary<String,Any>{
-            instruction = JinyAssistInstruction(withDict: instructionDict)
+            instruction = JinyInstruction(withDict: instructionDict)
             instructionInfoDict = instructionDict
         }
+        super.init(with: assistDict)
     }
 }
 
@@ -150,7 +87,7 @@ class JinyAssist {
 extension JinyAssist:Equatable {
     
     static func == (lhs:JinyAssist, rhs:JinyAssist)-> Bool {
-        return lhs.assistId == rhs.assistId && lhs.name == rhs.name
+        return lhs.id == rhs.id && lhs.name == rhs.name
     }
     
 }
@@ -159,16 +96,18 @@ extension JinyAssist {
     
     func copy(with zone: NSZone? = nil) -> JinyAssist {
         let copy = JinyAssist(withDict: [:])
-        copy.assistId = self.assistId
+        copy.id = self.id
         copy.name = self.name
-        copy.type = self.type
-        copy.isWeb = self.isWeb
-        copy.weight = self.weight
-        copy.frequencyPerApp = self.frequencyPerApp
-        copy.frequencyPerSession = self.frequencyPerSession
-        copy.eventIdentifiers = self.eventIdentifiers
         copy.webIdentifiers = self.webIdentifiers
         copy.nativeIdentifiers = self.nativeIdentifiers
+        copy.weight = self.weight
+        copy.type = self.type
+        copy.isWeb = self.isWeb
+        copy.taggedEvents = self.taggedEvents
+        copy.checkpoint = self.checkpoint
+        copy.type = self.type
+        copy.frequency = self.frequency
+        copy.eventIdentifiers = self.eventIdentifiers
         copy.instruction = self.instruction
         copy.instructionInfoDict = self.instructionInfoDict
         return copy

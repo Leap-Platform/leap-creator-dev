@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-protocol JinyFlowManagerDelegate {
+protocol JinyFlowManagerDelegate:NSObjectProtocol {
     
     func noActiveFlows()
     
 }
 
 class JinyFlowManager {
-    private let delegate:JinyFlowManagerDelegate
+    private weak var delegate:JinyFlowManagerDelegate?
     private var flowsArray:Array<JinyFlow> = []
     private var indexFromLast:Int = 0
     private var startedFromDiscovery:Int?
@@ -54,7 +54,7 @@ class JinyFlowManager {
     func popLastFlow() {
         guard flowsArray.count > 0 else { return }
         let _ = flowsArray.popLast()
-        if flowsArray.count == 0 { delegate.noActiveFlows() }
+        if flowsArray.count == 0 { delegate!.noActiveFlows() }
     }
     
     func getDiscoveryId() -> Int? { return startedFromDiscovery }
