@@ -7,21 +7,8 @@
 //
 
 import Foundation
-/*
-{
-"id":"_discovery_id",     // String
-"name":"registeration",   // String
-"type":"single_flow/multi_flow"  // String/Enum
-"detection_type":"event/context",   // String/Enum
-"tagged_discovery":true/false    // boolean
-"assist_type":"tooltip",    // any type of assist
-"trigger_type": "on_app_open/custom_trigger",
-"trigger_delay": 5000   // miliseconds
-"trigger_on_anchor_click":true/false,
-"opt_in_on_anchor_click":true/false,
-}
-*/
-class JinyDiscoveryInfoEvent:Codable {
+
+class JinyDiscoveryInfo:Codable {
     let id:String
     let name:String
     let type:String
@@ -45,7 +32,7 @@ class JinyDiscoveryInfoEvent:Codable {
             assist_type = assistType
         } else { assist_type = "" }
         trigger_type = dis.trigger?.type ?? ""
-        trigger_delay = dis.trigger?.delay ?? 0
+        trigger_delay = dis.eventIdentifiers?.delay ?? 0
         trigger_on_anchor_click = dis.eventIdentifiers?.triggerOnAnchorClick ?? false
         opt_in_on_anchor_click = dis.trigger?.optInOnAnchorClick ?? false
     }

@@ -1,5 +1,5 @@
 //
-//  JinyContextTypeInfo.swift
+//  JinyContextInfo.swift
 //  JinySDK
 //
 //  Created by Aravind GS on 29/05/20.
@@ -9,7 +9,7 @@
 import Foundation
 
 
-class JinyContextTypeInfo:Codable {
+class JinyContextInfo:Codable {
     
     var flow_info:JinyFlowInfo
     var page_info:JinyPageInfo?

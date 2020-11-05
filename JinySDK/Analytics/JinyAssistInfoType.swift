@@ -19,7 +19,7 @@ class JinyAssistInfoType:Codable {
     init(with assist:JinyAssist) {
         id = String(assist.id)
         name = assist.name
-        detection_type = (assist.eventIdentifiers != nil) ? "event" : "context"
+        detection_type = (assist.taggedEvents != nil) ? "event" : "context"
         assist_type = assist.type
         trigger_on_anchor_click = assist.eventIdentifiers?.triggerOnAnchorClick ?? false
         checkpoint = assist.checkpoint

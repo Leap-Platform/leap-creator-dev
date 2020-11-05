@@ -8,7 +8,7 @@
 
 import Foundation
 
-class JinyContentInfoAction:Codable {
+class JinyContentActionInfo:Codable {
     var opt_in: Bool
     var click_type: String
     var close: Bool

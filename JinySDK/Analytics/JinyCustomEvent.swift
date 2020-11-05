@@ -9,10 +9,25 @@
 import Foundation
 
 class JinyCustomEvent:Codable {
-    var context_info:JinyContextTypeInfo?
-    var discovery_info:JinyDiscoveryInfoEvent?
+    var context_info:JinyContextInfo?
+    var discovery_info:JinyDiscoveryInfo?
     var assist_info:JinyAssistInfoType?
-    var content_action_info:JinyContentInfoAction?
+    var content_action_info:JinyContentActionInfo?
     var event_tag:String?
+    var jiny_session_id:String
+    var client_id:String
+    var google_user_info:JinyAppleIdInfo
+    var device_info:JinyDeviceInfo
+    var languageInfo:JinyLanguageInfo
+    
+    init(with eventTag:String) {
+        
+        jiny_session_id = JinySharedInformation.shared.getSessionId()
+        client_id = JinySharedInformation.shared.getAPIKey()
+        google_user_info = JinyAppleIdInfo()
+        device_info = JinyDeviceInfo()
+        languageInfo = JinyLanguageInfo()
+        event_tag = eventTag
+    }
     
 }
