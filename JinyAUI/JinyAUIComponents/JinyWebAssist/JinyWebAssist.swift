@@ -458,9 +458,6 @@ extension JinyWebAssist: WKScriptMessageHandler {
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
         guard let dictBody = dict["body"] as? Dictionary<String, Any> else {return}
         guard let close = dictBody["close"] as? Bool else {return}
-        
-        print(dict)
-        
         delegate?.didSendAction(dict: dict)
         
         if let urlString = dictBody["external_url"] as? String, let url = URL(string: urlString) {

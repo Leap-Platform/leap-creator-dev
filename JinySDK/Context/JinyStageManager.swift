@@ -34,9 +34,12 @@ class JinyStageManager {
     func setCurrentPage(_ page:JinyPage?) {
         if let identifiedPage = page  {
             if identifiedPage == currentPage { delegate!.samePageIdentified(identifiedPage) }
-            else { delegate!.newPageIdentified(identifiedPage) }
+            else {
+                currentPage = page
+                delegate!.newPageIdentified(identifiedPage)
+            }
         }
-        currentPage = page
+        
         
         
     }

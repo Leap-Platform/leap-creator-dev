@@ -26,50 +26,45 @@ class JinyConfig {
     
     init(withDict dataDict:Dictionary<String,Any>) {
         
-        guard let configDict = dataDict["data"] as? Dictionary<String,Any> else { return }
         
-        if let webIdentifiersDict = configDict["web_identifiers"] as? Dictionary<String,Dictionary<String,Any>>  {
-            webIdentifiersDict.forEach { (webId, idObject) in
-                webIdentifiers[webId] = JinyWebIdentifier(withDict: idObject)
+        guard let data = dataDict["data"] as? Array<Dictionary<String,Any>> else {return}
+        for configDict in data {
+            if let webIdentifiersDict = configDict["web_identifiers"] as? Dictionary<String,Dictionary<String,Any>>  {
+                webIdentifiersDict.forEach { (webId, idObject) in
+                    webIdentifiers[webId] = JinyWebIdentifier(withDict: idObject)
+                }
             }
-        }
-        
-        if let nativeIdentifiersDict = configDict["native_identifiers"] as? Dictionary<String,Dictionary<String,Any>> {
-            nativeIdentifiersDict.forEach { (nativeId, idObject) in
-                nativeIdentifiers[nativeId] = JinyNativeIdentifier(withDict: idObject)
+            if let nativeIdentifiersDict = configDict["native_identifiers"] as? Dictionary<String,Dictionary<String,Any>> {
+                nativeIdentifiersDict.forEach { (nativeId, idObject) in
+                    nativeIdentifiers[nativeId] = JinyNativeIdentifier(withDict: idObject)
+                }
             }
-        }
-        
-        if let flowDictsArray = configDict["flows"] as? Array<Dictionary<String,Any>> {
-            for flowDicts in flowDictsArray {
-                flows.append(JinyFlow(withDict: flowDicts))
+            if let flowDictsArray = configDict["flows"] as? Array<Dictionary<String,Any>> {
+                for flowDicts in flowDictsArray {
+                    flows.append(JinyFlow(withDict: flowDicts))
+                }
             }
-        }
-        
-        if let languageDictsArray = configDict["languages"] as? Array<Dictionary<String,Any>> {
-            for languageDict in languageDictsArray {
-                languages.append(JinyLanguage(withLanguageDict: languageDict))
+            if let languageDictsArray = configDict["languages"] as? Array<Dictionary<String,Any>> {
+                for languageDict in languageDictsArray {
+                    languages.append(JinyLanguage(withLanguageDict: languageDict))
+                }
             }
-        }
-        
-        
-        
-        if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
-            for discoveryDict in discoveryDictsArray {
-                discoveries.append(JinyDiscovery(withDict: discoveryDict))
+            if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
+                for discoveryDict in discoveryDictsArray {
+                    discoveries.append(JinyDiscovery(withDict: discoveryDict))
+                }
             }
-        }
-        
-        if let assistsDictsArray = configDict["assists"] as? Array<Dictionary<String,Any>> {
-            for assistDict in assistsDictsArray {
-                assists.append(JinyAssist(withDict: assistDict))
+            if let assistsDictsArray = configDict["assists"] as? Array<Dictionary<String,Any>> {
+                for assistDict in assistsDictsArray {
+                    assists.append(JinyAssist(withDict: assistDict))
+                }
             }
+            
+            discoverySounds = configDict["discovery_sounds"] as? Dictionary<String,Any> ?? [:]
+            defaultSounds = configDict["default_sounds"] as? Dictionary<String,Any> ?? [:]
+            auiContent = configDict["aui_content"] as? Dictionary<String,Any> ?? [:]
+            supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []
         }
-        
-        discoverySounds = configDict["discovery_sounds"] as? Dictionary<String,Any> ?? [:]
-        defaultSounds = configDict["default_sounds"] as? Dictionary<String,Any> ?? [:]
-        auiContent = configDict["aui_content"] as? Dictionary<String,Any> ?? [:]
-        supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []
         
     }
     

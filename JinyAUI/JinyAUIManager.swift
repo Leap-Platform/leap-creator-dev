@@ -122,7 +122,7 @@ extension JinyAUIManager:JinyAUIHandler {
         currentTargetRect = nil
         
         
-//        guard let _ = instruction["sound_name"] as? String else { return }
+        //        guard let _ = instruction["sound_name"] as? String else { return }
         guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
@@ -272,9 +272,57 @@ extension JinyAUIManager:JinyAUIHandler {
         } else { if scrollArrow ==  nil { showArrow() } }
     }
     
-    func removeAllViews() {
+    func presentLanguagePanel(languages: Array<String>) {
+        removeAllViews()
+        languagePanel = JinyLanguagePanel(withDelegate: self, frame: .zero, languageTexts: languages, theme: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
+        languagePanel?.presentPanel()
+    }
+    
+    func presentOptionPanel(mute: String, repeatText: String, language: String?) {
+        removeAllViews()
+        optionPanel = JinyOptionPanel(withDelegate: self, repeatText: repeatText, muteText: mute, languageText: language)
+        optionPanel?.presentPanel()
+    }
+    
+    func dismissJinyButton() {
+        guard let mainButton = jinyButton, mainButton.superview != nil else { return }
+        mainButton.removeFromSuperview()
+        jinyButton = nil
+    }
+    
+    func keepOnlyJinyButtonIfPresent() {
+        
+        pointer?.removePointer()
+        pointer = nil
+        currentAssist?.remove()
+        currentAssist = nil
+        optionPanel?.dismissOptionPanel { self.optionPanel = nil }
+        languagePanel?.dismissLanguagePanel { self.languagePanel = nil }
         
     }
+    
+    func removeAllViews() {
+        pointer?.removePointer()
+        pointer = nil
+        currentAssist?.remove()
+        currentAssist = nil
+        dismissJinyButton()
+    }
+    
+    func presentJinyButton() {
+        guard jinyButton == nil, jinyButton?.window == nil else { return }
+        //        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
+        jinyButton = JinyMainButton(withThemeColor: .blue)
+        guard let keyWindow = UIApplication.shared.keyWindow else { return }
+        keyWindow.addSubview(jinyButton!)
+        jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
+        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
+        let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
+        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
+    }
+    
+    @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
+    
 }
 
 
@@ -379,6 +427,7 @@ extension JinyAUIManager:JinyOptionPanelDelegate {
             auiManagerCallBack?.optionPanelClosed()
             return
         }
+        presentLanguagePanel(languages: langs)
     }
     
     func optionPanelDismissed() { auiManagerCallBack?.optionPanelClosed() }

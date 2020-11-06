@@ -67,18 +67,62 @@ extension JinyInternal {
 extension JinyInternal {
     
     func fetchConfig() {
-        let url = URL(string: "http://dashboard.jiny.mockable.io/newIosData")
+        let url = URL(string: "https://odin-dev-gke.jiny.io/odin/api/v1/fetchConfig")
         var req = URLRequest(url: url!)
-        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
-        let session = URLSession.shared
-        let configTask = session.dataTask(with: req) { (data, response, error) in
+        req.httpMethod = "PUT"
+        let dict:Dictionary<String,String> = [:]
+        let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+        req.httpBody = jsonData
+//        let headers = getSavedHeaders()
+//        headers.forEach { (key,value) in
+//            req.addValue(value, forHTTPHeaderField: key)
+//        }
+        req.addValue("6e0062e7-4c8a-41c9-b67e-0305dc2302cf", forHTTPHeaderField: "x-jiny-client-id")
+        req.addValue("1", forHTTPHeaderField: "x-app-version-code")
+        req.addValue("1", forHTTPHeaderField: "x-app-version-name")
+        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
             guard let resultData = data else { return }
             guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
             self.jinyConfiguration = JinyConfig(withDict: configDict)
+            if let httpResponse = response as? HTTPURLResponse {
+                let headers = httpResponse.allHeaderFields
+                self.saveHeaders(headers: headers)
+            }
             self.setupDefaultLanguage()
             self.startContextDetection()
         }
         configTask.resume()
+//        let url = URL(string: "http://dashboard.jiny.mockable.io/newIosData")
+//        var req = URLRequest(url: url!)
+//        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
+//        let session = URLSession.shared
+//        let configTask = session.dataTask(with: req) { (data, response, error) in
+//            guard let resultData = data else { return }
+//            guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
+//            self.jinyConfiguration = JinyConfig(withDict: configDict)
+//            self.setupDefaultLanguage()
+//            self.startContextDetection()
+//        }
+//        configTask.resume()
+    }
+    
+    func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
+        var toSaveHeaders:Dictionary<String,String> = [:]
+        headers.forEach { (key,value) in
+            if let headerField = key as? String, let valueField = value as? String {
+                if headerField.starts(with: "x-jiny-") { toSaveHeaders[headerField] = valueField }
+            }
+        }
+        let prefs = UserDefaults.standard
+        prefs.set(toSaveHeaders, forKey: "jiny_saved_headers")
+        prefs.synchronize()
+    }
+    
+    func getSavedHeaders() -> Dictionary<String,String> {
+        let prefs = UserDefaults.standard
+        let headers = prefs.object(forKey: "jiny_saved_headers") as? Dictionary<String,String> ?? [:]
+        return headers
     }
     
     func setupDefaultLanguage() {

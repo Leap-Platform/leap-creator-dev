@@ -152,6 +152,7 @@ class JinyDiscoveryManager {
         cancelAllTimers()   
         delegate?.noDiscoveryIdentified()
         currentDiscovery = nil
+        toBeTriggered = []
     }
     
     func completedCurrentDiscovery() {
@@ -166,7 +167,8 @@ class JinyDiscoveryManager {
     
     func resetCurrentDiscovery() {
         currentDiscovery = nil
-        
+        cancelAllTimers()
+        toBeTriggered = []
     }
     
     func muteCurrentDiscovery() {

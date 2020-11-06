@@ -22,8 +22,12 @@ import UIKit
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
+    func presentJinyButton()
+    func presentLanguagePanel(languages: Array<String>)
+    func presentOptionPanel(mute: String, repeatText: String, language: String?)
+    func dismissJinyButton()
+    func keepOnlyJinyButtonIfPresent()
     func dismissCurrentAssist()
-    
     func removeAllViews()
 }
 

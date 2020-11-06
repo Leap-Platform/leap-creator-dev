@@ -128,7 +128,10 @@ class JinyAssistManager {
         delegate?.newAssistIdentified(assist, view: anchorView, rect: anchorRect, inWebview: anchorWebview)
     }
     
-    func noAssistFound() { setAssistValues(nil, view: nil, rect: nil, webview: nil) }
+    func noAssistFound() {
+        setAssistValues(nil, view: nil, rect: nil, webview: nil)
+        
+    }
     
     func getCurrentAssist() -> JinyAssist? { return currentAssist }
     
