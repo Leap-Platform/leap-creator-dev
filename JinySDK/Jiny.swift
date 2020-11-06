@@ -23,6 +23,7 @@ import UIKit
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
     func dismissCurrentAssist()
+    
     func removeAllViews()
 }
 
@@ -63,11 +64,7 @@ import UIKit
     func optionPanelClosed()
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
-    
-    func flowSelectorPresented()
-    func flowSelectorFlowSelected(atIndex:Int)
-    func flowSelectorDismissed()
-    
+
 }
 
 
@@ -89,8 +86,7 @@ import UIKit
         self.apiKey = token
         self.isTest = isTest
         self.jinyInternal = JinyInternal.init(self.apiKey!, uiManager: uiManager)
-        return nil
-//        return self.jinyInternal?.auiCallback()
+        return self.jinyInternal?.auiCallback()
     }
     
     @objc public func enable(_ enable:Bool) { sdkEnabled = enable }

@@ -130,6 +130,8 @@ class JinyAssistManager {
     
     func noAssistFound() { setAssistValues(nil, view: nil, rect: nil, webview: nil) }
     
+    func getCurrentAssist() -> JinyAssist? { return currentAssist }
+    
     func assistCompleted(assist:JinyAssist) {
         assistsToCheck = assistsToCheck.filter { $0 != assist}
         currentAssist = nil

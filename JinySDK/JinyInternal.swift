@@ -26,8 +26,7 @@ class JinyInternal:NSObject {
     }
     
     func auiCallback() -> JinyAUICallback? {
-//        return self.contextManager
-        return nil
+        return self.contextManager
     }
     
 }

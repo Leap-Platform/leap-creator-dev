@@ -102,9 +102,7 @@
 		D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* JinyStageManager.swift */; };
 		D0ABD0062481155F0069FA67 /* JinyAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */; };
 		D0ABD0102481198C0069FA67 /* JinyLanguageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD00F2481198C0069FA67 /* JinyLanguageInfo.swift */; };
-		D0ABD01A248120C90069FA67 /* JinyClientPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD019248120C90069FA67 /* JinyClientPreference.swift */; };
 		D0ABD01C2481210D0069FA67 /* JinyDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01B2481210D0069FA67 /* JinyDeviceInfo.swift */; };
-		D0ABD01E248121A50069FA67 /* JinyAppleIdInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01D248121A50069FA67 /* JinyAppleIdInfo.swift */; };
 		D0ABD022248122A80069FA67 /* JinyTimeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD021248122A80069FA67 /* JinyTimeInfo.swift */; };
 		D0ABD0262481237E0069FA67 /* JinyContextInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0252481237E0069FA67 /* JinyContextInfo.swift */; };
 		D0ABD028248123D60069FA67 /* JinyFlowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD027248123D60069FA67 /* JinyFlowInfo.swift */; };
@@ -359,9 +357,7 @@
 		D09C7231247174400060E054 /* JinyFlowSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowSelector.swift; sourceTree = "<group>"; };
 		D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAnalyticsEvent.swift; sourceTree = "<group>"; };
 		D0ABD00F2481198C0069FA67 /* JinyLanguageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyLanguageInfo.swift; sourceTree = "<group>"; };
-		D0ABD019248120C90069FA67 /* JinyClientPreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyClientPreference.swift; sourceTree = "<group>"; };
 		D0ABD01B2481210D0069FA67 /* JinyDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyDeviceInfo.swift; sourceTree = "<group>"; };
-		D0ABD01D248121A50069FA67 /* JinyAppleIdInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAppleIdInfo.swift; sourceTree = "<group>"; };
 		D0ABD021248122A80069FA67 /* JinyTimeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTimeInfo.swift; sourceTree = "<group>"; };
 		D0ABD0252481237E0069FA67 /* JinyContextInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyContextInfo.swift; sourceTree = "<group>"; };
 		D0ABD027248123D60069FA67 /* JinyFlowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowInfo.swift; sourceTree = "<group>"; };
@@ -780,9 +776,7 @@
 				D08D6F50254C650B009AA138 /* JinyContentActionInfo.swift */,
 				D0ABD021248122A80069FA67 /* JinyTimeInfo.swift */,
 				D0ABD00F2481198C0069FA67 /* JinyLanguageInfo.swift */,
-				D0ABD019248120C90069FA67 /* JinyClientPreference.swift */,
 				D0ABD01B2481210D0069FA67 /* JinyDeviceInfo.swift */,
-				D0ABD01D248121A50069FA67 /* JinyAppleIdInfo.swift */,
 				D0ABD027248123D60069FA67 /* JinyFlowInfo.swift */,
 				D0ABD029248124250069FA67 /* JinyPageInfo.swift */,
 				D0ABD02B248124D50069FA67 /* JinyStageInfo.swift */,
@@ -1396,7 +1390,6 @@
 				D0592E92241FAA3D007782A8 /* Jiny.swift in Sources */,
 				D0084C8E248681CF0082508C /* JinyPage.swift in Sources */,
 				D0850079242CC081007889B1 /* JinyUtils.swift in Sources */,
-				D0ABD01A248120C90069FA67 /* JinyClientPreference.swift in Sources */,
 				D00E859A24F51914000D8E5B /* JinyAssist.swift in Sources */,
 				D02E8A7024A8DF1E00374DE8 /* JinyIdentifier.swift in Sources */,
 				D0ABD038248145F60069FA67 /* JinySharedInformation.swift in Sources */,
@@ -1412,7 +1405,6 @@
 				D071662D24629D3E001937EE /* JinyContextDetector.swift in Sources */,
 				D04356C32498CB7C00B90276 /* JinyLanguage.swift in Sources */,
 				D0B792C92542F86300DB94DD /* JinyCustomEvent.swift in Sources */,
-				D0ABD01E248121A50069FA67 /* JinyAppleIdInfo.swift in Sources */,
 				D0ABD028248123D60069FA67 /* JinyFlowInfo.swift in Sources */,
 				D0084C92248682A80082508C /* JinyDiscovery.swift in Sources */,
 			);

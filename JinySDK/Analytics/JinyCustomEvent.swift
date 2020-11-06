@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AdSupport
 
 class JinyCustomEvent:Codable {
     var context_info:JinyContextInfo?
@@ -16,7 +17,7 @@ class JinyCustomEvent:Codable {
     var event_tag:String?
     var jiny_session_id:String
     var client_id:String
-    var google_user_info:JinyAppleIdInfo
+    var google_ad_id:String
     var device_info:JinyDeviceInfo
     var languageInfo:JinyLanguageInfo
     
@@ -24,10 +25,10 @@ class JinyCustomEvent:Codable {
         
         jiny_session_id = JinySharedInformation.shared.getSessionId()
         client_id = JinySharedInformation.shared.getAPIKey()
-        google_user_info = JinyAppleIdInfo()
         device_info = JinyDeviceInfo()
         languageInfo = JinyLanguageInfo()
         event_tag = eventTag
+        google_ad_id = ASIdentifierManager.shared().advertisingIdentifier.uuidString
     }
     
 }

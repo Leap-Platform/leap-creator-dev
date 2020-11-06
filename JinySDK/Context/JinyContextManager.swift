@@ -234,6 +234,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
     }
     
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
+        
     }
     
     func sameStageFound(_ stage: JinyStage, newRect: CGRect?, webviewForRect:UIView?) {
@@ -244,15 +245,74 @@ extension JinyContextManager:JinyStageManagerDelegate {
         
     }
     
-    func removeStage(_ stage: JinyStage) {
-        flowManager?.removeStage(stage)
-    }
+    func removeStage(_ stage: JinyStage) { flowManager?.removeStage(stage) }
     
     func isSuccessStagePerformed() {
         if let discoveryId = flowManager?.getDiscoveryId() {
             JinySharedInformation.shared.flowCompletedFor(discoveryId: discoveryId)
         }
         flowManager?.popLastFlow()
+    }
+    
+}
+
+
+// MARK: - CREATE AND SEND ANALYTICS EVENT
+extension JinyContextManager {
+    
+    func getContextInfoEventFor(eventTag:String) -> JinyAnalyticsEvent? {
+        guard let fm = flowManager, let sm = stageManager else { return nil }
+        let flowsArray = fm.getArrayOfFlows()
+        guard flowsArray.count > 0 else { return nil }
+        let mainFlow = flowsArray.count > 1 ? flowsArray[(flowsArray.count - 2)] : flowsArray[(flowsArray.count - 1)]
+        let subFlow = flowsArray.count > 1 ? flowsArray[(flowsArray.count - 1)] : nil
+        let event = JinyAnalyticsEvent()
+        event.jiny_custom_events = JinyCustomEvent(with: eventTag)
+        event.jiny_custom_events?.context_info = JinyContextInfo(flow: mainFlow, subFlow: subFlow, page: sm.getCurrentPage(), stage: sm.getCurrentStage())
+        return event
+        
+    }
+    
+    func getDiscoveryInfoEvent(eventTag:String) -> JinyAnalyticsEvent? {
+        guard let dm = discoveryManager, let discovery = dm.getCurrentDiscovery() else { return nil }
+        let event = JinyAnalyticsEvent()
+        event.jiny_custom_events = JinyCustomEvent(with: eventTag)
+        event.jiny_custom_events?.discovery_info = JinyDiscoveryInfo(withDiscovery: discovery)
+        return event
+    }
+    
+    func getAssistInfoEvent(eventTag:String) -> JinyAnalyticsEvent? {
+        guard let am = assistManager, let assist = am.getCurrentAssist() else { return nil }
+        let event = JinyAnalyticsEvent()
+        event.jiny_custom_events = JinyCustomEvent(with: eventTag)
+        event.jiny_custom_events?.assist_info = JinyAssistInfoType(with: assist)
+        return event
+    }
+    
+    func sendContextInfoEvent(eventTag:String) {
+        guard let contextEvent = getContextInfoEventFor(eventTag: eventTag) else { return }
+        sendEvent(event: contextEvent)
+    }
+    
+    func sendContentActionInfoEvent(eventTag:String, contentAction:Dictionary<String,Any>, type:String) {
+        guard let contextEvent = getContextInfoEventFor(eventTag: eventTag) else { return }
+        contextEvent.jiny_custom_events?.content_action_info = JinyContentActionInfo(with: contentAction, type: type)
+        sendEvent(event: contextEvent)
+    }
+    
+    func sendDiscoveryInfoEvent(eventTag:String) {
+        guard let discoveryEvent = getDiscoveryInfoEvent(eventTag: eventTag) else { return }
+        sendEvent(event: discoveryEvent)
+    }
+    
+    func sendAssistInfoEvent(eventTag:String) {
+        guard let assistEvent = getAssistInfoEvent(eventTag: eventTag) else { return }
+        sendEvent(event: assistEvent)
+    }
+    
+    func sendEvent(event:JinyAnalyticsEvent) {
+        guard let am = analyticsManager else { return }
+        am.sendEvent(event)
     }
     
 }
@@ -273,4 +333,138 @@ extension JinyContextManager:JinyAnalyticsManagerDelegate {
         
     }
     
+}
+
+
+extension JinyContextManager:JinyAUICallback {
+    
+    func getDefaultMedia() -> Dictionary<String, Dictionary<String, Any>> {
+        guard let config = configuration else { return [:] }
+        return ["default_sounds":config.defaultSounds, "discovery_sounds":config.discoverySounds, "aui_content":config.auiContent]
+    }
+    
+    func triggerEvent(identifier: String, value: Any) {
+        
+    }
+    
+    func tryTTS() -> String? {
+        if let languagesWithTTS = configuration?.feature?.tts?.languages, let langCode = JinySharedInformation.shared.getLanguage() {
+            guard let _ = languagesWithTTS[langCode] else { return nil }
+        }
+        guard let state = contextDetector?.getState() else { return nil }
+        var sound:JinySound?
+        switch state {
+        case .Discovery:
+            if assistManager?.getCurrentAssist() != nil {
+                sound = getSoundFor(name: assistManager!.assistToBeTriggered!.instruction!.soundName, langCode: JinySharedInformation.shared.getLanguage() ?? "hin")
+            } else if let dis = discoveryManager?.getCurrentDiscovery() {
+                sound = getSoundFor(name: dis.instruction!.soundName!, langCode: JinySharedInformation.shared.getLanguage() ?? "hin")
+            }
+            
+        case .Stage:
+            sound = getSoundFor(name: (stageManager?.getCurrentStage()!.instruction!.soundName!)!, langCode: JinySharedInformation.shared.getLanguage() ?? "hin")
+        }
+        return sound?.text
+    }
+    
+    func getAudioFilePath() -> String? {
+        
+    }
+    
+    func getTTSText() -> String? {
+        
+    }
+    
+    func getLanguages() -> Array<String> {
+        
+    }
+    
+    func getLanguageCode() -> String {
+        
+    }
+    
+    func willPresentView() {
+        
+    }
+    
+    func didPresentView() {
+        
+    }
+    
+    func willPlayAudio() {
+        
+    }
+    
+    func didPlayAudio() {
+        
+    }
+    
+    func failedToPerform() {
+        
+    }
+    
+    func willDismissView() {
+        
+    }
+    
+    func didDismissView() {
+        
+    }
+    
+    func didReceiveInstruction(dict: Dictionary<String, Any>) {
+        
+    }
+    
+    func stagePerformed() {
+        
+    }
+    
+    func jinyTapped() {
+        
+    }
+    
+    func discoveryPresented() {
+        
+    }
+    
+    func discoveryMuted() {
+        
+    }
+    
+    func discoveryOptedInFlow(atIndex: Int) {
+        
+    }
+    
+    func discoveryReset() {
+        
+    }
+    
+    func languagePanelOpened() {
+        
+    }
+    
+    func languagePanelClosed() {
+        
+    }
+    
+    func languagePanelLanguageSelected(atIndex: Int) {
+        
+    }
+    
+    func optionPanelOpened() {
+        
+    }
+    
+    func optionPanelClosed() {
+        
+    }
+    
+    func optionPanelRepeatClicked() {
+        
+    }
+    
+    func optionPanelMuteClicked() {
+        
+    }
+
 }

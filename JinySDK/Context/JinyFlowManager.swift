@@ -45,6 +45,8 @@ class JinyFlowManager {
         return flowsArray[(flowsArray.count - 1) - indexFromLast]
     }
     
+    func getArrayOfFlows() -> Array<JinyFlow> { return flowsArray }
+    
     func updateFlowArrayAndResetCounter() {
         if indexFromLast == 0 { return }
         flowsArray.removeLast(indexFromLast)
