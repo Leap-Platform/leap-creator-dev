@@ -29,9 +29,11 @@ class ScreenCaptureManager: AppStateProtocol{
     var roomId: String?
     var socket: WebSocket?
     var task: DispatchWorkItem?
+    var completeListener: FinishListener
     
-    init(){
+    init(completeHierarchyFinishListener: FinishListener){
         self.applicationInstance = UIApplication.shared
+        self.completeListener = completeHierarchyFinishListener
     }
     
     func capture(webSocket: WebSocket, room: String)->Void{
@@ -41,11 +43,9 @@ class ScreenCaptureManager: AppStateProtocol{
         if screenShotImage == nil {
             return
         }
-        let hierarchy = getHierarchy()
+        let hierarchy = getHierarchy(finishListener: self.completeListener)
+     
         
-        if hierarchy == nil {
-            return
-        }
         sendData(screenCapture: screenShotImage!,hierarchy: hierarchy)
     }
     
@@ -115,9 +115,12 @@ class ScreenCaptureManager: AppStateProtocol{
         return encodedImageBase64
     }
     
-    func getHierarchy()->Dictionary<String, Any>{
-        var hierarchyObj = ScreenHelper.captureHierarchy()
+    func getHierarchy(finishListener: FinishListener)->Dictionary<String, Any>{
+        let hierarchyObj = ScreenHelper.captureHierarchy(finishListener: finishListener)
         return hierarchyObj
     }
 }
 
+protocol FinishListener{
+    func onCompleteHierarchyFetch()->Void
+}

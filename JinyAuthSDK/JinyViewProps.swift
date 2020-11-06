@@ -51,12 +51,15 @@ class JinyViewProps:Codable {
     var location_x_on_screen:Float
     var location_y_on_screen:Float
     var bgColor:Dictionary<String,Int>
-    var tintColor:Dictionary<String, Int>
+    var tintColor:Dictionary<String, Int>?
     var uuid:String?
     var children:Array<JinyViewProps> = []
+    var web_children: String?
+    var is_ui_webview: Bool = false
+    var is_wk_webview: Bool = false
     
     
-    init(view:UIView) {
+    init(view:UIView, finishListener: FinishListener) {
         
         acc_id = view.accessibilityIdentifier ?? ""
         acc_label = view.accessibilityLabel ?? ""
@@ -73,7 +76,26 @@ class JinyViewProps:Codable {
         is_multiple_touch_enabled = view.isMultipleTouchEnabled
         is_exclusive_touch = view.isExclusiveTouch
         is_scroll_container = view.isKind(of: UIScrollView.self)
+        
         is_web_view = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
+//
+        var webChildren: String?
+        
+        if is_web_view {
+            if let uiweb = view as? UIWebView {
+                    let res = uiweb.stringByEvaluatingJavaScript(from: ScreenHelper.layoutInjectionJSScript)
+                    webChildren = res
+                print(web_children ?? "")
+            }
+            else if let wk_web = view as? WKWebView {
+                wk_web.evaluateJavaScript(ScreenHelper.layoutInjectionJSScript, completionHandler: {(res, error) in
+                    print("Hierarchy in WKWebView :: \(res)")
+                    webChildren = res as? String
+                })
+            }
+        }
+        
+        web_children = webChildren
         if let control = view as? UIControl {
             let targetActions = control.allTargets.filter{
                 control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
@@ -112,9 +134,9 @@ class JinyViewProps:Codable {
         }
         if view.window == UIApplication.shared.keyWindow {
             let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
-            for child in childrenToCheck { children.append(JinyViewProps(view: child)) }
+            for child in childrenToCheck { children.append(JinyViewProps(view: child, finishListener: finishListener))}
         } else {
-            for child in childViews  { children.append(JinyViewProps(view: child)) }
+            for child in childViews  { children.append(JinyViewProps(view: child, finishListener: finishListener)) }
         }
         
     }
@@ -134,6 +156,7 @@ class JinyViewProps:Codable {
         return visibleViews
     }
     
+    
 }
 
 extension UIColor {
@@ -151,4 +174,10 @@ extension UIColor {
         return colorDict
     }
     
+    
+    func getLayoutHierarchy(wkWebView: WKWebView, finishListener: FinishListener){
+        
+    }
+    
 }
+

@@ -10,8 +10,12 @@ import Foundation
 import UIKit
 import Starscream
 
-class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener {
+class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener, FinishListener {
+    
     func onSessionClosed() {
+        
+    }
+    func onCompleteHierarchyFetch() {
         
     }
     
@@ -85,7 +89,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     }
     
     func setup(){
-        self.captureManager = ScreenCaptureManager()
+        self.captureManager = ScreenCaptureManager(completeHierarchyFinishListener: self)
         self.streamingManager = StreamingManager()
         self.healthMonitor = HealthMonitorManager(healthCheckListener: self)
         self.jinySocketMessageDelegate = JinySocketMessageDelegate(jinySocketListener: self)
