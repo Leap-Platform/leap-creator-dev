@@ -21,8 +21,8 @@ class JinyViewBounds:Codable {
         let rect = view.superview?.convert(view.frame, to: nil)
         left = Float(rect?.origin.x ?? 0)
         top = Float(rect?.origin.y ?? 0)
-        right = left + Float(rect?.size.width ?? 0)
-        bottom = top + Float(rect?.size.height ?? 0)
+        right = left + Float(view.bounds.size.width)
+        bottom = top + Float(view.bounds.size.height)
     }
 }
 
@@ -124,6 +124,7 @@ class JinyViewProps:Codable {
             text = label.text
         }
         var childViews = view.subviews
+      
         childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
         childViews = childViews.filter{
             guard let superview = $0.superview else { return true }
@@ -156,7 +157,15 @@ class JinyViewProps:Codable {
         return visibleViews
     }
     
-    
+    func getWebChildren(webview:UIView, jsString: String, completion:@escaping(_:String?)->Void) {
+        if let wkweb = webview as? WKWebView {
+            wkweb.evaluateJavaScript(jsString) { (res, err) in
+                completion(res as? String)
+            }
+        } else if let uiweb = webview as? UIWebView {
+            completion(uiweb.stringByEvaluatingJavaScript(from: jsString))
+        }
+    }
 }
 
 extension UIColor {
