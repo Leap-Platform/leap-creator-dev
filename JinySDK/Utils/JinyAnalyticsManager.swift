@@ -132,7 +132,7 @@ extension Constants {
         static let downloadQ = "Jiny Download Queue"
         static let dataQ = "Jiny Data Queue"
         static let downloadsFolder = "Jiny"
-        static let analyticsEndPoint = "https://dev.jiny.io/api/jiny/v2/sendAnalytic"
+        static let analyticsEndPoint = "https://dev.jiny.io/api/jiny/v2/sendAnalytics"
         static let bulkAnalyticsEndPoint = "https://dev.jiny.io/api/jiny/v2/bulkAnalytics"
     }
 }

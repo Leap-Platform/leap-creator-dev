@@ -174,7 +174,7 @@ extension JinyContextManager:JinyAssistManagerDelegate {
     }
     
     func dismissAssist() {
-        
+        auiHandler?.removeAllViews()
     }
     
 }
