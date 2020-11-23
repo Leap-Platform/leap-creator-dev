@@ -258,6 +258,9 @@ extension JinyContextManager:JinyStageManagerDelegate {
             auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: [:])
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
+        } else {
+            
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!)
         }
         sendContextInfoEvent(eventTag: "jinyInstructionEvent")
     }
@@ -508,6 +511,10 @@ extension JinyContextManager:JinyAUICallback {
     
     func languagePanelLanguageSelected(atIndex: Int) {
         sendContextInfoEvent(eventTag: "langSelectedFromPanelEvent")
+        guard let config = configuration else { return }
+        let languageSelected = config.languages[atIndex].localeId
+        JinySharedInformation.shared.setLanguage(languageSelected)
+        auiHandler?.startMediaFetch()
         contextDetector?.start()
         guard let state = contextDetector?.getState(), state == .Stage else { return }
         stageManager?.resetCurrentStage()
