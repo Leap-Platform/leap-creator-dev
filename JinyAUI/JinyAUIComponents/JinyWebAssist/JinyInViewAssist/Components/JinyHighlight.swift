@@ -83,13 +83,13 @@ public class JinyHighlight: JinyInViewAssist {
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
-       guard toView != nil else { fatalError("no element to point to") }
-               
-        if inView == nil {
-           
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
-           
-            inView = UIApplication.shared.keyWindow
+        if toView?.window != UIApplication.shared.keyWindow {
+            
+            inView = toView!.window
+            
+        } else {
+            
+            inView = UIApplication.getCurrentVC()?.view
         }
         
         inView?.addSubview(self)
@@ -116,7 +116,7 @@ public class JinyHighlight: JinyInViewAssist {
     
        toolTipView.layer.masksToBounds = true
         
-       if assistInfo?.highlightAnchor ?? false {
+       if assistInfo?.highlightAnchor ?? true {
            
           highlightAnchor()
            
@@ -170,7 +170,7 @@ public class JinyHighlight: JinyInViewAssist {
             
             midY = (globalToView?.origin.y)! + (globalToView?.size.height)!
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 midY = midY + CGFloat(manipulatedHighlightSpacing) - CGFloat(manipulatedHighlightSpacing/2)
             }
@@ -181,16 +181,14 @@ public class JinyHighlight: JinyInViewAssist {
             
             midY = (globalToView?.origin.y)!
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 midY = midY - CGFloat(manipulatedHighlightSpacing)
             }
             
             toMidY = midY - CGFloat(connectorLength)
         }
-        
-        self.layer.isHidden = false
-        
+                
         switch connectorType {
             
         case .solid:
@@ -211,7 +209,7 @@ public class JinyHighlight: JinyInViewAssist {
             
         case .none:
             
-            self.layer.isHidden = true
+            print("No Connector")
         }
     }
       
@@ -264,7 +262,7 @@ public class JinyHighlight: JinyInViewAssist {
         
         var toViewBottom = toViewTop + globalToViewFrame.size.height
         
-        if assistInfo?.highlightAnchor ?? false {
+        if assistInfo?.highlightAnchor ?? true {
             
             toViewBottom = toViewBottom + CGFloat(manipulatedHighlightSpacing)
         }
@@ -317,7 +315,7 @@ public class JinyHighlight: JinyInViewAssist {
             
             y = globalToViewFrame.origin.y + globalToViewFrame.size.height
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 y = y + CGFloat(manipulatedHighlightSpacing)
             }
@@ -340,7 +338,7 @@ public class JinyHighlight: JinyInViewAssist {
             
             y = (globalToViewFrame.origin.y - toolTipView.frame.size.height)
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 y = y - CGFloat(manipulatedHighlightSpacing)
             }
@@ -559,26 +557,44 @@ public class JinyHighlight: JinyInViewAssist {
         }
     }
     
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
+            if let height = value as? CGFloat {
+                                
+                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
+                
+                DispatchQueue.main.async {
+                    
+                    self?.placePointer()
+                }
+            }
+        })
+    }
+    
     /// sets toolTip size based on the webview's callback.
     /// - Parameters:
     ///   - width: width to set for the tooltip's webview.
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-       let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
+        let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
         
-        if width > 0 && width > Float(proportionalWidth) {
-            
-           self.assistInfo?.layoutInfo?.style.maxWidth = proportionalWidth
+        var sizeWidth: Double?
         
-        } else {
+        if width <= 0 || width > Float(proportionalWidth) {
             
-           self.assistInfo?.layoutInfo?.style.maxWidth = Double(width)
+            sizeWidth = proportionalWidth
+        
+        } else if width < Float(proportionalWidth) {
+            
+            sizeWidth = Double(width)
         }
+                            
+        self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+            
+        self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
         
-        self.webView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
-        
-        toolTipView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -591,7 +607,6 @@ public class JinyHighlight: JinyInViewAssist {
         guard let width = rect["width"] else { return }
         guard let height = rect["height"] else { return }
         setToolTipDimensions(width: width, height: height)
-        placePointer()
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     

@@ -24,13 +24,13 @@ public class JinyLabel: JinyInViewAssist {
     /// sets up toView, inView and webView.
     func setupView() {
         
-      guard toView != nil else { fatalError("no element to point to") }
-        
-        if inView == nil {
+        if toView?.window != UIApplication.shared.keyWindow {
             
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
+            inView = toView!.window
             
-            inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
+        } else {
+            
+            inView = UIApplication.getCurrentVC()?.view
         }
         
         self.frame = CGRect.zero
@@ -130,6 +130,11 @@ public class JinyLabel: JinyInViewAssist {
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
     }
     
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        configureLabel()
+    }
+    
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         guard let body = message.body as? String else { return }
@@ -141,7 +146,6 @@ public class JinyLabel: JinyInViewAssist {
         guard let height = rect["height"] else { return }
         webView.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
         self.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
-        configureLabel()
     }
     
     public override func performEnterAnimation(animation: String) {

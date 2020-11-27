@@ -20,6 +20,11 @@ class JinyAUIManager:NSObject {
     var keyboardHeight:Float = 0
     var audioPlayer:AVAudioPlayer?
     var pointer:JinyPointer?
+    var tooltip: JinyToolTip?
+    var highlight: JinyHighlight?
+    var beacon: JinyBeacon?
+    var spot: JinySpot?
+    var label: JinyLabel?
     var optionPanel:JinyOptionPanel?
     var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
@@ -163,6 +168,9 @@ extension JinyAUIManager:JinyAUIHandler {
             auiManagerCallBack?.failedToPerform()
             return
         }
+        
+        let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
+        
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
             switch type {
@@ -183,6 +191,37 @@ extension JinyAUIManager:JinyAUIHandler {
                 pointer = JinyFingerRipplePointer()
                 pointer?.pointerDelegate = self
                 pointer?.presentPointer(view: inView)
+                
+            case "TOOLTIP":
+                tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = tooltip
+                tooltip?.delegate = self
+                tooltip?.presentPointer()
+                
+            case "HIGHLIGHT":
+                highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = highlight
+                highlight?.delegate = self
+                highlight?.presentPointer()
+        
+            case "BEACON":
+                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon()
+                
+            case "SPOT":
+                spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = spot
+                spot?.delegate = self
+                spot?.showSpot()
+                
+            case "LABEL":
+                label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = label
+                label?.delegate = self
+                label?.presentLabel()
+                
             default:
                 performKeyWindowInstruction(instruction: instruction)
             }
@@ -288,6 +327,18 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist?.delegate = self
                 UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
                 jinyBottomSheet.showBottomSheet()
+            case "NOTIFICATION":
+                let jinyNotification = JinyNotification(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyNotification
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyNotification)
+                jinyNotification.showNotification()
+            case "SLIDEIN":
+                let jinySlideIn = JinySlideIn(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinySlideIn
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinySlideIn)
+                jinySlideIn.showSlideIn()
             default:
                 break
             }

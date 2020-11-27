@@ -477,18 +477,3 @@ extension JinyWebAssist: WKScriptMessageHandler {
         }
     }
 }
-
-extension WKWebView {
-    
-    /// call the method internally to load content from web.
-    /// - Parameters:
-    ///   - urlString: A url to load content from.
-    func load(url urlString: String) {
-        
-        if let url = URL(string: urlString) {
-            
-            let request = URLRequest(url: url)
-            load(request)
-        }
-    }
-}
