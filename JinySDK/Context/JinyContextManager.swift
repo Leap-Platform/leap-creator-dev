@@ -229,7 +229,42 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         sendContextInfoEvent(eventTag: "jinyFlowOptInEvent")
     }
     
+    func canTriggerBasedOnTriggerFrequency(discovery: JinyDiscovery) -> Bool {
+        
+        switch discovery.triggerFrequency?.type {
+        case .everySession:
+            return true
+        case .playOnce:
+            if (JinySharedInformation.shared.getDiscoveryCount()["\(discovery.id)"] ?? 0) > 0 {
+                return false
+            } else {
+                return true
+            }
+        case .manualTrigger:
+                auiHandler?.presentJinyButton()
+                return false
+        case .everySessionUntilDismissed:
+            if (JinySharedInformation.shared.getDiscoveryDismissCount()["\(discovery.id)"] ?? 0) > 0 {
+                return false
+            } else {
+                return true
+            }
+        case .everySessionUntilFlowComplete:
+            if (JinySharedInformation.shared.getDiscoveryFlowCount()["\(discovery.id)"] ?? 0) > 0 {
+                return false
+            } else {
+                return true
+            }
+        default:
+            return true
+        }
+    }
     
+    func showJinyIcon() {
+        auiHandler?.removeAllViews()
+        auiHandler?.presentJinyButton()
+        discoveryManager?.currentDiscoveryOptOut = false
+    }
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
@@ -428,6 +463,7 @@ extension JinyContextManager:JinyAUICallback {
             }
             else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
                 sendDiscoveryInfoEvent(eventTag: "discoveryVisibleEvent")
+                discoveryPresented()
             }
         case .Stage:
             break
@@ -452,6 +488,16 @@ extension JinyContextManager:JinyAUICallback {
     
     func didDismissView() {
         
+        guard let state = contextDetector?.getState() else { return }
+        switch state {
+        case .Discovery:
+            if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
+                dm.currentDiscoveryOptOut = true
+                discoveryDismissed()
+            }
+        case .Stage:
+            auiHandler?.removeAllViews()
+        }
     }
     
     func didReceiveInstruction(dict: Dictionary<String, Any>) {
@@ -474,7 +520,14 @@ extension JinyContextManager:JinyAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            discoveryManager?.resetCurrentDiscovery()
+            if discoveryManager?.getCurrentDiscovery()?.triggerFrequency?.type == .manualTrigger || discoveryManager?.getCurrentDiscovery() != nil {
+                guard let currentDiscoveryObject = discoveryManager?.currentDiscoveryObject else {
+                    return
+                }
+                newDiscoveryIdentified(discovery: currentDiscoveryObject.0, view: currentDiscoveryObject.1, rect: currentDiscoveryObject.2, webview: currentDiscoveryObject.3)
+            } else {
+               discoveryManager?.resetCurrentDiscovery()
+            }
             return
         case .Stage:
             auiHandler?.presentOptionPanel(mute: "Mute", repeatText: "Repeat", language: "Change Language")
@@ -483,7 +536,9 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func discoveryPresented() {
-        
+        if let discoveryManager = discoveryManager {
+            discoveryManager.currentDiscoveryPresented()
+        }
     }
     
     func discoveryMuted() {
@@ -499,6 +554,12 @@ extension JinyContextManager:JinyAUICallback {
     
     func discoveryReset() {
         
+    }
+    
+    func discoveryDismissed() {
+        if let discoveryManager = discoveryManager {
+            discoveryManager.currentDiscoveryDismissed()
+        }
     }
     
     func languagePanelOpened() {

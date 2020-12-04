@@ -357,8 +357,6 @@ public class JinyWebAssist: UIView, JinyAssist {
     public func remove() {
       
         self.removeFromSuperview()
-        
-        delegate?.didDismissAssist()
     }
     
     @objc func jinyIconButtonTapped(button: UIButton) {
@@ -412,6 +410,13 @@ public class JinyWebAssist: UIView, JinyAssist {
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
     }
+    
+    /// call the method when you want the webView content to be in the desired user's language.
+    /// - Parameters:
+    ///   - locale: User's desired language selected in the Jiny panel.
+    func changeLanguage(locale: String) {
+        webView.evaluateJavaScript("changeLocale('\(locale)')", completionHandler: nil)
+    }
 
     /// call the method internally when webView didFinish navigation called
     /// - Parameters:
@@ -435,6 +440,8 @@ extension JinyWebAssist: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.isHidden = false
+        
+        changeLanguage(locale: UserDefaults.standard.object(forKey: "audio_language_code") as! String)
                 
         didFinish(webView, didFinish: navigation)
                 

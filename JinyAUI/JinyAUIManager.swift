@@ -647,3 +647,25 @@ extension JinyAUIManager: JinyAssistDelegate {
     
     func didTapAssociatedJinyIcon() { auiManagerCallBack?.jinyTapped() }
 }
+
+extension JinyAUIManager: JinyBottomDiscoveryDelegate {
+    func discoveryPresentedWithOptInButton(_ button: UIButton) {
+        
+    }
+    
+    func discoverySheetDismissed() {
+        auiManagerCallBack?.discoveryDismissed()
+    }
+    
+    func optOutButtonClicked() {
+        auiManagerCallBack?.discoveryDismissed()
+    }
+    
+    func optInButtonClicked() {
+        
+    }
+    
+    func discoveryLanguageButtonClicked() {
+        
+    }
+}

@@ -59,6 +59,7 @@ import UIKit
     func discoveryMuted()
     func discoveryOptedInFlow(atIndex:Int)
     func discoveryReset()
+    func discoveryDismissed()
     
     func languagePanelOpened()
     func languagePanelClosed()
@@ -68,7 +69,6 @@ import UIKit
     func optionPanelClosed()
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
-
 }
 
 

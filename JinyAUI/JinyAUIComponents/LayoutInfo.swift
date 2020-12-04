@@ -41,7 +41,7 @@ public class LayoutInfo {
             self.style = Style(withDict: [:])
         }
         
-        if let outsideDismiss = layoutDict["outside_dismiss"] as? Bool {
+        if let dismissAction = layoutDict["dismiss_action"] as? Dictionary<String,Any>, let outsideDismiss = dismissAction["outside_dismiss"] as? Bool {
             
             self.outsideDismiss = outsideDismiss
         }

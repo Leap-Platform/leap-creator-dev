@@ -24,6 +24,7 @@ class JinySharedInformation {
     private var audioLanguageCode:String?
     private var mute:Bool = false
     private var audioDownloadStatus:Dictionary<String,Dictionary<String, JinyDownloadStatus>> = [:]
+    var sessionFlowCountDict: Dictionary<String,Int> = [:]
 }
 
 
@@ -188,6 +189,9 @@ extension JinySharedInformation {
     }
     
     func flowCompletedFor(discoveryId:Int) {
+                    
+           sessionFlowCountDict[String(discoveryId)] = (sessionFlowCountDict[String(discoveryId)] ?? 0) + 1
+        
            if prefs.dictionary(forKey: "jiny_discovery_flow_count") == nil {
                let discDismissList:Dictionary<String,Int> = [:]
                prefs.set(discDismissList, forKey: "jiny_discovery_flow_count")

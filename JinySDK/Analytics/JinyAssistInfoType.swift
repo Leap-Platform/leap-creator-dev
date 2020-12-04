@@ -21,7 +21,11 @@ class JinyAssistInfoType:Codable {
         name = assist.name
         detection_type = (assist.taggedEvents != nil) ? "event" : "context"
         assist_type = assist.type
-        trigger_on_anchor_click = assist.eventIdentifiers?.triggerOnAnchorClick ?? false
+        if let type = assist.trigger?.event?["type"], let value = assist.trigger?.event?["value"], type == "click", value == "showDiscovery" {
+            trigger_on_anchor_click = true
+        } else {
+            trigger_on_anchor_click = false
+        }
         checkpoint = assist.checkpoint
     }
     
