@@ -23,6 +23,7 @@ class JinyConfig {
     
     var params:Dictionary<String,Any> = [:]
     var webViewList:Array<Dictionary<String,Any>> = []
+    var iconInfo:Dictionary<String,Any> = [:]
     
     init(withDict dataDict:Dictionary<String,Any>) {
         
@@ -64,8 +65,9 @@ class JinyConfig {
             defaultSounds = configDict["default_sounds"] as? Dictionary<String,Any> ?? [:]
             auiContent = configDict["aui_content"] as? Dictionary<String,Any> ?? [:]
             supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []
+            
         }
-        
+        iconInfo = dataDict["icon_info"] as? Dictionary<String,Any> ?? [:]
     }
     
 }

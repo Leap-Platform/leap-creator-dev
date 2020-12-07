@@ -17,12 +17,14 @@ import UIKit
 @objc public protocol JinyAUIHandler:NSObjectProtocol {
     
     func startMediaFetch()
+    func hasClientCallBack() -> Bool
+    func sendEvent(event:Dictionary<String,Any>)
     func performInstruction(instruction:Dictionary<String,Any>, inView:UIView, iconInfo:Dictionary<String,Any>)
     func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
-    func presentJinyButton()
+    func presentJinyButton(iconInfo:Dictionary<String,Any>)
     func presentLanguagePanel(languages: Array<String>)
     func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()

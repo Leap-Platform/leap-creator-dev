@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         JinyAUI.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
+        JinyAUI.shared.clientCallback = self
 //        let _ = Jiny.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36", isTesting: false, uiManager: nil)
 ////        JinyAuth.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
         return true
@@ -40,4 +41,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+}
+
+
+@available(iOS 13.0, *)
+extension AppDelegate:JinyAUIClientCallback {
+    
+    func eventNotification(eventInfo: Dictionary<String, Any>) {
+        print(eventInfo)
+    }
+    
 }

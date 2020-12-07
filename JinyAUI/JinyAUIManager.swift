@@ -13,9 +13,18 @@ import AVFoundation
 import AdSupport
 import WebKit
 
+
+protocol JinyAUIManagerDelegate:NSObjectProtocol {
+    
+    func isClientCallbackRequired() -> Bool
+    func eventGenerated(event:Dictionary<String,Any>)
+    
+}
+
 class JinyAUIManager:NSObject {
     
     weak var auiManagerCallBack:JinyAUICallback?
+    weak var delegate:JinyAUIManagerDelegate?
     
     var keyboardHeight:Float = 0
     var audioPlayer:AVAudioPlayer?
@@ -91,7 +100,7 @@ extension JinyAUIManager {
 }
 
 extension JinyAUIManager:JinyAUIHandler {
-    
+   
     func startMediaFetch() {
         mediaManager = JinyMediaManager(withDelegate: self)
         guard let callback = auiManagerCallBack else { return }
@@ -112,6 +121,15 @@ extension JinyAUIManager:JinyAUIHandler {
             }
         }
         fetchSoundConfig()
+    }
+    
+    func hasClientCallBack() -> Bool {
+        guard let managerDelegate = delegate else { return false }
+        return managerDelegate.isClientCallbackRequired()
+    }
+    
+    func sendEvent(event: Dictionary<String, Any>) {
+        delegate?.eventGenerated(event: event)
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView, iconInfo:Dictionary<String,Any>) {
@@ -309,16 +327,14 @@ extension JinyAUIManager:JinyAUIHandler {
         dismissJinyButton()
     }
     
-    func presentJinyButton() {
+    func presentJinyButton(iconInfo:Dictionary<String,Any>) {
         guard jinyButton == nil, jinyButton?.window == nil else { return }
         //        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        jinyButton = JinyMainButton(withThemeColor: .blue)
+        jinyButton = JinyMainButton(withThemeColor: .blue,iconInfo: iconInfo)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
+        jinyButton!.showButton()
         jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
-        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
-        let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
-        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
     }
     
     @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
