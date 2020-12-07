@@ -359,11 +359,6 @@ public class JinyWebAssist: UIView, JinyAssist {
         self.removeFromSuperview()
     }
     
-    @objc func jinyIconButtonTapped(button: UIButton) {
-        
-        self.delegate?.didTapAssociatedJinyIcon()
-    }
-    
     /// method to configure JinyIconView constraints.
     /// - Parameters:
     ///   - superView: view to which JinyIconView is added.
@@ -378,10 +373,14 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.iconButton.addTarget(self, action: #selector(jinyIconButtonTapped(button:)), for: .touchUpInside)
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl ?? ""
         
-        jinyIconView.iconBackgroundColor = UIColor.colorFromString(string: iconInfo?.backgroundColor ?? UIColor.stringFromUIColor(color: .blue))
-                
+        jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
+        
+        jinyIconView.tapGestureRecognizer.delegate = self
+        
+        jinyIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
+        
         self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
         
         var attributeType1: NSLayoutConstraint.Attribute = .leading
@@ -409,6 +408,8 @@ public class JinyWebAssist: UIView, JinyAssist {
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: 0))
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
+        
+        jinyIconView.configureIconButon()
     }
     
     /// call the method when you want the webView content to be in the desired user's language.
@@ -482,5 +483,17 @@ extension JinyWebAssist: WKScriptMessageHandler {
             
            self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
         }
+    }
+}
+
+extension JinyWebAssist: UIGestureRecognizerDelegate {
+    
+    @objc func jinyIconButtonTapped() {
+        
+        self.delegate?.didTapAssociatedJinyIcon()
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

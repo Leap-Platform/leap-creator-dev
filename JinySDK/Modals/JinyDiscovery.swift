@@ -51,7 +51,7 @@ class JinyTriggerFrequency {
 }
 
 class JinyFlowTerminationFrequency: JinyFrequency {
-    /// Terminates a discovery after n discovery sessions.
+    /// Terminates a discovery after n sessions.
     var nSession: Int?
     /// Terminates a discovery after n dismisses by the user.
     var nDismissByUser: Int?
@@ -77,7 +77,7 @@ class JinyDiscovery:JinyContext {
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
         triggerMode = JinyTriggerMode(rawValue: (discoveryDict["trigger_mode"] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
-        enableIcon = discoveryDict["enable_icon"] as? Bool ?? false
+        enableIcon = discoveryDict["enableIcon"] as? Bool ?? false
         autoStart = discoveryDict["auto_start"] as? Bool ?? false
         if let freqDict = discoveryDict["flowTerminationFrequency"] as? Dictionary<String,Int> {
             frequency = JinyFlowTerminationFrequency(with: freqDict)

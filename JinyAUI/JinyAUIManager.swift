@@ -150,6 +150,12 @@ extension JinyAUIManager:JinyAUIHandler {
                     let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
                     mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
                 }
+                if let iconSettingDict = initialSounds["iconSetting"] as? Dictionary<String, IconSetting> {
+                    for (_, value) in iconSettingDict {
+                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
+                        mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
+                    }
+                }
             }
         }
         fetchSoundConfig()
@@ -168,8 +174,6 @@ extension JinyAUIManager:JinyAUIHandler {
             auiManagerCallBack?.failedToPerform()
             return
         }
-        
-        let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
         
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
@@ -223,7 +227,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 label?.presentLabel()
                 
             default:
-                performKeyWindowInstruction(instruction: instruction)
+                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }
         }
         
@@ -263,7 +267,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 pointer = JinyFingerRipplePointer()
                 pointer?.presentPointer(toRect: rect, inView: inWebview)
             default:
-                performKeyWindowInstruction(instruction: instruction)
+                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }
         }
     }
@@ -272,7 +276,7 @@ extension JinyAUIManager:JinyAUIHandler {
         
     }
     
-    func performInstruction(instruction:Dictionary<String,Any>) {
+    func performInstruction(instruction: Dictionary<String,Any>) {
         currentInstruction = instruction
         currentTargetView = nil
         currentWebView = nil
@@ -294,13 +298,13 @@ extension JinyAUIManager:JinyAUIHandler {
         }
     }
     
-    func performKeyWindowInstruction(instruction:Dictionary<String,Any>) {
+    func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
         guard let _ = instruction["sound_name"] as? String else { return }
         guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
         }
-        let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
+        
         if let type = assistInfo["type"] as? String {
             switch type {
             case "POPUP":
@@ -396,20 +400,30 @@ extension JinyAUIManager:JinyAUIHandler {
         dismissJinyButton()
     }
     
-    func presentJinyButton() {
+    func presentJinyButton(with html: String, color: String) {
         guard jinyButton == nil, jinyButton?.window == nil else { return }
         //        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        jinyButton = JinyMainButton(withThemeColor: .blue)
+        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color)!)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
-        jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
+        jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
+        jinyButton!.tapGestureRecognizer.delegate = self
         jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
         let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
         NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
+        jinyButton!.htmlUrl = html
+        jinyButton!.iconSize = 56
+        jinyButton?.configureIconButon()
     }
+}
+
+extension JinyAUIManager: UIGestureRecognizerDelegate {
     
     @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
     
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }
 
 

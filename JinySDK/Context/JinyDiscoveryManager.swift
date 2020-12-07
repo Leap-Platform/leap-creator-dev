@@ -22,6 +22,7 @@ protocol JinyDiscoveryManagerDelegate:AnyObject {
     func startFlow(id:Int, disId:Int)
     func canTriggerBasedOnTriggerFrequency(discovery: JinyDiscovery) -> Bool
     func showJinyIcon()
+    func removeAllViews()
 }
 
 class JinyDiscoveryEventTrigger {
@@ -61,7 +62,7 @@ class JinyDiscoveryManager {
     
     func getDiscoveriesToCheck() -> Array<JinyDiscovery> {
         var discAllowed =  allDiscoveries.filter{ !(getMutedDiscoveries().contains($0) || completedDiscoveriesInSession.contains($0)) }
-        let seenDisc = JinySharedInformation.shared.getDiscoveryCount()
+        let sessionCount = JinySharedInformation.shared.getJinySessionCount()
         let discDismissCount = JinySharedInformation.shared.getDiscoveryDismissCount()
         let flowCompletedCount = JinySharedInformation.shared.getDiscoveryFlowCount()
         let triggeredEvents = delegate?.getTriggeredEvents()
@@ -73,19 +74,31 @@ class JinyDiscoveryManager {
                     if isPassing { return false }
                 }
             }
-            
+            JinySharedInformation.shared.jinySessionCountFor(discoveryId: allowedDiscovery.id)
             guard let freq = allowedDiscovery.frequency else { return true }
-            if let nSessionCount = freq.nSession, nSessionCount > 0, let counter = seenDisc[String(allowedDiscovery.id)] {
-                if counter >= nSessionCount { return false }
+            if let nSessionCount = freq.nSession, nSessionCount > 0, let counter = sessionCount[String(allowedDiscovery.id)] {
+                if counter >= nSessionCount {
+                    self.delegate!.removeAllViews()
+                    return false
+                }
             }
             if let nUserDismissCount = freq.nDismissByUser, nUserDismissCount > 0, let counter = discDismissCount[String(allowedDiscovery.id)] {
-                if counter >= nUserDismissCount { return false }
+                if counter >= nUserDismissCount {
+                    self.delegate!.removeAllViews()
+                    return false
+                }
             }
             if let perAppUntilFlowComplete = freq.perApp, perAppUntilFlowComplete > 0, let counter = flowCompletedCount[String(allowedDiscovery.id)] {
-                if counter >= perAppUntilFlowComplete { return false }
+                if counter >= perAppUntilFlowComplete {
+                    self.delegate!.removeAllViews()
+                    return false
+                }
             }
             if let perSessionUntilFlowComplete = freq.perSession, perSessionUntilFlowComplete > 0, let counter = JinySharedInformation.shared.sessionFlowCountDict[String(allowedDiscovery.id)] {
-                if counter >= perSessionUntilFlowComplete { return false }
+                if counter >= perSessionUntilFlowComplete {
+                    self.delegate!.removeAllViews()
+                    return false
+                }
             }
 //            if let nFlowCompleted = freq.nFlowCompleted, let counter = flowCompletedCount[String(allowedDiscovery.id)] {
 //                if counter >= nFlowCompleted { return false }
@@ -150,7 +163,9 @@ class JinyDiscoveryManager {
                     
                     } else {
                         
-                        if currentDiscoveryOptOut { self.delegate!.showJinyIcon() }
+                        if currentDiscoveryOptOut && self.delegate!.canTriggerBasedOnTriggerFrequency(discovery: discoveryObj.0)  {
+                            self.delegate!.showJinyIcon()
+                        }
                     }
                 }
                 newtriggerEvent(events: delegate!.getTriggeredEvents())

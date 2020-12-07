@@ -73,6 +73,7 @@ class JinyAssistInfo {
 }
 
 class JinyFrequency {
+    /// number of times a discovery is shown in a session until flow complete
     let perSession:Int?
     let perApp:Int?
     let perSessionWoJiny:Int?

@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */; };
 		D0084C882486814D0082508C /* JinyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* JinyConfig.swift */; };
 		D0084C8C248681A30082508C /* JinyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* JinyFlow.swift */; };
 		D0084C8E248681CF0082508C /* JinyPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8D248681CF0082508C /* JinyPage.swift */; };
@@ -270,6 +271,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIconSetting.swift; sourceTree = "<group>"; };
 		D0084C872486814D0082508C /* JinyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyConfig.swift; sourceTree = "<group>"; };
 		D0084C8B248681A30082508C /* JinyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlow.swift; sourceTree = "<group>"; };
 		D0084C8D248681CF0082508C /* JinyPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPage.swift; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 				D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */,
 				D0521CA424F8ECF900EEE719 /* JinyFeature.swift */,
 				D0DC3EFD2553ED9E00B6FA93 /* JinySupportModals.swift */,
+				2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */,
 			);
 			path = Modals;
 			sourceTree = "<group>";
@@ -1381,6 +1384,7 @@
 				D0B793472544237800DB94DD /* JinyDiscoveryInfo.swift in Sources */,
 				D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */,
 				D0ABD034248126820069FA67 /* JinySDKInfo.swift in Sources */,
+				2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */,
 				D0521CA124F6401F00EEE719 /* JinyAssistManager.swift in Sources */,
 				D0ABD02A248124250069FA67 /* JinyPageInfo.swift in Sources */,
 				D0ABD02C248124D50069FA67 /* JinyStageInfo.swift in Sources */,

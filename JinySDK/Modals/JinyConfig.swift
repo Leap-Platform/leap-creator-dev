@@ -20,6 +20,7 @@ class JinyConfig {
     var discoverySounds:Dictionary<String,Any> = [:]
     var defaultSounds:Dictionary<String,Any> = [:]
     var auiContent:Dictionary<String,Any> = [:]
+    var iconSetting: Dictionary<String, IconSetting> = [:]
     
     var params:Dictionary<String,Any> = [:]
     var webViewList:Array<Dictionary<String,Any>> = []
@@ -52,6 +53,11 @@ class JinyConfig {
             if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
                 for discoveryDict in discoveryDictsArray {
                     discoveries.append(JinyDiscovery(withDict: discoveryDict))
+                    if let discoveryId = discoveryDict["id"] as? Int, let iconSetting = configDict["iconSetting"] as? Dictionary<String, Any> {
+                        if let discoveryIconSetting = iconSetting[String(discoveryId)] as? Dictionary<String, Any> {
+                           self.iconSetting[String(discoveryId)] = IconSetting(with: discoveryIconSetting)
+                        }
+                    }
                 }
             }
             if let assistsDictsArray = configDict["assists"] as? Array<Dictionary<String,Any>> {
