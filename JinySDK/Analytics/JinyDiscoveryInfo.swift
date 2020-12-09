@@ -32,8 +32,17 @@ class JinyDiscoveryInfo:Codable {
             assist_type = assistType
         } else { assist_type = "" }
         trigger_type = dis.trigger?.type ?? ""
-        trigger_delay = dis.eventIdentifiers?.delay ?? 0
-        trigger_on_anchor_click = dis.eventIdentifiers?.triggerOnAnchorClick ?? false
-        opt_in_on_anchor_click = dis.trigger?.optInOnAnchorClick ?? false
+        if let type = dis.trigger?.event?["type"], let value = dis.trigger?.event?["value"], type == "click", value == "showDiscovery" {
+            trigger_delay = Float(dis.trigger?.delay ?? 0)
+            trigger_on_anchor_click = true
+        } else {
+            trigger_delay = 0
+            trigger_on_anchor_click = false
+        }
+        if let type = dis.trigger?.event?["type"], let value = dis.trigger?.event?["value"], type == "click", value == "optIn" {
+            opt_in_on_anchor_click = true
+        } else {
+            opt_in_on_anchor_click = false
+        }
     }
 }

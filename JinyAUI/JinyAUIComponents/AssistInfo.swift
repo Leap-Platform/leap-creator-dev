@@ -39,7 +39,7 @@ public class AssistInfo {
            self.highlightAnchor = highlightAnchor
         }
         
-        if let anchorClickable = assistDict["anchor_clickable"] as? Bool {
+        if let anchorClickable = assistDict["highlight_clickable"] as? Bool {
             
            self.anchorClickable = anchorClickable
         }

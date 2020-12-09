@@ -338,6 +338,7 @@ extension JinyBottomDiscovery {
     @objc private func optOutClicked() {
         dismissView {
             self.delegate.optOutButtonClicked()
+            self.delegate.discoverySheetDismissed()
         }
         
     }

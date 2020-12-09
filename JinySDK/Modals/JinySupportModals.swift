@@ -50,18 +50,6 @@ class JinyTaggedEvent {
     
 }
 
-class JinyEventIdentifier {
-    
-    var triggerOnAnchorClick:Bool
-    var delay:Float?
-    
-    init(withDict eventDict:Dictionary<String,Any>) {
-        triggerOnAnchorClick = eventDict["triggerOnAnchorClick"] as? Bool ?? false
-        delay = eventDict["delay"] as? Float
-    }
-    
-}
-
 class JinyAssistInfo {
     var layoutInfo:Dictionary<String,Any>
     var htmlUrl:String?
@@ -85,6 +73,7 @@ class JinyAssistInfo {
 }
 
 class JinyFrequency {
+    /// number of times a discovery is shown in a session until flow complete
     let perSession:Int?
     let perApp:Int?
     let perSessionWoJiny:Int?
@@ -92,8 +81,8 @@ class JinyFrequency {
     let perFlow:Int?
     
     init(with dict:Dictionary<String,Int>) {
-        perSession = dict["per_session"]
-        perApp = dict["per_app"]
+        perSession = dict["perSession"]
+        perApp = dict["perApp"]
         perSessionWoJiny = dict["per_session_wo_jiny"]
         perAppWoJiny = dict["per_app_wo_jiny"]
         perFlow = dict["per_flow"]

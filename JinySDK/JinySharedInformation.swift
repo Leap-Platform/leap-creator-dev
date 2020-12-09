@@ -24,6 +24,8 @@ class JinySharedInformation {
     private var audioLanguageCode:String?
     private var mute:Bool = false
     private var audioDownloadStatus:Dictionary<String,Dictionary<String, JinyDownloadStatus>> = [:]
+    var sessionFlowCountDict: Dictionary<String,Int> = [:]
+    private var discoveryContextDict: Dictionary<String, Bool> = [:]
 }
 
 
@@ -188,6 +190,9 @@ extension JinySharedInformation {
     }
     
     func flowCompletedFor(discoveryId:Int) {
+                    
+           sessionFlowCountDict[String(discoveryId)] = (sessionFlowCountDict[String(discoveryId)] ?? 0) + 1
+        
            if prefs.dictionary(forKey: "jiny_discovery_flow_count") == nil {
                let discDismissList:Dictionary<String,Int> = [:]
                prefs.set(discDismissList, forKey: "jiny_discovery_flow_count")
@@ -202,7 +207,30 @@ extension JinySharedInformation {
        func getDiscoveryFlowCount() -> Dictionary<String, Int> {
            return prefs.dictionary(forKey: "jiny_discovery_flow_count") as? Dictionary<String,Int> ?? [:]
        }
+
+    func jinySessionCountFor(discoveryId: Int) {
+        if prefs.dictionary(forKey: "jiny_session_count") == nil {
+            let discSessionList:Dictionary<String,Int> = [:]
+            prefs.set(discSessionList, forKey: "jiny_session_count")
+        }
+        guard var discSessionList = prefs.dictionary(forKey: "jiny_session_count") as? Dictionary<String,Int> else { return }
+        if discSessionList[String(discoveryId)] == nil {
+            discoveryContextDict[String(discoveryId)] = true
+            discSessionList[String(discoveryId)] = 0
+        }
+        else {
+            if !(discoveryContextDict[String(discoveryId)] ?? false) {
+                discoveryContextDict[String(discoveryId)] = true
+                discSessionList[String(discoveryId)] = discSessionList[String(discoveryId)]! + 1
+            } else { return }
+        }
+        prefs.set(discSessionList, forKey: "jiny_session_count")
+        prefs.synchronize()
+    }
     
+    func getJinySessionCount() -> Dictionary<String, Int> {
+        return prefs.dictionary(forKey: "jiny_session_count") as? Dictionary<String,Int> ?? [:]
+    }
 }
 
 

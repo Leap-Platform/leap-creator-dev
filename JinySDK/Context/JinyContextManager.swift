@@ -90,6 +90,9 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return configuration!.nativeIdentifiers[identifierId]
     }
     
+    func getIconSetting() -> Dictionary<String, IconSetting> {
+        return configuration!.iconSetting
+    }
     
     // MARK: - Assist Methods
     
@@ -198,12 +201,14 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard !JinySharedInformation.shared.isMuted() else {
-            auiHandler?.presentJinyButton()
+            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl ?? "", color: getIconSetting()[String(discovery.id)]?.bgColor ?? "")
             return
         }
         auiHandler?.removeAllViews()
+        
+        let iconInfo = ["isLeftAligned":true, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl ?? ""] as [String : Any]
         if let anchorView = view {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: [:])
+            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
         }
@@ -229,7 +234,49 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         sendContextInfoEvent(eventTag: "jinyFlowOptInEvent")
     }
     
+    func canTriggerBasedOnTriggerFrequency(discovery: JinyDiscovery) -> Bool {
+        
+        switch discovery.triggerFrequency?.type {
+        case .everySession:
+            return true
+        case .playOnce:
+            if (JinySharedInformation.shared.getDiscoveryCount()["\(discovery.id)"] ?? 0) > 0 {
+                auiHandler?.removeAllViews()
+                return false
+            } else {
+                return true
+            }
+        case .manualTrigger:
+            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl ?? "", color: getIconSetting()[String(discovery.id)]?.bgColor ?? "")
+                return false
+        case .everySessionUntilDismissed:
+            if (JinySharedInformation.shared.getDiscoveryDismissCount()["\(discovery.id)"] ?? 0) > 0 {
+                auiHandler?.removeAllViews()
+                return false
+            } else {
+                return true
+            }
+        case .everySessionUntilFlowComplete:
+            if (JinySharedInformation.shared.getDiscoveryFlowCount()["\(discovery.id)"] ?? 0) > 0 {
+                auiHandler?.removeAllViews()
+                return false
+            } else {
+                return true
+            }
+        default:
+            return true
+        }
+    }
     
+    func showJinyIcon() {
+        auiHandler?.removeAllViews()
+        auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl ?? "", color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "")
+        discoveryManager?.currentDiscoveryOptOut = false
+    }
+    
+    func removeAllViews() {
+        auiHandler?.removeAllViews()
+    }
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
@@ -252,12 +299,18 @@ extension JinyContextManager:JinyStageManagerDelegate {
     
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
         auiHandler?.removeAllViews()
-        auiHandler?.presentJinyButton()
+        if discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false {
+            auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl ?? "", color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "")
+        }
         guard !JinySharedInformation.shared.isMuted() else { return }
+        let iconInfo = ["isLeftAligned":true, "isEnabled": discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false, "backgroundColor": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl ?? ""] as [String : Any]
         if let anchorView = view {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: [:])
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
+        } else {
+            
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!)
         }
         sendContextInfoEvent(eventTag: "jinyInstructionEvent")
     }
@@ -275,6 +328,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
         if let discoveryId = flowManager?.getDiscoveryId() {
             JinySharedInformation.shared.flowCompletedFor(discoveryId: discoveryId)
         }
+        auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
     }
     
@@ -383,7 +437,7 @@ extension JinyContextManager:JinyAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Dictionary<String, Any>> {
         guard let config = configuration else { return [:] }
-        return ["default_sounds":config.defaultSounds, "discovery_sounds":config.discoverySounds, "aui_content":config.auiContent]
+        return ["default_sounds":config.defaultSounds, "discovery_sounds":config.discoverySounds, "aui_content":config.auiContent, "iconSetting":config.iconSetting]
     }
     
     func triggerEvent(identifier: String, value: Any) {
@@ -425,6 +479,7 @@ extension JinyContextManager:JinyAUICallback {
             }
             else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
                 sendDiscoveryInfoEvent(eventTag: "discoveryVisibleEvent")
+                discoveryPresented()
             }
         case .Stage:
             break
@@ -449,6 +504,16 @@ extension JinyContextManager:JinyAUICallback {
     
     func didDismissView() {
         
+        guard let state = contextDetector?.getState() else { return }
+        switch state {
+        case .Discovery:
+            if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
+                dm.currentDiscoveryOptOut = true
+                discoveryDismissed()
+            }
+        case .Stage:
+            break
+        }
     }
     
     func didReceiveInstruction(dict: Dictionary<String, Any>) {
@@ -471,7 +536,14 @@ extension JinyContextManager:JinyAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            discoveryManager?.resetCurrentDiscovery()
+            guard let currentDiscoveryObject = discoveryManager?.currentDiscoveryObject, let discovery = discoveryManager?.getCurrentDiscovery() else {
+                return
+            }
+            if canTriggerBasedOnTriggerFrequency(discovery: discovery) || discovery.triggerFrequency?.type == .manualTrigger {
+                newDiscoveryIdentified(discovery: currentDiscoveryObject.0, view: currentDiscoveryObject.1, rect: currentDiscoveryObject.2, webview: currentDiscoveryObject.3)
+            } else {
+               discoveryManager?.resetCurrentDiscovery()
+            }
             return
         case .Stage:
             auiHandler?.presentOptionPanel(mute: "Mute", repeatText: "Repeat", language: "Change Language")
@@ -480,7 +552,9 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func discoveryPresented() {
-        
+        if let discoveryManager = discoveryManager {
+            discoveryManager.currentDiscoveryPresented()
+        }
     }
     
     func discoveryMuted() {
@@ -498,6 +572,12 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
+    func discoveryDismissed() {
+        if let discoveryManager = discoveryManager {
+            discoveryManager.currentDiscoveryDismissed()
+        }
+    }
+    
     func languagePanelOpened() {
         sendContextInfoEvent(eventTag: "changeLangClickedEvent")
     }
@@ -508,6 +588,10 @@ extension JinyContextManager:JinyAUICallback {
     
     func languagePanelLanguageSelected(atIndex: Int) {
         sendContextInfoEvent(eventTag: "langSelectedFromPanelEvent")
+        guard let config = configuration else { return }
+        let languageSelected = config.languages[atIndex].localeId
+        JinySharedInformation.shared.setLanguage(languageSelected)
+        auiHandler?.startMediaFetch()
         contextDetector?.start()
         guard let state = contextDetector?.getState(), state == .Stage else { return }
         stageManager?.resetCurrentStage()

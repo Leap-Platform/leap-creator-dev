@@ -74,9 +74,15 @@ class JinyMediaManager {
         if let code = langCode {
             fileDest = fileDest.appendingPathComponent(code)
         } else {
-            fileDest.appendPathExtension("aui_component")
+            fileDest.appendPathComponent("aui_component")
         }
         fileDest = fileDest.appendingPathComponent(mediaName)
+        
+        if let _ = langCode {
+            
+           fileDest = fileDest.appendingPathExtension("mp3")
+        }
+        
         return FileManager.default.fileExists(atPath: fileDest.path)
     }
     

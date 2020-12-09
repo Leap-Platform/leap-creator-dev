@@ -62,18 +62,17 @@ class JinyAssist:JinyContext {
     
     var type:String
     var frequency:JinyFrequency?
-    var eventIdentifiers:JinyEventIdentifier?
     var instruction:JinyInstruction?
     var instructionInfoDict:Dictionary<String,Any>?
-    
+    var trigger: JinyTrigger?
     
     init(withDict assistDict:Dictionary<String,Any>) {
         type = assistDict["type"] as? String ?? "NORMAL"
         if let frequencyDict = assistDict["frequency"] as? Dictionary<String,Int> {
             frequency = JinyFrequency(with: frequencyDict)
         }
-        if let eventDict = assistDict["event_identifiers"] as? Dictionary<String,Any> {
-            eventIdentifiers = JinyEventIdentifier(withDict: eventDict)
+        if let trigger = assistDict["trigger"] as? Dictionary<String, String> {
+            self.trigger = JinyTrigger(with: trigger)
         }
         if let instructionDict = assistDict["instruction"] as? Dictionary<String,Any>{
             instruction = JinyInstruction(withDict: instructionDict)
@@ -107,7 +106,6 @@ extension JinyAssist {
         copy.checkpoint = self.checkpoint
         copy.type = self.type
         copy.frequency = self.frequency
-        copy.eventIdentifiers = self.eventIdentifiers
         copy.instruction = self.instruction
         copy.instructionInfoDict = self.instructionInfoDict
         return copy

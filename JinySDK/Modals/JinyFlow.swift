@@ -29,7 +29,9 @@ class JinyFlow {
         copy.id = self.id
         copy.name = self.name
         copy.flowText = self.flowText
-        copy.pages = self.pages
+        for page in self.pages {
+            copy.pages.append(page.copy())
+        }
         return copy
     }
     

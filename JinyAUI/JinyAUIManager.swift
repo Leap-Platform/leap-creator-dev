@@ -20,6 +20,11 @@ class JinyAUIManager:NSObject {
     var keyboardHeight:Float = 0
     var audioPlayer:AVAudioPlayer?
     var pointer:JinyPointer?
+    var tooltip: JinyToolTip?
+    var highlight: JinyHighlight?
+    var beacon: JinyBeacon?
+    var spot: JinySpot?
+    var label: JinyLabel?
     var optionPanel:JinyOptionPanel?
     var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
@@ -88,6 +93,42 @@ extension JinyAUIManager {
             jinyButton?.updateConstraints()
         }
     }
+    
+    func playAudio() {
+        
+        guard let callback = auiManagerCallBack else { return }
+        
+        callback.willPlayAudio()
+        
+        let code = callback.getLanguageCode()
+        
+        guard let mediaName = currentInstruction?["sound_name"] as? String else { return }
+        
+        if mediaManager?.isAlreadyDownloaded(mediaName: mediaName, langCode: code) ?? false {
+        
+            let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            var jinyMediaPath = documentPath.appendingPathComponent(Constants.Networking.downloadsFolder)
+            
+            jinyMediaPath = jinyMediaPath.appendingPathComponent(code).appendingPathComponent(mediaName).appendingPathExtension("mp3")
+
+        do {
+            
+            try AVAudioSession.sharedInstance().setActive(true)
+                        
+            audioPlayer = try AVAudioPlayer(contentsOf: jinyMediaPath, fileTypeHint: AVFileType.mp3.rawValue)
+            
+            audioPlayer?.delegate = self
+            
+            guard let player = audioPlayer else { return }
+
+                player.play()
+
+            } catch let error as NSError {
+                
+                print(error.description)
+            }
+        }
+    }
 }
 
 extension JinyAUIManager:JinyAUIHandler {
@@ -109,6 +150,12 @@ extension JinyAUIManager:JinyAUIHandler {
                     let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
                     mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
                 }
+                if let iconSettingDict = initialSounds["iconSetting"] as? Dictionary<String, IconSetting> {
+                    for (_, value) in iconSettingDict {
+                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
+                        mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
+                    }
+                }
             }
         }
         fetchSoundConfig()
@@ -127,6 +174,7 @@ extension JinyAUIManager:JinyAUIHandler {
             auiManagerCallBack?.failedToPerform()
             return
         }
+        
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
             switch type {
@@ -145,9 +193,41 @@ extension JinyAUIManager:JinyAUIHandler {
                 }
                 
                 pointer = JinyFingerRipplePointer()
+                pointer?.pointerDelegate = self
                 pointer?.presentPointer(view: inView)
+                
+            case "TOOLTIP":
+                tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = tooltip
+                tooltip?.delegate = self
+                tooltip?.presentPointer()
+                
+            case "HIGHLIGHT":
+                highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = highlight
+                highlight?.delegate = self
+                highlight?.presentPointer()
+        
+            case "BEACON":
+                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon()
+                
+            case "SPOT":
+                spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = spot
+                spot?.delegate = self
+                spot?.showSpot()
+                
+            case "LABEL":
+                label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = label
+                label?.delegate = self
+                label?.presentLabel()
+                
             default:
-                performKeyWindowInstruction(instruction: instruction)
+                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }
         }
         
@@ -187,7 +267,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 pointer = JinyFingerRipplePointer()
                 pointer?.presentPointer(toRect: rect, inView: inWebview)
             default:
-                performKeyWindowInstruction(instruction: instruction)
+                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }
         }
     }
@@ -196,14 +276,14 @@ extension JinyAUIManager:JinyAUIHandler {
         
     }
     
-    func performInstruction(instruction:Dictionary<String,Any>) {
+    func performInstruction(instruction: Dictionary<String,Any>) {
         currentInstruction = instruction
         currentTargetView = nil
         currentWebView = nil
         currentTargetRect = nil
         guard let _ = instruction["sound_name"] as? String else { return }
         guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
+            playAudio()
             return
         }
         if let type = assistInfo["type"] as? String {
@@ -218,13 +298,13 @@ extension JinyAUIManager:JinyAUIHandler {
         }
     }
     
-    func performKeyWindowInstruction(instruction:Dictionary<String,Any>) {
+    func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
         guard let _ = instruction["sound_name"] as? String else { return }
         guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
         }
-        let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
+        
         if let type = assistInfo["type"] as? String {
             switch type {
             case "POPUP":
@@ -251,6 +331,18 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist?.delegate = self
                 UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
                 jinyBottomSheet.showBottomSheet()
+            case "NOTIFICATION":
+                let jinyNotification = JinyNotification(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyNotification
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyNotification)
+                jinyNotification.showNotification()
+            case "SLIDEIN":
+                let jinySlideIn = JinySlideIn(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinySlideIn
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinySlideIn)
+                jinySlideIn.showSlideIn()
             default:
                 break
             }
@@ -298,7 +390,6 @@ extension JinyAUIManager:JinyAUIHandler {
         currentAssist = nil
         optionPanel?.dismissOptionPanel { self.optionPanel = nil }
         languagePanel?.dismissLanguagePanel { self.languagePanel = nil }
-        
     }
     
     func removeAllViews() {
@@ -309,20 +400,30 @@ extension JinyAUIManager:JinyAUIHandler {
         dismissJinyButton()
     }
     
-    func presentJinyButton() {
+    func presentJinyButton(with html: String, color: String) {
         guard jinyButton == nil, jinyButton?.window == nil else { return }
         //        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        jinyButton = JinyMainButton(withThemeColor: .blue)
+        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color)!)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
-        jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
+        jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
+        jinyButton!.tapGestureRecognizer.delegate = self
         jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
         let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
         NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
+        jinyButton!.htmlUrl = html
+        jinyButton!.iconSize = 56
+        jinyButton?.configureIconButon()
     }
+}
+
+extension JinyAUIManager: UIGestureRecognizerDelegate {
     
     @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
     
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }
 
 
@@ -382,11 +483,10 @@ extension JinyAUIManager {
     
 }
 
-
-extension JinyAUIManager:JinyPointerDelegate {
+extension JinyAUIManager: JinyPointerDelegate {
     
     func pointerPresented() {
-        self.auiManagerCallBack?.didPresentView()
+        self.didPresentAssist()
     }
     
     func nextClicked() { auiManagerCallBack?.stagePerformed() }
@@ -396,7 +496,7 @@ extension JinyAUIManager:JinyPointerDelegate {
     }
 }
 
-extension JinyAUIManager:JinyLanguagePanelDelegate {
+extension JinyAUIManager: JinyLanguagePanelDelegate {
     
     func languagePanelPresented() { auiManagerCallBack?.languagePanelOpened() }
     
@@ -412,7 +512,7 @@ extension JinyAUIManager:JinyLanguagePanelDelegate {
     
 }
 
-extension JinyAUIManager:JinyOptionPanelDelegate {
+extension JinyAUIManager: JinyOptionPanelDelegate {
     
     func failedToShowOptionPanel() { auiManagerCallBack?.optionPanelClosed() }
     
@@ -433,7 +533,6 @@ extension JinyAUIManager:JinyOptionPanelDelegate {
     func optionPanelDismissed() { auiManagerCallBack?.optionPanelClosed() }
     
     func optionPanelCloseClicked() { auiManagerCallBack?.optionPanelClosed() }
-    
 }
 
 extension JinyAUIManager:AVAudioPlayerDelegate {
@@ -445,7 +544,6 @@ extension JinyAUIManager:AVAudioPlayerDelegate {
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         self.auiManagerCallBack?.didPlayAudio()
     }
-    
 }
 
 extension JinyAUIManager:AVSpeechSynthesizerDelegate {
@@ -453,7 +551,6 @@ extension JinyAUIManager:AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         auiManagerCallBack?.didPlayAudio()
     }
-    
 }
 
 extension JinyAUIManager:JinyMediaManagerDelegate {
@@ -521,8 +618,6 @@ extension JinyAUIManager {
         let heightConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
         let widthConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
         NSLayoutConstraint.activate([leadingConstraint, scrollArrowBottomConstraint!, heightConstraint, widthConstraint])
-        
-        
     }
     
     @objc func arrowClicked() {
@@ -536,11 +631,16 @@ extension JinyAUIManager {
     }
 }
 
-
-extension JinyAUIManager:JinyAssistDelegate {
+extension JinyAUIManager: JinyAssistDelegate {
+    
     func willPresentAssist() { auiManagerCallBack?.willPresentView() }
     
-    func didPresentAssist() { auiManagerCallBack?.didPresentView() }
+    func didPresentAssist() {
+                
+        playAudio()
+        
+        auiManagerCallBack?.didPresentView()
+    }
     
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
@@ -560,6 +660,26 @@ extension JinyAUIManager:JinyAssistDelegate {
     func didExitAnimation() { auiManagerCallBack?.willDismissView() }
     
     func didTapAssociatedJinyIcon() { auiManagerCallBack?.jinyTapped() }
+}
+
+extension JinyAUIManager: JinyBottomDiscoveryDelegate {
+    func discoveryPresentedWithOptInButton(_ button: UIButton) {
+        
+    }
     
+    func discoverySheetDismissed() {
+        auiManagerCallBack?.discoveryDismissed()
+    }
     
+    func optOutButtonClicked() {
+        auiManagerCallBack?.discoveryDismissed()
+    }
+    
+    func optInButtonClicked() {
+        
+    }
+    
+    func discoveryLanguageButtonClicked() {
+        
+    }
 }

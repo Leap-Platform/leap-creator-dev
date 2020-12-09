@@ -22,7 +22,7 @@ import UIKit
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
-    func presentJinyButton()
+    func presentJinyButton(with html: String, color: String)
     func presentLanguagePanel(languages: Array<String>)
     func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()
@@ -59,6 +59,7 @@ import UIKit
     func discoveryMuted()
     func discoveryOptedInFlow(atIndex:Int)
     func discoveryReset()
+    func discoveryDismissed()
     
     func languagePanelOpened()
     func languagePanelClosed()
@@ -68,7 +69,6 @@ import UIKit
     func optionPanelClosed()
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
-
 }
 
 

@@ -22,6 +22,10 @@ public class JinySlideIn: JinyKeyWindowAssist {
         if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
             
             self.alignment = JinyAlignmentType(rawValue: alignment) ?? .left
+        
+        } else {
+            
+            assistInfo?.layoutInfo?.layoutAlignment = "left"
         }
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
@@ -129,12 +133,14 @@ public class JinySlideIn: JinyKeyWindowAssist {
         
         let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(inViewWidth)) / 100)
         
+        var sizeWidth = self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0
+        
         if width > 0 && width < Float(proportionalWidth) {
             
-            self.assistInfo?.layoutInfo?.style.maxWidth = (Double(width) / Double(inViewWidth)) * 100
+            sizeWidth = (Double(width) / Double(inViewWidth)) * 100
         }
         
-        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: inView, attribute: .width, multiplier: CGFloat((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0)/100), constant: 0))
+        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: inView, attribute: .width, multiplier: CGFloat(sizeWidth/100), constant: 0))
         
         self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: CGFloat(height)))
         
