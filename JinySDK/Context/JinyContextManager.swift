@@ -275,6 +275,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
         if let discoveryId = flowManager?.getDiscoveryId() {
             JinySharedInformation.shared.flowCompletedFor(discoveryId: discoveryId)
         }
+        auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
     }
     
