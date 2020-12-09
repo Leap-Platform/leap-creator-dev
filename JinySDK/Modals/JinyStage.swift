@@ -55,6 +55,18 @@ class JinyStage:JinyContext {
         super.init(with: stageDict)
     }
     
+    func copy(with zone: NSZone? = nil) -> JinyStage {
+        let copy = JinyStage(withDict: ["type":self.type, "frequency_per_flow":self.frequencyPerFlow, "is_success":self.isSuccess, "branch_info":self.branchInfo ?? [:], "instruction":self.instructionInfoDict ?? [:]])
+        copy.id = self.id
+        copy.name = self.name
+        copy.nativeIdentifiers = self.nativeIdentifiers
+        copy.webIdentifiers = self.webIdentifiers
+        copy.weight = self.weight
+        copy.isWeb = self.isWeb
+        copy.taggedEvents = self.taggedEvents
+        copy.checkpoint = self.checkpoint
+        return copy
+    }
 }
 
 extension JinyStage:Equatable {
