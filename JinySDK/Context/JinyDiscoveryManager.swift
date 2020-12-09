@@ -74,36 +74,25 @@ class JinyDiscoveryManager {
                     if isPassing { return false }
                 }
             }
-            JinySharedInformation.shared.jinySessionCountFor(discoveryId: allowedDiscovery.id)
-            guard let freq = allowedDiscovery.frequency else { return true }
-            if let nSessionCount = freq.nSession, nSessionCount > 0, let counter = sessionCount[String(allowedDiscovery.id)] {
-                if counter >= nSessionCount {
-                    self.delegate!.removeAllViews()
-                    return false
-                }
-            }
-            if let nUserDismissCount = freq.nDismissByUser, nUserDismissCount > 0, let counter = discDismissCount[String(allowedDiscovery.id)] {
-                if counter >= nUserDismissCount {
-                    self.delegate!.removeAllViews()
-                    return false
-                }
-            }
-            if let perAppUntilFlowComplete = freq.perApp, perAppUntilFlowComplete > 0, let counter = flowCompletedCount[String(allowedDiscovery.id)] {
-                if counter >= perAppUntilFlowComplete {
-                    self.delegate!.removeAllViews()
-                    return false
-                }
-            }
-            if let perSessionUntilFlowComplete = freq.perSession, perSessionUntilFlowComplete > 0, let counter = JinySharedInformation.shared.sessionFlowCountDict[String(allowedDiscovery.id)] {
-                if counter >= perSessionUntilFlowComplete {
-                    self.delegate!.removeAllViews()
-                    return false
-                }
-            }
-//            if let nFlowCompleted = freq.nFlowCompleted, let counter = flowCompletedCount[String(allowedDiscovery.id)] {
-//                if counter >= nFlowCompleted { return false }
-//            }
             
+            guard let freq = allowedDiscovery.frequency else { return true }
+            
+            if let nSessionCount = freq.nSession, nSessionCount > 0, let counter = sessionCount[String(allowedDiscovery.id)] {
+                if counter >= nSessionCount { return false }
+            }
+            
+            if let nUserDismissCount = freq.nDismissByUser, nUserDismissCount > 0, let counter = discDismissCount[String(allowedDiscovery.id)] {
+                if counter >= nUserDismissCount { return false }
+            }
+            
+            if let perAppUntilFlowComplete = freq.perApp, perAppUntilFlowComplete > 0, let counter = flowCompletedCount[String(allowedDiscovery.id)] {
+                if counter >= perAppUntilFlowComplete { return false }
+            }
+            
+            if let perSessionUntilFlowComplete = freq.perSession, perSessionUntilFlowComplete > 0, let counter = JinySharedInformation.shared.sessionFlowCountDict[String(allowedDiscovery.id)] {
+                if counter >= perSessionUntilFlowComplete { return false }
+            }
+
             return true
         })
         return discAllowed
