@@ -108,7 +108,7 @@ class JinyStageManager {
     func stagePerformed(_ stage:JinyStage) {
         if stageTracker[stage.name] == nil { stageTracker[stage.name] = 0 }
         stageTracker[stage.name]!  += 1
-        if stageTracker[stage.name] == stage.frequencyPerFlow { delegate!.removeStage(stage) }
+        if stageTracker[stage.name]! >= stage.frequencyPerFlow { delegate!.removeStage(stage) }
     }
 
     

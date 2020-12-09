@@ -23,6 +23,21 @@ class JinyPage:JinyContext {
         super.init(with: pageDict)
     }
     
+    func copy(with zone: NSZone? = nil) -> JinyPage {
+        let copy = JinyPage(withDict: ["prev_id":self.previousId ?? false, "must_have_prev_page":self.mustHavePreviousPage ?? -1])
+        for stage in self.stages {
+            copy.stages.append(stage.copy())
+        }
+        copy.id = self.id
+        copy.name = self.name
+        copy.nativeIdentifiers = self.nativeIdentifiers
+        copy.webIdentifiers = self.webIdentifiers
+        copy.weight = self.weight
+        copy.isWeb = self.isWeb
+        copy.taggedEvents = self.taggedEvents
+        copy.checkpoint = self.checkpoint
+        return copy
+    }
 }
 
 extension JinyPage:Equatable {
