@@ -29,7 +29,7 @@ class JinyMediaManager {
         delegate = withDelegate
     }
     
-    func startDownload(forMedia:JinyMedia, atPriority:Operation.QueuePriority) {
+    func startDownload(forMedia:JinyMedia, atPriority:Operation.QueuePriority, completion: ((_ sucess: Bool) -> Void)? = nil) {
         var code:String?
         if let sound = forMedia as? JinySound {
             code = sound.langCode
@@ -47,12 +47,14 @@ class JinyMediaManager {
                 }
                 else if isFinished{
                     if isSuccess {
+                        
+                        completion?(true)
 //                        self.statusTracker[forMedia.name] = .downloaded
                         self.dlTracker[forMedia.name] = nil
                     }
                     else {
 //                        self.statusTracker[forMedia.name] = .notDownloaded
-                        
+                        completion?(false)
                     }
                 }
             }

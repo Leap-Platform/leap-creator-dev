@@ -113,7 +113,7 @@ public class JinyDrawer: JinyKeyWindowAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.htmlUrl = iconInfo?.htmlUrl ?? ""
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl
         
         jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
         

@@ -373,7 +373,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.htmlUrl = iconInfo?.htmlUrl ?? ""
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl
         
         jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
         
