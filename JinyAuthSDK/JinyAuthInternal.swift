@@ -8,7 +8,7 @@
 
 import UIKit
 
-class JinyAuthInternal {
+class JinyAuthInternal : NSObject{
     
     var apiKey:String?
     var masterManager: MasterManager?
@@ -16,7 +16,6 @@ class JinyAuthInternal {
     var appDelegate: UIApplicationDelegate
     
     init(apiKey : String) {
-    
         self.applicationContext = UIApplication.shared
         self.apiKey = apiKey
         self.masterManager = MasterManager(key: apiKey)

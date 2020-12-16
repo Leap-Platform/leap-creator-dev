@@ -119,6 +119,10 @@ class ScreenCaptureManager: AppStateProtocol{
         let hierarchyObj = ScreenHelper.captureHierarchy(finishListener: finishListener)
         return hierarchyObj
     }
+    
+    func stop(){
+        
+    }
 }
 
 protocol FinishListener{

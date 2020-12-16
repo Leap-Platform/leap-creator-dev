@@ -13,8 +13,12 @@ import Starscream
 class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener, FinishListener {
     
     func onSessionClosed() {
-        
+        self.streamingManager?.stop()
+        self.captureManager?.stop()
+        self.healthMonitor?.stop()
+        self.protocolListener.onSessionClosed()
     }
+    
     func onCompleteHierarchyFetch() {
         
     }
@@ -49,6 +53,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
             captureManager?.capture(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_SCREENSTREAM:
+            self.captureManager?.stop()
             self.streamingManager?.start(webSocket: webSocketTask!, roomId: self.roomId!)
             break
             
@@ -57,6 +62,16 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
             break
         case CASE_PONG:
             healthMonitor?.receivePong()
+            break
+        case CASE_STOP_OPERATIONS:
+            streamingManager?.stop()
+            captureManager?.stop()
+            break
+        case CASE_DEVICE_INFO:
+            self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
+            break
+        case CASE_KILL_AUTH:
+            onSessionClosed()
             break
         default:
          print("Default command - DO NOTHING !")
@@ -70,6 +85,9 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     let CASE_SCREENSTREAM: String? = "SCREENSTREAM"
     let CASE_PING: String? = "PING"
     let CASE_PONG: String? = "PONG"
+    let CASE_STOP_OPERATIONS = "STOP_OPERATIONS"
+    let CASE_DEVICE_INFO = "DEVICE_INFO"
+    let CASE_KILL_AUTH = "KILL_AUTH"
 
 //    let SOCKET_URL: String? = "ws://15.206.167.18:4000/ws"
     let SOCKET_URL: String? = "wss://raven.jiny.io/ws"
@@ -82,6 +100,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     var webSocketTask: WebSocket?
     var jinySocketMessageDelegate: JinySocketMessageDelegate?
     var healthMonitor: HealthMonitorManager?
+    var deviceManager: DeviceManager?
     
     init(protocolListener: ProtocolListener) {
         self.protocolListener = protocolListener
@@ -89,6 +108,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     }
     
     func setup(){
+        self.deviceManager = DeviceManager()
         self.captureManager = ScreenCaptureManager(completeHierarchyFinishListener: self)
         self.streamingManager = StreamingManager()
         self.healthMonitor = HealthMonitorManager(healthCheckListener: self)
