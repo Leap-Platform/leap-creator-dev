@@ -34,6 +34,7 @@ class JinySocketMessageDelegate: WebSocketDelegate{
             let data = text.data(using: .utf8)
             let jsonData = try? JSONSerialization.jsonObject(with: (data)!,  options: []) as? [String: Any]
             //fetch the status and room info from the json
+            if jsonData!["id"] == nil { return }
             let id = (jsonData?["id"]) as! String
             let typeOfPacket = (jsonData?["type"]) as! String
             

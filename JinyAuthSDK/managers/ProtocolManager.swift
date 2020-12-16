@@ -68,7 +68,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
             captureManager?.stop()
             break
         case CASE_DEVICE_INFO:
-            self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
+            //self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_KILL_AUTH:
             onSessionClosed()

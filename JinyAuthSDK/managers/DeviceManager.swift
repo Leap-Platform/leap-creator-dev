@@ -23,16 +23,16 @@ class DeviceManager {
         let devicePayloadString = getDeviceInfo()
         
         let message: Dictionary<String, Any> = [
-            "dataPacket":devicePayloadString,
+            "dataPacket": devicePayloadString,
             "commandType":"DEVICE_INFO",
             "end":true
         ]
-        
+        //TODO: source needs to be changed to ios
         let splitPayload: Dictionary<String, Any> = [
             "room": room ,
             "message": message,
             "action":"message",
-            "source":"ios"
+            "source":"android"
         ]
         
         guard let payload = try? JSONSerialization.data(withJSONObject: splitPayload, options: .prettyPrinted),
@@ -41,13 +41,13 @@ class DeviceManager {
         }
         
         self.webSocket?.write(string: splitString, completion: {
-            print("PING has been sent! ")
+            print("DeviceInfo has been sent! ")
         })
     }
     
     //TODO: Add proper method to fetch Device info correctly 
     private func getDeviceInfo()->String{
-        return "DEVICE_INFO "
+        return "DEVICE_INFO"
     }
     
 }

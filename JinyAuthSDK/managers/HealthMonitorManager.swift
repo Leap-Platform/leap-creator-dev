@@ -40,7 +40,7 @@ class HealthMonitorManager {
     func sendPing(){
         if isSessionActive() {
             let message = ""
-            let payload = "{\"room\":\"\(String(describing: roomId))\",\"message\":\(message),\"action\": \"message\",\"source\": \"ios\",\"commandType\":\"PING\",\"end\":\"true\"}"
+            let payload = "{\"room\":\"\(roomId!)\",\"message\":\"\",\"action\": \"message\",\"source\": \"android\",\"commandType\":\"PING\",\"end\":\"true\"}"
             self.webSocket?.write(string: payload, completion: {
                 print("PING has been sent! ")
             })
@@ -52,8 +52,9 @@ class HealthMonitorManager {
     
     func sendPong(){
         let message = ""
-        let payload = "{\"room\":\"\(String(describing: roomId))\",\"message\":\(message),\"action\": \"message\",\"source\": \"ios\",\"commandType\":\"PONG\",\"end\":\"true\"}"
+        let payload = "{\"room\":\"\(roomId!)\",\"message\":\"\",\"action\": \"message\",\"source\": \"android\",\"commandType\":\"PONG\",\"end\":\"true\"}"
         self.webSocket?.write(string: payload, completion: {
+            print(" payload : \(payload)")
             print("PONG has been sent! ")
         })
     }
