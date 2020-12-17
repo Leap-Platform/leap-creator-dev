@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2D2334C6258B16D70084768E /* JinyCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2334C5258B16D70084768E /* JinyCarousel.swift */; };
 		2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */; };
 		D0084C882486814D0082508C /* JinyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* JinyConfig.swift */; };
 		D0084C8C248681A30082508C /* JinyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* JinyFlow.swift */; };
@@ -271,6 +272,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D2334C5258B16D70084768E /* JinyCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyCarousel.swift; sourceTree = "<group>"; };
 		2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIconSetting.swift; sourceTree = "<group>"; };
 		D0084C872486814D0082508C /* JinyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyConfig.swift; sourceTree = "<group>"; };
 		D0084C8B248681A30082508C /* JinyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlow.swift; sourceTree = "<group>"; };
@@ -890,6 +892,7 @@
 				D0B793252543186D00DB94DD /* JinyPopup.swift */,
 				D0B793262543186D00DB94DD /* JinyBottomSheet.swift */,
 				D0B793272543186D00DB94DD /* JinySlideIn.swift */,
+				2D2334C5258B16D70084768E /* JinyCarousel.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1468,6 +1471,7 @@
 				D032C57E24B6FF35006E8F2B /* JinyBottomDiscoveryView.swift in Sources */,
 				D0FDAC3824B4BF7100D9332B /* JinyAUIManager.swift in Sources */,
 				D0B793422543186D00DB94DD /* Style.swift in Sources */,
+				2D2334C6258B16D70084768E /* JinyCarousel.swift in Sources */,
 				D0B7932E2543186D00DB94DD /* JinyBeacon.swift in Sources */,
 				D032C58524B6FF35006E8F2B /* JinyOptionPanelButton.swift in Sources */,
 				D0B793332543186D00DB94DD /* Jiny+CALayer.swift in Sources */,
