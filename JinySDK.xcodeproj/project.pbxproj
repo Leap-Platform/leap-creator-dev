@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2D204F5C258BA92B007957CF /* JinySharedAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D204F5B258BA92B007957CF /* JinySharedAUI.swift */; };
 		2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */; };
 		2D2F661C258361EC004FDE16 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D2F661A258361EC004FDE16 /* jiny_default_icon.html */; };
 		2DC9EC4C2582660300B4039C /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */; };
@@ -273,6 +274,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D204F5B258BA92B007957CF /* JinySharedAUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySharedAUI.swift; sourceTree = "<group>"; };
 		2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIconSetting.swift; sourceTree = "<group>"; };
 		2D2F661A258361EC004FDE16 /* jiny_default_icon.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_default_icon.html; sourceTree = "<group>"; };
 		2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
@@ -943,6 +945,7 @@
 				D0938E0D251DD67000FD462E /* JinyMediaManager.swift */,
 				D0938E0F251DD7AB00FD462E /* JinyNetworking.swift */,
 				D0938E11251DD8E900FD462E /* JinyMedia.swift */,
+				2D204F5B258BA92B007957CF /* JinySharedAUI.swift */,
 			);
 			path = JinyAUI;
 			sourceTree = "<group>";
@@ -1462,6 +1465,7 @@
 				D0B793302543186D00DB94DD /* JinyNativeAssist.swift in Sources */,
 				D0938E10251DD7AB00FD462E /* JinyNetworking.swift in Sources */,
 				D0B793322543186D00DB94DD /* Jiny+UIColor.swift in Sources */,
+				2D204F5C258BA92B007957CF /* JinySharedAUI.swift in Sources */,
 				D0FDAC3124B4A49700D9332B /* JinyAUI.swift in Sources */,
 				D0B7933D2543186D00DB94DD /* JinyNotification.swift in Sources */,
 				D0938E12251DD8E900FD462E /* JinyMedia.swift in Sources */,

@@ -416,6 +416,8 @@ extension JinyAUIManager:JinyAUIHandler {
             jinyButton?.isHidden = false
             return
         }
+        JinySharedAUI.shared.iconHtml = html
+        JinySharedAUI.shared.iconColor = color
         jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color)!)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
