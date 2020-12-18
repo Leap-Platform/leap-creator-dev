@@ -411,11 +411,15 @@ extension JinyAUIManager:JinyAUIHandler {
         jinyButton?.isHidden = true
     }
     
-    func presentJinyButton(with html: String?, color: String) {
-        guard jinyButton == nil, jinyButton?.window == nil else {
+    func presentJinyButton(with html: String?, color: String, iconEnabled: Bool) {
+        guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
+            JinySharedAUI.shared.iconHtml = html
+            JinySharedAUI.shared.iconColor = color
             jinyButton?.isHidden = false
             return
         }
+        JinySharedAUI.shared.iconHtml = html
+        JinySharedAUI.shared.iconColor = color
         jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color)!)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)

@@ -43,7 +43,7 @@ public class JinyIconView: UIView {
     var audioWebView: WKWebView?
     
     /// icon's background color.
-    var iconBackgroundColor: UIColor = .blue
+    var iconBackgroundColor: UIColor = .black
     
     /// the height and width of the icon.
     var iconSize: CGFloat = 36
