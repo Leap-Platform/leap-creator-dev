@@ -37,6 +37,8 @@
 		D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D00E859A24F51914000D8E5B /* JinyAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E859924F51914000D8E5B /* JinyAssist.swift */; };
 		D02E8A7024A8DF1E00374DE8 /* JinyIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */; };
+		D032BC38258CC96300BEA8D8 /* Gzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; };
+		D032BC39258CC96300BEA8D8 /* Gzip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D032C57C24B6FF11006E8F2B /* JinyLanguageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB062492C600004FFD99 /* JinyLanguageButton.swift */; };
 		D032C57E24B6FF35006E8F2B /* JinyBottomDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB072492C600004FFD99 /* JinyBottomDiscoveryView.swift */; };
 		D032C57F24B6FF35006E8F2B /* JinyOptInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB082492C600004FFD99 /* JinyOptInButton.swift */; };
@@ -248,6 +250,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		D032BC3A258CC96300BEA8D8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D032BC39258CC96300BEA8D8 /* Gzip.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D073E9372425E04E00764EF5 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -291,6 +304,7 @@
 		D00B8F67249B2988006F4CA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D00E859924F51914000D8E5B /* JinyAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyAssist.swift; sourceTree = "<group>"; };
 		D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIdentifier.swift; sourceTree = "<group>"; };
+		D032BC37258CC96300BEA8D8 /* Gzip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Gzip.framework; sourceTree = "<group>"; };
 		D032C59B24B74C72006E8F2B /* JinyAUIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAUIUtils.swift; sourceTree = "<group>"; };
 		D03E44E02420AABA00A43FEA /* Jiny Sample App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jiny Sample App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03E44E22420AABA00A43FEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -475,6 +489,7 @@
 				D077C92124B9B328001A04DF /* WebKit.framework in Frameworks */,
 				D077C91F24B9B2BF001A04DF /* AdSupport.framework in Frameworks */,
 				D0592E95241FAD99007782A8 /* UIKit.framework in Frameworks */,
+				D032BC38258CC96300BEA8D8 /* Gzip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -705,6 +720,7 @@
 		D0592E93241FAD99007782A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D032BC37258CC96300BEA8D8 /* Gzip.framework */,
 				D077C92224B9B330001A04DF /* AVFoundation.framework */,
 				D077C92024B9B328001A04DF /* WebKit.framework */,
 				D077C91E24B9B2BF001A04DF /* AdSupport.framework */,
@@ -1087,6 +1103,7 @@
 				D0592E73241FA6E3007782A8 /* Sources */,
 				D0592E74241FA6E3007782A8 /* Frameworks */,
 				D0592E75241FA6E3007782A8 /* Resources */,
+				D032BC3A258CC96300BEA8D8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1934,6 +1951,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = JinySDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1963,6 +1984,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = JinySDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
