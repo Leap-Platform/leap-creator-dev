@@ -93,6 +93,8 @@ public class JinyCarousel: JinyKeyWindowAssist {
                 
         self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
         
+        if type == .fullScreen {
+        
         var attributeType1: NSLayoutConstraint.Attribute = .leading
         
         let attributeType2: NSLayoutConstraint.Attribute = .top
@@ -111,6 +113,30 @@ public class JinyCarousel: JinyKeyWindowAssist {
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: horizontalDistance))
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType2, multiplier: 1, constant: verticalDistance))
+            
+        } else {
+            
+            var attributeType1: NSLayoutConstraint.Attribute = .leading
+            
+            let attributeType2: NSLayoutConstraint.Attribute = .top
+            
+            let attributeType3: NSLayoutConstraint.Attribute = .bottom
+                            
+            var horizontalDistance: CGFloat = self.jinyIconView.iconGap
+            
+            let verticalDistance: CGFloat = self.jinyIconView.iconGap
+            
+            if !(iconInfo?.isLeftAligned ?? false) {
+                            
+                attributeType1 = .trailing
+                
+                horizontalDistance = -self.jinyIconView.iconGap
+            }
+                    
+            superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: horizontalDistance))
+            
+            superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: verticalDistance))
+        }
         
         jinyIconView.configureIconButon()
     }
@@ -128,12 +154,18 @@ public class JinyCarousel: JinyKeyWindowAssist {
                             }
                         }
                    })
-              }
-        })
-            
+                }
+            })
         }
         
-        configureJinyIconView(superView: webView, toItemView: webView, alignmentType: .top)
+        if type == .fullScreen {
+        
+           configureJinyIconView(superView: webView, toItemView: webView, alignmentType: .top)
+            
+        } else {
+            
+           configureJinyIconView(superView: self, toItemView: webView, alignmentType: .top)
+        }
     }
     
     public override func performEnterAnimation(animation: String) {
