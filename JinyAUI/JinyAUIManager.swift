@@ -110,17 +110,19 @@ extension JinyAUIManager {
             var jinyMediaPath = documentPath.appendingPathComponent(Constants.Networking.downloadsFolder)
             
             jinyMediaPath = jinyMediaPath.appendingPathComponent(code).appendingPathComponent(mediaName).appendingPathExtension("mp3")
-
-        do {
             
-            try AVAudioSession.sharedInstance().setActive(true)
-                        
-            audioPlayer = try AVAudioPlayer(contentsOf: jinyMediaPath, fileTypeHint: AVFileType.mp3.rawValue)
-            
-            audioPlayer?.delegate = self
-            
-            guard let player = audioPlayer else { return }
-
+            do {
+                
+                try AVAudioSession.sharedInstance().setActive(true)
+                
+                self.audioPlayer = try AVAudioPlayer(contentsOf: jinyMediaPath, fileTypeHint: AVFileType.mp3.rawValue)
+                
+                self.audioPlayer?.delegate = self
+                
+                guard let player = self.audioPlayer else { return }
+                
+                self.jinyButton?.iconState = .audioPlay
+                
                 player.play()
 
             } catch let error as NSError {
@@ -134,31 +136,40 @@ extension JinyAUIManager {
 extension JinyAUIManager:JinyAUIHandler {
     
     func startMediaFetch() {
-        mediaManager = JinyMediaManager(withDelegate: self)
-        guard let callback = auiManagerCallBack else { return }
-        let initialSounds = callback.getDefaultMedia()
         
-        if let defaultSoundsDict = initialSounds["default_sounds"] {
-            startDefaultSoundDownload(defaultSoundsDict)
+        DispatchQueue.main.async {
+            self.jinyButton?.iconState = .loading
         }
-        if let discoverySoundsDict = initialSounds["discovery_sounds"] {
-            startDefaultSoundDownload(discoverySoundsDict)
-        }
-        if let auiContentDict = initialSounds["aui_content"] {
-            if let baseUrl = auiContentDict["base_url"] as? String, let contents = auiContentDict["content"] as? Array<String> {
-                for content in contents {
-                    let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
-                    mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
-                }
-                if let iconSettingDict = initialSounds["iconSetting"] as? Dictionary<String, IconSetting> {
-                    for (_, value) in iconSettingDict {
-                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
-                        mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
+        
+        DispatchQueue.global().async {
+            
+            self.mediaManager = JinyMediaManager(withDelegate: self)
+            guard let callback = self.auiManagerCallBack else { return }
+            let initialSounds = callback.getDefaultMedia()
+            
+            if let defaultSoundsDict = initialSounds["default_sounds"] {
+                self.startDefaultSoundDownload(defaultSoundsDict)
+            }
+            if let discoverySoundsDict = initialSounds["discovery_sounds"] {
+                self.startDefaultSoundDownload(discoverySoundsDict)
+            }
+            if let auiContentDict = initialSounds["aui_content"] {
+                if let baseUrl = auiContentDict["base_url"] as? String, let contents = auiContentDict["content"] as? Array<String> {
+                    for content in contents {
+                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
+                        self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
+                    }
+                    if let iconSettingDict = initialSounds["iconSetting"] as? Dictionary<String, IconSetting> {
+                        for (_, value) in iconSettingDict {
+                            let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
+                            self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
+                        }
                     }
                 }
             }
+            self.fetchSoundConfig()
+            
         }
-        fetchSoundConfig()
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView, iconInfo:Dictionary<String,Any>) {
@@ -397,17 +408,20 @@ extension JinyAUIManager:JinyAUIHandler {
         pointer = nil
         currentAssist?.remove()
         currentAssist = nil
-        dismissJinyButton()
+        jinyButton?.isHidden = true
     }
     
-    func presentJinyButton(with html: String, color: String) {
-        guard jinyButton == nil, jinyButton?.window == nil else { return }
-        //        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
+    func presentJinyButton(with html: String?, color: String) {
+        guard jinyButton == nil, jinyButton?.window == nil else {
+            jinyButton?.isHidden = false
+            return
+        }
         jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color)!)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
         jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
         jinyButton!.tapGestureRecognizer.delegate = self
+        jinyButton!.stateDelegate = self
         jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
         let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
         NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
@@ -426,6 +440,25 @@ extension JinyAUIManager: UIGestureRecognizerDelegate {
     }
 }
 
+extension JinyAUIManager: JinyIconStateDelegate {
+    func iconDidChange(state: JinyIconState) {
+        switch state {
+        case .rest:
+            DispatchQueue.main.async {
+                self.jinyButton?.changeToRest()
+            }
+        case .loading:
+            DispatchQueue.main.async {
+                self.jinyButton?.changeToLoading()
+            }
+        case .audioPlay:
+            DispatchQueue.main.async {
+                self.jinyButton?.changeToAudioPlay()
+            }
+        }
+    }
+}
+
 
 // MARK: - Media Fetch And Handling
 extension JinyAUIManager {
@@ -434,13 +467,12 @@ extension JinyAUIManager {
         let langCode = auiManagerCallBack?.getLanguageCode()
         if let baseUrl = dict["base_url"] as? String, let code = langCode {
             if let allLangSoundsDict = dict["jiny_sounds"] as? Dictionary<String,Any>,
-                let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> {
+               let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> {
                 for soundDict in soundsDictArray {
                     if let url = soundDict["url"] as? String{
                         let sound = JinySound(baseUrl: baseUrl, location: url, code: code, info: soundDict)
                         mediaManager?.startDownload(forMedia: sound, atPriority: .normal)
                     }
-                    
                 }
             }
         }
@@ -476,7 +508,11 @@ extension JinyAUIManager {
         guard let soundDictsArray = self.soundsJson?[code] as? Array<Dictionary<String,Any>> else { return }
         for soundDict in soundDictsArray {
             let sound = JinySound(baseUrl: soundDict["url"] as! String, location: "", code: code, info: soundDict)
-            mediaManager?.startDownload(forMedia: sound, atPriority: .low)
+            mediaManager?.startDownload(forMedia: sound, atPriority: .low, completion: { [weak self] (_) in
+                DispatchQueue.main.async {
+                    self?.playAudio()
+                }
+            })
         }
     }
     
@@ -538,10 +574,12 @@ extension JinyAUIManager: JinyOptionPanelDelegate {
 extension JinyAUIManager:AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        jinyButton?.iconState = .rest
         self.auiManagerCallBack?.didPlayAudio()
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        jinyButton?.iconState = .rest
         self.auiManagerCallBack?.didPlayAudio()
     }
 }

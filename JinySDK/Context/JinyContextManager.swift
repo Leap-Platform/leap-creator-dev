@@ -201,12 +201,12 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard !JinySharedInformation.shared.isMuted() else {
-            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl ?? "", color: getIconSetting()[String(discovery.id)]?.bgColor ?? "")
+            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl, color: getIconSetting()[String(discovery.id)]?.bgColor ?? "")
             return
         }
         auiHandler?.removeAllViews()
         
-        let iconInfo = ["isLeftAligned":true, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl ?? ""] as [String : Any]
+        let iconInfo = ["isLeftAligned":true, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any]
         if let anchorView = view {
             auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
         } else if let anchorRect = rect {
@@ -247,7 +247,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
                 return true
             }
         case .manualTrigger:
-            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl ?? "", color: getIconSetting()[String(discovery.id)]?.bgColor ?? "")
+            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl, color: getIconSetting()[String(discovery.id)]?.bgColor ?? "")
                 return false
         case .everySessionUntilDismissed:
             if (JinySharedInformation.shared.getDiscoveryDismissCount()["\(discovery.id)"] ?? 0) > 0 {
@@ -270,7 +270,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func showJinyIcon() {
         auiHandler?.removeAllViews()
-        auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl ?? "", color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "")
+        auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "")
         discoveryManager?.currentDiscoveryOptOut = false
     }
     
@@ -300,10 +300,10 @@ extension JinyContextManager:JinyStageManagerDelegate {
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
         auiHandler?.removeAllViews()
         if discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false {
-            auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl ?? "", color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "")
+            auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "")
         }
         guard !JinySharedInformation.shared.isMuted() else { return }
-        let iconInfo = ["isLeftAligned":true, "isEnabled": discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false, "backgroundColor": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl ?? ""] as [String : Any]
+        let iconInfo = ["isLeftAligned":true, "isEnabled": discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false, "backgroundColor": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl] as [String : Any]
         if let anchorView = view {
             auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
         } else if let anchorRect = rect {

@@ -23,6 +23,8 @@
 /* Begin PBXBuildFile section */
 		2D2334C6258B16D70084768E /* JinyCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2334C5258B16D70084768E /* JinyCarousel.swift */; };
 		2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */; };
+		2D2F661C258361EC004FDE16 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D2F661A258361EC004FDE16 /* jiny_default_icon.html */; };
+		2DC9EC4C2582660300B4039C /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */; };
 		D0084C882486814D0082508C /* JinyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* JinyConfig.swift */; };
 		D0084C8C248681A30082508C /* JinyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* JinyFlow.swift */; };
 		D0084C8E248681CF0082508C /* JinyPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8D248681CF0082508C /* JinyPage.swift */; };
@@ -274,6 +276,8 @@
 /* Begin PBXFileReference section */
 		2D2334C5258B16D70084768E /* JinyCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyCarousel.swift; sourceTree = "<group>"; };
 		2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIconSetting.swift; sourceTree = "<group>"; };
+		2D2F661A258361EC004FDE16 /* jiny_default_icon.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_default_icon.html; sourceTree = "<group>"; };
+		2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
 		D0084C872486814D0082508C /* JinyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyConfig.swift; sourceTree = "<group>"; };
 		D0084C8B248681A30082508C /* JinyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlow.swift; sourceTree = "<group>"; };
 		D0084C8D248681CF0082508C /* JinyPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPage.swift; sourceTree = "<group>"; };
@@ -502,6 +506,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2DC9EC49258265E100B4039C /* SupportedFiles */ = {
+			isa = PBXGroup;
+			children = (
+				2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */,
+				2D2F661A258361EC004FDE16 /* jiny_default_icon.html */,
+			);
+			path = SupportedFiles;
+			sourceTree = "<group>";
+		};
 		D0084C862486812B0082508C /* Modals */ = {
 			isa = PBXGroup;
 			children = (
@@ -915,6 +928,7 @@
 		D0FDAC2324B48B3C00D9332B /* JinyAUI */ = {
 			isa = PBXGroup;
 			children = (
+				2DC9EC49258265E100B4039C /* SupportedFiles */,
 				D0B793082543186D00DB94DD /* JinyAUIComponents */,
 				D032C59A24B74C5B006E8F2B /* JinyAUIUtils */,
 				D032C59224B7008D006E8F2B /* JinyFlowSelector */,
@@ -1284,10 +1298,12 @@
 				D032C58C24B6FF35006E8F2B /* jiny_mute.png in Resources */,
 				D032C58824B6FF35006E8F2B /* jiny_close.png in Resources */,
 				D032C58924B6FF35006E8F2B /* jiny_continue.png in Resources */,
+				2D2F661C258361EC004FDE16 /* jiny_default_icon.html in Resources */,
 				D032C58D24B6FF35006E8F2B /* jiny_powered_by.png in Resources */,
 				D032C58E24B6FF35006E8F2B /* jiny_repeat.png in Resources */,
 				D032C58B24B6FF35006E8F2B /* jiny_language.png in Resources */,
 				D032C58A24B6FF35006E8F2B /* jiny_icon.png in Resources */,
+				2DC9EC4C2582660300B4039C /* jiny_audio_anim.html in Resources */,
 				D032C58724B6FF35006E8F2B /* jiny_change_lang.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

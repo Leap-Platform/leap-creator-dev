@@ -51,7 +51,9 @@ public class IconSetting {
         }
         
         if let htmlUrl = dict["htmlUrl"] as? String {
-            self.htmlUrl = htmlUrl
+            if self.isCustomised ?? false {
+               self.htmlUrl = htmlUrl
+            }
         }
         
         if let contentUrls = dict["content"] as? [String] {
