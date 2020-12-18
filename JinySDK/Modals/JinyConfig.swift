@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Gzip
 
 class JinyConfig {
     
@@ -31,11 +32,13 @@ class JinyConfig {
         if let base64ConfigStrings  = dataDict["dict"] as? Array<String> {
             for base64ConfigString in base64ConfigStrings {
                 let base64DecodedData = Data(base64Encoded: base64ConfigString)
-                
+                if let decompressedData = try? base64DecodedData?.gunzipped(), let jsonDict = try? JSONSerialization.jsonObject(with: decompressedData, options: .allowFragments) as? Dictionary<String,Any> {
+                    configsArray.append(jsonDict)
+                }
             }
             
         } else {
-            guard let data = dataDict["data"] as? Array<Dictionary<String,Any>> else {return}
+            guard let data = dataDict["data"] as? Array<Dictionary<String,Any>> else { return }
             configsArray = data
         }
         guard configsArray.count > 0  else { return }
