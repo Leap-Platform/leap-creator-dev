@@ -25,6 +25,7 @@ class JinyAUIManager:NSObject {
     var beacon: JinyBeacon?
     var spot: JinySpot?
     var label: JinyLabel?
+    var swipePointer: JinySwipePointer?
     var optionPanel:JinyOptionPanel?
     var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
@@ -188,21 +189,22 @@ extension JinyAUIManager:JinyAUIHandler {
         
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
+            
+            if !isViewInVisibleArea(view: inView) {
+                if let autoscroll = assistInfo["auto_scroll"] as? Bool {
+                    let scrollViews = getScrollViews(inView)
+                    if scrollViews.count > 0 {
+                        if autoscroll { makeViewVisible(scrollViews, false) }
+                        else { showArrow() }
+                    }
+                } else {
+                    showArrow()
+                }
+            }
+            
             switch type {
                 
             case "FINGER_POINTER":
-                if !isViewInVisibleArea(view: inView) {
-                    if let autoscroll = assistInfo["auto_scroll"] as? Bool {
-                        let scrollViews = getScrollViews(inView)
-                        if scrollViews.count > 0 {
-                            if autoscroll { makeViewVisible(scrollViews, false) }
-                            else { showArrow() }
-                        }
-                    } else {
-                        showArrow()
-                    }
-                }
-                
                 pointer = JinyFingerRipplePointer()
                 pointer?.pointerDelegate = self
                 pointer?.presentPointer(view: inView)
@@ -237,6 +239,12 @@ extension JinyAUIManager:JinyAUIHandler {
                 label?.delegate = self
                 label?.presentLabel()
                 
+            case "SWIPE_LEFT", "SWIPE_RIGHT", "SWIPE_UP", "SWIPE_DOWN":
+                swipePointer = JinySwipePointer()
+                swipePointer?.type = JinySwipePointerType(rawValue: type)!
+                swipePointer?.pointerDelegate = self
+                swipePointer?.presentPointer(view: inView)
+            
             default:
                 performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }
@@ -354,6 +362,13 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist?.delegate = self
                 UIApplication.shared.keyWindow?.addSubview(jinySlideIn)
                 jinySlideIn.showSlideIn()
+            case "CAROUSEL":
+                let jinyCarousel = JinyCarousel(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyCarousel
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyCarousel)
+                jinyCarousel.showCarousel()
+                
             default:
                 break
             }
