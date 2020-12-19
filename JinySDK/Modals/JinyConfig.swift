@@ -29,7 +29,7 @@ class JinyConfig {
     init(withDict dataDict:Dictionary<String,Any>) {
         
         var configsArray:Array<Dictionary<String,Any>> = []
-        if let base64ConfigStrings  = dataDict["dict"] as? Array<String> {
+        if let base64ConfigStrings  = dataDict["data"] as? Array<String> {
             for base64ConfigString in base64ConfigStrings {
                 let base64DecodedData = Data(base64Encoded: base64ConfigString)
                 if let decompressedData = try? base64DecodedData?.gunzipped(), let jsonDict = try? JSONSerialization.jsonObject(with: decompressedData, options: .allowFragments) as? Dictionary<String,Any> {
