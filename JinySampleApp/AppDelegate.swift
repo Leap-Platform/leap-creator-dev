@@ -8,8 +8,8 @@
 
 import UIKit
 //import JinySDK
-//import JinyAuthSDK
-import JinyAUI
+import JinyAuthSDK
+//import JinyAUI
 
 @available(iOS 13.0, *)
 @UIApplicationMain
@@ -19,9 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        JinyAUI.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
+//        JinyAUI.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
 //        let _ = Jiny.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36", isTesting: false, uiManager: nil)
-////        JinyAuth.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
+        
+        JinyAuth.instance.initialize(withToken: "5b4208c2-5f48-4fd2-8f0f-33362ca2d0ed")
         return true
     }
 
