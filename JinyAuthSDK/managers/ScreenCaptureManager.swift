@@ -43,10 +43,10 @@ class ScreenCaptureManager: AppStateProtocol{
         if screenShotImage == nil {
             return
         }
-        let hierarchy = getHierarchy(finishListener: self.completeListener)
-     
-        
-        sendData(screenCapture: screenShotImage!,hierarchy: hierarchy)
+        getHierarchy(finishListener: self.completeListener) { [weak self] (hierarchy) in
+            
+           self?.sendData(screenCapture: screenShotImage!,hierarchy: hierarchy)
+        }
     }
     
     func sendData(screenCapture: String, hierarchy: Dictionary<String, Any>)->Void{
@@ -115,9 +115,10 @@ class ScreenCaptureManager: AppStateProtocol{
         return encodedImageBase64
     }
     
-    func getHierarchy(finishListener: FinishListener)->Dictionary<String, Any>{
-        let hierarchyObj = ScreenHelper.captureHierarchy(finishListener: finishListener)
-        return hierarchyObj
+    func getHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
+        ScreenHelper.captureHierarchy(finishListener: finishListener) { (dict) in
+            completion(dict)
+        }
     }
     
     func stop(){

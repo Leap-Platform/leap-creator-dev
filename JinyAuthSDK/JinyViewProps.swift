@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 import WebKit
 
+/// global variable 'group' to keep track of recursion completion.
+let group = DispatchGroup()
+
 class JinyViewBounds:Codable {
     
     var left:Float
@@ -47,7 +50,7 @@ class JinyViewProps:Codable {
     var is_exclusive_touch: Bool
     var is_clickable: Bool
     var is_scroll_container: Bool
-    var is_web_view:Bool
+    var is_webview:Bool
     var location_x_on_screen:Float
     var location_y_on_screen:Float
     var bgColor:Dictionary<String,Int>
@@ -58,8 +61,10 @@ class JinyViewProps:Codable {
     var is_ui_webview: Bool = false
     var is_wk_webview: Bool = false
     
-    
-    init(view:UIView, finishListener: FinishListener) {
+    init(view:UIView, finishListener: FinishListener, completion: ((_ success: Bool, _ viewProps: JinyViewProps?) -> Void
+    )? = nil) {
+        
+        group.enter()
         
         acc_id = view.accessibilityIdentifier ?? ""
         acc_label = view.accessibilityLabel ?? ""
@@ -76,26 +81,8 @@ class JinyViewProps:Codable {
         is_multiple_touch_enabled = view.isMultipleTouchEnabled
         is_exclusive_touch = view.isExclusiveTouch
         is_scroll_container = view.isKind(of: UIScrollView.self)
+        is_webview = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
         
-        is_web_view = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
-//
-        var webChildren: String?
-        
-        if is_web_view {
-            if let uiweb = view as? UIWebView {
-                    let res = uiweb.stringByEvaluatingJavaScript(from: ScreenHelper.layoutInjectionJSScript)
-                    webChildren = res
-                print(web_children ?? "")
-            }
-            else if let wk_web = view as? WKWebView {
-                wk_web.evaluateJavaScript(ScreenHelper.layoutInjectionJSScript, completionHandler: {(res, error) in
-                    print("Hierarchy in WKWebView :: \(res)")
-                    webChildren = res as? String
-                })
-            }
-        }
-        
-        web_children = webChildren
         if let control = view as? UIControl {
             let targetActions = control.allTargets.filter{
                 control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
@@ -139,7 +126,29 @@ class JinyViewProps:Codable {
         } else {
             for child in childViews  { children.append(JinyViewProps(view: child, finishListener: finishListener)) }
         }
+
+        var webChildren: String?
         
+        if is_webview {
+            if let uiweb = view as? UIWebView {
+                let res = uiweb.stringByEvaluatingJavaScript(from: ScreenHelper.layoutInjectionJSScript)
+                webChildren = res
+                group.leave()
+            }
+            else if let wk_web = view as? WKWebView {
+                wk_web.evaluateJavaScript(ScreenHelper.layoutInjectionJSScript, completionHandler: { (res, error) in
+                    webChildren = res as? String
+                    group.leave()
+                })
+            }
+        
+        } else { group.leave() }
+        
+        group.notify(queue: DispatchQueue.main) {
+            
+            self.web_children = webChildren
+            completion?(true, self)
+        }
     }
     
     func getVisibleSiblings(allSiblings:Array<UIView>) -> Array<UIView> {

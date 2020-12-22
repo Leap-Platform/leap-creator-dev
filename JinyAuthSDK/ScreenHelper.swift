@@ -37,23 +37,24 @@ class ScreenHelper {
         return smallImage
     }
 
-    static func captureHierarchy(finishListener: FinishListener) -> Dictionary<String,Any> {
+    static func captureHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
         var hierarchy:Dictionary<String,Any> = [:]
         hierarchy["screen_width"] = UIScreen.main.bounds.width
         hierarchy["screen_height"] = UIScreen.main.bounds.height
         hierarchy["client_package_name"] = Bundle.main.bundleIdentifier
         hierarchy["orientation"] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
-        let layout = JinyViewProps(view: UIApplication.shared.keyWindow!, finishListener: finishListener)
-        do {
-            let jsonEncoder = JSONEncoder()
-            jsonEncoder.outputFormatting = .prettyPrinted
-            let hierarchyData = try jsonEncoder.encode(layout)
-            let payload = try JSONSerialization.jsonObject(with: hierarchyData, options: .mutableContainers) as? Dictionary<String,Any>
-            hierarchy["layout"] = payload
-        } catch {
-            
-        }
-        return hierarchy
+        _ = JinyViewProps(view: UIApplication.shared.keyWindow!, finishListener: finishListener) { (_, props) in
+            do {
+                let jsonEncoder = JSONEncoder()
+                jsonEncoder.outputFormatting = .prettyPrinted
+                let hierarchyData = try jsonEncoder.encode(props)
+                let payload = try JSONSerialization.jsonObject(with: hierarchyData, options: .mutableContainers) as? Dictionary<String,Any>
+                hierarchy["layout"] = payload
+                completion(hierarchy)
+            } catch {
+                
+            }
+        }        
     }
 
     static func jsonToString(json: AnyObject) -> String{
