@@ -11,8 +11,8 @@ import UIKit
 import WebKit
 
 public enum JinyCarouselType: String {
-    case fullScreen
-    case overlay
+    case fullScreen = "FULLSCREEN"
+    case overlay = "OVERLAY"
 }
 
 /// JinyCarousel - A Web KeyWindowAssist AUI Component class to show a fullscreen or overlay assist on a window.
