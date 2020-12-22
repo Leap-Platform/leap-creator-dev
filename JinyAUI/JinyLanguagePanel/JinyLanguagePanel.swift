@@ -48,11 +48,11 @@ class JinyLanguagePanel: UIView {
         return view
     }()
     
-    private lazy var jinyIcon:UIImageView = {
-        let image = UIImageView(frame: .zero)
-        image.contentMode = .scaleAspectFit
-        image.image = UIImage.getImageFromBundle("jiny_icon")
-        return image
+    private lazy var jinyIcon: JinyIconView = {
+        let jinyIconView = JinyIconView()
+        jinyIconView.htmlUrl = JinySharedAUI.shared.iconHtml
+        jinyIconView.iconBackgroundColor = UIColor(hex: JinySharedAUI.shared.iconColor) ?? .black
+        return jinyIconView
     }()
     
     private lazy var poweredBy:JinyPoweredBy = {
@@ -152,14 +152,12 @@ extension JinyLanguagePanel {
     }
     
     private func setupJinyIcon() {
-        
-        setupIconImageView()
+
         iconHolder.backgroundColor = themeColor
         iconHolder.layer.cornerRadius = 26
         iconHolder.layer.masksToBounds = true
         holder.addSubview(iconHolder)
         iconHolder.translatesAutoresizingMaskIntoConstraints = false
-        
         
         let heightConst = NSLayoutConstraint(item: iconHolder, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 52)
         let aspectConst = NSLayoutConstraint(item: iconHolder, attribute: .height, relatedBy: .equal, toItem: iconHolder, attribute: .width, multiplier: 1, constant: 0)
@@ -167,17 +165,20 @@ extension JinyLanguagePanel {
         let centerXConst = NSLayoutConstraint(item: iconHolder, attribute: .centerX, relatedBy: .equal, toItem: holder, attribute: .centerX, multiplier: 1, constant: 0)
         NSLayoutConstraint.activate([heightConst, aspectConst, topConst, centerXConst])
         
+        setupIconWebView()
+        jinyIcon.iconSize = iconHolder.frame.size.height
+        jinyIcon.configureIconButon()
     }
     
-    private func setupIconImageView() {
+    private func setupIconWebView() {
         
         iconHolder.addSubview(jinyIcon)
         jinyIcon.translatesAutoresizingMaskIntoConstraints = false
         
-        let leadingConst = NSLayoutConstraint(item: jinyIcon, attribute: .leading, relatedBy: .equal, toItem: iconHolder, attribute: .leading, multiplier: 1, constant: 10)
-        let trailingConst = NSLayoutConstraint(item: iconHolder, attribute: .trailing, relatedBy: .equal, toItem: jinyIcon, attribute: .trailing, multiplier: 1, constant: 10)
-        let bottomConst = NSLayoutConstraint(item: iconHolder, attribute: .bottom, relatedBy: .equal, toItem: jinyIcon, attribute: .bottom, multiplier: 1, constant: 10)
-        let topConst = NSLayoutConstraint(item: jinyIcon, attribute: .top, relatedBy: .equal, toItem: iconHolder, attribute: .top, multiplier: 1, constant: 10)
+        let leadingConst = NSLayoutConstraint(item: jinyIcon, attribute: .leading, relatedBy: .equal, toItem: iconHolder, attribute: .leading, multiplier: 1, constant: 0)
+        let trailingConst = NSLayoutConstraint(item: iconHolder, attribute: .trailing, relatedBy: .equal, toItem: jinyIcon, attribute: .trailing, multiplier: 1, constant: 0)
+        let bottomConst = NSLayoutConstraint(item: iconHolder, attribute: .bottom, relatedBy: .equal, toItem: jinyIcon, attribute: .bottom, multiplier: 1, constant: 0)
+        let topConst = NSLayoutConstraint(item: jinyIcon, attribute: .top, relatedBy: .equal, toItem: iconHolder, attribute: .top, multiplier: 1, constant: 0)
         NSLayoutConstraint.activate([leadingConst, trailingConst, bottomConst, topConst])
     }
     

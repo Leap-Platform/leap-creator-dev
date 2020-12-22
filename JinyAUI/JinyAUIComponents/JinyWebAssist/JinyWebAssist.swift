@@ -357,13 +357,6 @@ public class JinyWebAssist: UIView, JinyAssist {
     public func remove() {
       
         self.removeFromSuperview()
-        
-        delegate?.didDismissAssist()
-    }
-    
-    @objc func jinyIconButtonTapped(button: UIButton) {
-        
-        self.delegate?.didTapAssociatedJinyIcon()
     }
     
     /// method to configure JinyIconView constraints.
@@ -380,10 +373,14 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.iconButton.addTarget(self, action: #selector(jinyIconButtonTapped(button:)), for: .touchUpInside)
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl
         
-        jinyIconView.iconBackgroundColor = UIColor.colorFromString(string: iconInfo?.backgroundColor ?? UIColor.stringFromUIColor(color: .blue))
-                
+        jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
+        
+        jinyIconView.tapGestureRecognizer.delegate = self
+        
+        jinyIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
+        
         self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
         
         var attributeType1: NSLayoutConstraint.Attribute = .leading
@@ -411,6 +408,15 @@ public class JinyWebAssist: UIView, JinyAssist {
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: 0))
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
+        
+        jinyIconView.configureIconButon()
+    }
+    
+    /// call the method when you want the webView content to be in the desired user's language.
+    /// - Parameters:
+    ///   - locale: User's desired language selected in the Jiny panel.
+    func changeLanguage(locale: String) {
+        webView.evaluateJavaScript("changeLocale('\(locale)')", completionHandler: nil)
     }
 
     /// call the method internally when webView didFinish navigation called
@@ -435,6 +441,8 @@ extension JinyWebAssist: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.isHidden = false
+        
+        changeLanguage(locale: UserDefaults.standard.object(forKey: "audio_language_code") as! String)
                 
         didFinish(webView, didFinish: navigation)
                 
@@ -458,9 +466,6 @@ extension JinyWebAssist: WKScriptMessageHandler {
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
         guard let dictBody = dict["body"] as? Dictionary<String, Any> else {return}
         guard let close = dictBody["close"] as? Bool else {return}
-        
-        print(dict)
-        
         delegate?.didSendAction(dict: dict)
         
         if let urlString = dictBody["external_url"] as? String, let url = URL(string: urlString) {
@@ -481,17 +486,14 @@ extension JinyWebAssist: WKScriptMessageHandler {
     }
 }
 
-extension WKWebView {
+extension JinyWebAssist: UIGestureRecognizerDelegate {
     
-    /// call the method internally to load content from web.
-    /// - Parameters:
-    ///   - urlString: A url to load content from.
-    func load(url urlString: String) {
+    @objc func jinyIconButtonTapped() {
         
-        if let url = URL(string: urlString) {
-            
-            let request = URLRequest(url: url)
-            load(request)
-        }
+        self.delegate?.didTapAssociatedJinyIcon()
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

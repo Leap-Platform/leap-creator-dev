@@ -74,23 +74,13 @@ public class JinyBeacon: JinyNativeAssist {
         pulsator.radius = CGFloat(radius)
         pulsator.numPulse = 3
         
-        guard toView != nil else {
+        if toView?.window != UIApplication.shared.keyWindow {
             
-            delegate?.failedToPresentAssist()
+            inView = toView!.window
             
-            fatalError("no element to point to")
-        }
-        
-        if inView == nil {
+        } else {
             
-            guard let _ = toView?.superview else {
-                
-                delegate?.failedToPresentAssist()
-                
-                fatalError("View not in valid hierarchy or is window view")
-            }
-            
-            inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
+            inView = UIApplication.getCurrentVC()?.view
         }
         
         inView?.layer.addSublayer(pulsator)

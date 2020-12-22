@@ -19,6 +19,9 @@ public class IconInfo {
     /// background color of icon of type string.
     public var backgroundColor: String?
     
+    /// html string to load webView
+    public var htmlUrl: String?
+    
     /// initialises IconInfo.
     /// - Parameters:
     ///   - iconDict: A dictionary value for the type IconInfo.
@@ -37,6 +40,11 @@ public class IconInfo {
         if let backgroundColor = iconDict["backgroundColor"] as? String {
             
             self.backgroundColor = backgroundColor
+        }
+        
+        if let htmlUrl = iconDict["htmlUrl"] as? String {
+            
+            self.htmlUrl = htmlUrl
         }
     }
 }

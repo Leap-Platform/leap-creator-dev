@@ -17,32 +17,23 @@ import UIKit
 @objc public protocol JinyAUIHandler:NSObjectProtocol {
     
     func startMediaFetch()
-    func performInstruction(instruction:Dictionary<String,Any>, inView:UIView)
-    func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?)
+    func performInstruction(instruction:Dictionary<String,Any>, inView:UIView, iconInfo:Dictionary<String,Any>)
+    func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
-    
-    func playAudio()
-    func playTTS(withLangCode:String)
-    func presentJinyButton()
-    func presentBottomDiscovery(header:String, optInText:String, optOutText:String, languages:Array<String>)
-    func presentPingDiscovery()
-    func presentFlowSelector(branchTitle:String, flowTitles:Array<String>)
-    func presentPointer(toView:UIView, ofType:JinyPointerStyle)
-    func presentPointer(toRect:CGRect, inView:UIView?, ofType:JinyPointerStyle)
-    func updatePointerRect(newRect:CGRect, inView:UIView?)
-    func presentLanguagePanel(languages:Array<String>)
-    func presentOptionPanel(mute:String, repeatText:String, language:String?)
+    func presentJinyButton(with html: String?, color: String, iconEnabled: Bool)
+    func presentLanguagePanel(languages: Array<String>)
+    func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()
     func keepOnlyJinyButtonIfPresent()
+    func dismissCurrentAssist()
     func removeAllViews()
 }
 
 @objc public protocol JinyAUICallback:NSObjectProtocol {
     
     func getDefaultMedia() -> Dictionary<String,Dictionary<String,Any>>
-    
     func triggerEvent(identifier:String, value:Any)
     
     func tryTTS() -> String?
@@ -56,7 +47,9 @@ import UIKit
     func willPlayAudio()
     func didPlayAudio()
     func failedToPerform()
+    func willDismissView()
     func didDismissView()
+    func didReceiveInstruction(dict:Dictionary<String,Any>)
     
     func stagePerformed()
     
@@ -66,6 +59,7 @@ import UIKit
     func discoveryMuted()
     func discoveryOptedInFlow(atIndex:Int)
     func discoveryReset()
+    func discoveryDismissed()
     
     func languagePanelOpened()
     func languagePanelClosed()
@@ -75,11 +69,6 @@ import UIKit
     func optionPanelClosed()
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
-    
-    func flowSelectorPresented()
-    func flowSelectorFlowSelected(atIndex:Int)
-    func flowSelectorDismissed()
-    
 }
 
 
