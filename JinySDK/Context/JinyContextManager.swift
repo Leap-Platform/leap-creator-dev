@@ -301,9 +301,8 @@ extension JinyContextManager:JinyStageManagerDelegate {
         auiHandler?.removeAllViews()
         auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
-        let iconInfo = ["isLeftAligned":true, "isEnabled": discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false, "backgroundColor": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl] as [String : Any]
         if let anchorView = view {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: [:])
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
         } else {
