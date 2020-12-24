@@ -115,17 +115,19 @@ public class JinyLabel: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
                     
-            self.layer.borderColor = UIColor.colorFromString(string: colorString).cgColor
+            self.webView.layer.borderColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
                         
-            self.layer.borderWidth = CGFloat(strokeWidth)
+            self.webView.layer.borderWidth = CGFloat(strokeWidth)
         
         } else {
             
-            self.layer.borderWidth = 0.0
+            self.webView.layer.borderWidth = 0.0
         }
+        
+        self.webView.layer.masksToBounds = true
         
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
     }

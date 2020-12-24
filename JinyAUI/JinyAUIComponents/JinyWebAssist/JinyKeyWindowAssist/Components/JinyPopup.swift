@@ -18,6 +18,12 @@ public class JinyPopup: JinyKeyWindowAssist {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.elevation = 8 // hardcoded value
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.cornerRadius = 14 // hardcoded value
+        
         configureOverlayView()
         
         configureWebView()

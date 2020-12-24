@@ -75,7 +75,7 @@ public class JinySlideIn: JinyKeyWindowAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
                     
-            self.webView.layer.borderColor = UIColor.colorFromString(string: colorString).cgColor
+            self.webView.layer.borderColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -126,7 +126,7 @@ public class JinySlideIn: JinyKeyWindowAssist {
     ///   - width: Width of the content of the webview.
     private func configureSlideInDimensionConstraint(width: Float, height: Float) {
         
-        guard let inViewWidth = inView?.frame.width else {
+        guard let inViewWidth = inView?.frame.width, self.alignment == .left || self.alignment == .right else {
             
             return
         }

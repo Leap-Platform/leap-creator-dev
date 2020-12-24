@@ -104,13 +104,21 @@ public class JinyHighlight: JinyInViewAssist {
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
         
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
+         
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
+         
+       self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
+        
        self.webView.scrollView.isScrollEnabled = false
         
        toViewOriginalInteraction = self.toView?.isUserInteractionEnabled
                 
        maskLayer.bounds = self.webView.bounds
     
-       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 6.0)
+       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
 
        toolTipView.layer.cornerRadius = cornerRadius
     
@@ -127,7 +135,7 @@ public class JinyHighlight: JinyInViewAssist {
         
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
             
-            self.webView.alpha = 0
+            self.webView.isOpaque = false
         }
     }
     
@@ -141,7 +149,7 @@ public class JinyHighlight: JinyInViewAssist {
         
         if let connectorColor = assistInfo?.extraProps?.props["connectorColor"] as? String {
             
-            self.connectorColor = UIColor.colorFromString(string: connectorColor)
+            self.connectorColor = UIColor.init(hex: connectorColor) ?? .black
         }
         
         if let connectorType = assistInfo?.extraProps?.props["connectorType"] as? String {
@@ -387,9 +395,15 @@ public class JinyHighlight: JinyInViewAssist {
         
         borderLayer.frame = webView.bounds
         
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.strokeColor = "#00000000" // hardcoded value
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.strokeWidth = 0 // hardcoded value
+        
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
         
-            borderLayer.strokeColor = UIColor.colorFromString(string: colorString).cgColor
+            borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -547,7 +561,7 @@ public class JinyHighlight: JinyInViewAssist {
         fillLayer.opacity = 1.0
         self.layer.mask = fillLayer
         
-        if assistInfo?.anchorClickable ?? false {
+        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
             
             toView?.isUserInteractionEnabled = true
         

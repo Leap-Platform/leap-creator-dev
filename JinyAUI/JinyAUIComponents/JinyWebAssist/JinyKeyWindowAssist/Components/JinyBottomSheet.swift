@@ -25,6 +25,12 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
            self.assistInfo?.layoutInfo = LayoutInfo(withDict: layoutInfo)
         }
         
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.elevation = 8 // hardcoded value
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.cornerRadius = 14 // hardcoded value
+        
         setAnimationType()
     }
     

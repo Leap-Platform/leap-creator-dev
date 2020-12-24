@@ -116,7 +116,7 @@ public class JinySpot: JinyInViewAssist {
         
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
             
-            self.webView.backgroundColor = .clear
+            self.webView.isOpaque = false
         }
     }
     
@@ -130,7 +130,7 @@ public class JinySpot: JinyInViewAssist {
         
         if let connectorColor = assistInfo?.extraProps?.props["connectorColor"] as? String {
             
-            self.connectorColor = UIColor.colorFromString(string: connectorColor)
+            self.connectorColor = UIColor.init(hex: connectorColor) ?? .black
         }
                     
         self.connectorType = .none
@@ -276,7 +276,7 @@ public class JinySpot: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.bgColor {
         
-          circleView.backgroundColor = UIColor.colorFromString(string: colorString)
+          circleView.backgroundColor = UIColor.init(hex: colorString)
         
         } else {
             
@@ -460,7 +460,7 @@ public class JinySpot: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
         
-            borderLayer.strokeColor = UIColor.colorFromString(string: colorString).cgColor
+            borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -618,7 +618,7 @@ public class JinySpot: JinyInViewAssist {
         fillLayer.opacity = 1.0
         self.layer.mask = fillLayer
         
-        if assistInfo?.anchorClickable ?? false {
+        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
             
             toView?.isUserInteractionEnabled = true
         
