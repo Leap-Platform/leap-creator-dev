@@ -206,9 +206,9 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         }
         auiHandler?.removeAllViews()
         
-        let iconInfo = ["isLeftAligned":true, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any]
+        let iconInfo = ["isLeftAligned": getIconSetting()[String(discovery.id)]?.leftAlign ?? false, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]
         if let anchorView = view {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
+            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo as Dictionary<String, Any>)
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
         }
