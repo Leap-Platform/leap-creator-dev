@@ -76,7 +76,7 @@ extension JinyAUIManager {
     
     @objc func keyboardDidHide(_ notification:NSNotification) {
         keyboardHeight = 0
-        guard let assistInfo = currentInstruction?["assist_info"] as? Dictionary<String,Any>, let autoScroll = assistInfo["auto_scroll"] as? Bool else {
+        guard let assistInfo = currentInstruction?["assist_info"] as? Dictionary<String,Any>, let autoScroll = assistInfo["autoScroll"] as? Bool else {
             return
         }
         if autoScroll {
@@ -191,7 +191,7 @@ extension JinyAUIManager:JinyAUIHandler {
             auiManagerCallBack?.willPresentView()
             
             if !isViewInVisibleArea(view: inView) {
-                if let autoscroll = assistInfo["auto_scroll"] as? Bool {
+                if let autoscroll = assistInfo["autoScroll"] as? Bool {
                     let scrollViews = getScrollViews(inView)
                     if scrollViews.count > 0 {
                         if autoscroll { makeViewVisible(scrollViews, false) }
@@ -215,7 +215,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 tooltip?.delegate = self
                 tooltip?.presentPointer()
                 
-            case "HIGHLIGHT":
+            case "HIGHLIGHT_WITH_DESC":
                 highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 currentAssist = highlight
                 highlight?.delegate = self
@@ -267,11 +267,9 @@ extension JinyAUIManager:JinyAUIHandler {
                 
             case "FINGER_POINTER":
                 if !isRectInVisbleArea(rect: rect, inView: inWebview!) {
-                    if let autoscroll = assistInfo["auto_scroll"] as? Bool {
+                    if let autoscroll = assistInfo["autoScroll"] as? Bool {
                         if autoscroll {
-                            if let _ = inWebview as? UIWebView {
-                                
-                            } else if let wkweb = inWebview as? WKWebView {
+                            if let wkweb = inWebview as? WKWebView {
                                 wkweb.scrollView.scrollRectToVisible(rect, animated: false)
                             }
                         }
@@ -435,7 +433,7 @@ extension JinyAUIManager:JinyAUIHandler {
         }
         JinySharedAUI.shared.iconHtml = html
         JinySharedAUI.shared.iconColor = color
-        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color)!)
+        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color) ?? .black)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
         jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))

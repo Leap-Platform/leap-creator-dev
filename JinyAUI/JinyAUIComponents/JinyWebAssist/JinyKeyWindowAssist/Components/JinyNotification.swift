@@ -41,8 +41,6 @@ public class JinyNotification: JinyKeyWindowAssist {
         self.webView.addGestureRecognizer(swipeUp)
         
         inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
-        
-        self.webView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 1))
     }
     
     required public init?(coder: NSCoder) {
@@ -74,12 +72,29 @@ public class JinyNotification: JinyKeyWindowAssist {
             
            print("There is no other alignment for notification except top and bottom")
         }
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.elevation = 8 // hardcoded value
+        
+        self.webView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 1))
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.cornerRadius = 14 // hardcoded value
+        
+        self.webView.clipsToBounds = true
+        
+        self.webView.layer.cornerRadius = CGFloat(assistInfo?.layoutInfo?.style.cornerRadius ?? 14)
     }
     
     /// This is a custom configuration of constraints for the Notification component.
     /// - Parameters:
     ///   - alignment: the alignment of the webview whether it is top or bottom.
     private func configureWebViewForNotification(alignment: JinyAlignmentType) {
+        
+        guard self.alignment == .top || self.alignment == .bottom else {
+            
+            return
+        }
         
         inView?.addSubview(self.webView)
                                 
@@ -110,6 +125,11 @@ public class JinyNotification: JinyKeyWindowAssist {
         
         webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
             if let height = value as? CGFloat {
+                
+                guard self?.alignment == .top || self?.alignment == .bottom else {
+                    
+                    return
+                }
                                 
                 self?.configureHeightConstraint(height: height)
                 

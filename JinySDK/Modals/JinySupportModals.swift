@@ -61,12 +61,12 @@ class JinyAssistInfo {
     var identifier:String?
     
     init(withDict infoDict:Dictionary<String,Any>) {
-        layoutInfo = infoDict["layout_info"] as? Dictionary<String,Any> ?? [:]
-        htmlUrl = infoDict["html_url"] as? String
-        contentUrls = infoDict["content_urls"] as? Array<String> ?? []
-        highlightClickable = infoDict["highlight_clickable"] as? Bool ?? false
-        autoScroll = infoDict["auto_scroll"] as? Bool ?? false
-        autoFocus = infoDict["auto_focus"] as? Bool ?? false
+        layoutInfo = infoDict["layoutInfo"] as? Dictionary<String,Any> ?? [:]
+        htmlUrl = infoDict["htmlUrl"] as? String
+        contentUrls = infoDict["contentUrls"] as? Array<String> ?? []
+        highlightClickable = infoDict["highlightClickable"] as? Bool ?? false
+        autoScroll = infoDict["autoScroll"] as? Bool ?? false
+        autoFocus = infoDict["autoFocus"] as? Bool ?? false
         type = infoDict["type"] as? String
         identifier = infoDict["identifier"] as? String
     }
