@@ -39,7 +39,8 @@ class JinyStage:JinyContext {
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
-        type = JinyStageType(rawValue: (stageDict["type"] as? String) ?? "NORMAL") ?? .Normal
+        let typeString = (stageDict["type"] as? String)?.uppercased() ?? "NORMAL"
+        type = JinyStageType(rawValue: typeString) ?? .Normal
         frequencyPerFlow = stageDict["frequency_per_flow"] as? Int ?? -1
         isSuccess = stageDict["is_success"] as? Bool ?? false
         if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> {
@@ -56,7 +57,7 @@ class JinyStage:JinyContext {
     }
     
     func copy(with zone: NSZone? = nil) -> JinyStage {
-        let copy = JinyStage(withDict: ["type":self.type, "frequency_per_flow":self.frequencyPerFlow, "is_success":self.isSuccess, "branch_info":self.branchInfo ?? [:], "instruction":self.instructionInfoDict ?? [:]])
+        let copy = JinyStage(withDict: ["type":self.type.rawValue, "frequency_per_flow":self.frequencyPerFlow, "is_success":self.isSuccess, "branch_info":self.branchInfo ?? [:], "instruction":self.instructionInfoDict ?? [:]])
         copy.id = self.id
         copy.name = self.name
         copy.nativeIdentifiers = self.nativeIdentifiers

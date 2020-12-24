@@ -418,6 +418,7 @@ extension JinyAUIManager:JinyAUIHandler {
     
     func removeAllViews() {
         pointer?.removePointer()
+        swipePointer?.removePointer()
         pointer = nil
         currentAssist?.remove()
         currentAssist = nil
@@ -699,7 +700,11 @@ extension JinyAUIManager: JinyAssistDelegate {
     
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
-    func didDismissAssist() { auiManagerCallBack?.didDismissView() }
+    func didDismissAssist() {
+        currentAssist = nil
+        auiManagerCallBack?.didDismissView()
+        
+    }
     
     func didSendAction(dict: Dictionary<String, Any>) {
         auiManagerCallBack?.didReceiveInstruction(dict: dict)
