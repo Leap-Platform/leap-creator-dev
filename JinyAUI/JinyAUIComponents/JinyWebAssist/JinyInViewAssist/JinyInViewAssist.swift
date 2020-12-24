@@ -90,8 +90,7 @@ public class JinyInViewAssist: JinyWebAssist {
         if assistInfo?.layoutInfo?.outsideDismiss ?? false {
         
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "")
-            
-            self.delegate?.didDismissAssist()
+
         }
     }
 }

@@ -541,8 +541,6 @@ public class JinyToolTip: JinyInViewAssist {
             
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
             
-            self.delegate?.didDismissAssist()
-            
             guard let userInteraction = toViewOriginalInteraction else {
                 
                return

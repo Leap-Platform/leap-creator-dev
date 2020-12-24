@@ -488,7 +488,17 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didPlayAudio() {
-        
+        guard let state = contextDetector?.getState() else { return }
+        switch state {
+        case .Discovery:
+            break
+        case .Stage:
+            guard let sm = stageManager else { return }
+            guard let currentStage = sm.getCurrentStage() else { return }
+            if currentStage.type == .Sequence{
+                sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
+            }
+        }
     }
     
     func failedToPerform() {
@@ -509,7 +519,8 @@ extension JinyContextManager:JinyAUICallback {
                 discoveryDismissed()
             }
         case .Stage:
-            break
+            guard let sm = stageManager, let currentStage = sm.getCurrentStage() else { return }
+            if currentStage.type == .ManualSequence { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)}
         }
     }
     
