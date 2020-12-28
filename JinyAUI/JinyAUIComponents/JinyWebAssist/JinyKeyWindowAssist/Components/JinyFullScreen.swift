@@ -20,6 +20,9 @@ public class JinyFullScreen: JinyKeyWindowAssist {
         
         configureOverlayView()
         
+        // exclusive to FullScreen, comment this to get color from config.
+        self.backgroundColor = .clear //  hardcoded value
+        
         configureWebView()
         
         configureWebViewForFullScreen()
