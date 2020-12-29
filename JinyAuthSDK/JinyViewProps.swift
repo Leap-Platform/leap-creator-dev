@@ -133,7 +133,7 @@ class JinyViewProps:Codable {
         var webChildren: String?
         if is_webview {
             var injectionScript = ScreenHelper.layoutInjectionJSScript
-            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.bounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.bounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_y_on_screen)")
+            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.bounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.bounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
             if let uiweb = view as? UIWebView {
                 let res = uiweb.stringByEvaluatingJavaScript(from: injectionScript)
                 webChildren = res
