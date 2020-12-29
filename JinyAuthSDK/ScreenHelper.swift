@@ -11,7 +11,46 @@ import UIKit
 
 class ScreenHelper {
     
-    static let layoutInjectionJSScript = "(function () {\r\n    var jinyFetchClientHierarchy = function(root){\r\n        var node = {};\r\n        if(root!==undefined){\r\n            node.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\r\n                var dt = new Date().getTime();\r\n                var r = (dt + Math.random()*16)%16 | 0;\r\n                dt = Math.floor(dt/16);\r\n                return (c=='x' ? r :(r&0x3|0x8)).toString(16);\r\n            });\r\n            node.tag = root.tagName.toLowerCase();\r\n            var attributeNames = root.getAttributeNames();\r\n            node.attributes = {};\r\n            for(var i=0; i<attributeNames.length; i++){\r\n                node.attributes[attributeNames[i]] = root.getAttribute(attributeNames[i]);\r\n            }\r\n            node.bounds = root.getClientRects()[0];\r\n           node.innerText = root.innerText;\r\n            node.value = root.value;\r\n             node.children = [];\r\n            var childs = root.children.length;\r\n            for(var child=0;child<childs;child++){\r\n                node.children.push(jinyFetchClientHierarchy(root.children[child]));\r\n            }\r\n        }\r\n        return node\r\n    }\r\n    var layout = jinyFetchClientHierarchy(document.getElementsByTagName('html')[0])\r\n    return JSON.stringify(layout)\r\n}())"
+    static let layoutInjectionJSScript = "(function (totalScreenHeight, totalScreenWidth, topMargin=0, leftMargin=0) {\n" +
+        "    var jinyFetchClientHierarchy = function(root){\n" +
+        "        var node = {};\n" +
+        "        if(root!==undefined){\n" +
+        "            node.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n" +
+        "                var dt = new Date().getTime();\n" +
+        "                var r = (dt + Math.random()*16)%16 | 0;\n" +
+        "                dt = Math.floor(dt/16);\n" +
+        "                return (c=='x' ? r :(r&0x3|0x8)).toString(16);\n" +
+        "            });\n" +
+        "            node.tag = root.tagName.toLowerCase();\n" +
+        "            var attributeNames = root.getAttributeNames();\n" +
+        "            for(var i=0; i<attributeNames.length; i++){\n" +
+        "                node[attributeNames[i]] = root.getAttribute(attributeNames[i]);\n" +
+        "            }\n" +
+        "            var viewportWidth = screen.width;\n" +
+        "            var viewportHeight = screen.height;\n" +
+        "            node.bounds = root.getClientRects()[0];\n" +
+        "            if(node.bounds!==undefined){\n" +
+        "               node.normalised_bounds = {};\n" +
+        "               node.normalised_bounds.top = (node.bounds.top*totalScreenHeight)/viewportHeight + topMargin;\n" +
+        "               node.normalised_bounds.bottom = (node.bounds.bottom*totalScreenHeight)/viewportHeight + topMargin;\n" +
+        "               node.normalised_bounds.left = (node.bounds.left*totalScreenWidth)/viewportWidth + leftMargin;\n" +
+        "               node.normalised_bounds.right = (node.bounds.right*totalScreenWidth)/viewportWidth + leftMargin;\n" +
+        "            }\n" +
+        "            node.innerText = root.innerText;\n" +
+        "            node.value = root.value;\n" +
+        "            node.children = [];\n" +
+        "            var childs = root.children.length;\n" +
+        "            if(node.bounds!==undefined){\n" +
+        "               for(var child=0;child<childs;child++){\n" +
+        "                    node.children.push(jinyFetchClientHierarchy(root.children[child]));\n" +
+        "               }\n" +
+        "           }\n" +
+        "        }\n" +
+        "        return node\n" +
+        "    }\n" +
+        "    var layout = jinyFetchClientHierarchy(document.getElementsByTagName('html')[0])\n" +
+        "    return JSON.stringify(layout)\n" +
+        "}(${totalScreenHeight},${totalScreenWidth},${topMargin},${leftMargin}));";
     
     static func captureScreenshot() -> UIImage? {
         let imageSize = UIScreen.main.bounds.size

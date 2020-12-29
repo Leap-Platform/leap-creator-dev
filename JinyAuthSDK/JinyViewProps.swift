@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// global variable 'group' to keep track of recursion completion.
-let group = DispatchGroup()
+fileprivate let group = DispatchGroup()
 
 class JinyViewBounds:Codable {
     
@@ -110,33 +110,37 @@ class JinyViewProps:Codable {
         } else if let label = view as? UILabel {
             text = label.text
         }
-        var childViews = view.subviews
-      
-        childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
-        childViews = childViews.filter{
-            guard let superview = $0.superview else { return true }
-            let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
-            guard let keyWindow = UIApplication.shared.keyWindow else { return true }
-            if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
-            return true
-        }
-        if view.window == UIApplication.shared.keyWindow {
-            let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
-            for child in childrenToCheck { children.append(JinyViewProps(view: child, finishListener: finishListener))}
-        } else {
-            for child in childViews  { children.append(JinyViewProps(view: child, finishListener: finishListener)) }
-        }
+        if !is_webview {
+            var childViews = view.subviews
+          
+            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
+            childViews = childViews.filter{
+                guard let superview = $0.superview else { return true }
+                let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
+                guard let keyWindow = UIApplication.shared.keyWindow else { return true }
+                if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
+                return true
+            }
+            if view.window == UIApplication.shared.keyWindow {
+                let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
+                for child in childrenToCheck { children.append(JinyViewProps(view: child, finishListener: finishListener))}
+            } else {
+                for child in childViews  { children.append(JinyViewProps(view: child, finishListener: finishListener)) }
+            }
+        } else { children = [] }
+        
 
         var webChildren: String?
-        
         if is_webview {
+            var injectionScript = ScreenHelper.layoutInjectionJSScript
+            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.bounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.bounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_y_on_screen)")
             if let uiweb = view as? UIWebView {
-                let res = uiweb.stringByEvaluatingJavaScript(from: ScreenHelper.layoutInjectionJSScript)
+                let res = uiweb.stringByEvaluatingJavaScript(from: injectionScript)
                 webChildren = res
                 group.leave()
             }
             else if let wk_web = view as? WKWebView {
-                wk_web.evaluateJavaScript(ScreenHelper.layoutInjectionJSScript, completionHandler: { (res, error) in
+                wk_web.evaluateJavaScript(injectionScript, completionHandler: { (res, error) in
                     webChildren = res as? String
                     group.leave()
                 })
