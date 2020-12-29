@@ -82,7 +82,7 @@ class JinyViewProps:Codable {
         is_exclusive_touch = view.isExclusiveTouch
         is_scroll_container = view.isKind(of: UIScrollView.self)
         is_webview = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
-        
+        uuid = String.generateJinyAuthUUIDString()
         if let control = view as? UIControl {
             let targetActions = control.allTargets.filter{
                 control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
@@ -177,6 +177,19 @@ class JinyViewProps:Codable {
     }
 }
 
+
+extension String {
+    static func generateJinyAuthUUIDString() -> String {
+        return "JinyAuthHierarchy\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))-\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
+    }
+    
+    static func authRandomString(_ length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyz0123456789"
+        let randomString = String((0..<length).map{_ in letters.randomElement()!})
+        return randomString
+    }
+}
+
 extension UIColor {
     
     func getComponentDict() ->Dictionary<String,Int> {
@@ -198,4 +211,3 @@ extension UIColor {
     }
     
 }
-
