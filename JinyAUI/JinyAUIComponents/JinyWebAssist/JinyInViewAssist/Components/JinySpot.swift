@@ -85,9 +85,14 @@ public class JinySpot: JinyInViewAssist {
         
         self.addSubview(circleView)
                    
-        self.addSubview(toolTipView)
+        inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
+    }
+    
+    public override func remove() {
+        toolTipView.removeFromSuperview()
+        super.remove()
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
@@ -117,6 +122,10 @@ public class JinySpot: JinyInViewAssist {
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
             
             self.webView.isOpaque = false
+        
+        } else {
+            
+            self.webView.isOpaque = true
         }
     }
     

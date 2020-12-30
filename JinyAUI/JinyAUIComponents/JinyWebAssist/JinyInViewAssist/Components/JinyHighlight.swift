@@ -96,9 +96,14 @@ public class JinyHighlight: JinyInViewAssist {
            
         configureOverlayView()
                    
-        self.addSubview(toolTipView)
+        inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
+    }
+    
+    public override func remove() {
+        toolTipView.removeFromSuperview()
+        super.remove()
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
@@ -136,6 +141,10 @@ public class JinyHighlight: JinyInViewAssist {
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
             
             self.webView.isOpaque = false
+        
+        } else {
+            
+            self.webView.isOpaque = true
         }
     }
     
