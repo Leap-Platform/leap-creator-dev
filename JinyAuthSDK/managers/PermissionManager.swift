@@ -45,21 +45,21 @@ class PermissionManager: AppStateProtocol{
         //seek permission to allow communication to take place
         
         DispatchQueue.main.async {
-            
-            guard self.permissionTimer == nil else { return }
-            
-            self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.permissionTimeout), userInfo: nil, repeats: false)
+                        
+            self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.permissionDenied), userInfo: nil, repeats: false)
             
             self.permissionAlert = UIAlertController(title: "Streaming Permission ", message: "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
 
             self.permissionAlert?.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
             
+                self.permissionTimer?.invalidate()
+                self.permissionTimer = nil
                 // update the Alfred server that permission has been granted
                 self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
                 
             }))
             self.permissionAlert?.addAction(UIAlertAction(title: "No", style: .cancel, handler:{ (action) in
-                self.permissionListener.onPermissionRejected(permnission: self.permissionRejected)
+                 self.permissionDenied()
             }))
 
             
@@ -97,7 +97,7 @@ class PermissionManager: AppStateProtocol{
                 print(response)
             }
             
-            if let data = data {
+            if data != nil {
                 self.permissionListener.onPermissionStatusUpdation(permission: permission)
             }
         }.resume()
@@ -112,10 +112,10 @@ class PermissionManager: AppStateProtocol{
     }
     
     @objc private func appDidEnterBackground(){
-        permissionTimeout()
+        permissionDenied()
     }
     
-    @objc func permissionTimeout() {
+    @objc private func permissionDenied() {
         guard permissionTimer != nil else { return }
         permissionTimer?.invalidate()
         permissionTimer = nil
