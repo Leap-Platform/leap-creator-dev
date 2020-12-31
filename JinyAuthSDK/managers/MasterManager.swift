@@ -35,9 +35,9 @@ class MasterManager: ProtocolListener,
     // Permission Listeners
     func onPermissionStatusUpdation(permission: String) {
         if permission == PERMISSION_GRANTED {
-            self.protocolManager?.start(roomId: (self.beaconManager?.roomId) as! String)
-        }else{
-            print(permission)
+            self.protocolManager?.start(roomId: (self.beaconManager?.roomId)!)
+        } else {
+            self.beaconManager?.start(appId: self.appId!)
         }
     }
     
