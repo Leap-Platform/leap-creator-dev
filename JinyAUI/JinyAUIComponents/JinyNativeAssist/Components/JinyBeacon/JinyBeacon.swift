@@ -17,9 +17,6 @@ public class JinyBeacon: JinyNativeAssist {
     
     /// source view of the toView for which the component is relatively positioned.
     private weak var inView: UIView?
-     
-    /// Radius of the beacon's pulse, range of pulsating.
-    public var radius: Double = 10
     
     /// JinyBeacon's custom layer (CAReplicatorLayer) class.
     let pulsator = JinyPulsator()
@@ -62,16 +59,24 @@ public class JinyBeacon: JinyNativeAssist {
         
         pulsator.stop()
         
-        inView?.layer.sublayers?.removeAll()
-        
+        for layer in inView?.layer.sublayers ?? [] {
+            
+            if let subLayer = layer as? JinyPulsator {
+                
+                subLayer.removeFromSuperlayer()
+            }
+        }
+                
         super.remove()
     }
     
     /// sets up customised JinyBeacon's class, toView and inView.
     func setupView() {
         
-       pulsator.backgroundColor = UIColor.colorFromString(string: assistInfo?.layoutInfo?.style.bgColor ?? "black").cgColor
-        pulsator.radius = CGFloat(radius)
+        pulsator.backgroundColor = UIColor.init(hex: assistInfo?.layoutInfo?.style.bgColor ?? "#FF000000")?.cgColor
+        if let radius = assistInfo?.extraProps?.props["beaconRippleRadius"] as? String {
+           pulsator.radius = CGFloat(Int(radius) ?? 10)
+        }
         pulsator.numPulse = 3
         
         if toView?.window != UIApplication.shared.keyWindow {

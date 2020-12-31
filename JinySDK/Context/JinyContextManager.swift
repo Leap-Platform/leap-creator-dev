@@ -206,9 +206,9 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         }
         auiHandler?.removeAllViews()
         
-        let iconInfo = ["isLeftAligned":true, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any]
+        let iconInfo = ["isLeftAligned": getIconSetting()[String(discovery.id)]?.leftAlign ?? false, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]
         if let anchorView = view {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
+            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo as Dictionary<String, Any>)
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
         }
@@ -301,9 +301,8 @@ extension JinyContextManager:JinyStageManagerDelegate {
         auiHandler?.removeAllViews()
         auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
-        let iconInfo = ["isLeftAligned":true, "isEnabled": discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false, "backgroundColor": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl] as [String : Any]
         if let anchorView = view {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo)
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: [:])
         } else if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
         } else {
@@ -489,7 +488,17 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didPlayAudio() {
-        
+        guard let state = contextDetector?.getState() else { return }
+        switch state {
+        case .Discovery:
+            break
+        case .Stage:
+            guard let sm = stageManager else { return }
+            guard let currentStage = sm.getCurrentStage() else { return }
+            if currentStage.type == .Sequence{
+                sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
+            }
+        }
     }
     
     func failedToPerform() {
@@ -510,7 +519,8 @@ extension JinyContextManager:JinyAUICallback {
                 discoveryDismissed()
             }
         case .Stage:
-            break
+            guard let sm = stageManager, let currentStage = sm.getCurrentStage() else { return }
+            if currentStage.type == .ManualSequence { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)}
         }
     }
     

@@ -40,9 +40,7 @@ public class JinyNotification: JinyKeyWindowAssist {
         swipeUp.direction = .up
         self.webView.addGestureRecognizer(swipeUp)
         
-        inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
-        
-        self.webView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 1))
+        inView = UIApplication.shared.keyWindow
     }
     
     required public init?(coder: NSCoder) {
@@ -74,6 +72,20 @@ public class JinyNotification: JinyKeyWindowAssist {
             
            print("There is no other alignment for notification except top and bottom")
         }
+        
+        self.backgroundColor = .clear
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.elevation = 8 // hardcoded value
+        
+        self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 8))
+                
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.cornerRadius = 8 // hardcoded value
+        
+        self.webView.clipsToBounds = true
+        
+        self.webView.layer.cornerRadius = CGFloat(assistInfo?.layoutInfo?.style.cornerRadius ?? 8)
     }
     
     /// This is a custom configuration of constraints for the Notification component.
@@ -81,21 +93,40 @@ public class JinyNotification: JinyKeyWindowAssist {
     ///   - alignment: the alignment of the webview whether it is top or bottom.
     private func configureWebViewForNotification(alignment: JinyAlignmentType) {
         
-        inView?.addSubview(self.webView)
+        guard self.alignment == .top || self.alignment == .bottom else {
+            
+            return
+        }
+        
+        inView?.addSubview(self)
+        
+        // Setting Constraints to Self
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+                        
+        let attributeType: NSLayoutConstraint.Attribute = alignment == .top ? .top : .bottom
+        
+        let constant = alignment == .top ? (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 50) : -(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 50)
+        
+        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: attributeType, relatedBy: .equal, toItem: inView, attribute: attributeType, multiplier: 1, constant: CGFloat(constant)))
+        
+        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: inView, attribute: .trailing, multiplier: 1, constant: -24))
+        
+        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: inView, attribute: .leading, multiplier: 1, constant: 24))
+        
+        self.addSubview(webView)
                                 
         // Setting Constraints to WebView
         
         webView.translatesAutoresizingMaskIntoConstraints = false
                         
-        let attributeType: NSLayoutConstraint.Attribute = alignment == .top ? .top : .bottom
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
         
-        let constant = alignment == .top ? 24 : -24
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
         
-        inView?.addConstraint(NSLayoutConstraint(item: webView, attribute: attributeType, relatedBy: .equal, toItem: inView, attribute: attributeType, multiplier: 1, constant: CGFloat(constant)))
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
         
-        inView?.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: inView, attribute: .trailing, multiplier: 1, constant: -24))
-        
-        inView?.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: inView, attribute: .leading, multiplier: 1, constant: 24))
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
     }
     
     /// Set height constraint for the Notification.
@@ -103,13 +134,18 @@ public class JinyNotification: JinyKeyWindowAssist {
     ///   - height: Height of the content of the webview.
     private func configureHeightConstraint(height: CGFloat) {
         
-        self.webView.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: height))
+        self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: height))
     }
     
     public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
             if let height = value as? CGFloat {
+                
+                guard self?.alignment == .top || self?.alignment == .bottom else {
+                    
+                    return
+                }
                                 
                 self?.configureHeightConstraint(height: height)
                 
@@ -140,13 +176,13 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.jinyIconView.alpha = 0
                     
-                  self.webView.frame.origin.x = UIScreen.main.bounds.width
+                  self.frame.origin.x = UIScreen.main.bounds.width
                     
                   self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
-                    self.webView.removeFromSuperview()
+                    self.removeFromSuperview()
                     
                     self.delegate?.didDismissAssist()
                 }
@@ -157,13 +193,13 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.jinyIconView.alpha = 0
                     
-                  self.webView.frame.origin.y = UIScreen.main.bounds.height
+                  self.frame.origin.y = UIScreen.main.bounds.height
                     
                   self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
-                    self.webView.removeFromSuperview()
+                    self.removeFromSuperview()
                     
                     self.delegate?.didDismissAssist()
                 }
@@ -174,13 +210,13 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.jinyIconView.alpha = 0
                     
-                  self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                  self.frame.origin.x = -(UIScreen.main.bounds.width)
                     
                   self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
-                    self.webView.removeFromSuperview()
+                    self.removeFromSuperview()
                     
                     self.delegate?.didDismissAssist()
                 }
@@ -191,13 +227,13 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.jinyIconView.alpha = 0
                     
-                  self.webView.frame.origin.y = -(UIScreen.main.bounds.height)
+                  self.frame.origin.y = -(UIScreen.main.bounds.height)
                     
                   self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
-                    self.webView.removeFromSuperview()
+                    self.removeFromSuperview()
                     
                     self.delegate?.didDismissAssist()
                 }

@@ -66,7 +66,7 @@ public class JinyInViewAssist: JinyWebAssist {
 
         if let colorString = self.assistInfo?.layoutInfo?.style.bgColor {
         
-          self.backgroundColor = UIColor.colorFromString(string: colorString)
+          self.backgroundColor = UIColor.init(hex: colorString)
         
         } else {
             
@@ -90,8 +90,7 @@ public class JinyInViewAssist: JinyWebAssist {
         if assistInfo?.layoutInfo?.outsideDismiss ?? false {
         
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "")
-            
-            self.delegate?.didDismissAssist()
+
         }
     }
 }

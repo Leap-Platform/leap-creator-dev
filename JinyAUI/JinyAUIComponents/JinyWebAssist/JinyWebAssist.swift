@@ -357,6 +357,7 @@ public class JinyWebAssist: UIView, JinyAssist {
     public func remove() {
       
         self.removeFromSuperview()
+        self.delegate?.didDismissAssist()
     }
     
     /// method to configure JinyIconView constraints.

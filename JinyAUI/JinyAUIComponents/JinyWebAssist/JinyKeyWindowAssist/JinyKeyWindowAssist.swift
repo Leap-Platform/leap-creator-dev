@@ -59,7 +59,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
 
         if let colorString = self.assistInfo?.layoutInfo?.style.bgColor {
         
-          self.backgroundColor = UIColor.colorFromString(string: colorString)
+          self.backgroundColor = UIColor.init(hex: colorString)
         
         } else {
             
@@ -122,8 +122,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
         if assistInfo?.layoutInfo?.outsideDismiss ?? false {
         
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            delegate?.didDismissAssist()
+
         }
     }
 }

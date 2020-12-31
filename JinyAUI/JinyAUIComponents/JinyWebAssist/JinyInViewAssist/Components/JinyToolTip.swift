@@ -69,13 +69,24 @@ public class JinyToolTip: JinyInViewAssist {
            
         configureOverlayView()
                    
-        self.addSubview(toolTipView)
+        inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }
     
+    public override func remove() {
+        toolTipView.removeFromSuperview()
+        super.remove()
+    }
+    
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
+        
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
+        
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
         
        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
         
@@ -85,7 +96,7 @@ public class JinyToolTip: JinyInViewAssist {
                 
        maskLayer.bounds = self.webView.bounds
     
-       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 6.0)
+       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
 
        webView.layer.cornerRadius = cornerRadius
     
@@ -266,7 +277,7 @@ public class JinyToolTip: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
         
-            borderLayer.strokeColor = UIColor.colorFromString(string: colorString).cgColor
+            borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -400,7 +411,7 @@ public class JinyToolTip: JinyInViewAssist {
         fillLayer.opacity = 1.0
         self.layer.mask = fillLayer
         
-        if assistInfo?.anchorClickable ?? false {
+        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
             
             toView?.isUserInteractionEnabled = true
         
@@ -534,8 +545,6 @@ public class JinyToolTip: JinyInViewAssist {
         if assistInfo?.layoutInfo?.outsideDismiss ?? false {
             
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            self.delegate?.didDismissAssist()
             
             guard let userInteraction = toViewOriginalInteraction else {
                 

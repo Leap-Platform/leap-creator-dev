@@ -41,7 +41,7 @@ public class LayoutInfo {
             self.style = Style(withDict: [:])
         }
         
-        if let dismissAction = layoutDict["dismiss_action"] as? Dictionary<String,Any>, let outsideDismiss = dismissAction["outside_dismiss"] as? Bool {
+        if let dismissAction = layoutDict["dismissAction"] as? Dictionary<String,Any>, let outsideDismiss = dismissAction["outsideDismiss"] as? Bool {
             
             self.outsideDismiss = outsideDismiss
         }
@@ -61,7 +61,7 @@ public class LayoutInfo {
             self.layoutAlignment = alignment
         }
         
-        self.autoDismissDelay = (layoutDict["auto_dismiss_delay"] as? Float ?? 0)/1000
+        self.autoDismissDelay = (layoutDict["autoDismissDelay"] as? Float ?? 0)/1000
     }
 }
 
