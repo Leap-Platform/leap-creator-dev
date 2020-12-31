@@ -410,6 +410,8 @@ extension JinyAUIManager:JinyAUIHandler {
         
         pointer?.removePointer()
         pointer = nil
+        swipePointer?.removePointer()
+        swipePointer = nil
         currentAssist?.remove()
         currentAssist = nil
         optionPanel?.dismissOptionPanel { self.optionPanel = nil }
@@ -418,8 +420,9 @@ extension JinyAUIManager:JinyAUIHandler {
     
     func removeAllViews() {
         pointer?.removePointer()
-        swipePointer?.removePointer()
         pointer = nil
+        swipePointer?.removePointer()
+        swipePointer = nil
         currentAssist?.remove()
         currentAssist = nil
         jinyButton?.isHidden = true
