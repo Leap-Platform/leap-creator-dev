@@ -7,7 +7,9 @@
 //
 
 import Foundation
-class Constants {
-    static let API_KEY: String = "5b4208c2-5f48-4fd2-8f0f-33362ca2d0ed"
-//    static let API_KEY = "0655dfd2-7d70-4bac-89dd-01aa003129e8"
+
+class JinyAuthShared {
+    
+    static let shared = JinyAuthShared()
+    var apiKey: String?
 }

@@ -49,7 +49,8 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     func onReceivePacket(id: String, type: String) {
         switch type {
         case CASE_SCREENSHOT:
-            streamingManager?.stop()
+            //streamingManager?.stop()
+            onSessionClosed()
             captureManager?.capture(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_SCREENSTREAM:
