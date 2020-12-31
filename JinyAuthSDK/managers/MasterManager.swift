@@ -86,7 +86,7 @@ class MasterManager: ProtocolListener,
     }
     
     func start(){
-        self.appId = Constants.API_KEY
+        self.appId = JinyAuthShared.shared.apiKey
         beaconManager?.start(appId: self.appId!)
     }
     

@@ -7,6 +7,9 @@
 //
 
 import Foundation
-class Constants {
-    static let API_KEY: String = Bundle.main.infoDictionary?["APP_API_KEY"] as! String
+
+class JinyAuthShared {
+    
+    static let shared = JinyAuthShared()
+    var apiKey: String?
 }

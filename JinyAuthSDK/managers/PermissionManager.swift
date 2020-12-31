@@ -71,10 +71,10 @@ class PermissionManager: AppStateProtocol{
     //Update the permission action to Alfred Server by POST
     func updatePermissionToServer(permission: String, status:Bool, appId: String){
         
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(Constants.API_KEY)/device/\(appId)")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(JinyAuthShared.shared.apiKey!)/device/\(appId)")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(Constants.API_KEY , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(JinyAuthShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
   
