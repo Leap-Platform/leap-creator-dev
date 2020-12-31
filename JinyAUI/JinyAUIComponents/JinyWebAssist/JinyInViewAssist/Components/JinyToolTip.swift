@@ -69,9 +69,14 @@ public class JinyToolTip: JinyInViewAssist {
            
         configureOverlayView()
                    
-        self.addSubview(toolTipView)
+        inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
+    }
+    
+    public override func remove() {
+        toolTipView.removeFromSuperview()
+        super.remove()
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
