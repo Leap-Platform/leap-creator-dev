@@ -52,6 +52,7 @@ class JinyTaggedEvent {
 
 class JinyAssistInfo {
     var layoutInfo:Dictionary<String,Any>
+    var autoDismissDelay:Float?
     var htmlUrl:String?
     var contentUrls:Array<String>
     var highlightClickable:Bool
@@ -62,6 +63,7 @@ class JinyAssistInfo {
     
     init(withDict infoDict:Dictionary<String,Any>) {
         layoutInfo = infoDict["layoutInfo"] as? Dictionary<String,Any> ?? [:]
+        if let autoDismiss = layoutInfo["autoDismissDelay"] as? Float { autoDismissDelay = autoDismiss/1000 }
         htmlUrl = infoDict["htmlUrl"] as? String
         contentUrls = infoDict["contentUrls"] as? Array<String> ?? []
         highlightClickable = infoDict["highlightClickable"] as? Bool ?? false
