@@ -78,7 +78,7 @@ class ScreenHelper {
 
     static func captureHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
         var hierarchy:Dictionary<String,Any> = [:]
-        if let controller = UIApplication.shared.topMostViewController() {
+        if let controller = UIApplication.getCurrentTopVC() {
             hierarchy["controller"] = String(describing: type(of: controller.self))
         } else {
             hierarchy["controller"] = ""
