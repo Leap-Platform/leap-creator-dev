@@ -22,10 +22,10 @@ class JinyViewBounds:Codable {
     
     init(view:UIView) {
         let rect = view.superview?.convert(view.frame, to: nil)
-        left = Float(rect?.origin.x ?? 0)
-        top = Float(rect?.origin.y ?? 0)
-        right = left + Float(view.bounds.size.width)
-        bottom = top + Float(view.bounds.size.height)
+        left = Float(rect?.origin.x ?? 0) * Float(UIScreen.main.scale)
+        top = Float(rect?.origin.y ?? 0) * Float(UIScreen.main.scale)
+        right = left + Float(view.bounds.size.width * UIScreen.main.scale)
+        bottom = top + Float(view.bounds.size.height * UIScreen.main.scale)
     }
 }
 
@@ -133,7 +133,7 @@ class JinyViewProps:Codable {
         var webChildren: String?
         if is_webview {
             var injectionScript = ScreenHelper.layoutInjectionJSScript
-            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.bounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.bounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
+            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.nativeBounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.nativeBounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
             if let uiweb = view as? UIWebView {
                 let res = uiweb.stringByEvaluatingJavaScript(from: injectionScript)
                 webChildren = res
