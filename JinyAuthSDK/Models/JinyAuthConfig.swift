@@ -77,7 +77,7 @@ class JinyAuthConfig: Codable {
 
 class Beacon: Codable {
     
-    var interval: Double = 500
+    var interval: Double = 3000
     
     enum CodingKeys: String, CodingKey {
         case interval = "interval"
