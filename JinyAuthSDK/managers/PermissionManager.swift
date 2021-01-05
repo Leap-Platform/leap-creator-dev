@@ -31,7 +31,7 @@ class PermissionManager: AppStateProtocol{
     let permissionGranted: String = "PERMISSION_GRANTED"
     let permissionRejected: String = "PERMISSION_REJECTED"
     private var permissionTimer: Timer?
-    var timeout: TimeInterval = 15 // default
+    let timeout: TimeInterval = (JinyAuthShared.shared.authConfig?.permission?.timeOutDuration ?? 15000)/1000
     private var permissionAlert: UIAlertController?
     
     init(permissionListener: PermissionListener){
@@ -48,7 +48,7 @@ class PermissionManager: AppStateProtocol{
                         
             self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.permissionDenied), userInfo: nil, repeats: false)
             
-            self.permissionAlert = UIAlertController(title: "Streaming Permission ", message: "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
+            self.permissionAlert = UIAlertController(title: JinyAuthShared.shared.authConfig?.permission?.dialogTitle ?? "Streaming Permission ", message: JinyAuthShared.shared.authConfig?.permission?.dialogDescription ?? "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
 
             self.permissionAlert?.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
             
