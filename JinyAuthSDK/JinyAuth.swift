@@ -19,6 +19,6 @@ public class JinyAuth {
         authInternal = JinyAuthInternal(apiKey: apiKey)
         authInternal?.apiKey = token
         JinyAuthShared.shared.apiKey = token
-        authInternal?.start(token: apiKey)
+        authInternal?.start()
     }
 }

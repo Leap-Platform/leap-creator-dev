@@ -20,6 +20,7 @@ class BeaconManager {
     var roomId: String
     var status: String?
     var task: DispatchWorkItem?
+    let interval: TimeInterval = (JinyAuthShared.shared.authConfig?.beacon?.interval ?? 3000)/1000
     
     var roomID: String? {
         get{
@@ -83,8 +84,7 @@ class BeaconManager {
                 self.roomId = (jsonData?["roomId"]) as! String
                 self.beaconListener.onBeaconSuccess(roomId: (jsonData?["roomId"])! as! String, status: jsonData?["status"]! as Any)
                 //repeat this api call every 'm' seconds
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: self.task!)
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: self.task!)
             }
         }
         discoveryTask.resume()
