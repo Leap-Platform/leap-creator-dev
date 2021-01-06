@@ -83,14 +83,7 @@ public class JinyHighlight: JinyInViewAssist {
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
-        if toView?.window != UIApplication.shared.keyWindow {
-            
-            inView = toView!.window
-            
-        } else {
-            
-            inView = UIApplication.getCurrentVC()?.view
-        }
+        inView = toView?.window
         
         inView?.addSubview(self)
            
@@ -151,17 +144,17 @@ public class JinyHighlight: JinyInViewAssist {
     /// configures connector.
     func configureConnector() {
         
-        if let connectorLength = assistInfo?.extraProps?.props["connectorLength"] as? Double {
+        if let connectorLength = assistInfo?.extraProps?.props[constant_connectorLength] as? Double {
             
             self.connectorLength = connectorLength
         }
         
-        if let connectorColor = assistInfo?.extraProps?.props["connectorColor"] as? String {
+        if let connectorColor = assistInfo?.extraProps?.props[constant_connectorColor] as? String {
             
             self.connectorColor = UIColor.init(hex: connectorColor) ?? .black
         }
         
-        if let connectorType = assistInfo?.extraProps?.props["connectorType"] as? String {
+        if let connectorType = assistInfo?.extraProps?.props[constant_connectorType] as? String {
             
             self.connectorType = ConnectorType(rawValue: connectorType) ?? .solid
         }
@@ -244,11 +237,11 @@ public class JinyHighlight: JinyInViewAssist {
         
        if direction == .top {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .bottom)
         
         } else {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .top)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .top)
         }
             
        setOriginForDirection(direction: direction)
@@ -519,7 +512,7 @@ public class JinyHighlight: JinyInViewAssist {
                 
         var transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
         
-        if let highlightType = assistInfo?.extraProps?.props["highlightType"] as? String {
+        if let highlightType = assistInfo?.extraProps?.props[constant_highlightType] as? String {
             
             self.highlightType = HighlightType(rawValue: highlightType) ?? .rect
         }
@@ -528,7 +521,7 @@ public class JinyHighlight: JinyInViewAssist {
             
         case .rect:
             
-            if let highlightCornerRadius = assistInfo?.extraProps?.props["highlightCornerRadius"] as? Double {
+            if let highlightCornerRadius = assistInfo?.extraProps?.props[constant_highlightCornerRadius] as? Double {
                 
                 self.highlightCornerRadius = highlightCornerRadius
             }
@@ -580,21 +573,6 @@ public class JinyHighlight: JinyInViewAssist {
         }
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
-            if let height = value as? CGFloat {
-                                
-                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
-                
-                DispatchQueue.main.async {
-                    
-                    self?.placePointer()
-                }
-            }
-        })
-    }
-    
     /// sets toolTip size based on the webview's callback.
     /// - Parameters:
     ///   - width: width to set for the tooltip's webview.
@@ -617,7 +595,21 @@ public class JinyHighlight: JinyInViewAssist {
         self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
             
         self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+    }
+    
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
+            if let height = value as? CGFloat {
+                                
+                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
+                
+                DispatchQueue.main.async {
+                    
+                    self?.placePointer()
+                }
+            }
+        })
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -625,10 +617,10 @@ public class JinyHighlight: JinyInViewAssist {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }

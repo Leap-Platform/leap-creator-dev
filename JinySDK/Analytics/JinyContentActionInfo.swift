@@ -15,9 +15,9 @@ class JinyContentActionInfo:Codable {
     var actionType: String
     
     init(with dict:Dictionary<String,Any>, type:String) {
-        opt_in = dict["opt_in"] as? Bool ?? false
-        click_type = dict["click_type"] as? String ?? ""
-        close = dict["close"] as? Bool ?? false
+        opt_in = dict[constant_opt_in] as? Bool ?? false
+        click_type = dict[constant_click_type] as? String ?? ""
+        close = dict[constant_close] as? Bool ?? false
         actionType = type
     }
 }

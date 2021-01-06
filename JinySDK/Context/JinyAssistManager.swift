@@ -106,7 +106,7 @@ class JinyAssistManager {
         if let trigger = currentAssist?.trigger {
             if let delay = trigger.delay {
                 assistTimer = Timer.init(timeInterval: TimeInterval(delay/1000), target: self, selector: #selector(triggerAssist), userInfo: nil, repeats: false)
-            } else if let type = trigger.event?["type"], let value = trigger.event?["value"], type == "click", value == "optIn" { triggerAssist() }
+            } else if let type = trigger.event?[constant_type], let value = trigger.event?[constant_value], type == constant_click, value == constant_optIn { triggerAssist() }
         } else { triggerAssist() }
     }
     
@@ -156,7 +156,7 @@ extension JinyAssistManager:JinyEventDetectorDelegate {
     
     func clickDetected(view: UIView?, point: CGPoint) {
         guard let assist = currentAssist else { return }
-        guard let type = assist.trigger?.event?["type"], let value = assist.trigger?.event?["value"], type == "click", value == "showDiscovery" else { return }
+        guard let type = assist.trigger?.event?[constant_type], let value = assist.trigger?.event?[constant_value], type == constant_click, value == constant_showDiscovery else { return }
         if assist.isWeb {
             guard let rectToCheck = anchorRect else { return }
             if rectToCheck.contains(point) { triggerAssist() }

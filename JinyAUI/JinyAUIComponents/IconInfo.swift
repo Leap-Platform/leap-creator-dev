@@ -27,22 +27,22 @@ public class IconInfo {
     ///   - iconDict: A dictionary value for the type IconInfo.
     init(withDict iconDict: Dictionary<String, Any>) {
         
-        if let isLeftAligned = iconDict["isLeftAligned"] as? Bool {
+        if let isLeftAligned = iconDict[constant_isLeftAligned] as? Bool {
             
             self.isLeftAligned = isLeftAligned
         }
         
-        if let isEnabled = iconDict["isEnabled"] as? Bool {
+        if let isEnabled = iconDict[constant_isEnabled] as? Bool {
             
             self.isEnabled = isEnabled
         }
         
-        if let backgroundColor = iconDict["backgroundColor"] as? String {
+        if let backgroundColor = iconDict[constant_backgroundColor] as? String {
             
             self.backgroundColor = backgroundColor
         }
         
-        if let htmlUrl = iconDict["htmlUrl"] as? String {
+        if let htmlUrl = iconDict[constant_htmlUrl] as? String {
             
             self.htmlUrl = htmlUrl
         }

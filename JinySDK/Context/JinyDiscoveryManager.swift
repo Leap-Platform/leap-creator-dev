@@ -69,7 +69,7 @@ class JinyDiscoveryManager {
         discAllowed = discAllowed.filter({ (allowedDiscovery) -> Bool in
             
             if let taggedEvents = allowedDiscovery.taggedEvents {
-                if taggedEvents.action == "disable" {
+                if taggedEvents.action == constant_disable {
                     let isPassing = checkOrConditions(conditions: taggedEvents.orConditions, events: triggeredEvents!)
                     if isPassing { return false }
                 }
@@ -135,11 +135,11 @@ class JinyDiscoveryManager {
                     } else {
                         // Fallback on earlier versions
                     }
-                } else if let type = discoveryObj.0.trigger?.event?["type"], let value = discoveryObj.0.trigger?.event?["value"], type == "click", value == "showDiscovery" {
+                } else if let type = discoveryObj.0.trigger?.event?[constant_type], let value = discoveryObj.0.trigger?.event?[constant_value], type == constant_click, value == constant_showDiscovery {
                     toBeTriggered.append(JinyDiscoveryEventTrigger(discoveryObj.0, nil, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3))
-                } else if let type = discoveryObj.0.trigger?.event?["type"], let value = discoveryObj.0.trigger?.event?["value"], type == "click", value == "optIn" {
+                } else if let type = discoveryObj.0.trigger?.event?[constant_type], let value = discoveryObj.0.trigger?.event?[constant_value], type == constant_click, value == constant_optIn {
                     toBeTriggered.append(JinyDiscoveryEventTrigger(discoveryObj.0, nil, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3))
-                } else if discoveryObj.0.taggedEvents != nil && discoveryObj.0.taggedEvents?.action == "enable" {
+                } else if discoveryObj.0.taggedEvents != nil && discoveryObj.0.taggedEvents?.action == constant_enable {
                     toBeTriggered.append(JinyDiscoveryEventTrigger(discoveryObj.0, nil, view: discoveryObj.1, rect: discoveryObj.2, webview: discoveryObj.3))
                 }
                 else {
@@ -259,12 +259,12 @@ extension JinyDiscoveryManager:JinyEventDetectorDelegate {
             }
         }
         guard let fireDis = selectedDis else { return }
-        if let type = fireDis.discovery.trigger?.event?["type"], let value = fireDis.discovery.trigger?.event?["value"], type == "click", value == "optIn" {
+        if let type = fireDis.discovery.trigger?.event?[constant_type], let value = fireDis.discovery.trigger?.event?[constant_value], type == constant_click, value == constant_optIn {
             currentDiscovery = nil
             cancelAllTimers()
             guard let flowId = fireDis.discovery.flowId else { return }
             delegate?.startFlow(id: flowId, disId: fireDis.discovery.id)
-        } else if let type = fireDis.discovery.trigger?.event?["type"], let value = fireDis.discovery.trigger?.event?["value"], type == "click", value == "showDiscovery" {
+        } else if let type = fireDis.discovery.trigger?.event?[constant_type], let value = fireDis.discovery.trigger?.event?[constant_value], type == constant_click, value == constant_showDiscovery {
             currentDiscovery = fireDis.discovery
             if self.delegate!.canTriggerBasedOnTriggerFrequency(discovery: self.currentDiscovery!) {
             self.delegate?.newDiscoveryIdentified(discovery: fireDis.discovery, view: fireDis.anchorView, rect: fireDis.anchorRect, webview: fireDis.anchorWebView)
@@ -282,7 +282,7 @@ extension JinyDiscoveryManager:JinyEventDetectorDelegate {
         for discoveryObj in tagDiscoveries {
             let discovery = discoveryObj.discovery
             if discovery.taggedEvents == nil { return }
-            if discovery.taggedEvents!.action != "enable" { return }
+            if discovery.taggedEvents!.action != constant_enable { return }
             let isPassing:Bool = checkOrConditions(conditions: discovery.taggedEvents!.orConditions, events: events)
             if isPassing { discoveriesPassingCheck.append(discoveryObj) }
         }

@@ -29,26 +29,26 @@ public class AssistInfo {
     ///   - assistDict: A dictionary for the type AssistInfo.
     public init(withDict assistDict: Dictionary<String,Any>) {
         
-        if let layoutInfo = assistDict["layoutInfo"] as? Dictionary<String, Any> {
+        if let layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> {
             
            self.layoutInfo = LayoutInfo(withDict: layoutInfo)
         }
         
-        if let highlightAnchor = assistDict["highlightAnchor"] as? Bool {
+        if let highlightAnchor = assistDict[constant_highlightAnchor] as? Bool {
             
            self.highlightAnchor = highlightAnchor
         }
         
-        if let highlightClickable = assistDict["highlightClickable"] as? Bool {
+        if let highlightClickable = assistDict[constant_highlightClickable] as? Bool {
             
            self.highlightClickable = highlightClickable
         }
         
-        if let extraProps = assistDict["extraProps"] as? Dictionary<String, Any> {
+        if let extraProps = assistDict[constant_extraProps] as? Dictionary<String, Any> {
             
             self.extraProps = ExtraProps(props: extraProps)
         }
         
-        self.htmlUrl = assistDict["htmlUrl"] as? String
+        self.htmlUrl = assistDict[constant_htmlUrl] as? String
     }
 }

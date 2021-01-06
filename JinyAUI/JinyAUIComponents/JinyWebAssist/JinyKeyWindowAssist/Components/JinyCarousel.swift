@@ -19,9 +19,7 @@ public enum JinyCarouselType: String {
 public class JinyCarousel: JinyKeyWindowAssist {
     
     var type: JinyCarouselType = .fullScreen // default
-    
-    private var heightConstraint: NSLayoutConstraint?
-    
+        
     /// call the method to configure constraints for the component and to load the content to display.
     public func showCarousel() {
         
@@ -48,7 +46,7 @@ public class JinyCarousel: JinyKeyWindowAssist {
 
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
                 
-        if let type = self.assistInfo?.extraProps?.props["carouselType"] as? String {
+        if let type = self.assistInfo?.extraProps?.props[constant_carouselType] as? String {
             
             self.type = JinyCarouselType(rawValue: type) ?? .fullScreen
         }
@@ -57,23 +55,15 @@ public class JinyCarousel: JinyKeyWindowAssist {
             
             self.webView.isOpaque = false
             
+            heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
+            
+            NSLayoutConstraint.activate([heightConstraint!])
+            
         } else {
             
             self.webView.isOpaque = true
             configureWebViewForFullScreenCarousel()
         }
-    }
-    
-    /// This is a custom configuration of constraints for the Carousel type.
-    private func configureWebViewForFullScreenCarousel() {
-      
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
-    }
-    
-    /// This is a custom configuration of constraints for the Carousel type.
-    private func configureWebViewForOverlayCarousel(height: CGFloat) {
-
-        webView.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: height))
     }
     
     override func configureJinyIconView(superView: UIView, toItemView: UIView, alignmentType: JinyAlignmentType) {
@@ -141,22 +131,19 @@ public class JinyCarousel: JinyKeyWindowAssist {
         jinyIconView.configureIconButon()
     }
     
+    /// This is a custom configuration of constraints for the Carousel type.
+    private func configureWebViewForFullScreenCarousel() {
+      
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+    }
+    
+    /// This is a custom configuration of constraints for the Carousel type.
+    private func configureWebViewForOverlayCarousel(height: CGFloat) {
+
+        heightConstraint?.constant = height
+    }
+    
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        if type == .overlay {
-        
-        self.webView.evaluateJavaScript("document.readyState", completionHandler: { (complete, error) in
-                if complete != nil {
-                    self.webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { (height, error) in
-                        DispatchQueue.main.async {
-                            if let height = height as? CGFloat {
-                                self.configureWebViewForOverlayCarousel(height: height)
-                            }
-                        }
-                   })
-                }
-            })
-        }
         
         if type == .fullScreen {
         
@@ -165,6 +152,22 @@ public class JinyCarousel: JinyKeyWindowAssist {
         } else {
             
            configureJinyIconView(superView: self, toItemView: webView, alignmentType: .top)
+        }
+    }
+    
+    override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        
+        guard let body = message.body as? String else { return }
+        print(body)
+        guard let data = body.data(using: .utf8) else { return }
+        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let height = rect[constant_height] else { return }
+        DispatchQueue.main.async {
+            if self.type == .overlay {
+               self.configureWebViewForOverlayCarousel(height: CGFloat(height))
+            }
         }
     }
     

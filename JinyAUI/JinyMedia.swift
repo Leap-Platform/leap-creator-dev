@@ -34,6 +34,6 @@ class JinySound:JinyMedia {
     init(baseUrl: String, location: String, code:String, info:Dictionary<String,Any>) {
         langCode = code
         super.init(baseUrl: baseUrl, location: location)
-        if let newName = info["name"] as? String { name = newName }
+        if let newName = info[constant_name] as? String { name = newName }
     }
 }

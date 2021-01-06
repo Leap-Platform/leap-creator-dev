@@ -206,7 +206,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         }
         auiHandler?.removeAllViews()
         
-        let iconInfo = ["isLeftAligned": getIconSetting()[String(discovery.id)]?.leftAlign ?? false, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]
+        let iconInfo = [constant_isLeftAligned: getIconSetting()[String(discovery.id)]?.leftAlign ?? false, constant_isEnabled: discovery.enableIcon, constant_backgroundColor: getIconSetting()[String(discovery.id)]?.bgColor ?? "", constant_htmlUrl: getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]
         if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
         } else {
@@ -301,13 +301,11 @@ extension JinyContextManager:JinyStageManagerDelegate {
         auiHandler?.removeAllViews()
         auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
-        if let anchorView = view {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: anchorView, iconInfo: [:])
-        } else if let anchorRect = rect {
+        if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
         } else {
             
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!)
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: view, iconInfo: [:])
         }
         sendContextInfoEvent(eventTag: "jinyInstructionEvent")
     }
@@ -434,7 +432,7 @@ extension JinyContextManager:JinyAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Dictionary<String, Any>> {
         guard let config = configuration else { return [:] }
-        return ["defaultSounds":config.defaultSounds, "discoverySounds":config.discoverySounds, "auiContent":config.auiContent, "iconSetting":config.iconSetting]
+        return [constant_defaultSounds:config.defaultSounds, constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
     }
     
     func triggerEvent(identifier: String, value: Any) {
@@ -525,7 +523,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didReceiveInstruction(dict: Dictionary<String, Any>) {
-        sendContentActionInfoEvent(eventTag: "auiContentInteractionEvent", contentAction: dict, type: dict["type"] as? String ?? "action_taken")
+        sendContentActionInfoEvent(eventTag: "auiContentInteractionEvent", contentAction: dict, type: dict[constant_type] as? String ?? "action_taken")
     }
     
     func stagePerformed() {
