@@ -17,7 +17,7 @@ import UIKit
 @objc public protocol JinyAUIHandler:NSObjectProtocol {
     
     func startMediaFetch()
-    func performInstruction(instruction:Dictionary<String,Any>, inView:UIView, iconInfo:Dictionary<String,Any>)
+    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>)
     func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)

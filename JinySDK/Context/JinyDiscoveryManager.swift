@@ -119,7 +119,7 @@ class JinyDiscoveryManager {
             }
             if discoveriesAlreadyPresent.contains(discoveryObj.0) {continue}
             else {
-                if discoveryObj.0.trigger?.delay != nil {
+                if discoveryObj.0.trigger?.delay != nil && self.currentDiscovery == nil {
                     let delay = discoveryObj.0.trigger!.delay!
                     if #available(iOS 10.0, *) {
                         let timer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false) { (timer) in
