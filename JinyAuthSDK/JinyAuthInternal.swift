@@ -12,6 +12,7 @@ class JinyAuthInternal : NSObject{
     
     var apiKey:String?
     var masterManager: MasterManager?
+    var authManager: JinyAuthManager?
     var applicationContext: UIApplication
     var appDelegate: UIApplicationDelegate
     
@@ -23,11 +24,29 @@ class JinyAuthInternal : NSObject{
     }
     
     
-    func start(token : String){
+    func start() {
         
+        self.authManager = JinyAuthManager(key: self.apiKey!, delegate: self)
+        self.authManager?.fetchAuthConfig()
+    }
+    
+    private func startSendingBeacons() {
+       
         //begin sending beacons
         masterManager?.initialiseComponents()
         masterManager?.start()
+    }
+}
+
+extension JinyAuthInternal: AuthManagerDelegate {
+    func fetchConfigSuccess() {
+        
+        startSendingBeacons()
+    }
+    
+    func fetchConfigFailure() {
+        
+        print("Fetch Auth Config Failed")
     }
 }
     

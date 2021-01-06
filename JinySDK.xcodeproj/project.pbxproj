@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2D08591825A31FE9002D7993 /* JinyAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08591725A31FE9002D7993 /* JinyAuthManager.swift */; };
+		2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */; };
 		2D1702122591D13700F33729 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702102591D13700F33729 /* jiny_default_icon.html */; };
 		2D1702132591D13700F33729 /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702112591D13700F33729 /* jiny_audio_anim.html */; };
 		2D2334C6258B16D70084768E /* JinyCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2334C5258B16D70084768E /* JinyCarousel.swift */; };
@@ -40,7 +42,7 @@
 		B64FCB422541D620008BB342 /* JinySocketMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB412541D61F008BB342 /* JinySocketMessageDelegate.swift */; };
 		B64FCB542542B95F008BB342 /* ScreenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64FCB532542B95E008BB342 /* ScreenHelper.swift */; };
 		B69D8E33258A6D00004D858D /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D8E32258A6D00004D858D /* DeviceManager.swift */; };
-		B6E276FD2542F6410094C491 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E276FC2542F6410094C491 /* Constants.swift */; };
+		B6E276FD2542F6410094C491 /* JinyAuthShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E276FC2542F6410094C491 /* JinyAuthShared.swift */; };
 		B6EC702B254C08FB0022452D /* AppStateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6EC702A254C08FB0022452D /* AppStateProtocol.swift */; };
 		D0084C882486814D0082508C /* JinyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* JinyConfig.swift */; };
 		D0084C8C248681A30082508C /* JinyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* JinyFlow.swift */; };
@@ -295,6 +297,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D08591725A31FE9002D7993 /* JinyAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthManager.swift; sourceTree = "<group>"; };
+		2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthConfig.swift; sourceTree = "<group>"; };
 		2D1702102591D13700F33729 /* jiny_default_icon.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_default_icon.html; sourceTree = "<group>"; };
 		2D1702112591D13700F33729 /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
 		2D2334C5258B16D70084768E /* JinyCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyCarousel.swift; sourceTree = "<group>"; };
@@ -314,7 +318,7 @@
 		B64FCB412541D61F008BB342 /* JinySocketMessageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySocketMessageDelegate.swift; sourceTree = "<group>"; };
 		B64FCB532542B95E008BB342 /* ScreenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHelper.swift; sourceTree = "<group>"; };
 		B69D8E32258A6D00004D858D /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
-		B6E276FC2542F6410094C491 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		B6E276FC2542F6410094C491 /* JinyAuthShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthShared.swift; sourceTree = "<group>"; };
 		B6EC702A254C08FB0022452D /* AppStateProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateProtocol.swift; sourceTree = "<group>"; };
 		D0084C872486814D0082508C /* JinyConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyConfig.swift; sourceTree = "<group>"; };
 		D0084C8B248681A30082508C /* JinyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlow.swift; sourceTree = "<group>"; };
@@ -538,6 +542,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D08593D25A33908002D7993 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		2D1702062591CFC300F33729 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -568,6 +580,7 @@
 				B6153A3C253E9933008CA08F /* PermissionManager.swift */,
 				B6153A32253E98DB008CA08F /* BeaconManager.swift */,
 				B69D8E32258A6D00004D858D /* DeviceManager.swift */,
+				2D08591725A31FE9002D7993 /* JinyAuthManager.swift */,
 			);
 			path = managers;
 			sourceTree = "<group>";
@@ -603,6 +616,7 @@
 		D00B8F57249B2988006F4CA1 /* JinyAuthSDK */ = {
 			isa = PBXGroup;
 			children = (
+				2D08593D25A33908002D7993 /* Models */,
 				B69D8E31258A6C89004D858D /* delegate */,
 				B69D8E30258A6C57004D858D /* managers */,
 				D00B8F59249B2988006F4CA1 /* Info.plist */,
@@ -611,7 +625,7 @@
 				D0BC371C249DCF24002648FF /* JinyViewProps.swift */,
 				B64FCAFE25408173008BB342 /* TopViewController.swift */,
 				B64FCB532542B95E008BB342 /* ScreenHelper.swift */,
-				B6E276FC2542F6410094C491 /* Constants.swift */,
+				B6E276FC2542F6410094C491 /* JinyAuthShared.swift */,
 			);
 			path = JinyAuthSDK;
 			sourceTree = "<group>";
@@ -1395,12 +1409,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */,
+				2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */,
 				B6153A47253E9945008CA08F /* ProtocolManager.swift in Sources */,
 				B64FCB422541D620008BB342 /* JinySocketMessageDelegate.swift in Sources */,
 				B64FCB542542B95F008BB342 /* ScreenHelper.swift in Sources */,
 				B6153A3D253E9933008CA08F /* PermissionManager.swift in Sources */,
+				2D08591825A31FE9002D7993 /* JinyAuthManager.swift in Sources */,
 				B6EC702B254C08FB0022452D /* AppStateProtocol.swift in Sources */,
-				B6E276FD2542F6410094C491 /* Constants.swift in Sources */,
+				B6E276FD2542F6410094C491 /* JinyAuthShared.swift in Sources */,
 				B69D8E33258A6D00004D858D /* DeviceManager.swift in Sources */,
 				B64FCB0825418D8E008BB342 /* JinyUtils.swift in Sources */,
 				B64FCB232541C8AA008BB342 /* ScreenCaptureManager.swift in Sources */,

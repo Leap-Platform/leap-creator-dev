@@ -27,7 +27,7 @@ class StreamingManager: AppStateProtocol {
     
     
     let ONE_SECOND: Double = 1.0
-    let FRAME_RATE: Double = 24
+    let FRAME_RATE: Double = JinyAuthShared.shared.authConfig?.streaming?.frameRate ?? 24
     
     var context: UIApplication
     var roomId: String?
@@ -113,7 +113,7 @@ class StreamingManager: AppStateProtocol {
         let maxWidth: Float = 360.0
         var imgRatio: Float = actualWidth / actualHeight
         let maxRatio: Float = maxWidth / maxHeight
-        let compressionQuality: Float = 0.4
+        let compressionQuality: Float = Float((JinyAuthShared.shared.authConfig?.streaming?.quality ?? 40)/100)
         //50 percent compression
 
         if actualHeight > maxHeight || actualWidth > maxWidth {
