@@ -78,8 +78,14 @@ class ScreenHelper {
 
     static func captureHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
         var hierarchy:Dictionary<String,Any> = [:]
-        hierarchy["screen_width"] = UIScreen.main.bounds.width
-        hierarchy["screen_height"] = UIScreen.main.bounds.height
+        if let controller = UIApplication.getCurrentTopVC() {
+            hierarchy["controller"] = String(describing: type(of: controller.self))
+        } else {
+            hierarchy["controller"] = ""
+        }
+        hierarchy["viewport"] = ["width": UIScreen.main.bounds.width, "height": UIScreen.main.bounds.height]
+        hierarchy["screen_width"] = UIScreen.main.nativeBounds.width
+        hierarchy["screen_height"] = UIScreen.main.nativeBounds.height
         hierarchy["client_package_name"] = Bundle.main.bundleIdentifier
         hierarchy["orientation"] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
         _ = JinyViewProps(view: UIApplication.shared.keyWindow!, finishListener: finishListener) { (_, props) in
