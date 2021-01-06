@@ -207,10 +207,10 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         auiHandler?.removeAllViews()
         
         let iconInfo = ["isLeftAligned": getIconSetting()[String(discovery.id)]?.leftAlign ?? false, "isEnabled": discovery.enableIcon, "backgroundColor": getIconSetting()[String(discovery.id)]?.bgColor ?? "", "htmlUrl": getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]
-        if let anchorView = view {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: anchorView, iconInfo: iconInfo as Dictionary<String, Any>)
-        } else if let anchorRect = rect {
+        if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
+        } else {
+            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: view, iconInfo: iconInfo as Dictionary<String, Any>)
         }
     }
     
@@ -434,7 +434,7 @@ extension JinyContextManager:JinyAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Dictionary<String, Any>> {
         guard let config = configuration else { return [:] }
-        return ["default_sounds":config.defaultSounds, "discovery_sounds":config.discoverySounds, "aui_content":config.auiContent, "iconSetting":config.iconSetting]
+        return ["defaultSounds":config.defaultSounds, "discoverySounds":config.discoverySounds, "auiContent":config.auiContent, "iconSetting":config.iconSetting]
     }
     
     func triggerEvent(identifier: String, value: Any) {
