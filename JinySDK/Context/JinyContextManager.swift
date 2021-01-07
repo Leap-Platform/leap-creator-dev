@@ -166,11 +166,11 @@ extension JinyContextManager:JinyAssistManagerDelegate {
     
     func newAssistIdentified(_ assist: JinyAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
         auiHandler?.removeAllViews()
-        if let anchorView = view {
-            auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, inView: anchorView, iconInfo: [:])
-        } else if let anchorRect = rect {
+       if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: assist.instructionInfoDict!, rect: anchorRect, inWebview: inWebview, iconInfo: [:])
-        }
+       } else {
+            auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, inView: view, iconInfo: [:])
+       }
     }
     
     func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) {
