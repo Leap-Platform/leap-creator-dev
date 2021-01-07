@@ -139,7 +139,13 @@ extension JinyContextDetector {
         let currentWebViews = hierarchy.filter { $0.isKind(of: WKWebView.self) || $0.isKind(of: UIWebView.self) }
         if currentWebViews.count == 0 || allWebIds.count == 0 { passingIds(passingNativeIds,[]) }
         else {
-            getPassingWebIds(allWebIds, inAllWebviews: currentWebViews) { (passedWebIds) in
+            let currentControllerString = String(describing: type(of: UIApplication.getCurrentVC().self))
+            let controllerCheckedWebIds = allWebIds.filter { (webId) -> Bool in
+                guard let webIdentifier = delegate!.getWebIdentifier(identifierId: webId) else { return false }
+                guard let controllerCheckString = webIdentifier.controller else { return true }
+                return controllerCheckString == currentControllerString
+            }
+            getPassingWebIds(controllerCheckedWebIds, inAllWebviews: currentWebViews) { (passedWebIds) in
                 passingIds(passingNativeIds, passedWebIds)
             }
         }
@@ -271,7 +277,14 @@ extension JinyContextDetector {
 extension JinyContextDetector {
     
     private func getNativeIdentifiersPassing(_ identifiers:Array<String>, inHierarchy allView:Array<UIView>) -> Array<String> {
-        let passingIds = identifiers.filter { (checkIdentifier) -> Bool in
+        let controllerString = String(describing: type(of: UIApplication.getCurrentVC().self))
+        let controllerFilteredIdentifiers = identifiers.filter { (identifier) -> Bool in
+            guard let nativeIdentifier = delegate!.getNativeIdentifier(identifierId: identifier) else { return false }
+            guard let controllerCheckString = nativeIdentifier.controller else { return true }
+            return controllerString == controllerCheckString
+        }
+        
+        let passingIds = controllerFilteredIdentifiers.filter { (checkIdentifier) -> Bool in
             let views = getViewsForIdentifer(identifierId: checkIdentifier, hierarchy: allView)
             return views?.count ?? 0 > 0
         }
