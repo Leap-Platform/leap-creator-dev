@@ -103,7 +103,7 @@ extension JinyAUIManager {
         
         let code = callback.getLanguageCode()
         
-        guard let mediaName = currentInstruction?["sound_name"] as? String else {
+        guard let mediaName = currentInstruction?[constant_soundName] as? String else {
             callback.didPlayAudio()
             return
         }
