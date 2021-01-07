@@ -277,12 +277,19 @@ extension JinyContextDetector {
 extension JinyContextDetector {
     
     private func getNativeIdentifiersPassing(_ identifiers:Array<String>, inHierarchy allView:Array<UIView>) -> Array<String> {
-        let controllerString = String(describing: type(of: UIApplication.getCurrentVC().self))
-        let controllerFilteredIdentifiers = identifiers.filter { (identifier) -> Bool in
-            guard let nativeIdentifier = delegate!.getNativeIdentifier(identifierId: identifier) else { return false }
-            guard let controllerCheckString = nativeIdentifier.controller else { return true }
-            return controllerString == controllerCheckString
+        
+        var controllerFilteredIdentifiers = identifiers
+        
+        if let currentController = UIApplication.getCurrentVC() {
+            let controllerString = String(describing: type(of: currentController.self))
+            controllerFilteredIdentifiers = controllerFilteredIdentifiers.filter { (identifier) -> Bool in
+                guard let nativeIdentifier = delegate!.getNativeIdentifier(identifierId: identifier) else { return false }
+                guard let controllerCheckString = nativeIdentifier.controller else { return true }
+                return controllerString == controllerCheckString
+            }
         }
+        
+        
         
         let passingIds = controllerFilteredIdentifiers.filter { (checkIdentifier) -> Bool in
             let views = getViewsForIdentifer(identifierId: checkIdentifier, hierarchy: allView)
