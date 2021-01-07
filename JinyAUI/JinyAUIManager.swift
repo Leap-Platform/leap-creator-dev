@@ -103,8 +103,10 @@ extension JinyAUIManager {
         
         let code = callback.getLanguageCode()
         
-        guard let mediaName = currentInstruction?[constant_soundName] as? String else { return }
-        
+        guard let mediaName = currentInstruction?[constant_soundName] as? String else {
+            callback.didPlayAudio()
+            return
+        }
         if mediaManager?.isAlreadyDownloaded(mediaName: mediaName, langCode: code) ?? false {
         
             let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -319,6 +321,7 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
+
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return

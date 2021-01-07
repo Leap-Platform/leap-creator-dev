@@ -67,7 +67,7 @@ extension JinyInternal {
 extension JinyInternal {
     
     func fetchConfig() {
-        let url = URL(string: "https://odin-dev-gke.jiny.io/odin/api/v1/fetchConfig")
+        let url = URL(string: "https://odin-dev-gke.jiny.io/odin/api/v3/config")
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"
         let dict:Dictionary<String,String> = [:]
@@ -77,9 +77,10 @@ extension JinyInternal {
 //        headers.forEach { (key,value) in
 //            req.addValue(value, forHTTPHeaderField: key)
 //        }
-        req.addValue("6e0062e7-4c8a-41c9-b67e-0305dc2302cf", forHTTPHeaderField: "x-jiny-client-id")
+//        req.addValue("6e0062e7-4c8a-41c9-b67e-0305dc2302cf", forHTTPHeaderField: "x-jiny-client-id")
+        req.addValue("2c9fba13-57ad-4948-a359-5180180cc7b7", forHTTPHeaderField: "x-jiny-client-id")
         req.addValue("1", forHTTPHeaderField: "x-app-version-code")
-        req.addValue("1", forHTTPHeaderField: "x-app-version-name")
+        req.addValue("0.1.1", forHTTPHeaderField: "x-app-version-name")
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
             guard let resultData = data else { return }

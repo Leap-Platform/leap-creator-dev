@@ -20,6 +20,7 @@ class JinyContextManager:NSObject {
     private var configuration:JinyConfig?
     private var assistManager:JinyAssistManager?
     private weak var auiHandler:JinyAUIHandler?
+    private var autoDismissTimer:Timer?
     private var taggedEvents:Dictionary<String,Any> = [:]
     
     init(withUIHandler uiHandler:JinyAUIHandler?) {
@@ -282,7 +283,11 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
 // MARK: - FLOW MANAGER DELEGATE METHODS
 extension JinyContextManager:JinyFlowManagerDelegate {
     
-    func noActiveFlows() { contextDetector?.switchState() }
+    func noActiveFlows() {
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
+        contextDetector?.switchState()
+    }
     
 }
 
@@ -298,6 +303,8 @@ extension JinyContextManager:JinyStageManagerDelegate {
     }
     
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
         auiHandler?.removeAllViews()
         auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
@@ -494,7 +501,17 @@ extension JinyContextManager:JinyAUICallback {
             guard let sm = stageManager else { return }
             guard let currentStage = sm.getCurrentStage() else { return }
             if currentStage.type == .Sequence{
-                sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
+                let delay = currentStage.instruction?.assistInfo?.autoDismissDelay
+                if delay == nil || delay == 0 { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil) }
+                else {
+                    autoDismissTimer = Timer(timeInterval: TimeInterval(delay!), repeats: false, block: { (timer) in
+                        timer.invalidate()
+                        self.autoDismissTimer = nil
+                        sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
+                        
+                    })
+                    RunLoop.main.add(autoDismissTimer!, forMode: .default)
+                }
             }
         }
     }
@@ -508,7 +525,8 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didDismissView() {
-        
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
@@ -518,7 +536,7 @@ extension JinyContextManager:JinyAUICallback {
             }
         case .Stage:
             guard let sm = stageManager, let currentStage = sm.getCurrentStage() else { return }
-            if currentStage.type == .ManualSequence { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)}
+            if currentStage.type != .Normal { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)}
         }
     }
     
@@ -535,6 +553,8 @@ extension JinyContextManager:JinyAUICallback {
         if JinySharedInformation.shared.isMuted() {
             if contextDetector?.getState() == .Stage {
                 flowManager?.resetFlowsArray()
+                autoDismissTimer?.invalidate()
+                autoDismissTimer = nil
                 contextDetector?.switchState()
             }
             JinySharedInformation.shared.unmuteJiny()
@@ -624,6 +644,8 @@ extension JinyContextManager:JinyAUICallback {
             stageManager?.resetCurrentStage()
             JinySharedInformation.shared.muteJiny()
             flowManager?.resetFlowsArray()
+            autoDismissTimer?.invalidate()
+            autoDismissTimer = nil
             contextDetector?.switchState()
             discoveryManager?.resetCurrentDiscovery()
             assistManager?.noAssistFound()

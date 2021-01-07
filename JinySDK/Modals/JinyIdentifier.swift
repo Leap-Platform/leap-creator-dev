@@ -12,6 +12,7 @@ import UIKit
 
 class JinyWebIdentifier {
     
+    let controller:String?
     let tagName:String
     let attributes:Dictionary<String,Dictionary<String,String>>?
     let innerHtml:Dictionary<String,String>?
@@ -28,6 +29,7 @@ class JinyWebIdentifier {
         value = webDict[constant_value] as? Dictionary<String,String>
         url = webDict[constant_url] as? String
         index = webDict[constant_index] as? Int ?? 0
+        controller = webDict[constant_controller] as? String
     }
     
 }
