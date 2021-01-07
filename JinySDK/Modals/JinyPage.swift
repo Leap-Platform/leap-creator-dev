@@ -15,16 +15,16 @@ class JinyPage:JinyContext {
     var stages:Array<JinyStage> = []
     
     init(withDict pageDict:Dictionary<String,Any>) {
-        previousId = pageDict["prev_id"] as? Int
-        mustHavePreviousPage = pageDict["must_have_prev_page"] as? Bool
-        if let stagesDictsArray = pageDict["stages"] as? Array<Dictionary<String,Any>> {
+        previousId = pageDict[constant_prevId] as? Int
+        mustHavePreviousPage = pageDict[constant_mustHavePrevPage] as? Bool
+        if let stagesDictsArray = pageDict[constant_stages] as? Array<Dictionary<String,Any>> {
             for stageDict in stagesDictsArray { stages.append(JinyStage(withDict: stageDict)) }
         }
         super.init(with: pageDict)
     }
     
     func copy(with zone: NSZone? = nil) -> JinyPage {
-        let copy = JinyPage(withDict: ["prev_id":self.previousId ?? false, "must_have_prev_page":self.mustHavePreviousPage ?? -1])
+        let copy = JinyPage(withDict: [constant_prevId:self.previousId ?? false, constant_mustHavePrevPage:self.mustHavePreviousPage ?? -1])
         for stage in self.stages {
             copy.stages.append(stage.copy())
         }

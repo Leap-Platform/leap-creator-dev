@@ -16,11 +16,11 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
     public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
         super.init(withDict: assistDict, iconDict: iconDict)
                         
-        if let layoutInfo = assistDict["layoutInfo"] as? Dictionary<String, Any> {
+        if let layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> {
             
            var layoutInfo = layoutInfo
             
-           layoutInfo["alignment"] = "bottom"
+           layoutInfo[constant_alignment] = "bottom"
                         
            self.assistInfo?.layoutInfo = LayoutInfo(withDict: layoutInfo)
         }
@@ -93,17 +93,18 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
     
     public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
-        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
-            if let height = value as? CGFloat {
-                
-                DispatchQueue.main.async {
-                
-                self?.configureHeightConstraint(height: height)
-                
-                self?.configureJinyIconView(superView: self!, toItemView: self!.webView, alignmentType: .top)
-                    
-                }
-            }
-        })
+        self.configureJinyIconView(superView: self, toItemView: self.webView, alignmentType: .top)
+    }
+    
+    override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        
+        guard let body = message.body as? String else { return }
+        print(body)
+        guard let data = body.data(using: .utf8) else { return }
+        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let height = rect[constant_height] else { return }
+        self.configureHeightConstraint(height: CGFloat(height))
     }
 }

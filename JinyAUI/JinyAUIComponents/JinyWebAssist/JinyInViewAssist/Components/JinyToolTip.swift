@@ -56,14 +56,7 @@ public class JinyToolTip: JinyInViewAssist {
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
-        if toView?.window != UIApplication.shared.keyWindow {
-            
-            inView = toView!.window
-            
-        } else {
-            
-            inView = UIApplication.getCurrentVC()?.view
-        }
+        inView = toView?.window
         
         inView?.addSubview(self)
            
@@ -124,11 +117,11 @@ public class JinyToolTip: JinyInViewAssist {
         
         if direction == .top {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .bottom)
         
         } else {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .top)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .top)
         }
             
        setOriginForDirection(direction: direction)
@@ -421,21 +414,6 @@ public class JinyToolTip: JinyInViewAssist {
         }
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
-            if let height = value as? CGFloat {
-                                
-                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
-                
-                DispatchQueue.main.async {
-                    
-                    self?.placePointer()
-                }
-            }
-        })
-    }
-    
     /// sets toolTip size based on the webview's callback.
     /// - Parameters:
     ///   - width: width to set for the tooltip's webview.
@@ -460,15 +438,30 @@ public class JinyToolTip: JinyInViewAssist {
         self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
     }
     
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
+            if let height = value as? CGFloat {
+                                
+                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
+                
+                DispatchQueue.main.async {
+                    
+                    self?.placePointer()
+                }
+            }
+        })
+    }
+    
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }

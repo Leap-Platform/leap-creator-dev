@@ -18,21 +18,21 @@ class JinyJSMaker {
         var finalCheck = "(" + baseJs + " != null" + ")"
         
         if let innerHTML = identifier.innerHtml {
-            if let localeInnerHTML = innerHTML["ang"] {
+            if let localeInnerHTML = innerHTML[constant_ang] {
                 let innerHTMLCheck = "(" + baseJs + ".innerHTML === " + "\"\(localeInnerHTML)\"" + ")"
                 finalCheck += " && \(innerHTMLCheck)"
             }
         }
         
         if let innerText = identifier.innerText {
-            if let localeInnerText = innerText["ang"] {
+            if let localeInnerText = innerText[constant_ang] {
                 let innerTextCheck = "(" + baseJs + ".innerText === " + "\"\(localeInnerText)\"" + ")"
                 finalCheck += " && \(innerTextCheck)"
             }
         }
         
         if let value = identifier.value {
-            if let localeValue = value["ang"] {
+            if let localeValue = value[constant_ang] {
                 let valueCheck = "(" + baseJs + ".value === " + "\"\(localeValue)\"" + ")"
                 finalCheck += " && \(valueCheck)"
             }
@@ -47,21 +47,21 @@ class JinyJSMaker {
         var attributeScript = ""
         let querySelector = getElementScript(identifier)
         if let innerHTML = identifier.innerHtml {
-            if let localeInnerHTML = innerHTML["ang"] {
+            if let localeInnerHTML = innerHTML[constant_ang] {
                 let innerHTMLCheck = "(" + querySelector + ".innerHTML === " + "\"\(localeInnerHTML)\"" + ") && "
                 attributeScript += innerHTMLCheck
             }
         }
         
         if let innerText = identifier.innerText {
-            if let localeInnerText = innerText["ang"] {
+            if let localeInnerText = innerText[constant_ang] {
                 let innerTextCheck = "(" + querySelector + ".innerText === " + "\"\(localeInnerText)\"" + ") && "
                 attributeScript += innerTextCheck
             }
         }
         
         if let value = identifier.value {
-            if let localeValue = value["ang"] {
+            if let localeValue = value[constant_ang] {
                 let valueCheck = "(" + querySelector + ".value === " + "\"\(localeValue)\"" + ") && "
                 attributeScript += valueCheck
             }
@@ -88,7 +88,7 @@ class JinyJSMaker {
         var baseJs = "document.querySelectorAll('"
         baseJs += id.tagName
         
-        if let attributes = id.attributes, let localeAttrs = attributes["ang"] {
+        if let attributes = id.attributes, let localeAttrs = attributes[constant_ang] {
             localeAttrs.forEach { (attr, value) in
                 baseJs += "[\(attr)=\"\(value)\"]"
             }

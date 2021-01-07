@@ -30,9 +30,9 @@ class JinyTrigger {
     let event:Dictionary<String, String>?
     
     init(with dict:Dictionary<String,Any>) {
-        type = dict["type"] as? String ?? "instant"
-        delay = dict["delay"] as? Double
-        event = dict["event"] as? Dictionary<String, String>
+        type = dict[constant_type] as? String ?? constant_instant
+        delay = dict[constant_delay] as? Double
+        event = dict[constant_event] as? Dictionary<String, String>
     }
     
 }
@@ -42,7 +42,7 @@ class JinyTriggerFrequency {
     let type: JinyTriggerFrequencyType?
     
     init(with dict: Dictionary<String, String>) {
-        if let triggerFrequencyType = dict["type"] {
+        if let triggerFrequencyType = dict[constant_type] {
             self.type = JinyTriggerFrequencyType(rawValue: triggerFrequencyType)
         } else {
             self.type = .everySession
@@ -58,8 +58,8 @@ class JinyFlowTerminationFrequency: JinyFrequency {
     
     override init(with dict: Dictionary<String, Int>) {
         super.init(with: dict)
-        nSession = dict["nSession"]
-        nDismissByUser = dict["nDismissByUser"]
+        nSession = dict[constant_nSession]
+        nDismissByUser = dict[constant_nDismissByUser]
     }
 }
 
@@ -76,21 +76,21 @@ class JinyDiscovery:JinyContext {
     var instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
-        triggerMode = JinyTriggerMode(rawValue: (discoveryDict["triggerMode"] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
-        enableIcon = discoveryDict["enableIcon"] as? Bool ?? false
-        autoStart = discoveryDict["autoStart"] as? Bool ?? false
-        if let freqDict = discoveryDict["flowTerminationFrequency"] as? Dictionary<String,Int> {
+        triggerMode = JinyTriggerMode(rawValue: (discoveryDict[constant_triggerMode] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
+        enableIcon = discoveryDict[constant_enableIcon] as? Bool ?? false
+        autoStart = discoveryDict[constant_autoStart] as? Bool ?? false
+        if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Int> {
             frequency = JinyFlowTerminationFrequency(with: freqDict)
         }
-        flowId = discoveryDict["flowId"] as? Int
-        if let instructionDict = discoveryDict["instruction"] as? Dictionary<String,Any> {
+        flowId = discoveryDict[constant_flowId] as? Int
+        if let instructionDict = discoveryDict[constant_instruction] as? Dictionary<String,Any> {
             instructionInfoDict = instructionDict
             instruction = JinyInstruction(withDict: instructionDict)
         }
-        if let triggerDict = discoveryDict["trigger"] as? Dictionary<String,Any> {
+        if let triggerDict = discoveryDict[constant_trigger] as? Dictionary<String,Any> {
             trigger = JinyTrigger(with: triggerDict)
         }
-        if let triggerFrequencyDict = discoveryDict["triggerFrequency"] as? Dictionary<String,String> {
+        if let triggerFrequencyDict = discoveryDict[constant_triggerFrequency] as? Dictionary<String,String> {
             triggerFrequency = JinyTriggerFrequency(with: triggerFrequencyDict)
         }
         super.init(with: discoveryDict)

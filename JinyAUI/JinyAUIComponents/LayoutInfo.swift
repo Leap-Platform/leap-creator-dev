@@ -32,7 +32,7 @@ public class LayoutInfo {
     ///   - layoutDict: A dictionary for the type LayoutInfo.
     init(withDict layoutDict: Dictionary<String,Any>) {
         
-        if let styleDict = layoutDict["style"] as? Dictionary<String,Any> {
+        if let styleDict = layoutDict[constant_style] as? Dictionary<String,Any> {
         
             self.style = Style(withDict: styleDict)
         
@@ -41,27 +41,27 @@ public class LayoutInfo {
             self.style = Style(withDict: [:])
         }
         
-        if let dismissAction = layoutDict["dismissAction"] as? Dictionary<String,Any>, let outsideDismiss = dismissAction["outsideDismiss"] as? Bool {
+        if let dismissAction = layoutDict[constant_dismissAction] as? Dictionary<String,Any>, let outsideDismiss = dismissAction[constant_outsideDismiss] as? Bool {
             
             self.outsideDismiss = outsideDismiss
         }
         
-        if let enterAnimation = layoutDict["enter_animation"] as? String {
+        if let enterAnimation = layoutDict[constant_enterAnimation] as? String {
             
             self.enterAnimation = enterAnimation
         }
         
-        if let exitAnimation = layoutDict["exit_animation"] as? String {
+        if let exitAnimation = layoutDict[constant_exitAnimation] as? String {
             
             self.exitAnimation = exitAnimation
         }
         
-        if let alignment = layoutDict["alignment"] as? String {
+        if let alignment = layoutDict[constant_alignment] as? String {
             
             self.layoutAlignment = alignment
         }
         
-        self.autoDismissDelay = (layoutDict["autoDismissDelay"] as? Float ?? 0)/1000
+        self.autoDismissDelay = (layoutDict[constant_autoDismissDelay] as? Float ?? 0)/1000
     }
 }
 

@@ -20,15 +20,15 @@ class JinyContext {
     var checkpoint:Bool
     
     init(with dict:Dictionary<String,Any>) {
-        id = dict["id"] as? Int ?? -1
-        name = dict["name"] as? String ?? ""
-        nativeIdentifiers = dict["nativeIdentifiers"] as? Array<String> ?? []
-        webIdentifiers = dict["webIdentifiers"] as? Array<String> ?? []
-        weight = dict["weight"] as? Int ?? 1
-        isWeb = dict["isWeb"] as? Bool ?? false
-        if let taggedEventsDict = dict["taggedEvents"] as? Dictionary<String,Any> {
+        id = dict[constant_id] as? Int ?? -1
+        name = dict[constant_name] as? String ?? ""
+        nativeIdentifiers = dict[constant_nativeIdentifiers] as? Array<String> ?? []
+        webIdentifiers = dict[constant_webIdentifiers] as? Array<String> ?? []
+        weight = dict[constant_weight] as? Int ?? 1
+        isWeb = dict[constant_isWeb] as? Bool ?? false
+        if let taggedEventsDict = dict[constant_taggedEvents] as? Dictionary<String,Any> {
             taggedEvents = JinyTaggedEvent(withDict: taggedEventsDict)
         }
-        checkpoint = dict["checkpoint"] as? Bool ?? false
+        checkpoint = dict[constant_checkPoint] as? Bool ?? false
     }
 }

@@ -13,6 +13,9 @@ import WebKit
 /// A super class for the JinyKeyWindowAssist AUI Components.
 public class JinyKeyWindowAssist: JinyWebAssist {
     
+    /// height constraint to increase the constant when html resizes
+    var heightConstraint: NSLayoutConstraint?
+    
     /// source view of the AUIComponent that is relatively positioned.
     weak var inView: UIView?
     

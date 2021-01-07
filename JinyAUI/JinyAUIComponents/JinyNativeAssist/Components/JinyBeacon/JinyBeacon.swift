@@ -74,7 +74,7 @@ public class JinyBeacon: JinyNativeAssist {
     func setupView() {
         
         pulsator.backgroundColor = UIColor.init(hex: assistInfo?.layoutInfo?.style.bgColor ?? "#FF000000")?.cgColor
-        if let radius = assistInfo?.extraProps?.props["beaconRippleRadius"] as? String {
+        if let radius = assistInfo?.extraProps?.props[constant_beaconRippleRadius] as? String {
            pulsator.radius = CGFloat(Int(radius) ?? 10)
         }
         pulsator.numPulse = 3

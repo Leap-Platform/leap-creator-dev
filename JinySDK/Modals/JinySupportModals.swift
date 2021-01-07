@@ -21,10 +21,10 @@ class JinyTaggedEventCondition {
     let condition:String
     
     init(withDict dict:Dictionary<String,Any>) {
-        identifier = dict["identifier"] as? String ?? ""
-        value = dict["value"] as? String ?? ""
-        type = dict["type"] as? String ?? ""
-        condition = dict["condition"] as? String ?? ""
+        identifier = dict[constant_identifier] as? String ?? ""
+        value = dict[constant_value] as? String ?? ""
+        type = dict[constant_type] as? String ?? ""
+        condition = dict[constant_condition] as? String ?? ""
     }
     
 }
@@ -35,8 +35,8 @@ class JinyTaggedEvent {
     var action:String?
     
     init(withDict taggedDict:Dictionary<String,Any>) {
-        action = taggedDict["action"] as? String
-        if let eventsDictArray = taggedDict["events"] as? Array<Array<Dictionary<String,Any>>>{
+        action = taggedDict[constant_action] as? String
+        if let eventsDictArray = taggedDict[constant_events] as? Array<Array<Dictionary<String,Any>>>{
             for andConditionsArray in eventsDictArray {
                 var andConditions:Array<JinyTaggedEventCondition> = []
                 for andCondition in andConditionsArray {
@@ -62,15 +62,15 @@ class JinyAssistInfo {
     var identifier:String?
     
     init(withDict infoDict:Dictionary<String,Any>) {
-        layoutInfo = infoDict["layoutInfo"] as? Dictionary<String,Any> ?? [:]
-        if let autoDismiss = layoutInfo["autoDismissDelay"] as? Float { autoDismissDelay = autoDismiss/1000 }
-        htmlUrl = infoDict["htmlUrl"] as? String
-        contentUrls = infoDict["contentUrls"] as? Array<String> ?? []
-        highlightClickable = infoDict["highlightClickable"] as? Bool ?? false
-        autoScroll = infoDict["autoScroll"] as? Bool ?? false
-        autoFocus = infoDict["autoFocus"] as? Bool ?? false
-        type = infoDict["type"] as? String
-        identifier = infoDict["identifier"] as? String
+
+        layoutInfo = infoDict[constant_layoutInfo] as? Dictionary<String,Any> ?? [:]
+        htmlUrl = infoDict[constant_htmlUrl] as? String
+        contentUrls = infoDict[constant_contentUrls] as? Array<String> ?? []
+        highlightClickable = infoDict[constant_highlightClickable] as? Bool ?? false
+        autoScroll = infoDict[constant_autoScroll] as? Bool ?? false
+        autoFocus = infoDict[constant_autoFocus] as? Bool ?? false
+        type = infoDict[constant_type] as? String
+        identifier = infoDict[constant_identifier] as? String
     }
 }
 
@@ -83,11 +83,11 @@ class JinyFrequency {
     let perFlow:Int?
     
     init(with dict:Dictionary<String,Int>) {
-        perSession = dict["perSession"]
-        perApp = dict["perApp"]
-        perSessionWoJiny = dict["per_session_wo_jiny"]
-        perAppWoJiny = dict["per_app_wo_jiny"]
-        perFlow = dict["per_flow"]
+        perSession = dict[constant_perSession]
+        perApp = dict[constant_perApp]
+        perSessionWoJiny = dict[constant_perSessionWOJiny]
+        perAppWoJiny = dict[constant_perSessionWOJiny]
+        perFlow = dict[constant_perFlow]
     }
     
 }
@@ -98,8 +98,8 @@ class JinyInstruction {
     var assistInfo:JinyAssistInfo?
     
     init(withDict instructionDict:Dictionary<String,Any>) {
-        soundName = instructionDict["sound_name"] as? String
-        if let assistInfoDict = instructionDict["assist_info"] as? Dictionary<String,Any> {
+        soundName = instructionDict[constant_soundName] as? String
+        if let assistInfoDict = instructionDict[constant_assistInfo] as? Dictionary<String,Any> {
             assistInfo = JinyAssistInfo(withDict: assistInfoDict)
         }
     }

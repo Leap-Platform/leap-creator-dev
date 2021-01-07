@@ -29,8 +29,14 @@ public class JinyWebAssist: UIView, JinyAssist {
     
     public var iconInfo: IconInfo?
     
+    /// javascript to adjust width according to native view.
+    private let jscript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        let userScript = WKUserScript(source: jscript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(userScript)
         
         preferences.javaScriptEnabled = true
         
@@ -465,11 +471,13 @@ extension JinyWebAssist: WKScriptMessageHandler {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
-        guard let dictBody = dict["body"] as? Dictionary<String, Any> else {return}
-        guard let close = dictBody["close"] as? Bool else {return}
+        guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
+        guard let close = dictBody[constant_close] as? Bool else {return}
+        let opt = (dictBody[constant_optIn] as? Bool) ?? false
+        
         delegate?.didSendAction(dict: dict)
         
-        if let urlString = dictBody["external_url"] as? String, let url = URL(string: urlString) {
+        if let urlString = dictBody[constant_external_url] as? String, let url = URL(string: urlString) {
 
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(url)
@@ -480,7 +488,7 @@ extension JinyWebAssist: WKScriptMessageHandler {
            return
         }
         
-        if close {
+        if close && !opt {
             
            self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
         }

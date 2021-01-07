@@ -52,8 +52,8 @@ class ScreenCaptureManager: AppStateProtocol{
     func sendData(screenCapture: String, hierarchy: Dictionary<String, Any>)->Void{
         var payload : Dictionary<String, Any> = Dictionary<String, Any>()
         
-        payload["image"] = screenCapture
-        payload["hierarchy"] = hierarchy
+        payload[constant_image] = screenCapture
+        payload[constant_hierarchy] = hierarchy
         
         self.task = DispatchWorkItem {
             self.postMessage(payload: payload)

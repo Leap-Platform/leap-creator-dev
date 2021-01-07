@@ -16,10 +16,10 @@ class JinyFlow {
     var pages:Array<JinyPage> = []
     
     init(withDict flowDict:Dictionary<String,Any>) {
-        id = flowDict["id"] as? Int
-        name = flowDict["name"] as? String
-        flowText = flowDict["flow_title"] as? Dictionary<String,String> ?? [:]
-        if let pageDictsArray = flowDict["pages"] as? Array<Dictionary<String,Any>> {
+        id = flowDict[constant_id] as? Int
+        name = flowDict[constant_name] as? String
+        flowText = flowDict[constant_flowTitle] as? Dictionary<String,String> ?? [:]
+        if let pageDictsArray = flowDict[constant_pages] as? Array<Dictionary<String,Any>> {
             for pageDict in pageDictsArray { pages.append(JinyPage(withDict: pageDict)) }
         }
     }

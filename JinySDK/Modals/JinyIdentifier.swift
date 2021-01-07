@@ -12,6 +12,7 @@ import UIKit
 
 class JinyWebIdentifier {
     
+    let controller:String?
     let tagName:String
     let attributes:Dictionary<String,Dictionary<String,String>>?
     let innerHtml:Dictionary<String,String>?
@@ -21,13 +22,14 @@ class JinyWebIdentifier {
     let index:Int
     
     init(withDict webDict:Dictionary<String,Any>) {
-        tagName = webDict["tag_name"] as? String ?? ""
-        attributes = webDict["attributes"] as? Dictionary<String,Dictionary<String,String>>
-        innerHtml = webDict["inner_html"] as? Dictionary<String,String>
-        innerText = webDict["inner_text"] as? Dictionary<String,String>
-        value = webDict["value"] as? Dictionary<String,String>
-        url = webDict["url"] as? String
-        index = webDict["index"] as? Int ?? 0
+        tagName = webDict[constant_tagName] as? String ?? ""
+        attributes = webDict[constant_attributes] as? Dictionary<String,Dictionary<String,String>>
+        innerHtml = webDict[constant_innerHtml] as? Dictionary<String,String>
+        innerText = webDict[constant_innerText] as? Dictionary<String,String>
+        value = webDict[constant_value] as? Dictionary<String,String>
+        url = webDict[constant_url] as? String
+        index = webDict[constant_index] as? Int ?? 0
+        controller = webDict[constant_controller] as? String
     }
     
 }
@@ -43,13 +45,13 @@ class JinyNativeParameters {
     var textRegex:String?
     
     init(withDict paramsDict:Dictionary<String,Any>) {
-        accId = paramsDict["ACC_ID"] as? String
-        accLabel = paramsDict["ACC_LABEL"] as? String
-        tag = paramsDict["TAG"] as? Int
-        className = paramsDict["class_name"] as? String
-        text = paramsDict["text"] as? Dictionary<String,String>
-        placeholder = paramsDict["placeholder"] as? Dictionary<String,String>
-        textRegex = paramsDict["text_regex"] as? String
+        accId = paramsDict[constant_ACC_ID] as? String
+        accLabel = paramsDict[constant_ACC_LABEL] as? String
+        tag = paramsDict[constant_TAG] as? Int
+        className = paramsDict[constant_class_name] as? String
+        text = paramsDict[constant_text] as? Dictionary<String,String>
+        placeholder = paramsDict[constant_placeholder] as? Dictionary<String,String>
+        textRegex = paramsDict[constant_text_regex] as? String
     }
     
 }
@@ -67,14 +69,14 @@ class JinyNativeViewProps {
     
     init(withDict propsDict:Dictionary<String,Any>) {
         
-        isSelected = propsDict["isSelected"] as? Bool
-        isEnabled = propsDict["isEnabled"] as? Bool
-        isFocused = propsDict["isFocused"] as? Bool
-        isChecked = propsDict["isChecked"] as? Bool
-        textRegex = propsDict["text_regex"] as? String
+        isSelected = propsDict[constant_isSelected] as? Bool
+        isEnabled = propsDict[constant_isEnabled] as? Bool
+        isFocused = propsDict[constant_isFocused] as? Bool
+        isChecked = propsDict[constant_isChecked] as? Bool
+        textRegex = propsDict[constant_text_regex] as? String
         
-        className = propsDict["class_name"] as? String
-        text = propsDict["text"] as? Dictionary<String,String>
+        className = propsDict[constant_class_name] as? String
+        text = propsDict[constant_text] as? Dictionary<String,String>
         
     }
     
@@ -87,11 +89,11 @@ class JinyNativeElement {
 
     init(withDict elementDict:Dictionary<String,Any>) {
         
-        if let paramsDict = elementDict["idParams"] as? Dictionary<String,Any> {
+        if let paramsDict = elementDict[constant_idParams] as? Dictionary<String,Any> {
             idParameters = JinyNativeParameters(withDict: paramsDict)
         }
         
-        if let propsDict = elementDict["viewProps"] as? Dictionary<String,Any> {
+        if let propsDict = elementDict[constant_viewProps] as? Dictionary<String,Any> {
             viewProps = JinyNativeViewProps(withDict: propsDict)
         }
     }
@@ -107,11 +109,11 @@ class JinyNativeIdentifier:JinyNativeElement {
     var target:JinyNativeElement?
     
     override init(withDict nativeDict:Dictionary<String,Any>) {
-        controller = nativeDict["controller"] as? String
-        nesting = nativeDict["nesting"] as? String
-        isAnchorSameAsTarget = nativeDict["isAnchorSameAsTarget"] as? Bool ?? false
-        relationToTarget = nativeDict["relationToTarget"] as? Array<String>
-        if let targetDict = nativeDict["target"] as? Dictionary<String,Any> {
+        controller = nativeDict[constant_controller] as? String
+        nesting = nativeDict[constant_nesting] as? String
+        isAnchorSameAsTarget = nativeDict[constant_isAnchorSameAsTarget] as? Bool ?? true
+        relationToTarget = nativeDict[constant_relationToTarget] as? Array<String>
+        if let targetDict = nativeDict[constant_target] as? Dictionary<String,Any> {
             target = JinyNativeElement(withDict: targetDict)
         }
         super.init(withDict: nativeDict)
