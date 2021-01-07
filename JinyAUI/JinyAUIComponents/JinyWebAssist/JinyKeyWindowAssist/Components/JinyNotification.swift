@@ -114,6 +114,10 @@ public class JinyNotification: JinyKeyWindowAssist {
         
         inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: inView, attribute: .leading, multiplier: 1, constant: 24))
         
+        heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
+        
+        NSLayoutConstraint.activate([heightConstraint!])
+        
         self.addSubview(webView)
                                 
         // Setting Constraints to WebView
@@ -134,31 +138,36 @@ public class JinyNotification: JinyKeyWindowAssist {
     ///   - height: Height of the content of the webview.
     private func configureHeightConstraint(height: CGFloat) {
         
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: height))
+        heightConstraint?.constant = height
     }
     
     public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
-            if let height = value as? CGFloat {
                 
-                guard self?.alignment == .top || self?.alignment == .bottom else {
+            guard self.alignment == .top || self.alignment == .bottom else {
                     
-                    return
-                }
-                                
-                self?.configureHeightConstraint(height: height)
-                
-                if self?.alignment == .top {
-                    
-                    self?.configureJinyIconView(superView: self!.inView!, toItemView: webView, alignmentType: .bottom)
-                
-                } else {
-                    
-                    self?.configureJinyIconView(superView: self!.inView!, toItemView: webView, alignmentType: .top)
-                }
+                return
             }
-        })
+                                                
+            if self.alignment == .top {
+                    
+                self.configureJinyIconView(superView: self.inView!, toItemView: webView, alignmentType: .bottom)
+                
+            } else {
+                    
+                self.configureJinyIconView(superView: self.inView!, toItemView: webView, alignmentType: .top)
+            }
+    }
+    
+    override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        
+        guard let body = message.body as? String else { return }
+        print(body)
+        guard let data = body.data(using: .utf8) else { return }
+        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let height = rect[constant_height] else { return }
+        self.configureHeightConstraint(height: CGFloat(height))
     }
     
     /// animates the webview according to the direction of swipe gesture.

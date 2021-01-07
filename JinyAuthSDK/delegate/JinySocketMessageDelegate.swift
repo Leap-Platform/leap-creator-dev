@@ -34,18 +34,18 @@ class JinySocketMessageDelegate: WebSocketDelegate{
             let data = text.data(using: .utf8)
             let jsonData = try? JSONSerialization.jsonObject(with: (data)!,  options: []) as? [String: Any]
             //fetch the status and room info from the json
-            if jsonData!["id"] == nil { return }
-            let id = (jsonData?["id"]) as! String
-            let typeOfPacket = (jsonData?["type"]) as! String
+            if jsonData![constant_id] == nil { return }
+            let id = (jsonData?[constant_id]) as! String
+            let typeOfPacket = (jsonData?[constant_type]) as! String
             
             self.jinySocketListener.onReceivePacket(id: id, type: typeOfPacket)
             
            case .binary(let data):
              print("received data: \(data)")
            
-        case .pong(let pongData): break
+        case .pong( _): break
             
-        case .ping(let pingData): break
+        case .ping( _): break
             
            case .error(let error):
             print("error \(error)")

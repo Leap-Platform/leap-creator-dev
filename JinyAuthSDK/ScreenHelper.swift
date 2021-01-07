@@ -79,22 +79,22 @@ class ScreenHelper {
     static func captureHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
         var hierarchy:Dictionary<String,Any> = [:]
         if let controller = UIApplication.getCurrentTopVC() {
-            hierarchy["controller"] = String(describing: type(of: controller.self))
+            hierarchy[constant_controller] = String(describing: type(of: controller.self))
         } else {
-            hierarchy["controller"] = ""
+            hierarchy[constant_controller] = ""
         }
-        hierarchy["viewport"] = ["width": UIScreen.main.bounds.width, "height": UIScreen.main.bounds.height]
-        hierarchy["screen_width"] = UIScreen.main.nativeBounds.width
-        hierarchy["screen_height"] = UIScreen.main.nativeBounds.height
-        hierarchy["client_package_name"] = Bundle.main.bundleIdentifier
-        hierarchy["orientation"] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
+        hierarchy[constant_viewport] = [constant_width: UIScreen.main.bounds.width, constant_height: UIScreen.main.bounds.height]
+        hierarchy[constant_screen_width] = UIScreen.main.nativeBounds.width
+        hierarchy[constant_screen_height] = UIScreen.main.nativeBounds.height
+        hierarchy[constant_client_package_name] = Bundle.main.bundleIdentifier
+        hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
         _ = JinyViewProps(view: UIApplication.shared.keyWindow!, finishListener: finishListener) { (_, props) in
             do {
                 let jsonEncoder = JSONEncoder()
                 jsonEncoder.outputFormatting = .prettyPrinted
                 let hierarchyData = try jsonEncoder.encode(props)
                 let payload = try JSONSerialization.jsonObject(with: hierarchyData, options: .mutableContainers) as? Dictionary<String,Any>
-                hierarchy["layout"] = payload
+                hierarchy[constant_layout] = payload
                 completion(hierarchy)
             } catch {
                 

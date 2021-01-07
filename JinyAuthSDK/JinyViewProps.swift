@@ -201,10 +201,10 @@ extension UIColor {
         let rComponent = cgColor.components![0]
         let gComponent = cgColor.components![1]
         let bComponent = cgColor.components![2]
-        var colorDict = ["r": lroundf(Float(rComponent * 255)), "g":  lroundf(Float(gComponent * 255)),  "b":lroundf(Float(bComponent * 255))]
+        var colorDict = [constant_r: lroundf(Float(rComponent * 255)), constant_g:  lroundf(Float(gComponent * 255)),  constant_b:lroundf(Float(bComponent * 255))]
         if cgColor.components?.count ?? 0 > 3 {
             let aComponent = cgColor.components![3]
-            colorDict["a"] =  lroundf(Float(aComponent * 255))
+            colorDict[constant_a] =  lroundf(Float(aComponent * 255))
         }
         return colorDict
     }

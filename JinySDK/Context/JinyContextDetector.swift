@@ -286,7 +286,7 @@ extension JinyContextDetector {
         if params.accLabel != nil { anchorViews = anchorViews.filter{ $0.accessibilityLabel == params.accLabel } }
         if params.tag != nil { anchorViews = anchorViews.filter{ $0.tag == params.tag } }
         if params.text != nil {
-            if let localeText = params.text!["ang"] {
+            if let localeText = params.text![constant_ang] {
                 anchorViews =  anchorViews.filter { (view) -> Bool in
                     if let label = view as? UILabel {
                         return label.text == localeText
@@ -302,7 +302,7 @@ extension JinyContextDetector {
             }
         }
         if params.placeholder != nil {
-            if let localeText = params.placeholder!["ang"] {
+            if let localeText = params.placeholder![constant_ang] {
                 anchorViews =  anchorViews.filter { (view) -> Bool in
                     if let label = view as? UILabel {
                         return label.text == localeText

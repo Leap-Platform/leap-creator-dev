@@ -9,17 +9,17 @@
 import Foundation
 
 //{
-//    "id": 1,
-//    "name": "",
-//    "type": "",
-//    "weight": 1,
-//    "frequency": {
+//    constant_id: 1,
+//    constant_name: "",
+//    constant_type: "",
+//    constant_weight: 1,
+//    constant_frequency: {
 //        "per_session": 1,
 //        "per_app": 1
 //    },
 //    "event_identifiers": {
 //        "triggerOnAnchorClick": true,
-//        "delay": 5000
+//        constant_delay: 5000
 //    },
 //    "is_web": true,
 //    "native_identifiers": [
@@ -28,13 +28,13 @@ import Foundation
 //    "web_identifiers": [
 //        "JD1"
 //    ],
-//    "instruction": {
+//    constant_instruction: {
 //        "sound_name": "",
 //        "assist_info": {
 //            "layout_info": {
 //                "enter_animation": "zoom_in",
 //                "exit_animation": "slide_bottom",
-//                "style": {
+//                constant_style: {
 //                    "alpha": 0.7
 //                },
 //                "dismiss_action": {
@@ -49,8 +49,8 @@ import Foundation
 //            "highlight_clickable": true,
 //            "auto_scroll": true,
 //            "auto_focus": false,
-//            "type": "TOOLTIP",
-//            "identifier": "JD1"
+//            constant_type: "TOOLTIP",
+//            constant_identifier: "JD1"
 //        }
 //    }
 //}
@@ -67,14 +67,14 @@ class JinyAssist:JinyContext {
     var trigger: JinyTrigger?
     
     init(withDict assistDict:Dictionary<String,Any>) {
-        type = assistDict["type"] as? String ?? "NORMAL"
-        if let frequencyDict = assistDict["frequency"] as? Dictionary<String,Int> {
+        type = assistDict[constant_type] as? String ?? "NORMAL"
+        if let frequencyDict = assistDict[constant_frequency] as? Dictionary<String,Int> {
             frequency = JinyFrequency(with: frequencyDict)
         }
-        if let trigger = assistDict["trigger"] as? Dictionary<String, String> {
+        if let trigger = assistDict[constant_trigger] as? Dictionary<String, String> {
             self.trigger = JinyTrigger(with: trigger)
         }
-        if let instructionDict = assistDict["instruction"] as? Dictionary<String,Any>{
+        if let instructionDict = assistDict[constant_instruction] as? Dictionary<String,Any>{
             instruction = JinyInstruction(withDict: instructionDict)
             instructionInfoDict = instructionDict
         }

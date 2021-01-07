@@ -274,7 +274,7 @@ class JinyFingerRipplePointer:JinyPointer {
         ringLayer.masksToBounds = false
         self.masksToBounds = false
         
-        fingerLayer.add(clickAnimation, forKey: "click")
+        fingerLayer.add(clickAnimation, forKey: constant_click)
         ringLayer.add(pulse, forKey: "pulse")
         
     }
