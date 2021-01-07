@@ -30,10 +30,14 @@ class PermissionManager: AppStateProtocol{
     var application: UIApplication
     let permissionGranted: String = "PERMISSION_GRANTED"
     let permissionRejected: String = "PERMISSION_REJECTED"
+    private var permissionTimer: Timer?
+    let timeout: TimeInterval = (JinyAuthShared.shared.authConfig?.permission?.timeOutDuration ?? 15000)/1000
+    private var permissionAlert: UIAlertController?
     
     init(permissionListener: PermissionListener){
         self.permissionListener = permissionListener
         self.application = UIApplication.shared
+        addObservers()
     }
     
     //call start in MasterManager
@@ -41,21 +45,26 @@ class PermissionManager: AppStateProtocol{
         //seek permission to allow communication to take place
         
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Streaming Permission ", message: "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
-
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+                        
+            self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.permissionDenied), userInfo: nil, repeats: false)
             
+            self.permissionAlert = UIAlertController(title: JinyAuthShared.shared.authConfig?.permission?.dialogTitle ?? "Streaming Permission ", message: JinyAuthShared.shared.authConfig?.permission?.dialogDescription ?? "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
+
+            self.permissionAlert?.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+            
+                self.permissionTimer?.invalidate()
+                self.permissionTimer = nil
                 // update the Alfred server that permission has been granted
                 self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
                 
             }))
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler:{ (action) in
-                self.permissionListener.onPermissionRejected(permnission: self.permissionRejected)
+            self.permissionAlert?.addAction(UIAlertAction(title: "No", style: .cancel, handler:{ (action) in
+                 self.permissionDenied()
             }))
 
             
            // UIApplication.shared.keyWindow!.rootViewController?.present(alert, animated: true)
-            UIApplication.getCurrentVC()?.present(alert, animated: true)
+            UIApplication.getCurrentVC()?.present(self.permissionAlert!, animated: true)
         }
         
     }
@@ -71,10 +80,10 @@ class PermissionManager: AppStateProtocol{
     //Update the permission action to Alfred Server by POST
     func updatePermissionToServer(permission: String, status:Bool, appId: String){
         
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(Constants.API_KEY)/device/\(appId)")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(JinyAuthShared.shared.apiKey!)/device/\(appId)")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(Constants.API_KEY , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(JinyAuthShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
   
@@ -88,7 +97,7 @@ class PermissionManager: AppStateProtocol{
                 print(response)
             }
             
-            if let data = data {
+            if data != nil {
                 self.permissionListener.onPermissionStatusUpdation(permission: permission)
             }
         }.resume()
@@ -96,6 +105,22 @@ class PermissionManager: AppStateProtocol{
     }
     func stop()->Void{
         
+    }
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    @objc private func appDidEnterBackground(){
+        permissionDenied()
+    }
+    
+    @objc private func permissionDenied() {
+        guard permissionTimer != nil else { return }
+        permissionTimer?.invalidate()
+        permissionTimer = nil
+        self.permissionAlert?.dismiss(animated: true, completion: nil)
+        self.permissionListener.onPermissionRejected(permnission: self.permissionRejected)
     }
 }
 

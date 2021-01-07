@@ -76,7 +76,7 @@ extension JinyAUIManager {
     
     @objc func keyboardDidHide(_ notification:NSNotification) {
         keyboardHeight = 0
-        guard let assistInfo = currentInstruction?["assist_info"] as? Dictionary<String,Any>, let autoScroll = assistInfo["autoScroll"] as? Bool else {
+        guard let assistInfo = currentInstruction?["assistInfo"] as? Dictionary<String,Any>, let autoScroll = assistInfo["autoScroll"] as? Bool else {
             return
         }
         if autoScroll {
@@ -107,7 +107,7 @@ extension JinyAUIManager {
             callback.didPlayAudio()
             return
         }
-        
+
         if mediaManager?.isAlreadyDownloaded(mediaName: mediaName, langCode: code) ?? false {
         
             let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -151,14 +151,14 @@ extension JinyAUIManager:JinyAUIHandler {
             guard let callback = self.auiManagerCallBack else { return }
             let initialSounds = callback.getDefaultMedia()
             
-            if let defaultSoundsDict = initialSounds["default_sounds"] {
+            if let defaultSoundsDict = initialSounds["defaultSounds"] {
                 self.startDefaultSoundDownload(defaultSoundsDict)
             }
-            if let discoverySoundsDict = initialSounds["discovery_sounds"] {
+            if let discoverySoundsDict = initialSounds["discoverySounds"] {
                 self.startDefaultSoundDownload(discoverySoundsDict)
             }
-            if let auiContentDict = initialSounds["aui_content"] {
-                if let baseUrl = auiContentDict["base_url"] as? String, let contents = auiContentDict["content"] as? Array<String> {
+            if let auiContentDict = initialSounds["auiContent"] {
+                if let baseUrl = auiContentDict["baseUrl"] as? String, let contents = auiContentDict["content"] as? Array<String> {
                     for content in contents {
                         let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
                         self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
@@ -176,22 +176,27 @@ extension JinyAUIManager:JinyAUIHandler {
         }
     }
     
-    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView, iconInfo:Dictionary<String,Any>) {
+    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>) {
         
         currentInstruction = instruction
         currentTargetView = inView
         currentWebView = nil
         currentTargetRect = nil
-        
-        
-        //        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+                
+        guard let assistInfo = instruction["assistInfo"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
         }
         
         if let type = assistInfo["type"] as? String {
             auiManagerCallBack?.willPresentView()
+            
+            guard let inView = inView else {
+                
+                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+                
+                return
+            }
             
             if !isViewInVisibleArea(view: inView) {
                 if let autoscroll = assistInfo["autoScroll"] as? Bool {
@@ -260,8 +265,8 @@ extension JinyAUIManager:JinyAUIHandler {
         currentTargetView = nil
         currentWebView = inWebview
         currentTargetRect = rect
-        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+        guard let _ = instruction["soundName"] as? String else { return }
+        guard let assistInfo = instruction["assistInfo"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
         }
@@ -301,8 +306,8 @@ extension JinyAUIManager:JinyAUIHandler {
         currentTargetView = nil
         currentWebView = nil
         currentTargetRect = nil
-        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+        guard let _ = instruction["soundName"] as? String else { return }
+        guard let assistInfo = instruction["assistInfo"] as? Dictionary<String,Any> else {
             playAudio()
             return
         }
@@ -319,8 +324,8 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
-        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
+        guard let _ = instruction["soundName"] as? String else { return }
+        guard let assistInfo = instruction["assistInfo"] as? Dictionary<String,Any> else {
             auiManagerCallBack?.failedToPerform()
             return
         }
@@ -489,8 +494,8 @@ extension JinyAUIManager {
     
     func startDefaultSoundDownload(_ dict:Dictionary<String,Any>) {
         let langCode = auiManagerCallBack?.getLanguageCode()
-        if let baseUrl = dict["base_url"] as? String, let code = langCode {
-            if let allLangSoundsDict = dict["jiny_sounds"] as? Dictionary<String,Any>,
+        if let baseUrl = dict["baseUrl"] as? String, let code = langCode {
+            if let allLangSoundsDict = dict["jinySounds"] as? Dictionary<String,Any>,
                let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> {
                 for soundDict in soundsDictArray {
                     if let url = soundDict["url"] as? String{
@@ -515,8 +520,8 @@ extension JinyAUIManager {
             do {
                 let audioDict = try JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as! Dictionary<String,Any>
                 guard let dataDict = audioDict["data"] as? Dictionary<String,Any> else { return }
-                let _ = dataDict["base_url"] as? String
-                guard let jinySoundsJson = dataDict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return }
+                let _ = dataDict["baseUrl"] as? String
+                guard let jinySoundsJson = dataDict["jinySounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return }
                 self.soundsJson = jinySoundsJson
                 self.startStageSoundDownload()
             } catch {

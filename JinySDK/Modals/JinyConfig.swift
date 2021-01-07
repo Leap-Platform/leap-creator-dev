@@ -43,12 +43,12 @@ class JinyConfig {
         }
         guard configsArray.count > 0  else { return }
         for configDict in configsArray {
-            if let webIdentifiersDict = configDict["web_identifiers"] as? Dictionary<String,Dictionary<String,Any>>  {
+            if let webIdentifiersDict = configDict["webIdentifiers"] as? Dictionary<String,Dictionary<String,Any>>  {
                 webIdentifiersDict.forEach { (webId, idObject) in
                     webIdentifiers[webId] = JinyWebIdentifier(withDict: idObject)
                 }
             }
-            if let nativeIdentifiersDict = configDict["native_identifiers"] as? Dictionary<String,Dictionary<String,Any>> {
+            if let nativeIdentifiersDict = configDict["nativeIdentifiers"] as? Dictionary<String,Dictionary<String,Any>> {
                 nativeIdentifiersDict.forEach { (nativeId, idObject) in
                     nativeIdentifiers[nativeId] = JinyNativeIdentifier(withDict: idObject)
                 }
@@ -63,7 +63,7 @@ class JinyConfig {
                     languages.append(JinyLanguage(withLanguageDict: languageDict))
                 }
             }
-            if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
+            if let discoveryDictsArray = configDict["discoveryList"] as? Array<Dictionary<String,Any>> {
                 for discoveryDict in discoveryDictsArray {
                     discoveries.append(JinyDiscovery(withDict: discoveryDict))
                     if let discoveryId = discoveryDict["id"] as? Int, let iconSetting = configDict["iconSetting"] as? Dictionary<String, Any> {
@@ -79,10 +79,10 @@ class JinyConfig {
                 }
             }
             
-            discoverySounds = configDict["discovery_sounds"] as? Dictionary<String,Any> ?? [:]
-            defaultSounds = configDict["default_sounds"] as? Dictionary<String,Any> ?? [:]
-            auiContent = configDict["aui_content"] as? Dictionary<String,Any> ?? [:]
-            supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []
+            discoverySounds = configDict["discoverySounds"] as? Dictionary<String,Any> ?? [:]
+            defaultSounds = configDict["defaultSounds"] as? Dictionary<String,Any> ?? [:]
+            auiContent = configDict["auiContent"] as? Dictionary<String,Any> ?? [:]
+            supportedAppLocales = configDict["supportedAppLocales"] as? Array<String> ?? []
         }
         
     }

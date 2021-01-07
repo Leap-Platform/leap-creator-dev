@@ -22,11 +22,11 @@ class JinyContext {
     init(with dict:Dictionary<String,Any>) {
         id = dict["id"] as? Int ?? -1
         name = dict["name"] as? String ?? ""
-        nativeIdentifiers = dict["native_identifiers"] as? Array<String> ?? []
-        webIdentifiers = dict["web_identifiers"] as? Array<String> ?? []
+        nativeIdentifiers = dict["nativeIdentifiers"] as? Array<String> ?? []
+        webIdentifiers = dict["webIdentifiers"] as? Array<String> ?? []
         weight = dict["weight"] as? Int ?? 1
-        isWeb = dict["is_web"] as? Bool ?? false
-        if let taggedEventsDict = dict["tagged_events"] as? Dictionary<String,Any> {
+        isWeb = dict["isWeb"] as? Bool ?? false
+        if let taggedEventsDict = dict["taggedEvents"] as? Dictionary<String,Any> {
             taggedEvents = JinyTaggedEvent(withDict: taggedEventsDict)
         }
         checkpoint = dict["checkpoint"] as? Bool ?? false

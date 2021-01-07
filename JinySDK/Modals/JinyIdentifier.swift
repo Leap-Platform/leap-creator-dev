@@ -67,10 +67,10 @@ class JinyNativeViewProps {
     
     init(withDict propsDict:Dictionary<String,Any>) {
         
-        isSelected = propsDict["is_selected"] as? Bool
-        isEnabled = propsDict["is_enabled"] as? Bool
-        isFocused = propsDict["is_focused"] as? Bool
-        isChecked = propsDict["is_checked"] as? Bool
+        isSelected = propsDict["isSelected"] as? Bool
+        isEnabled = propsDict["isEnabled"] as? Bool
+        isFocused = propsDict["isFocused"] as? Bool
+        isChecked = propsDict["isChecked"] as? Bool
         textRegex = propsDict["text_regex"] as? String
         
         className = propsDict["class_name"] as? String
@@ -87,11 +87,11 @@ class JinyNativeElement {
 
     init(withDict elementDict:Dictionary<String,Any>) {
         
-        if let paramsDict = elementDict["id_params"] as? Dictionary<String,Any> {
+        if let paramsDict = elementDict["idParams"] as? Dictionary<String,Any> {
             idParameters = JinyNativeParameters(withDict: paramsDict)
         }
         
-        if let propsDict = elementDict["view_props"] as? Dictionary<String,Any> {
+        if let propsDict = elementDict["viewProps"] as? Dictionary<String,Any> {
             viewProps = JinyNativeViewProps(withDict: propsDict)
         }
     }
@@ -109,8 +109,8 @@ class JinyNativeIdentifier:JinyNativeElement {
     override init(withDict nativeDict:Dictionary<String,Any>) {
         controller = nativeDict["controller"] as? String
         nesting = nativeDict["nesting"] as? String
-        isAnchorSameAsTarget = nativeDict["is_anchor_same_as_target"] as? Bool ?? false
-        relationToTarget = nativeDict["relation_to_target"] as? Array<String>
+        isAnchorSameAsTarget = nativeDict["isAnchorSameAsTarget"] as? Bool ?? false
+        relationToTarget = nativeDict["relationToTarget"] as? Array<String>
         if let targetDict = nativeDict["target"] as? Dictionary<String,Any> {
             target = JinyNativeElement(withDict: targetDict)
         }

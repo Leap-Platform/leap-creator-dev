@@ -13,13 +13,14 @@ class BeaconManager {
     private let ALFRED_URL_LOCAL: String  = "http://192.168.1.3:8080"
     private let ALFRED_URL_DEV: String = "https://alfred-dev-0-0-1-gke.jiny.io"
     
-    let json = "{\"id\":\"\(Constants.API_KEY)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(Constants.API_KEY)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
+    let json = "{\"id\":\"\(JinyAuthShared.shared.apiKey!)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(JinyAuthShared.shared.apiKey!)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
     
     var beaconListener: BeaconListener
     var appId: String?
     var roomId: String
     var status: String?
     var task: DispatchWorkItem?
+    let interval: TimeInterval = (JinyAuthShared.shared.authConfig?.beacon?.interval ?? 3000)/1000
     
     var roomID: String? {
         get{
@@ -49,7 +50,7 @@ class BeaconManager {
         let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(Constants.API_KEY, forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(JinyAuthShared.shared.apiKey!, forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "POST"
         
@@ -69,7 +70,7 @@ class BeaconManager {
         let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(Constants.API_KEY , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(JinyAuthShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
         
@@ -83,8 +84,7 @@ class BeaconManager {
                 self.roomId = (jsonData?["roomId"]) as! String
                 self.beaconListener.onBeaconSuccess(roomId: (jsonData?["roomId"])! as! String, status: jsonData?["status"]! as Any)
                 //repeat this api call every 'm' seconds
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: self.task!)
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: self.task!)
             }
         }
         discoveryTask.resume()

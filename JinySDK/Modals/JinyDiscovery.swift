@@ -76,13 +76,13 @@ class JinyDiscovery:JinyContext {
     var instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
-        triggerMode = JinyTriggerMode(rawValue: (discoveryDict["trigger_mode"] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
+        triggerMode = JinyTriggerMode(rawValue: (discoveryDict["triggerMode"] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
         enableIcon = discoveryDict["enableIcon"] as? Bool ?? false
-        autoStart = discoveryDict["auto_start"] as? Bool ?? false
+        autoStart = discoveryDict["autoStart"] as? Bool ?? false
         if let freqDict = discoveryDict["flowTerminationFrequency"] as? Dictionary<String,Int> {
             frequency = JinyFlowTerminationFrequency(with: freqDict)
         }
-        flowId = discoveryDict["flow_id"] as? Int
+        flowId = discoveryDict["flowId"] as? Int
         if let instructionDict = discoveryDict["instruction"] as? Dictionary<String,Any> {
             instructionInfoDict = instructionDict
             instruction = JinyInstruction(withDict: instructionDict)
