@@ -38,14 +38,12 @@ public class JinyWebAssist: UIView, JinyAssist {
         let userScript = WKUserScript(source: jscript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         configuration.userContentController.addUserScript(userScript)
         
-        preferences.javaScriptEnabled = true
-        
         let jsCallBack = "iosListener"
         configuration.userContentController.add(self, name: jsCallBack)
-        configuration.preferences = preferences
         configuration.allowsInlineMediaPlayback = true
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
-        configuration.preferences.javaScriptEnabled = true
+        preferences.javaScriptEnabled = true
+        preferences.javaScriptCanOpenWindowsAutomatically = true
+        configuration.preferences = preferences
         if #available(iOS 10.0, *) {
             configuration.dataDetectorTypes = [.all]
         } else {
@@ -75,8 +73,7 @@ public class JinyWebAssist: UIView, JinyAssist {
     
     public func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
         
-        // Loading the html source file from the project bundle
-        
+        // Loading the html source file from the main project bundle
         guard let _ = URL(string: htmlUrl) else {
             
             if let url = Bundle.main.url(forResource: appLocale, withExtension: "html") {
@@ -86,11 +83,11 @@ public class JinyWebAssist: UIView, JinyAssist {
             return
         }
         
+        // Loading the html from documents directory
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Jiny").appendingPathComponent("aui_component")
         let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = documentPath.appendingPathComponent(fileName)
-        let req = URLRequest(url: filePath)
-        webView.load(req)        
+        webView.loadHTML(withUrl: filePath)
     }
     
     public func updateLayout(alignment: String, anchorBounds: CGRect?) {

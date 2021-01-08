@@ -226,7 +226,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 currentAssist = highlight
                 highlight?.delegate = self
-                highlight?.presentPointer()
+                highlight?.presentHighlight()
         
             case BEACON:
                 beacon = JinyBeacon(withDict: assistInfo, toView: inView)
@@ -238,7 +238,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 currentAssist = spot
                 spot?.delegate = self
-                spot?.showSpot()
+                spot?.presentSpot()
                 
             case LABEL:
                 label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)

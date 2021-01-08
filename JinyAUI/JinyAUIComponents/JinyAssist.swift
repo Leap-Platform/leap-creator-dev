@@ -51,8 +51,8 @@ public protocol JinyAssist {
     func applyStyle(style: Style)
     
     /// - Parameters:
-    ///   - htmlUrl: A url string to load html content.
-    ///   - appLocale: Another value.
+    ///   - htmlUrl: A url string to load html content from web.
+    ///   - appLocale: A url string to load html content from app's main bundle.
     ///   - contentFileUriMap: Another value.
     func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?)
     

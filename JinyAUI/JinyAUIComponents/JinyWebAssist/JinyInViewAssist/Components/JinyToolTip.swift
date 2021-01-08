@@ -420,7 +420,7 @@ public class JinyToolTip: JinyInViewAssist {
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-        let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
         
         var sizeWidth: Double?
         

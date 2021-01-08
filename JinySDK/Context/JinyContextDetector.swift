@@ -142,7 +142,7 @@ extension JinyContextDetector {
             let currentControllerString = String(describing: type(of: UIApplication.getCurrentVC().self))
             let controllerCheckedWebIds = allWebIds.filter { (webId) -> Bool in
                 guard let webIdentifier = delegate!.getWebIdentifier(identifierId: webId) else { return false }
-                guard let controllerCheckString = webIdentifier.controller else { return true }
+                guard let controllerCheckString = webIdentifier.controller, !controllerCheckString.isEmpty else { return true }
                 return controllerCheckString == currentControllerString
             }
             getPassingWebIds(controllerCheckedWebIds, inAllWebviews: currentWebViews) { (passedWebIds) in
@@ -284,12 +284,10 @@ extension JinyContextDetector {
             let controllerString = String(describing: type(of: currentController.self))
             controllerFilteredIdentifiers = controllerFilteredIdentifiers.filter { (identifier) -> Bool in
                 guard let nativeIdentifier = delegate!.getNativeIdentifier(identifierId: identifier) else { return false }
-                guard let controllerCheckString = nativeIdentifier.controller else { return true }
+                guard let controllerCheckString = nativeIdentifier.controller, !controllerCheckString.isEmpty else { return true }
                 return controllerString == controllerCheckString
             }
         }
-        
-        
         
         let passingIds = controllerFilteredIdentifiers.filter { (checkIdentifier) -> Bool in
             let views = getViewsForIdentifer(identifierId: checkIdentifier, hierarchy: allView)
