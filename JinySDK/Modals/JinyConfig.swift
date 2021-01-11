@@ -18,9 +18,9 @@ class JinyConfig {
     var flows:Array<JinyFlow> = []
     var languages:Array<JinyLanguage> = []
     var supportedAppLocales:Array<String> = []
-    var discoverySounds:Dictionary<String,Any> = [:]
-    var defaultSounds:Dictionary<String,Any> = [:]
-    var auiContent:Dictionary<String,Any> = [:]
+    var discoverySounds:Array<Dictionary<String,Any>> = []
+    var defaultSounds:Array<Dictionary<String,Any>> = []
+    var auiContent:Array<Dictionary<String,Any>> = []
     var iconSetting: Dictionary<String, IconSetting> = [:]
     
     var params:Dictionary<String,Any> = [:]
@@ -78,11 +78,19 @@ class JinyConfig {
                     assists.append(JinyAssist(withDict: assistDict))
                 }
             }
-            
-            discoverySounds = configDict[constant_discoverySounds] as? Dictionary<String,Any> ?? [:]
-            defaultSounds = configDict[constant_defaultSounds] as? Dictionary<String,Any> ?? [:]
-            auiContent = configDict[constant_auiContent] as? Dictionary<String,Any> ?? [:]
-            supportedAppLocales = configDict[constant_supportedAppLocales] as? Array<String> ?? []
+            if let discoverySoundsDict = configDict[constant_discoverySounds] as? Dictionary<String,Any> {
+                discoverySounds.append(discoverySoundsDict)
+            }
+            if let defaultSoundsDict = configDict[constant_defaultSounds] as? Dictionary<String,Any> {
+                defaultSounds.append(defaultSoundsDict)
+            }
+            if let auiContentsDict = configDict[constant_auiContent] as? Dictionary<String,Any> {
+                auiContent.append(auiContentsDict)
+            }
+
+            if let newSupportedAppLocale = configDict[constant_supportedAppLocales] as? Array<String> {
+                supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
+            }
         }
         
     }

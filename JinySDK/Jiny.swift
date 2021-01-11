@@ -33,7 +33,7 @@ import UIKit
 
 @objc public protocol JinyAUICallback:NSObjectProtocol {
     
-    func getDefaultMedia() -> Dictionary<String,Dictionary<String,Any>>
+    func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
     
     func tryTTS() -> String?

@@ -437,7 +437,7 @@ extension JinyContextManager:JinyAnalyticsManagerDelegate {
 
 extension JinyContextManager:JinyAUICallback {
     
-    func getDefaultMedia() -> Dictionary<String, Dictionary<String, Any>> {
+    func getDefaultMedia() -> Dictionary<String, Any> {
         guard let config = configuration else { return [:] }
         return [constant_defaultSounds:config.defaultSounds, constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
     }
