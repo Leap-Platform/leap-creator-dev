@@ -42,11 +42,8 @@ class JinyAuthManager {
                 case 200: print(configDict)
                     
                     do {
-                                                    
-                        let serializedData = try JSONSerialization.data(withJSONObject: configDict, options: JSONSerialization.WritingOptions.prettyPrinted)
-                            
                         let decoder = JSONDecoder()
-                        let authData = try decoder.decode(JinyAuthData.self, from: serializedData)
+                        let authData = try decoder.decode(JinyAuthData.self, from: resultData)
                         
                         guard let authConfig = authData.authConfig else {
                             

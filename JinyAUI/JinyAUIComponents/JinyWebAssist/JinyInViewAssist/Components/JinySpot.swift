@@ -55,8 +55,11 @@ public class JinySpot: JinyInViewAssist {
     /// the color of the connector.
     public var connectorColor: UIColor = .red
     
+    /// radius of the circle at the connector end.
+    var connectorCircleRadius: CGFloat = 5.0
+    
     /// presents pointer after setup, configure and show() webview content method is called and when the delegate is called for the webView.
-    func showSpot() {
+    func presentSpot() {
         
         setupView()
         
@@ -99,9 +102,9 @@ public class JinySpot: JinyInViewAssist {
     
        cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 6.0)
 
-       toolTipView.layer.cornerRadius = cornerRadius
+       webView.layer.cornerRadius = cornerRadius
     
-       toolTipView.layer.masksToBounds = true
+       webView.layer.masksToBounds = true
         
        if assistInfo?.highlightAnchor ?? true {
            
@@ -125,12 +128,12 @@ public class JinySpot: JinyInViewAssist {
     /// configures connector.
     func configureConnector() {
         
-        if let connectorLength = assistInfo?.extraProps?.props[constant_connectorLength] as? Double {
+        if let connectorLength = assistInfo?.extraProps?.props[constant_highlightConnectorLength] as? String {
             
-            self.connectorLength = connectorLength
+            self.connectorLength = Double(connectorLength) ?? self.connectorLength
         }
         
-        if let connectorColor = assistInfo?.extraProps?.props[constant_connectorColor] as? String {
+        if let connectorColor = assistInfo?.extraProps?.props[constant_highlightConnectorColor] as? String {
             
             self.connectorColor = UIColor.init(hex: connectorColor) ?? .black
         }
@@ -160,10 +163,10 @@ public class JinySpot: JinyInViewAssist {
             
             if assistInfo?.highlightAnchor ?? true {
                 
-                midY = midY + CGFloat(manipulatedHighlightSpacing) - CGFloat(manipulatedHighlightSpacing/2)
+                midY = midY + CGFloat(manipulatedHighlightSpacing)
             }
             
-            toMidY = midY + CGFloat(connectorLength) + CGFloat(manipulatedHighlightSpacing/2)
+            toMidY = midY + CGFloat(connectorLength)
             
         case .bottom:
             
@@ -185,7 +188,7 @@ public class JinySpot: JinyInViewAssist {
             
         case .solidWithCircle:
             
-            self.layer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            self.layer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
             
         case .dashGap:
             
@@ -193,7 +196,7 @@ public class JinySpot: JinyInViewAssist {
             
         case .dashGapWithCircle:
             
-            self.layer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            self.layer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
             
         case .none:
             
@@ -393,7 +396,7 @@ public class JinySpot: JinyInViewAssist {
                 y = y + CGFloat(manipulatedHighlightSpacing)
             }
             
-            y = y - minimalSpacing + (CGFloat(connectorLength))
+            y = y + (CGFloat(connectorLength))
             
         case .bottom:
             
@@ -416,7 +419,7 @@ public class JinySpot: JinyInViewAssist {
                 y = y - CGFloat(manipulatedHighlightSpacing)
             }
             
-            y = y + minimalSpacing - (CGFloat(connectorLength))
+            y = y - (CGFloat(connectorLength))
         }
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
@@ -482,13 +485,13 @@ public class JinySpot: JinyInViewAssist {
     
         let path = UIBezierPath()
 
-        path.move(to: CGPoint(x: 0, y: cornerRadius+minimalSpacing))
+        path.move(to: CGPoint(x: 0, y: 0))
         
-        path.addArc(withCenter: CGPoint(x: cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: 0, y: 0), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
                     
-        path.addLine(to: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: minimalSpacing))
+        path.addLine(to: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: 0))
         
-        path.addArc(withCenter: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: 3 * .pi/2, endAngle: 0, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: cornerRadius), radius: cornerRadius, startAngle: 3 * .pi/2, endAngle: 0, clockwise: true)
             
         path.addLine(to: CGPoint(x: self.webView.frame.size.width, y: 0))
         
@@ -510,13 +513,13 @@ public class JinySpot: JinyInViewAssist {
         
         path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height))
         
-        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height-minimalSpacing-cornerRadius))
+        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height-cornerRadius))
         
-        path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
                     
-        path.addLine(to: CGPoint(x: cornerRadius, y: contentSize.height-minimalSpacing))
+        path.addLine(to: CGPoint(x: cornerRadius, y: contentSize.height))
         
-        path.addArc(withCenter: CGPoint(x: cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: .pi/2, endAngle: .pi, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: cornerRadius, y: contentSize.height-cornerRadius), radius: cornerRadius, startAngle: .pi/2, endAngle: .pi, clockwise: true)
         
         path.close()
             
@@ -578,9 +581,9 @@ public class JinySpot: JinyInViewAssist {
             
         case .rect:
             
-            if let highlightCornerRadius = assistInfo?.extraProps?.props[constant_highlightCornerRadius] as? Double {
+            if let highlightCornerRadius = assistInfo?.extraProps?.props[constant_highlightCornerRadius] as? String {
                 
-                self.highlightCornerRadius = highlightCornerRadius
+                self.highlightCornerRadius = Double(highlightCornerRadius) ?? self.highlightCornerRadius
             }
         
             transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
@@ -595,20 +598,22 @@ public class JinySpot: JinyInViewAssist {
             
             var x = Double(origin.x) - highlightSpacing
             
-            var y = Double(origin.y) - Double(radius/2)
+            var y = Double(origin.y) - Double(radius/2) + (highlightSpacing*2)
+            
+            manipulatedHighlightSpacing = abs(-Double(radius/2) + (highlightSpacing*2))
             
             if size.height > size.width {
                 
                 radius = size.height
                 
-                x = Double(origin.x) - Double(radius/2)
+                x = Double(origin.x) - Double(radius/2) + (highlightSpacing*2)
                 
                 y = Double(origin.y) - highlightSpacing
+                
+                manipulatedHighlightSpacing = highlightSpacing
             }
             
             transparentPath = UIBezierPath(ovalIn: CGRect(x: x, y: y, width: Double(radius) + (highlightSpacing*2), height: Double(radius) + (highlightSpacing*2)))
-            
-            manipulatedHighlightSpacing = Double(radius/2)
         }
         
         path.append(transparentPath)
@@ -636,7 +641,7 @@ public class JinySpot: JinyInViewAssist {
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-        let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
         
         var sizeWidth: Double?
         

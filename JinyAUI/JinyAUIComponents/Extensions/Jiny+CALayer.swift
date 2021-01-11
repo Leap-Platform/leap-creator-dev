@@ -32,7 +32,7 @@ extension CALayer {
     ///   - start: startPoint of the line.
     ///   - end: endPoint of the line.
     ///   - color: color of the line layer.
-    func addSolidLineWithCircle(fromPoint start: CGPoint, toPoint end: CGPoint, withColor color: CGColor) {
+    func addSolidLineWithCircle(fromPoint start: CGPoint, toPoint end: CGPoint, withColor color: CGColor, withCircleRadius radius: CGFloat) {
         let line = CAShapeLayer()
         let linePath = UIBezierPath()
         linePath.move(to: start)
@@ -41,7 +41,7 @@ extension CALayer {
 
         var circleY: CGFloat = 0
         
-        let radius: CGFloat = 5.0
+        let radius: CGFloat = radius
         
         if start.y > end.y {
             
@@ -92,7 +92,7 @@ extension CALayer {
     ///   - start: startPoint of the line.
     ///   - end: endPoint of the line.
     ///   - color: color of the line layer.
-    func addDashedLineWithCircle(fromPoint start: CGPoint, toPoint end:CGPoint, withColor color: CGColor) {
+    func addDashedLineWithCircle(fromPoint start: CGPoint, toPoint end:CGPoint, withColor color: CGColor, withCircleRadius radius: CGFloat) {
         let line = CAShapeLayer()
         line.lineDashPattern = [2, 2]
         let linePath = UIBezierPath()
@@ -102,7 +102,7 @@ extension CALayer {
 
         var circleY: CGFloat = 0
         
-        let radius: CGFloat = 5.0
+        let radius: CGFloat = radius
         
         if start.y > end.y {
             

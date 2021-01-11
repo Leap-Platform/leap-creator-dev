@@ -73,11 +73,6 @@ extension JinyInternal {
         let dict:Dictionary<String,String> = [:]
         let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
         req.httpBody = jsonData
-//        let headers = getSavedHeaders()
-//        headers.forEach { (key,value) in
-//            req.addValue(value, forHTTPHeaderField: key)
-//        }
-//        req.addValue("6e0062e7-4c8a-41c9-b67e-0305dc2302cf", forHTTPHeaderField: "x-jiny-client-id")
         req.addValue("2c9fba13-57ad-4948-a359-5180180cc7b7", forHTTPHeaderField: "x-jiny-client-id")
         req.addValue("1", forHTTPHeaderField: "x-app-version-code")
         req.addValue("0.1.1", forHTTPHeaderField: "x-app-version-name")

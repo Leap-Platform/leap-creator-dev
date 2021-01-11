@@ -83,20 +83,15 @@ public class JinyIconView: UIView {
     }
     
     func setupIconView() {
-        
-        let preferences = WKPreferences()
-        
+                
         let configuration = WKWebViewConfiguration()
         
         let userScript = WKUserScript(source: jscript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         
         configuration.userContentController.addUserScript(userScript)
         
-        preferences.javaScriptEnabled = true
-        
         let jsCallBack = "iosListener"
         configuration.userContentController.add(self, name: jsCallBack)
-        configuration.preferences = preferences
         configuration.allowsInlineMediaPlayback = true
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
         configuration.preferences.javaScriptEnabled = true
@@ -122,12 +117,8 @@ public class JinyIconView: UIView {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController.addUserScript(userScript)
         
-        let preferences = WKPreferences()
-        preferences.javaScriptEnabled = true
-        
         let jsCallBack = "iosListener"
         configuration.userContentController.add(self, name: jsCallBack)
-        configuration.preferences = preferences
         configuration.allowsInlineMediaPlayback = true
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
         configuration.preferences.javaScriptEnabled = true
