@@ -150,23 +150,34 @@ extension JinyAUIManager:JinyAUIHandler {
             guard let callback = self.auiManagerCallBack else { return }
             let initialSounds = callback.getDefaultMedia()
             
-            if let defaultSoundsDict = initialSounds[constant_defaultSounds] {
-                self.startDefaultSoundDownload(defaultSoundsDict)
+            if let defaultSoundsDicts = initialSounds[constant_defaultSounds] as? Array<Dictionary<String,Any>> {
+                for defaultSoundDict in defaultSoundsDicts {
+                    self.startDefaultSoundDownload(defaultSoundDict)
+                }
             }
-            if let discoverySoundsDict = initialSounds[constant_discoverySounds] {
-                self.startDefaultSoundDownload(discoverySoundsDict)
+            if let discoverySoundsDicts = initialSounds[constant_discoverySounds] as? Array<Dictionary<String,Any>> {
+                for discoverySoundsDict in discoverySoundsDicts {
+                    self.startDefaultSoundDownload(discoverySoundsDict)
+                }
             }
-            if let auiContentDict = initialSounds[constant_auiContent] {
-                if let baseUrl = auiContentDict[constant_baseUrl] as? String, let contents = auiContentDict[constant_content] as? Array<String> {
-                    for content in contents {
-                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
-                        self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
-                    }
-                    if let iconSettingDict = initialSounds[constant_iconSetting] as? Dictionary<String, IconSetting> {
-                        for (_, value) in iconSettingDict {
-                            let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
+            var htmlBaseUrl:String?
+            if let auiContentDicts = initialSounds[constant_auiContent]  as? Array<Dictionary<String,Any>> {
+                for auiContentDict in auiContentDicts {
+                    if let baseUrl = auiContentDict[constant_baseUrl] as? String, let contents = auiContentDict[constant_content] as? Array<String> {
+                        htmlBaseUrl = baseUrl
+                        for content in contents {
+                            let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
                             self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
                         }
+                    }
+                }
+            }
+            
+            if let iconSettingDict = initialSounds[constant_iconSetting] as? Dictionary<String, IconSetting> {
+                if let baseUrl = htmlBaseUrl {
+                    for (_, value) in iconSettingDict {
+                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
+                        self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
                     }
                 }
             }
