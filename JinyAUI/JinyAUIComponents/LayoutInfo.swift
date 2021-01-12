@@ -19,11 +19,11 @@ public class LayoutInfo {
     /// exit animation for the content
     public var exitAnimation: String?
     
-    /// property type of the type Style
+    /// property of the type Style
     public var style: Style
     
-    /// A boolean value to set outside dismiss
-    public var outsideDismiss: Bool?
+    /// property of the type DismissAction
+    public var dismissAction: DismissAction
     
     /// An integer value to set time delay in ms
     public var autoDismissDelay: Float
@@ -41,9 +41,13 @@ public class LayoutInfo {
             self.style = Style(withDict: [:])
         }
         
-        if let dismissAction = layoutDict[constant_dismissAction] as? Dictionary<String,Any>, let outsideDismiss = dismissAction[constant_outsideDismiss] as? Bool {
+        if let dismissAction = layoutDict[constant_dismissAction] as? Dictionary<String,Any> {
             
-            self.outsideDismiss = outsideDismiss
+            self.dismissAction = DismissAction(withDict: dismissAction)
+        
+        } else {
+            
+            self.dismissAction = DismissAction(withDict: [:])
         }
         
         if let enterAnimation = layoutDict[constant_enterAnimation] as? String {
@@ -62,6 +66,28 @@ public class LayoutInfo {
         }
         
         self.autoDismissDelay = (layoutDict[constant_autoDismissDelay] as? Float ?? 0)/1000
+    }
+}
+
+public class DismissAction {
+    
+    public var outsideDismiss: Bool?
+    
+    public var dismissOnAnchorClick: Bool?
+    
+    /// - Parameters:
+    ///   - dismissDict: A dictionary for the type DismissAction.
+    init(withDict dismissDict: Dictionary<String,Any>) {
+        
+        if let outsideDismiss = dismissDict[constant_outsideDismiss] as? Bool {
+            
+            self.outsideDismiss = outsideDismiss
+        }
+        
+        if let dismissOnAnchorClick = dismissDict[constant_dismissOnAnchorClick] as? Bool {
+            
+            self.dismissOnAnchorClick = dismissOnAnchorClick
+        }
     }
 }
 

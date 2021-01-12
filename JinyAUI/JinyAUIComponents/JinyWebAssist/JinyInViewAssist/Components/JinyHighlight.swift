@@ -29,10 +29,7 @@ public enum HighlightType: String {
 }
 
 /// JinyHighlight - A Web InViewAssist AUI Component class to show a tip with a connector on the screen and highlights the source view.
-public class JinyHighlight: JinyInViewAssist {
-    
-    /// toolTipView which carries webView.
-    private var toolTipView = UIView(frame: .zero)
+public class JinyHighlight: JinyTipView {
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -45,9 +42,6 @@ public class JinyHighlight: JinyInViewAssist {
     
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
-    
-    /// original isUserInteractionEnabled boolean value of the toView.
-    private var toViewOriginalInteraction: Bool?
     
     /// spacing of the highlight area.
     public var highlightSpacing = 10.0
@@ -80,6 +74,8 @@ public class JinyHighlight: JinyInViewAssist {
         
         configureTooltipView()
         
+        setupAutoFocus()
+        
         show()
     }
         
@@ -95,11 +91,6 @@ public class JinyHighlight: JinyInViewAssist {
         inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
-    }
-    
-    public override func remove() {
-        toolTipView.removeFromSuperview()
-        super.remove()
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
@@ -630,26 +621,6 @@ public class JinyHighlight: JinyInViewAssist {
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        
-        if let viewToCheck = toView {
-            
-            guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-                
-                return self
-            }
-            
-            if frameForKw.contains(point) { return nil } else { return self }
-        }
-        
-        return self
-    }
-    
-    func simulateTap(atPoint:CGPoint, onWebview:UIView, withEvent:UIEvent) {
-                
-         onWebview.hitTest(atPoint, with: withEvent)
-    }
-    
     public override func performEnterAnimation(animation: String) {
         
         let alpha = self.alpha
@@ -679,16 +650,9 @@ public class JinyHighlight: JinyInViewAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            guard let userInteraction = toViewOriginalInteraction else {
-                
-               return
-            }
-            
-            toView?.isUserInteractionEnabled = userInteraction
+           remove()
         }
     }
 }

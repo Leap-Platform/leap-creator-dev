@@ -122,10 +122,9 @@ public class JinyKeyWindowAssist: JinyWebAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
         
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-
         }
     }
 }
