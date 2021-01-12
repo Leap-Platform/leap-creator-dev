@@ -25,6 +25,7 @@
 		2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */; };
 		2D1702122591D13700F33729 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702102591D13700F33729 /* jiny_default_icon.html */; };
 		2D1702132591D13700F33729 /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702112591D13700F33729 /* jiny_audio_anim.html */; };
+		2D1BC4EC25ADB10F00B39606 /* JinyTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1BC4EB25ADB10F00B39606 /* JinyTipView.swift */; };
 		2D2334C6258B16D70084768E /* JinyCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2334C5258B16D70084768E /* JinyCarousel.swift */; };
 		2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */; };
 		2D2AE919258D00AF0038A5C3 /* JinySharedAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2AE918258D00AF0038A5C3 /* JinySharedAUI.swift */; };
@@ -305,6 +306,7 @@
 		2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthConfig.swift; sourceTree = "<group>"; };
 		2D1702102591D13700F33729 /* jiny_default_icon.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_default_icon.html; sourceTree = "<group>"; };
 		2D1702112591D13700F33729 /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
+		2D1BC4EB25ADB10F00B39606 /* JinyTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyTipView.swift; sourceTree = "<group>"; };
 		2D2334C5258B16D70084768E /* JinyCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyCarousel.swift; sourceTree = "<group>"; };
 		2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIconSetting.swift; sourceTree = "<group>"; };
 		2D2AE918258D00AF0038A5C3 /* JinySharedAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinySharedAUI.swift; sourceTree = "<group>"; };
@@ -901,14 +903,14 @@
 			isa = PBXGroup;
 			children = (
 				D0B793092543186D00DB94DD /* AssistInfo.swift */,
+				D0B793162543186D00DB94DD /* LayoutInfo.swift */,
+				D0B793292543186D00DB94DD /* Style.swift */,
 				D0B7930A2543186D00DB94DD /* IconInfo.swift */,
 				D0B7930B2543186D00DB94DD /* JinyAssist.swift */,
-				D0B7930C2543186D00DB94DD /* JinyNativeAssist */,
-				D0B793122543186D00DB94DD /* Extensions */,
-				D0B793162543186D00DB94DD /* LayoutInfo.swift */,
-				D0B793172543186D00DB94DD /* JinyWebAssist */,
-				D0B793292543186D00DB94DD /* Style.swift */,
 				D0B7932A2543186D00DB94DD /* JinyIconView.swift */,
+				D0B7930C2543186D00DB94DD /* JinyNativeAssist */,
+				D0B793172543186D00DB94DD /* JinyWebAssist */,
+				D0B793122543186D00DB94DD /* Extensions */,
 			);
 			path = JinyAUIComponents;
 			sourceTree = "<group>";
@@ -972,6 +974,7 @@
 			isa = PBXGroup;
 			children = (
 				D0B7931A2543186D00DB94DD /* JinyLabel.swift */,
+				2D1BC4EB25ADB10F00B39606 /* JinyTipView.swift */,
 				D0B7931B2543186D00DB94DD /* JinySpot.swift */,
 				D0B7931C2543186D00DB94DD /* JinyHighlight.swift */,
 				D0B7931D2543186D00DB94DD /* JinyToolTip.swift */,
@@ -1570,6 +1573,7 @@
 				D032C58624B6FF35006E8F2B /* JinyOptionPanel.swift in Sources */,
 				D0B7933F2543186D00DB94DD /* JinyBottomSheet.swift in Sources */,
 				D0B793432543186D00DB94DD /* JinyIconView.swift in Sources */,
+				2D1BC4EC25ADB10F00B39606 /* JinyTipView.swift in Sources */,
 				D0B7932C2543186D00DB94DD /* IconInfo.swift in Sources */,
 				D032C59324B700B0006E8F2B /* JinyFlowSelector.swift in Sources */,
 				D032C58224B6FF35006E8F2B /* JinyDragRect.swift in Sources */,

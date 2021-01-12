@@ -19,6 +19,9 @@ public class AssistInfo {
     /// A boolean value to set anchor highlight
     var highlightAnchor: Bool?
     
+    /// A boolean value to set autoFocus to true only when highlightAnchor and highlightClickable are true.
+    var autoFocus: Bool = false         // default is false
+    
     /// A layoutInfo property for the type LayoutInfo
     public var layoutInfo: LayoutInfo?
 
@@ -43,6 +46,8 @@ public class AssistInfo {
             
            self.highlightClickable = highlightClickable
         }
+        
+        autoFocus = (highlightAnchor ?? false) && (highlightClickable ?? false)
         
         if let extraProps = assistDict[constant_extraProps] as? Dictionary<String, Any> {
             

@@ -11,13 +11,10 @@ import UIKit
 import WebKit
 
 /// JinySpot - A Web InViewAssist AUI Component class to show a tip on the screen over a circular spot and highlights the source view.
-public class JinySpot: JinyInViewAssist {
+public class JinySpot: JinyTipView {
     
     /// circleView to surround highlighted view with tooltip.
     private var circleView = UIView(frame: .zero)
-    
-    /// toolTipView which carries webView.
-    private var toolTipView = UIView(frame: .zero)
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -30,9 +27,6 @@ public class JinySpot: JinyInViewAssist {
     
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
-    
-    /// original isUserInteractionEnabled boolean value of the toView.
-    private var toViewOriginalInteraction: Bool?
     
     /// spacing of the highlight area.
     public var highlightSpacing = 10.0
@@ -65,6 +59,8 @@ public class JinySpot: JinyInViewAssist {
         
         configureTooltipView()
         
+        setupAutoFocus()
+        
         show()
     }
         
@@ -84,11 +80,6 @@ public class JinySpot: JinyInViewAssist {
         inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
-    }
-    
-    public override func remove() {
-        toolTipView.removeFromSuperview()
-        super.remove()
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
@@ -687,26 +678,6 @@ public class JinySpot: JinyInViewAssist {
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        
-        if let viewToCheck = toView {
-            
-            guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-                
-                return self
-            }
-            
-            if frameForKw.contains(point) { return nil } else { return self }
-        }
-        
-        return self
-    }
-    
-    func simulateTap(atPoint:CGPoint, onWebview:UIView, withEvent:UIEvent) {
-                
-         onWebview.hitTest(atPoint, with: withEvent)
-    }
-    
     public override func performEnterAnimation(animation: String) {
         
         circleView.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
@@ -734,16 +705,9 @@ public class JinySpot: JinyInViewAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            guard let userInteraction = toViewOriginalInteraction else {
-                
-               return
-            }
-            
-            toView?.isUserInteractionEnabled = userInteraction
+           remove()
         }
     }
 }
