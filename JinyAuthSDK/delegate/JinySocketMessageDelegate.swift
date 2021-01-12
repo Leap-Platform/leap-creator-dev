@@ -48,7 +48,7 @@ class JinySocketMessageDelegate: WebSocketDelegate{
         case .ping( _): break
             
            case .error(let error):
-            print("error \(error)")
+            print("error \(String(describing: error?.localizedDescription))")
             
            case .viabilityChanged:
              print("viabilityChanged")
