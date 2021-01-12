@@ -288,12 +288,18 @@ extension JinyContextDetector {
                 return controllerString == controllerCheckString
             }
         }
-        
-        let passingIds = controllerFilteredIdentifiers.filter { (checkIdentifier) -> Bool in
+        let alreadyPassedIdentifiers = controllerFilteredIdentifiers.filter { (identifier) -> Bool in
+            guard let nativeIdentifier = delegate?.getNativeIdentifier(identifierId: identifier) else { return false }
+            guard let _ = nativeIdentifier.idParameters else { return true }
+            return false
+        }
+        let toCheckIdentifiers = controllerFilteredIdentifiers.filter{ !alreadyPassedIdentifiers.contains($0) }
+        let passingIds = toCheckIdentifiers.filter { (checkIdentifier) -> Bool in
             let views = getViewsForIdentifer(identifierId: checkIdentifier, hierarchy: allView)
             return views?.count ?? 0 > 0
         }
-        return passingIds
+        
+        return (passingIds + alreadyPassedIdentifiers)
     }
     
     private func getViewsForIdentifer(identifierId:String, hierarchy:Array<UIView>) -> Array<UIView>? {
