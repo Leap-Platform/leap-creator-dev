@@ -106,7 +106,11 @@ public class JinyNotification: JinyKeyWindowAssist {
                         
         let attributeType: NSLayoutConstraint.Attribute = alignment == .top ? .top : .bottom
         
-        let constant = alignment == .top ? (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 50) : -(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 50)
+        var constant:CGFloat = alignment == .top ? 50.0 : -50.0
+        
+        if #available(iOS 11.0, *) {
+            constant = alignment == .top ? (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 50) : -(UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 50)
+        }
         
         inView?.addConstraint(NSLayoutConstraint(item: self, attribute: attributeType, relatedBy: .equal, toItem: inView, attribute: attributeType, multiplier: 1, constant: CGFloat(constant)))
         
