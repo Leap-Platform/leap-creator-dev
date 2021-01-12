@@ -416,64 +416,6 @@ extension JinyContextDetector {
 // MARK: - WEB IDENTFIER CHECK
 extension JinyContextDetector {
     
-    private func getRectForIdentifier(id:JinyWebIdentifier, webviews:Array<UIView>, rectCalculated:@escaping(_ :CGRect?, _ :UIView?)->Void) {
-        let boundsScript = JinyJSMaker.calculateBoundsScript(id)
-        var counter = 0
-        
-        var resultCompletion:((_ :CGRect?)->Void)?
-        resultCompletion = { rect in
-            if rect != nil { rectCalculated(rect, webviews[counter]) }
-            else {
-                counter += 1
-                if counter < webviews.count { self.runJs(script: boundsScript, in: webviews[counter], result: resultCompletion!) }
-                else { rectCalculated(nil, nil) }
-            }
-        }
-        runJs(script: boundsScript, in: webviews[counter], result: resultCompletion!)
-    }
-    
-    func runJs(script:String, in webview:UIView, result:@escaping(_ :CGRect?)->Void) {
-        
-        if let wk = webview as? WKWebView {
-            
-            wk.evaluateJavaScript(script) { (output, error) in
-                if let resultString = output as? String {
-                    let rectStringsArray = (resultString.split(separator: ","))
-                    let rectInfoArray = rectStringsArray.map { (string) -> CGFloat? in
-                        CGFloat((string as NSString).floatValue)
-                    }.filter { $0 != nil } as! Array<CGFloat>
-                    if rectInfoArray.count != 4 { result(nil) }
-                    else {
-                        let resultRect = CGRect(x: rectInfoArray[0], y: rectInfoArray[1], width: rectInfoArray[2], height: rectInfoArray[3])
-                        result(resultRect)
-                    }
-                } else {
-                    result(nil)
-                }
-            }
-            
-        } else if let uiweb = webview as? UIWebView {
-            
-            if let resultString = uiweb.stringByEvaluatingJavaScript(from: script) {
-                let rectStringsArray = (resultString.split(separator: ","))
-                let rectInfoArray = rectStringsArray.map { (string) -> CGFloat? in
-                    CGFloat((string as NSString).floatValue)
-                }.filter { $0 != nil } as! Array<CGFloat>
-                if rectInfoArray.count != 4 { result(nil) }
-                else {
-                    let resultRect = CGRect(x: rectInfoArray[0], y: rectInfoArray[1], width: rectInfoArray[2], height: rectInfoArray[3])
-                    result(resultRect)
-                }
-            } else {
-                result(nil)
-            }
-            
-        } else {
-            result(nil)
-        }
-        
-    }
-    
     private func getPassingWebIds(_ webIds:Array<String>, inAllWebviews:Array<UIView>, completion: @escaping(_ passingIds:Array<String>)->Void) {
         
         var counter = 0
@@ -492,95 +434,111 @@ extension JinyContextDetector {
     }
     
     private func getPassingWebIds(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ passingIds:Array<String>)->Void) {
-        getElementsPresent(webIds, inSingleWebview: inSingleWebview) { (presentWebIds) in
-            if presentWebIds.count > 0 {
-                self.getElementsPassingAttributes(presentWebIds, inSingleWebview: inSingleWebview) { (passingWebIds) in
-                    completion(passingWebIds)
+        webIdsPresentCheck(allIds: webIds, webview: inSingleWebview) { (presentIds) in
+            if let idsPresentInWebview = presentIds {
+                self.webIdsPassingCheck(presentIds: idsPresentInWebview, webview: inSingleWebview) { (passingIds) in
+                    completion(passingIds ?? [])
                 }
             } else { completion([]) }
         }
-        
     }
     
-    private func getElementsPresent(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ presentElements:Array<String>) -> Void ) {
+    private func webIdsPresentCheck(allIds:Array<String>, webview:UIView, completion:@escaping(_:Array<String>?)->Void) {
         
-        //Create query to check if element is present
-        var jsString = "["
-        for (index,webId) in webIds.enumerated() {
-            if index != 0 { jsString += "," }
-            if let webIdentifier = delegate!.getWebIdentifier(identifierId: webId) {
-                let querySelectorCheck = "(" + JinyJSMaker.getElementScript(webIdentifier) + " != null" + ").toString()"
-                jsString += querySelectorCheck
+        var overAllCheckElementScript = "["
+        for (index,id) in allIds.enumerated() {
+            if index != 0 { overAllCheckElementScript += "," }
+            if let webId = delegate?.getWebIdentifier(identifierId: id) {
+                let checkElementScript  = JinyJSMaker.generateNullCheckScript(identifier: webId)
+                overAllCheckElementScript += checkElementScript
             } else {
-                let falseReturn = "(document.querySelectorAll('div[class=\"return_false\"')[0] != null).toString()"
-                jsString += falseReturn
+                overAllCheckElementScript += "(document.querySelectorAll('div[class=\"return_false\"')[0] != null).toString()"
             }
         }
-        jsString += "]"
-        
-        
-        if let uiweb = inSingleWebview as? UIWebView {
-            //Inject query into UIWebview
-            jsString = "(" + jsString + ").toString()"
-            if let result = uiweb.stringByEvaluatingJavaScript(from: jsString){
-                let resultArray = result.components(separatedBy: ",")
-                let presentWebIds = webIds.filter { (webId) -> Bool in
-                    let webIdIndex = webIds.firstIndex(of: webId)!
-                    return NSString(string: resultArray[webIdIndex]).boolValue
-                }
-                completion(presentWebIds)
+        overAllCheckElementScript += "].toString()"
+        runJavascript(overAllCheckElementScript, inWebView: webview) { (res) in
+            if let result = res {
+                let presentIds = self.getPassingIdsFromJSResult(jsResult: result, toCheckIds: allIds)
+                completion(presentIds)
             } else { completion([]) }
-        } else if let wkweb = inSingleWebview as? WKWebView {
-            //Inject query into WKWebview
-            wkweb.evaluateJavaScript(jsString) { (result, error) in
-                if let boolStrings = result as? Array<String> {
-                    let presentWebIds = webIds.filter { (webId) -> Bool in
-                        let webIdIndex = webIds.firstIndex(of: webId)!
-                        return NSString(string: boolStrings[webIdIndex]).boolValue
-                    }
-                    completion(presentWebIds)
-                } else { completion([]) }
-            }
         }
     }
     
-    private func getElementsPassingAttributes(_ webIds:Array<String>, inSingleWebview:UIView, completion:@escaping(_ passingElements:Array<String>) -> Void ) {
-        var jsString = "["
-        for (index,webId) in webIds.enumerated() {
-            if index != 0 { jsString += "," }
-            var checkScript = ""
-            if let webIdentifier = delegate!.getWebIdentifier(identifierId: webId) {
-                if let attributeCheck = JinyJSMaker.createAttributeCheckScript(for: webIdentifier) {
-                    checkScript += "(" + attributeCheck + ").toString()"
+    private func webIdsPassingCheck(presentIds:Array<String>, webview:UIView, completion:@escaping(_:Array<String>?)->Void) {
+        
+        var overallAttributeCheckScript = "["
+        for (index, id) in presentIds.enumerated() {
+            if let webId = delegate?.getWebIdentifier(identifierId: id) {
+                if index != 0 { overallAttributeCheckScript += ","}
+                if let attributeElementCheck = JinyJSMaker.generateAttributeCheckScript(webIdentifier: webId) {
+                    overallAttributeCheckScript += attributeElementCheck
                 } else {
-                    checkScript += "(" + JinyJSMaker.getElementScript(webIdentifier) + " != null" + ").toString()"
+                    let nullCheckScript  = JinyJSMaker.generateNullCheckScript(identifier: webId)
+                    overallAttributeCheckScript += nullCheckScript
                 }
-                jsString += checkScript
+            } else {
+                overallAttributeCheckScript += "(document.querySelectorAll('div[class=\"return_false\"')[0] != null).toString()"
             }
         }
-        jsString += "]"
-        if let uiweb = inSingleWebview as? UIWebView {
-            //Inject query into UIWebview
-            jsString = "(" + jsString + ").toString()"
-            if let result = uiweb.stringByEvaluatingJavaScript(from: jsString){
-                let resultArray = result.components(separatedBy: ",")
-                let presentWebIds = webIds.filter { (webId) -> Bool in
-                    let webIdIndex = webIds.firstIndex(of: webId)!
-                    return NSString(string: resultArray[webIdIndex]).boolValue
-                }
-                completion(presentWebIds)
+        overallAttributeCheckScript += "].toString()"
+        runJavascript(overallAttributeCheckScript, inWebView: webview) { (res) in
+            if let result = res {
+                let passingIds = self.getPassingIdsFromJSResult(jsResult: result, toCheckIds: presentIds)
+                completion(passingIds)
             } else { completion([]) }
-        } else if let wkweb = inSingleWebview as? WKWebView {
-            //Inject query into WKWebview
-            wkweb.evaluateJavaScript(jsString) { (result, error) in
-                if let boolStrings = result as? Array<String> {
-                    let presentWebIds = webIds.filter { (webId) -> Bool in
-                        let webIdIndex = webIds.firstIndex(of: webId)!
-                        return NSString(string: boolStrings[webIdIndex]).boolValue
-                    }
-                    completion(presentWebIds)
-                } else { completion([]) }
-            }
         }
     }
+    
+    private func getRectForIdentifier(id:JinyWebIdentifier, webviews:Array<UIView>, rectCalculated:@escaping(_ :CGRect?, _ :UIView?)->Void) {
+        let boundsScript = JinyJSMaker.calculateBoundsScript(id)
+        var counter = 0
+        var resultCompletion:((_ :CGRect?)->Void)?
+        resultCompletion = { rect in
+            if rect != nil { rectCalculated(rect, webviews[counter]) }
+            else {
+                counter += 1
+                if counter < webviews.count { self.calculateBoundsWithScript(_script: boundsScript, in: webviews[counter], rectCalculated: resultCompletion!) }
+                else { rectCalculated(nil, nil) }
+            }
+        }
+        calculateBoundsWithScript(_script: boundsScript, in: webviews[counter], rectCalculated: resultCompletion!)
+    }
+    
+    func calculateBoundsWithScript(_script:String, in webview:UIView, rectCalculated completed:@escaping(_:CGRect?)->Void) {
+        runJavascript(_script, inWebView: webview) { (res) in
+            if let result = res {
+                let resultArray = result.components(separatedBy: ",").compactMap({ CGFloat(($0 as NSString).doubleValue) })
+                if resultArray.count != 4 { completed(nil) }
+                else {
+                    let rect = CGRect(x: resultArray[0], y: resultArray[1], width: resultArray[2], height: resultArray[3])
+                    completed(rect)
+                }
+            } else { (completed(nil)) }
+        }
+    }
+    
+    private func runJavascript(_ script:String, inWebView:UIView, completion:@escaping(_:String?)->Void) {
+        if let wkweb = inWebView as? WKWebView {
+            wkweb.evaluateJavaScript(script) { (res, err) in
+                if let result = res as? String { completion(result) }
+                else { completion(nil) }
+            }
+        } else if let uiweb = inWebView as? UIWebView {
+            let result = uiweb.stringByEvaluatingJavaScript(from: script)
+            completion(result)
+        } else { completion(nil) }
+    }
+    
+    
+    
+    private func getPassingIdsFromJSResult(jsResult:String, toCheckIds:Array<String>) -> Array<String> {
+        let boolStrings = jsResult.components(separatedBy: ",")
+        var presentIds:Array<String> = []
+        for (index,id) in toCheckIds.enumerated() {
+            if NSString(string: boolStrings[index]).boolValue { presentIds.append(id) }
+        }
+        return presentIds
+    }
+    
+   
 }
