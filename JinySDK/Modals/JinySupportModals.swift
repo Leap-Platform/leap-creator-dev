@@ -71,6 +71,10 @@ class JinyAssistInfo {
         autoFocus = infoDict[constant_autoFocus] as? Bool ?? false
         type = infoDict[constant_type] as? String
         identifier = infoDict[constant_identifier] as? String
+        if let delay = infoDict[constant_autoDismissDelay] as? Float {
+            autoDismissDelay = (delay/1000)
+        }
+        
     }
 }
 
