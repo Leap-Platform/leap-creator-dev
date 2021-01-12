@@ -56,11 +56,15 @@ class JinyStageManager {
         currentStage = stage
         
         // If both current and previous stages are not identified do nothing
-        if currentStage == nil && previousStage == nil { return }
+        if currentStage == nil && previousStage == nil {
+            delegate?.noStageFound()
+            return
+        }
         
         // If no current stage identified, mark previous stage as performed, if previous stage isSuccess stage pop the flow and wait for new stage info
         if currentStage == nil {
             stagePerformed(previousStage!)
+            delegate?.noStageFound()
             if previousStage!.isSuccess { delegate!.isSuccessStagePerformed() }
             return
         }

@@ -219,9 +219,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         
     }
     
-    func noDiscoveryIdentified() {
-        
-    }
+    func noDiscoveryIdentified() { auiHandler?.removeAllViews() }
     
     func startFlow(id: Int, disId:Int) {
         let flow = configuration?.flows.first(where: { (flow) -> Bool in
@@ -321,8 +319,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
         
     }
     
-    func noStageFound() {
-    }
+    func noStageFound() { auiHandler?.removeAllViews() }
     
     func removeStage(_ stage: JinyStage) { flowManager?.removeStage(stage) }
     
@@ -588,6 +585,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func discoveryOptedInFlow(atIndex: Int) {
+        auiHandler?.removeAllViews()
         sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
         guard let dm = discoveryManager, let disc = dm.getCurrentDiscovery() else { return }
         guard let flowId = disc.flowId else { return }
