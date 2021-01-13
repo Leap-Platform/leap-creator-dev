@@ -272,10 +272,6 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         discoveryManager?.currentDiscoveryOptOut = false
     }
-    
-    func removeAllViews() {
-        auiHandler?.removeAllViews()
-    }
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
