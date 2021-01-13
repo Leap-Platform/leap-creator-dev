@@ -272,10 +272,6 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         discoveryManager?.currentDiscoveryOptOut = false
     }
-    
-    func removeAllViews() {
-        auiHandler?.removeAllViews()
-    }
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
@@ -389,6 +385,21 @@ extension JinyContextManager {
     
     func sendEvent(event:JinyAnalyticsEvent) {
         guard let am = analyticsManager else { return }
+        if let aui = auiHandler {
+            if aui.hasClientCallBack() {
+                let standardEvent = JinyStandardEvent(withEvent: event)
+                let jsonEncoder = JSONEncoder()
+                jsonEncoder.outputFormatting = .prettyPrinted
+                if let eventData = try? jsonEncoder.encode(standardEvent) {
+                    if let eventPayload = try? JSONSerialization.jsonObject(with: eventData, options: .mutableContainers) as? Dictionary<String,Dictionary<String,String>> {
+                        if eventPayload != [:] {
+                            event.jiny_standard_event = JinyStandardEvent(withEvent: event)
+                            auiHandler?.sendEvent(event: eventPayload)
+                        }
+                    }
+                }
+            }
+        }
         am.sendEvent(event)
     }
     

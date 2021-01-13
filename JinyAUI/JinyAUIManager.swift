@@ -13,9 +13,18 @@ import AVFoundation
 import AdSupport
 import WebKit
 
+
+protocol JinyAUIManagerDelegate:NSObjectProtocol {
+    
+    func isClientCallbackRequired() -> Bool
+    func eventGenerated(event:Dictionary<String,Any>)
+    
+}
+
 class JinyAUIManager:NSObject {
     
     weak var auiManagerCallBack:JinyAUICallback?
+    weak var delegate:JinyAUIManagerDelegate?
     
     var keyboardHeight:Float = 0
     var audioPlayer:AVAudioPlayer?
@@ -137,7 +146,7 @@ extension JinyAUIManager {
 }
 
 extension JinyAUIManager:JinyAUIHandler {
-    
+   
     func startMediaFetch() {
         
         DispatchQueue.main.async {
@@ -184,6 +193,15 @@ extension JinyAUIManager:JinyAUIHandler {
             self.fetchSoundConfig()
             
         }
+    }
+    
+    func hasClientCallBack() -> Bool {
+        guard let managerDelegate = delegate else { return false }
+        return managerDelegate.isClientCallbackRequired()
+    }
+    
+    func sendEvent(event: Dictionary<String, Any>) {
+        delegate?.eventGenerated(event: event)
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>) {
@@ -444,6 +462,7 @@ extension JinyAUIManager:JinyAUIHandler {
         jinyButton?.isHidden = true
     }
     
+
     func presentJinyButton(with html: String?, color: String, iconEnabled: Bool) {
         guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
             JinySharedAUI.shared.iconHtml = html

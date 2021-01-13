@@ -22,7 +22,6 @@ protocol JinyDiscoveryManagerDelegate:AnyObject {
     func startFlow(id:Int, disId:Int)
     func canTriggerBasedOnTriggerFrequency(discovery: JinyDiscovery) -> Bool
     func showJinyIcon()
-    func removeAllViews()
 }
 
 class JinyDiscoveryEventTrigger {
