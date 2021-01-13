@@ -19,13 +19,13 @@ class JinyLanguage {
     var ttsInfo:Dictionary<String,String>
     
     init(withLanguageDict dict:Dictionary<String, Any>) {
-        localeId = dict["locale_id"] as? String ?? ""
-        name = dict["locale_name"] as? String ?? ""
-        script = dict["locale_script"] as? String ?? ""
-        muteText = dict["mute_text"] as? String ?? ""
-        repeatText = dict["repeat_text"] as? String ?? ""
-        changeLanguageText = dict["change_language_text"] as? String ?? ""
-        ttsInfo = dict["tts_info"] as? Dictionary<String,String> ?? [:]
+        localeId = dict[constant_localeId] as? String ?? ""
+        name = dict[constant_localeName] as? String ?? ""
+        script = dict[constant_localeScript] as? String ?? ""
+        muteText = dict[constant_muteText] as? String ?? ""
+        repeatText = dict[constant_repeatText] as? String ?? ""
+        changeLanguageText = dict[constant_changeLanguageText] as? String ?? ""
+        ttsInfo = dict[constant_ttsInfo] as? Dictionary<String,String> ?? [:]
     }
     
 }

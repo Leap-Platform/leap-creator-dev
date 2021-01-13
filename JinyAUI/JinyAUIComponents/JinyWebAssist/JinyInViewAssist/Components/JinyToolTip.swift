@@ -17,10 +17,7 @@ public enum JinyTooltipArrowDirection {
 }
 
 /// JinyToolTip - A Web InViewAssist AUI Component class to show a tip on a view.
-public class JinyToolTip: JinyInViewAssist {
-    
-    /// toolTipView which carries webView.
-    private var toolTipView = UIView(frame: .zero)
+public class JinyToolTip: JinyTipView {
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -33,9 +30,6 @@ public class JinyToolTip: JinyInViewAssist {
     
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
-    
-    /// original isUserInteractionEnabled boolean value of the toView.
-    private var toViewOriginalInteraction: Bool?
     
     /// spacing of the highlight area.
     public var highlightSpacing = 10.0
@@ -50,32 +44,33 @@ public class JinyToolTip: JinyInViewAssist {
         
         configureTooltipView()
         
+        setupAutoFocus()
+        
         show()
     }
         
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
-       guard toView != nil else { fatalError("no element to point to") }
-               
-        if inView == nil {
-           
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
-           
-            inView = UIApplication.shared.keyWindow
-        }
+        inView = toView?.window
         
         inView?.addSubview(self)
            
         configureOverlayView()
                    
-        self.addSubview(toolTipView)
+        inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
+        
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
+        
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
         
        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
         
@@ -85,7 +80,7 @@ public class JinyToolTip: JinyInViewAssist {
                 
        maskLayer.bounds = self.webView.bounds
     
-       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 6.0)
+       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
 
        webView.layer.cornerRadius = cornerRadius
     
@@ -113,11 +108,11 @@ public class JinyToolTip: JinyInViewAssist {
         
         if direction == .top {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .bottom)
         
         } else {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .top)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .top)
         }
             
        setOriginForDirection(direction: direction)
@@ -266,7 +261,7 @@ public class JinyToolTip: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
         
-            borderLayer.strokeColor = UIColor.colorFromString(string: colorString).cgColor
+            borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -400,7 +395,7 @@ public class JinyToolTip: JinyInViewAssist {
         fillLayer.opacity = 1.0
         self.layer.mask = fillLayer
         
-        if assistInfo?.anchorClickable ?? false {
+        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
             
             toView?.isUserInteractionEnabled = true
         
@@ -416,20 +411,37 @@ public class JinyToolTip: JinyInViewAssist {
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-       let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
         
-        if width > 0 && width > Float(proportionalWidth) {
-            
-           self.assistInfo?.layoutInfo?.style.maxWidth = proportionalWidth
+        var sizeWidth: Double?
         
-        } else {
+        if width <= 0 || width > Float(proportionalWidth) {
             
-           self.assistInfo?.layoutInfo?.style.maxWidth = Double(width)
+            sizeWidth = proportionalWidth
+        
+        } else if width < Float(proportionalWidth) {
+            
+            sizeWidth = Double(width)
         }
+                            
+        self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+            
+        self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+    }
+    
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
-        self.webView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
-        
-        toolTipView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
+            if let height = value as? CGFloat {
+                                
+                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
+                
+                DispatchQueue.main.async {
+                    
+                    self?.placePointer()
+                }
+            }
+        })
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -437,33 +449,12 @@ public class JinyToolTip: JinyInViewAssist {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
-        placePointer()
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
-    }
-    
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        
-        if let viewToCheck = toView {
-            
-            guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-                
-                return self
-            }
-            
-            if frameForKw.contains(point) { return nil } else { return self }
-        }
-        
-        return self
-    }
-    
-    func simulateTap(atPoint:CGPoint, onWebview:UIView, withEvent:UIEvent) {
-                
-         onWebview.hitTest(atPoint, with: withEvent)
     }
     
     public override func performEnterAnimation(animation: String) {
@@ -515,16 +506,9 @@ public class JinyToolTip: JinyInViewAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            guard let userInteraction = toViewOriginalInteraction else {
-                
-               return
-            }
-            
-            toView?.isUserInteractionEnabled = userInteraction
+           remove()
         }
     }
 }

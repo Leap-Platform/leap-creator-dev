@@ -14,9 +14,9 @@ import WebKit
 public enum ConnectorType: String {
     
     case solid = "solid"
-    case solidWithCircle = "solid with circle"
-    case dashGap = "dash gap"
-    case dashGapWithCircle = "dash gap with circle"
+    case solidWithCircle = "solid_with_circle"
+    case dashGap = "dash_gap"
+    case dashGapWithCircle = "dash_gap_with_circle"
     case none = "none"
 }
 
@@ -29,10 +29,7 @@ public enum HighlightType: String {
 }
 
 /// JinyHighlight - A Web InViewAssist AUI Component class to show a tip with a connector on the screen and highlights the source view.
-public class JinyHighlight: JinyInViewAssist {
-    
-    /// toolTipView which carries webView.
-    private var toolTipView = UIView(frame: .zero)
+public class JinyHighlight: JinyTipView {
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -45,9 +42,6 @@ public class JinyHighlight: JinyInViewAssist {
     
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
-    
-    /// original isUserInteractionEnabled boolean value of the toView.
-    private var toViewOriginalInteraction: Bool?
     
     /// spacing of the highlight area.
     public var highlightSpacing = 10.0
@@ -70,12 +64,17 @@ public class JinyHighlight: JinyInViewAssist {
     /// the color of the connector.
     public var connectorColor: UIColor = .red
     
+    /// radius of the circle at the connector end.
+    var connectorCircleRadius: CGFloat = 5.0
+    
     /// presents pointer after setup, configure and show() webview content method is called and when the delegate is called for the webView.
-    func presentPointer() {
+    func presentHighlight() {
         
         setupView()
         
         configureTooltipView()
+        
+        setupAutoFocus()
         
         show()
     }
@@ -83,20 +82,13 @@ public class JinyHighlight: JinyInViewAssist {
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
-       guard toView != nil else { fatalError("no element to point to") }
-               
-        if inView == nil {
-           
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
-           
-            inView = UIApplication.shared.keyWindow
-        }
+        inView = toView?.window
         
         inView?.addSubview(self)
            
         configureOverlayView()
                    
-        self.addSubview(toolTipView)
+        inView?.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }
@@ -104,19 +96,27 @@ public class JinyHighlight: JinyInViewAssist {
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
         
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
+         
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
+         
+       self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
+        
        self.webView.scrollView.isScrollEnabled = false
         
        toViewOriginalInteraction = self.toView?.isUserInteractionEnabled
                 
        maskLayer.bounds = self.webView.bounds
     
-       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 6.0)
+       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
 
-       toolTipView.layer.cornerRadius = cornerRadius
+       webView.layer.cornerRadius = cornerRadius
     
-       toolTipView.layer.masksToBounds = true
+       webView.layer.masksToBounds = true
         
-       if assistInfo?.highlightAnchor ?? false {
+       if assistInfo?.highlightAnchor ?? true {
            
           highlightAnchor()
            
@@ -127,24 +127,28 @@ public class JinyHighlight: JinyInViewAssist {
         
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
             
-            self.webView.alpha = 0
+            self.webView.isOpaque = false
+        
+        } else {
+            
+            self.webView.isOpaque = true
         }
     }
     
     /// configures connector.
     func configureConnector() {
         
-        if let connectorLength = assistInfo?.extraProps?.props["connectorLength"] as? Double {
+        if let connectorLength = assistInfo?.extraProps?.props[constant_highlightConnectorLength] as? String {
             
-            self.connectorLength = connectorLength
+            self.connectorLength = Double(connectorLength) ?? self.connectorLength
         }
         
-        if let connectorColor = assistInfo?.extraProps?.props["connectorColor"] as? String {
+        if let connectorColor = assistInfo?.extraProps?.props[constant_highlightConnectorColor] as? String {
             
-            self.connectorColor = UIColor.colorFromString(string: connectorColor)
+            self.connectorColor = UIColor.init(hex: connectorColor) ?? .black
         }
         
-        if let connectorType = assistInfo?.extraProps?.props["connectorType"] as? String {
+        if let connectorType = assistInfo?.extraProps?.props[constant_highlightConnectorType] as? String {
             
             self.connectorType = ConnectorType(rawValue: connectorType) ?? .solid
         }
@@ -170,27 +174,25 @@ public class JinyHighlight: JinyInViewAssist {
             
             midY = (globalToView?.origin.y)! + (globalToView?.size.height)!
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
-                midY = midY + CGFloat(manipulatedHighlightSpacing) - CGFloat(manipulatedHighlightSpacing/2)
+                midY = midY + CGFloat(manipulatedHighlightSpacing)
             }
             
-            toMidY = midY + CGFloat(connectorLength) + CGFloat(manipulatedHighlightSpacing/2)
+            toMidY = midY + CGFloat(connectorLength)
             
         case .bottom:
             
             midY = (globalToView?.origin.y)!
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 midY = midY - CGFloat(manipulatedHighlightSpacing)
             }
             
             toMidY = midY - CGFloat(connectorLength)
         }
-        
-        self.layer.isHidden = false
-        
+                
         switch connectorType {
             
         case .solid:
@@ -198,8 +200,8 @@ public class JinyHighlight: JinyInViewAssist {
             self.layer.addSolidLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
             
         case .solidWithCircle:
-            
-            self.layer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+                        
+            self.layer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
             
         case .dashGap:
             
@@ -207,11 +209,11 @@ public class JinyHighlight: JinyInViewAssist {
             
         case .dashGapWithCircle:
             
-            self.layer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            self.layer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
             
         case .none:
             
-            self.layer.isHidden = true
+            print("No Connector")
         }
     }
       
@@ -229,11 +231,11 @@ public class JinyHighlight: JinyInViewAssist {
         
        if direction == .top {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .bottom)
         
         } else {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .top)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .top)
         }
             
        setOriginForDirection(direction: direction)
@@ -264,7 +266,7 @@ public class JinyHighlight: JinyInViewAssist {
         
         var toViewBottom = toViewTop + globalToViewFrame.size.height
         
-        if assistInfo?.highlightAnchor ?? false {
+        if assistInfo?.highlightAnchor ?? true {
             
             toViewBottom = toViewBottom + CGFloat(manipulatedHighlightSpacing)
         }
@@ -317,12 +319,12 @@ public class JinyHighlight: JinyInViewAssist {
             
             y = globalToViewFrame.origin.y + globalToViewFrame.size.height
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 y = y + CGFloat(manipulatedHighlightSpacing)
             }
             
-            y = y - minimalSpacing + (CGFloat(connectorLength))
+            y = y + (CGFloat(connectorLength))
             
         case .bottom:
             
@@ -340,12 +342,12 @@ public class JinyHighlight: JinyInViewAssist {
             
             y = (globalToViewFrame.origin.y - toolTipView.frame.size.height)
             
-            if assistInfo?.highlightAnchor ?? false {
+            if assistInfo?.highlightAnchor ?? true {
                 
                 y = y - CGFloat(manipulatedHighlightSpacing)
             }
             
-            y = y + minimalSpacing - (CGFloat(connectorLength))
+            y = y - (CGFloat(connectorLength))
         }
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
@@ -389,9 +391,15 @@ public class JinyHighlight: JinyInViewAssist {
         
         borderLayer.frame = webView.bounds
         
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.strokeColor = "#00000000" // hardcoded value
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.strokeWidth = 0 // hardcoded value
+        
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
         
-            borderLayer.strokeColor = UIColor.colorFromString(string: colorString).cgColor
+            borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -411,13 +419,13 @@ public class JinyHighlight: JinyInViewAssist {
     
         let path = UIBezierPath()
 
-        path.move(to: CGPoint(x: 0, y: cornerRadius+minimalSpacing))
+        path.move(to: CGPoint(x: 0, y: 0))
         
-        path.addArc(withCenter: CGPoint(x: cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: 0, y: 0), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
                     
-        path.addLine(to: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: minimalSpacing))
+        path.addLine(to: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: 0))
         
-        path.addArc(withCenter: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: 3 * .pi/2, endAngle: 0, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: cornerRadius), radius: cornerRadius, startAngle: 3 * .pi/2, endAngle: 0, clockwise: true)
             
         path.addLine(to: CGPoint(x: self.webView.frame.size.width, y: 0))
         
@@ -439,13 +447,13 @@ public class JinyHighlight: JinyInViewAssist {
         
         path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height))
         
-        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height-minimalSpacing-cornerRadius))
+        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height-cornerRadius))
         
-        path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
                     
-        path.addLine(to: CGPoint(x: cornerRadius, y: contentSize.height-minimalSpacing))
+        path.addLine(to: CGPoint(x: cornerRadius, y: contentSize.height))
         
-        path.addArc(withCenter: CGPoint(x: cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: .pi/2, endAngle: .pi, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: cornerRadius, y: contentSize.height-cornerRadius), radius: cornerRadius, startAngle: .pi/2, endAngle: .pi, clockwise: true)
         
         path.close()
             
@@ -498,7 +506,7 @@ public class JinyHighlight: JinyInViewAssist {
                 
         var transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
         
-        if let highlightType = assistInfo?.extraProps?.props["highlightType"] as? String {
+        if let highlightType = assistInfo?.extraProps?.props[constant_highlightType] as? String {
             
             self.highlightType = HighlightType(rawValue: highlightType) ?? .rect
         }
@@ -507,9 +515,9 @@ public class JinyHighlight: JinyInViewAssist {
             
         case .rect:
             
-            if let highlightCornerRadius = assistInfo?.extraProps?.props["highlightCornerRadius"] as? Double {
+            if let highlightCornerRadius = assistInfo?.extraProps?.props[constant_highlightCornerRadius] as? String {
                 
-                self.highlightCornerRadius = highlightCornerRadius
+                self.highlightCornerRadius = Double(highlightCornerRadius) ?? self.highlightCornerRadius
             }
         
             transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
@@ -524,20 +532,22 @@ public class JinyHighlight: JinyInViewAssist {
             
             var x = Double(origin.x) - highlightSpacing
             
-            var y = Double(origin.y) - Double(radius/2)
+            var y = Double(origin.y) - Double(radius/2) + (highlightSpacing*2)
             
+            manipulatedHighlightSpacing = abs(-Double(radius/2) + (highlightSpacing*2))
+                        
             if size.height > size.width {
                 
                 radius = size.height
                 
-                x = Double(origin.x) - Double(radius/2)
+                x = Double(origin.x) - Double(radius/2) + (highlightSpacing*2)
                 
                 y = Double(origin.y) - highlightSpacing
+                
+                manipulatedHighlightSpacing = highlightSpacing
             }
             
             transparentPath = UIBezierPath(ovalIn: CGRect(x: x, y: y, width: Double(radius) + (highlightSpacing*2), height: Double(radius) + (highlightSpacing*2)))
-            
-            manipulatedHighlightSpacing = Double(radius/2)
         }
         
         path.append(transparentPath)
@@ -549,7 +559,7 @@ public class JinyHighlight: JinyInViewAssist {
         fillLayer.opacity = 1.0
         self.layer.mask = fillLayer
         
-        if assistInfo?.anchorClickable ?? false {
+        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
             
             toView?.isUserInteractionEnabled = true
         
@@ -565,20 +575,37 @@ public class JinyHighlight: JinyInViewAssist {
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-       let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
         
-        if width > 0 && width > Float(proportionalWidth) {
-            
-           self.assistInfo?.layoutInfo?.style.maxWidth = proportionalWidth
+        var sizeWidth: Double?
         
-        } else {
+        if width <= 0 || width > Float(proportionalWidth) {
             
-           self.assistInfo?.layoutInfo?.style.maxWidth = Double(width)
+            sizeWidth = proportionalWidth
+        
+        } else if width < Float(proportionalWidth) {
+            
+            sizeWidth = Double(width)
         }
+                            
+        self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+            
+        self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+    }
+    
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
-        self.webView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
-        
-        toolTipView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
+        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
+            if let height = value as? CGFloat {
+                                
+                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
+                
+                DispatchQueue.main.async {
+                    
+                    self?.placePointer()
+                }
+            }
+        })
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -586,33 +613,12 @@ public class JinyHighlight: JinyInViewAssist {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
-        placePointer()
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
-    }
-    
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        
-        if let viewToCheck = toView {
-            
-            guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-                
-                return self
-            }
-            
-            if frameForKw.contains(point) { return nil } else { return self }
-        }
-        
-        return self
-    }
-    
-    func simulateTap(atPoint:CGPoint, onWebview:UIView, withEvent:UIEvent) {
-                
-         onWebview.hitTest(atPoint, with: withEvent)
     }
     
     public override func performEnterAnimation(animation: String) {
@@ -644,16 +650,9 @@ public class JinyHighlight: JinyInViewAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            guard let userInteraction = toViewOriginalInteraction else {
-                
-               return
-            }
-            
-            toView?.isUserInteractionEnabled = userInteraction
+           remove()
         }
     }
 }

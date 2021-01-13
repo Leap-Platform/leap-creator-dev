@@ -11,15 +11,15 @@ import UIKit
 
 public class JinyInViewAssist: JinyWebAssist {
     
-    /// source view to which the component to pointed to.
-    weak var toView: UIView?
+    /// target view to which the aui component is pointed to.
+    weak var toView: UIView?    // should always be weak otherwise causes memory leak due to retain cycle.
     
-    /// source view of the toView for which the component is relatively positioned.
+    /// source view of the toView for which the aui component is relatively positioned.
     weak var inView: UIView?
     
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type AssistInfo.
-    ///   - toView: source view to which the tooltip is attached.
+    ///   - toView: target view to which the tooltip is attached.
     ///   - insideView: an optional view on which overlay is diaplayed or else takes entire window.
     public init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
         super.init(frame: CGRect.zero)
@@ -62,11 +62,11 @@ public class JinyInViewAssist: JinyWebAssist {
 
         superView.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: superView, attribute: .height, multiplier: 1, constant: 0))
         
-        // Overlay View to be semi transparent black
-
+        // Overlay View to be clear by default
+        
         if let colorString = self.assistInfo?.layoutInfo?.style.bgColor {
         
-          self.backgroundColor = UIColor.colorFromString(string: colorString)
+          self.backgroundColor = UIColor.init(hex: colorString)
         
         } else {
             
@@ -83,13 +83,5 @@ public class JinyInViewAssist: JinyWebAssist {
         
         webView.clipsToBounds = true
         webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
-    }
-    
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
-        
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "")
-        }
     }
 }

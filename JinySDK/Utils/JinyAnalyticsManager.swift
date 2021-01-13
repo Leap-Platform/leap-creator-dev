@@ -48,7 +48,7 @@ class JinyAnalyticsManager {
             if error != nil { self.delegate.failedToSendPayload(payload) }
             else {
                 if let res = try? JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? Dictionary<String,String> {
-                    if let status = res["status"], status == "success" {
+                    if let status = res[constant_status], status == "success" {
                         self.delegate.payloadSend(payload)
                     } else { self.delegate.failedToSendPayload(payload)}
                 } else { self.delegate.failedToSendPayload(payload)}
@@ -101,7 +101,7 @@ class JinyAnalyticsManager {
             if error != nil { self.delegate.failedToSendBulkEvents(payload: events) }
             else {
                 if let res = try? JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? Dictionary<String,String> {
-                    if let status = res["status"], status == "success" {
+                    if let status = res[constant_status], status == "success" {
                         self.delegate.sendBulkEvents(payload: events)
                     } else { self.delegate.failedToSendBulkEvents(payload: events)}
                 } else { self.delegate.failedToSendBulkEvents(payload: events)}

@@ -10,14 +10,17 @@ import Foundation
 
 public class AssistInfo {
     
-    /// A boolean value to set anchor clickable
-    var anchorClickable: Bool?
+    /// A boolean value to set highlight clickable
+    var highlightClickable: Bool?
     
     /// A string to set url for html
     var htmlUrl: String?
     
     /// A boolean value to set anchor highlight
     var highlightAnchor: Bool?
+    
+    /// A boolean value to set autoFocus to true only when highlightAnchor and highlightClickable are true.
+    var autoFocus: Bool = false         // default is false
     
     /// A layoutInfo property for the type LayoutInfo
     public var layoutInfo: LayoutInfo?
@@ -29,26 +32,28 @@ public class AssistInfo {
     ///   - assistDict: A dictionary for the type AssistInfo.
     public init(withDict assistDict: Dictionary<String,Any>) {
         
-        if let layoutInfo = assistDict["layout_info"] as? Dictionary<String, Any> {
+        if let layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> {
             
            self.layoutInfo = LayoutInfo(withDict: layoutInfo)
         }
         
-        if let highlightAnchor = assistDict["highlight_anchor"] as? Bool {
+        if let highlightAnchor = assistDict[constant_highlightAnchor] as? Bool {
             
            self.highlightAnchor = highlightAnchor
         }
         
-        if let anchorClickable = assistDict["anchor_clickable"] as? Bool {
+        if let highlightClickable = assistDict[constant_highlightClickable] as? Bool {
             
-           self.anchorClickable = anchorClickable
+           self.highlightClickable = highlightClickable
         }
         
-        if let extraProps = assistDict["extra_props"] as? Dictionary<String, Any> {
+        autoFocus = (highlightAnchor ?? false) && (highlightClickable ?? false)
+        
+        if let extraProps = assistDict[constant_extraProps] as? Dictionary<String, Any> {
             
             self.extraProps = ExtraProps(props: extraProps)
         }
         
-        self.htmlUrl = assistDict["html_url"] as? String
+        self.htmlUrl = assistDict[constant_htmlUrl] as? String
     }
 }

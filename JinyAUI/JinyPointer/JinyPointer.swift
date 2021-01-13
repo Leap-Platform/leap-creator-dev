@@ -274,7 +274,7 @@ class JinyFingerRipplePointer:JinyPointer {
         ringLayer.masksToBounds = false
         self.masksToBounds = false
         
-        fingerLayer.add(clickAnimation, forKey: "click")
+        fingerLayer.add(clickAnimation, forKey: constant_click)
         ringLayer.add(pulse, forKey: "pulse")
         
     }
@@ -440,6 +440,233 @@ class JinyHighlightManualSequencePointer:JinyHighlightPointer {
     override func removePointer() {
         fingerRipple.removePointer()
         nextButton.removeFromSuperview()
+        toView?.layer.removeObserver(self, forKeyPath: "position")
+        super.removePointer()
+    }
+}
+
+enum JinySwipePointerType: String {
+    case swipeLeft = "SWIPE_LEFT"
+    case swipeRight = "SWIPE_RIGHT"
+    case swipeUp = "SWIPE_UP"
+    case swipeDown = "SWIPE_DOWN"
+}
+
+class JinySwipePointer: JinyPointer {
+    
+    var type: JinySwipePointerType = .swipeDown // Default
+    
+    var ringLayer: CAShapeLayer
+    var fingerLayer: CAShapeLayer
+    
+    let swipeAnimation = CAAnimationGroup()
+    
+    private var screenWidth = UIScreen.main.bounds.width
+    
+    override init() {
+        fingerLayer = CAShapeLayer()
+        ringLayer = CAShapeLayer()
+        super.init()
+        let pointerPath = getInnerPath()
+        
+        fingerLayer.path = pointerPath.cgPath
+        fingerLayer.fillColor = UIColor(red: 0.941, green: 0.663, blue: 0.122, alpha: 1.000).cgColor
+        fingerLayer.fillRule = .nonZero
+        fingerLayer.strokeColor = UIColor.white.cgColor
+        fingerLayer.lineWidth = 2.0
+        
+        ringLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 20, height: 20)).cgPath
+        
+        ringLayer.fillColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
+        ringLayer.strokeColor = UIColor.white.cgColor
+        ringLayer.lineWidth = 5.0
+        
+        self.addSublayer(ringLayer)
+        ringLayer.frame = CGRect(x: 11, y: 4, width: 20, height: 20)
+        
+        self.addSublayer(fingerLayer)
+        fingerLayer.frame = CGRect(x: 9, y: 10, width: 31, height: 39)
+    }
+    
+    override init(layer: Any) {
+        fingerLayer = CAShapeLayer()
+        ringLayer = CAShapeLayer()
+        super.init(layer: layer)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func presentPointer() {
+        inView?.layer.addSublayer(self)
+        setPosition()
+        toView?.layer.addObserver(self, forKeyPath: "position", options: [.new,.old], context: nil)
+
+        startAnimation()
+        addNotifiers()
+        self.pointerDelegate?.pointerPresented()
+    }
+    
+    override func presentPointer(toRect: CGRect, inView:UIView?) {
+        self.inView = inView
+        let toViewFrame = toRect
+        var y = toViewFrame.midY - 15
+        var x = toViewFrame.midX - (1/4*screenWidth)
+        switch type {
+        case .swipeLeft:
+            y = toViewFrame.midY - 15
+            x = toViewFrame.midX - (1/4*screenWidth)
+        case .swipeRight:
+            y = toViewFrame.midY - 15
+            x = toViewFrame.midX + (1/4*screenWidth)
+        case .swipeUp:
+            y = toViewFrame.midY + (1/4*screenWidth)
+            x = toViewFrame.midX - 21
+        case .swipeDown:
+            y = toViewFrame.midY - (1/4*screenWidth)
+            x = toViewFrame.midX - 21
+        }
+        self.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        inView?.layer.addSublayer(self)
+        self.zPosition = 10
+        startAnimation()
+        self.pointerDelegate?.pointerPresented()
+    }
+    
+    override func updateRect(newRect: CGRect, inView: UIView?) {
+        self.inView = inView
+        let toViewFrame = newRect
+        var y = toViewFrame.midY - 15
+        var x = toViewFrame.midX - (1/4*screenWidth)
+        switch type {
+        case .swipeLeft:
+            y = toViewFrame.midY - 15
+            x = toViewFrame.midX - (1/4*screenWidth)
+        case .swipeRight:
+            y = toViewFrame.midY - 15
+            x = toViewFrame.midX + (1/4*screenWidth)
+        case .swipeUp:
+            y = toViewFrame.midY + (1/4*screenWidth)
+            x = toViewFrame.midX - 21
+        case .swipeDown:
+            y = toViewFrame.midY - (1/4*screenWidth)
+            x = toViewFrame.midX - 21
+        }
+        self.frame = CGRect(x: x, y: y, width: 42, height: 54)
+    }
+    
+    override func presentPointer(view: UIView) {
+        toView = view
+        inView = findEligibleInView(view: toView!)
+        presentPointer()
+    }
+    
+    func findEligibleInView(view:UIView) -> UIView{
+        let eligibleView = view
+        if canCompletelyHoldPointer(eligibleView) { return eligibleView }
+        guard let superView = eligibleView.superview else { return eligibleView }
+        if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
+            if canCompletelyHoldPointer(superView) { return eligibleView }
+            else { return findEligibleInView(view: superView) }
+        } else {
+            return findEligibleInView(view: superView)
+        }
+    }
+    
+    func canCompletelyHoldPointer(_ view:UIView) -> Bool {
+        return (view.bounds.height > 80 && view.bounds.width > 80)
+    }
+    
+    func setPosition() {
+        let toViewFrame = getToViewPositionForInView()
+        var y = toViewFrame.midY - 15
+        var x = toViewFrame.midX - (1/4*screenWidth)
+        switch type {
+        case .swipeLeft:
+            y = toViewFrame.midY - 15
+            x = toViewFrame.midX - (1/4*screenWidth)
+        case .swipeRight:
+            y = toViewFrame.midY - 15
+            x = toViewFrame.midX + (1/4*screenWidth)
+        case .swipeUp:
+            y = toViewFrame.midY + (1/4*screenWidth)
+            x = toViewFrame.midX - 21
+        case .swipeDown:
+            y = toViewFrame.midY - (1/4*screenWidth)
+            x = toViewFrame.midX - 21
+        }
+        self.frame = CGRect(x: x, y: y, width: 42, height: 54)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "position" {
+            setPosition()
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+    
+    override func startAnimation() {
+                
+        let fingerAnimation = CABasicAnimation()
+        fingerAnimation.beginTime = 0.2
+        fingerAnimation.duration = 1.4
+        fingerAnimation.fillMode = .forwards
+        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        let fadeAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeAnimation.beginTime = 1.2
+        fadeAnimation.fromValue = 1
+        fadeAnimation.toValue = 0
+        fadeAnimation.duration = 0.2
+        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        
+        switch type {
+        
+        case .swipeLeft:
+            
+            fingerAnimation.keyPath = "position.x"
+            
+            fingerAnimation.fromValue = self.position.x
+            fingerAnimation.toValue = getToViewPositionForInView().midX + (1/4*screenWidth)
+                        
+        case .swipeRight:
+            
+            fingerAnimation.keyPath = "position.x"
+            
+            fingerAnimation.fromValue = self.position.x
+            fingerAnimation.toValue = getToViewPositionForInView().midX - (1/4*screenWidth)
+                    
+        case .swipeUp:
+            
+            fingerAnimation.keyPath = "position.y"
+            
+            fingerAnimation.fromValue = self.position.y
+            fingerAnimation.toValue = getToViewPositionForInView().midY - (1/4*screenWidth)
+                        
+        case .swipeDown:
+            
+            fingerAnimation.keyPath = "position.y"
+        
+            fingerAnimation.fromValue = self.position.y
+            fingerAnimation.toValue = getToViewPositionForInView().midY + (1/4*screenWidth)
+        }
+        
+        let group = CAAnimationGroup()
+        group.duration = 1.4
+        group.animations = [fingerAnimation, fadeAnimation]
+        group.repeatCount = .infinity
+        
+        self.add(group, forKey: "slideFade")
+    }
+    
+    override func removeAnimation() {
+        ringLayer.removeAllAnimations()
+    }
+    
+    override func removePointer() {
+        
         toView?.layer.removeObserver(self, forKeyPath: "position")
         super.removePointer()
     }

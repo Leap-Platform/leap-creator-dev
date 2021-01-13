@@ -19,11 +19,11 @@ public class LayoutInfo {
     /// exit animation for the content
     public var exitAnimation: String?
     
-    /// property type of the type Style
+    /// property of the type Style
     public var style: Style
     
-    /// A boolean value to set outside dismiss
-    public var outsideDismiss: Bool?
+    /// property of the type DismissAction
+    public var dismissAction: DismissAction
     
     /// An integer value to set time delay in ms
     public var autoDismissDelay: Float
@@ -32,7 +32,7 @@ public class LayoutInfo {
     ///   - layoutDict: A dictionary for the type LayoutInfo.
     init(withDict layoutDict: Dictionary<String,Any>) {
         
-        if let styleDict = layoutDict["style"] as? Dictionary<String,Any> {
+        if let styleDict = layoutDict[constant_style] as? Dictionary<String,Any> {
         
             self.style = Style(withDict: styleDict)
         
@@ -41,27 +41,53 @@ public class LayoutInfo {
             self.style = Style(withDict: [:])
         }
         
-        if let outsideDismiss = layoutDict["outside_dismiss"] as? Bool {
+        if let dismissAction = layoutDict[constant_dismissAction] as? Dictionary<String,Any> {
             
-            self.outsideDismiss = outsideDismiss
+            self.dismissAction = DismissAction(withDict: dismissAction)
+        
+        } else {
+            
+            self.dismissAction = DismissAction(withDict: [:])
         }
         
-        if let enterAnimation = layoutDict["enter_animation"] as? String {
+        if let enterAnimation = layoutDict[constant_enterAnimation] as? String {
             
             self.enterAnimation = enterAnimation
         }
         
-        if let exitAnimation = layoutDict["exit_animation"] as? String {
+        if let exitAnimation = layoutDict[constant_exitAnimation] as? String {
             
             self.exitAnimation = exitAnimation
         }
         
-        if let alignment = layoutDict["alignment"] as? String {
+        if let alignment = layoutDict[constant_alignment] as? String {
             
             self.layoutAlignment = alignment
         }
         
-        self.autoDismissDelay = (layoutDict["auto_dismiss_delay"] as? Float ?? 0)/1000
+        self.autoDismissDelay = (layoutDict[constant_autoDismissDelay] as? Float ?? 0)/1000
+    }
+}
+
+public class DismissAction {
+    
+    public var outsideDismiss: Bool?
+    
+    public var dismissOnAnchorClick: Bool?
+    
+    /// - Parameters:
+    ///   - dismissDict: A dictionary for the type DismissAction.
+    init(withDict dismissDict: Dictionary<String,Any>) {
+        
+        if let outsideDismiss = dismissDict[constant_outsideDismiss] as? Bool {
+            
+            self.outsideDismiss = outsideDismiss
+        }
+        
+        if let dismissOnAnchorClick = dismissDict[constant_dismissOnAnchorClick] as? Bool {
+            
+            self.dismissOnAnchorClick = dismissOnAnchorClick
+        }
     }
 }
 

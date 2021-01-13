@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 import WebKit
 
+/// global variable 'group' to keep track of recursion completion.
+fileprivate let group = DispatchGroup()
+
 class JinyViewBounds:Codable {
     
     var left:Float
@@ -18,11 +21,11 @@ class JinyViewBounds:Codable {
     var bottom:Float
     
     init(view:UIView) {
-        let rect = view.superview?.convert(view.frame, from: nil)
-        left = Float(rect?.origin.x ?? 0)
-        top = Float(rect?.origin.y ?? 0)
-        right = left + Float(rect?.size.width ?? 0)
-        bottom = top + Float(rect?.size.height ?? 0)
+        let rect = view.superview?.convert(view.frame, to: nil)
+        left = Float(rect?.origin.x ?? 0) * Float(UIScreen.main.scale)
+        top = Float(rect?.origin.y ?? 0) * Float(UIScreen.main.scale)
+        right = left + Float(view.bounds.size.width * UIScreen.main.scale)
+        bottom = top + Float(view.bounds.size.height * UIScreen.main.scale)
     }
 }
 
@@ -33,7 +36,7 @@ class JinyViewProps:Codable {
     var acc_label:String
     var acc_hint:String
     var tag:Int
-    var className:String
+    var class_name:String
     var node_index:Int
     var bounds:JinyViewBounds
     var placeholder:String?
@@ -47,22 +50,27 @@ class JinyViewProps:Codable {
     var is_exclusive_touch: Bool
     var is_clickable: Bool
     var is_scroll_container: Bool
-    var is_web_view:Bool
+    var is_webview:Bool
     var location_x_on_screen:Float
     var location_y_on_screen:Float
     var bgColor:Dictionary<String,Int>
-    var tintColor:Dictionary<String, Int>
+    var tintColor:Dictionary<String, Int>?
     var uuid:String?
     var children:Array<JinyViewProps> = []
+    var web_children: String?
+    var is_ui_webview: Bool = false
+    var is_wk_webview: Bool = false
     
-    
-    init(view:UIView) {
+    init(view:UIView, finishListener: FinishListener, completion: ((_ success: Bool, _ viewProps: JinyViewProps?) -> Void
+    )? = nil) {
+        
+        group.enter()
         
         acc_id = view.accessibilityIdentifier ?? ""
         acc_label = view.accessibilityLabel ?? ""
         acc_hint = view.accessibilityHint ?? ""
         tag = view.tag
-        className = String(describing: type(of: view))
+        class_name = String(describing: type(of: view))
         node_index = view.superview?.subviews.firstIndex(of: view) ?? -1
         bounds = JinyViewBounds(view: view)
         is_focusable = view.canBecomeFocused
@@ -73,7 +81,8 @@ class JinyViewProps:Codable {
         is_multiple_touch_enabled = view.isMultipleTouchEnabled
         is_exclusive_touch = view.isExclusiveTouch
         is_scroll_container = view.isKind(of: UIScrollView.self)
-        is_web_view = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
+        is_webview = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
+        uuid = String.generateJinyAuthUUIDString()
         if let control = view as? UIControl {
             let targetActions = control.allTargets.filter{
                 control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
@@ -101,22 +110,49 @@ class JinyViewProps:Codable {
         } else if let label = view as? UILabel {
             text = label.text
         }
-        var childViews = view.subviews
-        childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
-        childViews = childViews.filter{
-            guard let superview = $0.superview else { return true }
-            let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
-            guard let keyWindow = UIApplication.shared.keyWindow else { return true }
-            if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
-            return true
-        }
-        if view.window == UIApplication.shared.keyWindow {
-            let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
-            for child in childrenToCheck { children.append(JinyViewProps(view: child)) }
-        } else {
-            for child in childViews  { children.append(JinyViewProps(view: child)) }
-        }
+        if !is_webview {
+            var childViews = view.subviews
+          
+            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
+            childViews = childViews.filter{
+                guard let superview = $0.superview else { return true }
+                let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
+                guard let keyWindow = UIApplication.shared.keyWindow else { return true }
+                if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
+                return true
+            }
+            if view.window == UIApplication.shared.keyWindow {
+                let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
+                for child in childrenToCheck { children.append(JinyViewProps(view: child, finishListener: finishListener))}
+            } else {
+                for child in childViews  { children.append(JinyViewProps(view: child, finishListener: finishListener)) }
+            }
+        } else { children = [] }
         
+
+        var webChildren: String?
+        if is_webview {
+            var injectionScript = ScreenHelper.layoutInjectionJSScript
+            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.nativeBounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.nativeBounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
+            if let uiweb = view as? UIWebView {
+                let res = uiweb.stringByEvaluatingJavaScript(from: injectionScript)
+                webChildren = res
+                group.leave()
+            }
+            else if let wk_web = view as? WKWebView {
+                wk_web.evaluateJavaScript(injectionScript, completionHandler: { (res, error) in
+                    webChildren = res as? String
+                    group.leave()
+                })
+            }
+        
+        } else { group.leave() }
+        
+        group.notify(queue: DispatchQueue.main) {
+            
+            self.web_children = webChildren
+            completion?(true, self)
+        }
     }
     
     func getVisibleSiblings(allSiblings:Array<UIView>) -> Array<UIView> {
@@ -134,6 +170,28 @@ class JinyViewProps:Codable {
         return visibleViews
     }
     
+    func getWebChildren(webview:UIView, jsString: String, completion:@escaping(_:String?)->Void) {
+        if let wkweb = webview as? WKWebView {
+            wkweb.evaluateJavaScript(jsString) { (res, err) in
+                completion(res as? String)
+            }
+        } else if let uiweb = webview as? UIWebView {
+            completion(uiweb.stringByEvaluatingJavaScript(from: jsString))
+        }
+    }
+}
+
+
+extension String {
+    static func generateJinyAuthUUIDString() -> String {
+        return "JinyAuthHierarchy\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))-\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
+    }
+    
+    static func authRandomString(_ length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyz0123456789"
+        let randomString = String((0..<length).map{_ in letters.randomElement()!})
+        return randomString
+    }
 }
 
 extension UIColor {
@@ -143,12 +201,17 @@ extension UIColor {
         let rComponent = cgColor.components![0]
         let gComponent = cgColor.components![1]
         let bComponent = cgColor.components![2]
-        var colorDict = ["r": lroundf(Float(rComponent * 255)), "g":  lroundf(Float(gComponent * 255)),  "b":lroundf(Float(bComponent * 255))]
+        var colorDict = [constant_r: lroundf(Float(rComponent * 255)), constant_g:  lroundf(Float(gComponent * 255)),  constant_b:lroundf(Float(bComponent * 255))]
         if cgColor.components?.count ?? 0 > 3 {
             let aComponent = cgColor.components![3]
-            colorDict["a"] =  lroundf(Float(aComponent * 255))
+            colorDict[constant_a] =  lroundf(Float(aComponent * 255))
         }
         return colorDict
+    }
+    
+    
+    func getLayoutHierarchy(wkWebView: WKWebView, finishListener: FinishListener){
+        
     }
     
 }

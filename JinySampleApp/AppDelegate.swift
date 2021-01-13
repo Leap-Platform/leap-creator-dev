@@ -22,7 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         JinyAUI.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
         JinyAUI.shared.clientCallback = self
 //        let _ = Jiny.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36", isTesting: false, uiManager: nil)
-////        JinyAuth.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36")
+        
+//        JinyAuth.instance.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         return true
     }
 

@@ -20,6 +20,9 @@ public class JinyFullScreen: JinyKeyWindowAssist {
         
         configureOverlayView()
         
+        // exclusive to FullScreen, comment this to get color from config.
+        self.backgroundColor = .clear //  hardcoded value
+        
         configureWebView()
         
         configureWebViewForFullScreen()
@@ -52,7 +55,11 @@ public class JinyFullScreen: JinyKeyWindowAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.iconBackgroundColor = UIColor.colorFromString(string: iconInfo?.backgroundColor ?? UIColor.stringFromUIColor(color: .blue))
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl
+        
+        jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
+        
+        jinyIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
                 
         self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -62,7 +69,7 @@ public class JinyFullScreen: JinyKeyWindowAssist {
                         
         var horizontalDistance: CGFloat = self.jinyIconView.iconGap
         
-        let verticalDistance: CGFloat = 2*self.jinyIconView.iconGap
+        let verticalDistance: CGFloat = 4*self.jinyIconView.iconGap
         
         if !(iconInfo?.isLeftAligned ?? false) {
                         
@@ -74,6 +81,8 @@ public class JinyFullScreen: JinyKeyWindowAssist {
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: horizontalDistance))
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType2, multiplier: 1, constant: verticalDistance))
+        
+        jinyIconView.configureIconButon()
     }
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

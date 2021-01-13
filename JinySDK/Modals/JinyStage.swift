@@ -39,13 +39,14 @@ class JinyStage:JinyContext {
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
-        type = JinyStageType(rawValue: (stageDict["type"] as? String) ?? "NORMAL") ?? .Normal
-        frequencyPerFlow = stageDict["frequency_per_flow"] as? Int ?? -1
-        isSuccess = stageDict["is_success"] as? Bool ?? false
-        if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> {
+        let typeString = (stageDict[constant_type] as? String)?.uppercased() ?? "NORMAL"
+        type = JinyStageType(rawValue: typeString) ?? .Normal
+        frequencyPerFlow = stageDict[constant_frequencyPerFlow] as? Int ?? -1
+        isSuccess = stageDict[constant_isSuccess] as? Bool ?? false
+        if let branchDict = stageDict[constant_branchInfo] as? Dictionary<String,Any> {
             branchInfo = JinyBranchInfo(withDict: branchDict)
         } else { branchInfo = nil }
-        if let instructionDict = stageDict["instruction"] as? Dictionary<String,Any> {
+        if let instructionDict = stageDict[constant_instruction] as? Dictionary<String,Any> {
             instruction = JinyInstruction(withDict: instructionDict)
             instructionInfoDict = instructionDict
         } else {
@@ -55,6 +56,18 @@ class JinyStage:JinyContext {
         super.init(with: stageDict)
     }
     
+    func copy(with zone: NSZone? = nil) -> JinyStage {
+        let copy = JinyStage(withDict: [constant_type:self.type.rawValue, constant_frequencyPerFlow:self.frequencyPerFlow, constant_isSuccess:self.isSuccess, constant_branchInfo:self.branchInfo ?? [:], constant_instruction:self.instructionInfoDict ?? [:]])
+        copy.id = self.id
+        copy.name = self.name
+        copy.nativeIdentifiers = self.nativeIdentifiers
+        copy.webIdentifiers = self.webIdentifiers
+        copy.weight = self.weight
+        copy.isWeb = self.isWeb
+        copy.taggedEvents = self.taggedEvents
+        copy.checkpoint = self.checkpoint
+        return copy
+    }
 }
 
 extension JinyStage:Equatable {
@@ -72,8 +85,8 @@ class JinyBranchInfo {
     let branchFlows:Array<Int>
     
     init(withDict branchInfoDict:Dictionary<String,Any>) {
-        branchTitle = branchInfoDict["branch_title"] as? Dictionary<String,String> ?? [:]
-        branchFlows = branchInfoDict["branch_flows"] as? Array<Int> ?? []
+        branchTitle = branchInfoDict[constant_branchTitle] as? Dictionary<String,String> ?? [:]
+        branchFlows = branchInfoDict[constant_branchFlows] as? Array<Int> ?? []
     }
     
 }

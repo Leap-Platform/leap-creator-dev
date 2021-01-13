@@ -24,16 +24,25 @@ class JinyDiscoveryInfo:Codable {
         id = String(dis.id)
         name = dis.name
         type = (dis.triggerMode == .Multi) ? "multi_flow" : "single_flow"
-        detection_type = (dis.taggedEvents != nil) ? "event" : "context"
+        detection_type = (dis.taggedEvents != nil) ? constant_event : constant_context
         tagged_discovery = (dis.taggedEvents != nil)
         if let instruction = dis.instructionInfoDict,
-            let assistInfo = instruction["assist_info"] as? Dictionary<String,Any>,
-            let assistType = assistInfo["type"] as? String {
+            let assistInfo = instruction[constant_assist_info] as? Dictionary<String,Any>,
+            let assistType = assistInfo[constant_type] as? String {
             assist_type = assistType
         } else { assist_type = "" }
         trigger_type = dis.trigger?.type ?? ""
-        trigger_delay = dis.eventIdentifiers?.delay ?? 0
-        trigger_on_anchor_click = dis.eventIdentifiers?.triggerOnAnchorClick ?? false
-        opt_in_on_anchor_click = dis.trigger?.optInOnAnchorClick ?? false
+        if let type = dis.trigger?.event?[constant_type], let value = dis.trigger?.event?[constant_value], type == constant_click, value == constant_showDiscovery {
+            trigger_delay = Float(dis.trigger?.delay ?? 0)
+            trigger_on_anchor_click = true
+        } else {
+            trigger_delay = 0
+            trigger_on_anchor_click = false
+        }
+        if let type = dis.trigger?.event?[constant_type], let value = dis.trigger?.event?[constant_value], type == constant_click, value == constant_optIn {
+            opt_in_on_anchor_click = true
+        } else {
+            opt_in_on_anchor_click = false
+        }
     }
 }

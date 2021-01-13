@@ -19,12 +19,12 @@ import UIKit
     func startMediaFetch()
     func hasClientCallBack() -> Bool
     func sendEvent(event:Dictionary<String,Any>)
-    func performInstruction(instruction:Dictionary<String,Any>, inView:UIView, iconInfo:Dictionary<String,Any>)
+    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>)
     func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
-    func presentJinyButton(iconInfo:Dictionary<String,Any>)
+    func presentJinyButton(with html: String?, color: String, iconEnabled: Bool)
     func presentLanguagePanel(languages: Array<String>)
     func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()
@@ -35,7 +35,7 @@ import UIKit
 
 @objc public protocol JinyAUICallback:NSObjectProtocol {
     
-    func getDefaultMedia() -> Dictionary<String,Dictionary<String,Any>>
+    func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
     
     func tryTTS() -> String?
@@ -61,6 +61,7 @@ import UIKit
     func discoveryMuted()
     func discoveryOptedInFlow(atIndex:Int)
     func discoveryReset()
+    func discoveryDismissed()
     
     func languagePanelOpened()
     func languagePanelClosed()
@@ -70,7 +71,6 @@ import UIKit
     func optionPanelClosed()
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
-
 }
 
 
