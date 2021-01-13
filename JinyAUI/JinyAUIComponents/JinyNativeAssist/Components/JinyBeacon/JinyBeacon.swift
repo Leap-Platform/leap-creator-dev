@@ -78,15 +78,8 @@ public class JinyBeacon: JinyNativeAssist {
            pulsator.radius = CGFloat(Int(radius) ?? 10)
         }
         pulsator.numPulse = 3
-        
-        if toView?.window != UIApplication.shared.keyWindow {
-            
-            inView = toView!.window
-            
-        } else {
-            
-            inView = UIApplication.getCurrentVC()?.view
-        }
+                    
+        inView = toView?.window
         
         inView?.layer.addSublayer(pulsator)
     }
@@ -96,7 +89,7 @@ public class JinyBeacon: JinyNativeAssist {
         
         let globalToViewFrame = toView!.superview!.convert(toView!.frame, to: inView)
                 
-        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topCenter {
+        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topLeft {
             
         case .topLeft:
             

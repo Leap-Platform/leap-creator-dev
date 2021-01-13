@@ -241,7 +241,8 @@ extension JinyAUIManager:JinyAUIHandler {
             switch type {
                 
             case FINGER_RIPPLE:
-                pointer = JinyFingerRipplePointer()
+                pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = pointer
                 pointer?.pointerDelegate = self
                 pointer?.presentPointer(view: inView)
                 
@@ -276,8 +277,9 @@ extension JinyAUIManager:JinyAUIHandler {
                 label?.presentLabel()
                 
             case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-                swipePointer = JinySwipePointer()
+                swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 swipePointer?.type = JinySwipePointerType(rawValue: type)!
+                currentAssist = swipePointer
                 swipePointer?.pointerDelegate = self
                 swipePointer?.presentPointer(view: inView)
             
@@ -316,7 +318,7 @@ extension JinyAUIManager:JinyAUIHandler {
                     }
                 }
                 
-                pointer = JinyFingerRipplePointer()
+                pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
                 pointer?.presentPointer(toRect: rect, inView: inWebview)
             default:
                 performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
@@ -441,11 +443,6 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func keepOnlyJinyButtonIfPresent() {
-        
-        pointer?.removePointer()
-        pointer = nil
-        swipePointer?.removePointer()
-        swipePointer = nil
         currentAssist?.remove()
         currentAssist = nil
         optionPanel?.dismissOptionPanel { self.optionPanel = nil }
@@ -453,10 +450,6 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func removeAllViews() {
-        pointer?.removePointer()
-        pointer = nil
-        swipePointer?.removePointer()
-        swipePointer = nil
         currentAssist?.remove()
         currentAssist = nil
         jinyButton?.isHidden = true
