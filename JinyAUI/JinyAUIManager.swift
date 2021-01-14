@@ -319,7 +319,18 @@ extension JinyAUIManager:JinyAUIHandler {
                 }
                 
                 pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = pointer
+                pointer?.pointerDelegate = self
                 pointer?.presentPointer(toRect: rect, inView: inWebview)
+            
+            case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
+                
+                swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                swipePointer?.type = JinySwipePointerType(rawValue: type)!
+                currentAssist = swipePointer
+                swipePointer?.pointerDelegate = self
+                swipePointer?.presentPointer(toRect: rect, inView: inWebview)
+            
             default:
                 performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }

@@ -84,7 +84,7 @@ class JinyPointer: JinyInViewAssist {
         removeAnimation()
     }
     
-    func startAnimation() {
+    func startAnimation(toRect: CGRect? = nil) {
         
     }
     
@@ -231,7 +231,7 @@ class JinyFingerRipplePointer:JinyPointer {
         }
     }
     
-    override func startAnimation() {
+    override func startAnimation(toRect: CGRect? = nil) {
         let fingerAnimation = CABasicAnimation(keyPath: "transform.scale")
         fingerAnimation.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
         fingerAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(0.5, 0.5, 1))
@@ -382,8 +382,6 @@ class JinyHighlightManualSequencePointer:JinyHighlightPointer {
         nextButton.frame = CGRect(x: inView!.frame.size.width - 160, y: toViewFrame.origin.y-40, width: 100, height: 30)
     }
     
-    
-    
     override func presentPointer() {
         createPointer()
         toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: .new, context: nil)
@@ -494,48 +492,51 @@ class JinySwipePointer: JinyPointer {
     }
     
     override func presentPointer(toRect: CGRect, inView:UIView?) {
+        pointerLayer.frame.size = CGSize(width: 42, height: 54)
         self.inView = inView
         let toViewFrame = toRect
         var y = toViewFrame.midY - 15
-        var x = toViewFrame.midX - (1/4*screenWidth)
+        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         switch type {
         case .swipeLeft:
             y = toViewFrame.midY - 15
-            x = toViewFrame.midX + (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
         case .swipeRight:
             y = toViewFrame.midY - 15
-            x = toViewFrame.midX - (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         case .swipeUp:
-            y = toViewFrame.midY + (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
             x = toViewFrame.midX - 21
         case .swipeDown:
-            y = toViewFrame.midY - (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
             x = toViewFrame.midX - 21
         }
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
         inView?.layer.addSublayer(pointerLayer)
         pointerLayer.zPosition = 10
-        startAnimation()
+        toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
+        startAnimation(toRect: toRect)
         self.pointerDelegate?.pointerPresented()
     }
     
     override func updateRect(newRect: CGRect, inView: UIView?) {
         self.inView = inView
+        pointerLayer.frame.size = CGSize(width: 42, height: 54)
         let toViewFrame = newRect
         var y = toViewFrame.midY - 15
-        var x = toViewFrame.midX - (1/4*screenWidth)
+        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         switch type {
         case .swipeLeft:
             y = toViewFrame.midY - 15
-            x = toViewFrame.midX + (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
         case .swipeRight:
             y = toViewFrame.midY - 15
-            x = toViewFrame.midX - (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         case .swipeUp:
-            y = toViewFrame.midY + (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
             x = toViewFrame.midX - 21
         case .swipeDown:
-            y = toViewFrame.midY - (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
             x = toViewFrame.midX - 21
         }
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
@@ -565,20 +566,21 @@ class JinySwipePointer: JinyPointer {
     
     func setPosition() {
         let toViewFrame = getToViewPositionForInView()
+        pointerLayer.frame.size = CGSize(width: 42, height: 54)
         var y = toViewFrame.midY - 15
-        var x = toViewFrame.midX - (1/4*screenWidth)
+        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         switch type {
         case .swipeLeft:
             y = toViewFrame.midY - 15
-            x = toViewFrame.midX + (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
         case .swipeRight:
             y = toViewFrame.midY - 15
-            x = toViewFrame.midX - (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         case .swipeUp:
-            y = toViewFrame.midY + (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
             x = toViewFrame.midX - 21
         case .swipeDown:
-            y = toViewFrame.midY - (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
             x = toViewFrame.midX - 21
         }
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
@@ -592,7 +594,7 @@ class JinySwipePointer: JinyPointer {
         }
     }
     
-    override func startAnimation() {
+    override func startAnimation(toRect: CGRect? = nil) {
                 
         let fingerAnimation = CABasicAnimation()
         fingerAnimation.beginTime = 0.2
@@ -607,6 +609,8 @@ class JinySwipePointer: JinyPointer {
         fadeAnimation.duration = 0.2
         fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
         
+        let toViewFrame = toRect ?? getToViewPositionForInView()
+        
         switch type {
         
         case .swipeLeft:
@@ -614,28 +618,28 @@ class JinySwipePointer: JinyPointer {
             fingerAnimation.keyPath = "position.x"
             
             fingerAnimation.fromValue = pointerLayer.position.x
-            fingerAnimation.toValue = getToViewPositionForInView().midX - (1/4*screenWidth)
+            fingerAnimation.toValue = (toViewFrame.midX - (pointerLayer.frame.size.width/2)) - (1/4*screenWidth)
                         
         case .swipeRight:
             
             fingerAnimation.keyPath = "position.x"
             
             fingerAnimation.fromValue = pointerLayer.position.x
-            fingerAnimation.toValue = getToViewPositionForInView().midX + (1/4*screenWidth)
+            fingerAnimation.toValue = toViewFrame.midX + (1/4*screenWidth)
                     
         case .swipeUp:
             
             fingerAnimation.keyPath = "position.y"
             
             fingerAnimation.fromValue = pointerLayer.position.y
-            fingerAnimation.toValue = getToViewPositionForInView().midY - (1/4*screenWidth)
+            fingerAnimation.toValue = (toViewFrame.midY - (pointerLayer.frame.size.height/2)) - (1/4*screenWidth)
                         
         case .swipeDown:
             
             fingerAnimation.keyPath = "position.y"
         
             fingerAnimation.fromValue = pointerLayer.position.y
-            fingerAnimation.toValue = getToViewPositionForInView().midY + (1/4*screenWidth)
+            fingerAnimation.toValue = toViewFrame.midY + (1/4*screenWidth)
         }
         
         let group = CAAnimationGroup()
