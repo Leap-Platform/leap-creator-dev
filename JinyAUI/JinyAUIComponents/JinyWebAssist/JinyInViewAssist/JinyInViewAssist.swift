@@ -17,6 +17,8 @@ public class JinyInViewAssist: JinyWebAssist {
     /// source view of the toView for which the aui component is relatively positioned.
     weak var inView: UIView?
     
+    var webRect: CGRect?
+    
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type AssistInfo.
     ///   - toView: target view to which the tooltip is attached.

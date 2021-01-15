@@ -257,18 +257,18 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist = highlight
                 highlight?.delegate = self
                 highlight?.presentHighlight()
-        
-            case BEACON:
-                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
-                currentAssist = beacon
-                beacon?.delegate = self
-                beacon?.presentBeacon()
                 
             case SPOT:
                 spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 currentAssist = spot
                 spot?.delegate = self
                 spot?.presentSpot()
+        
+            case BEACON:
+                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon()
                 
             case LABEL:
                 label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
@@ -330,6 +330,24 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist = swipePointer
                 swipePointer?.pointerDelegate = self
                 swipePointer?.presentPointer(toRect: rect, inView: inWebview)
+                
+            case TOOLTIP:
+                tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = tooltip
+                tooltip?.delegate = self
+                tooltip?.presentPointer(toRect: rect, inView: inWebview)
+                
+            case HIGHLIGHT_WITH_DESC:
+                highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = highlight
+                highlight?.delegate = self
+                highlight?.presentHighlight(toRect: rect, inView: inWebview)
+                
+            case SPOT:
+                spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = spot
+                spot?.delegate = self
+                spot?.presentSpot(toRect: rect, inView: inWebview)
             
             default:
                 performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
