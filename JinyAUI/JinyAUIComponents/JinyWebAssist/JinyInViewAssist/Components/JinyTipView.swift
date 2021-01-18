@@ -115,9 +115,4 @@ public class JinyTipView: JinyInViewAssist {
                 
          onWebview.hitTest(atPoint, with: withEvent)
     }
-    
-    func getGlobalToViewFrame() -> CGRect {
-        
-        return webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
-    }
 }

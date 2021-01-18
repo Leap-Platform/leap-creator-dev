@@ -18,6 +18,8 @@ public class JinyBeacon: JinyNativeAssist {
     /// source view of the toView for which the component is relatively positioned.
     private weak var inView: UIView?
     
+    private var webRect: CGRect?
+    
     /// JinyBeacon's custom layer (CAReplicatorLayer) class.
     let pulsator = JinyPulsator()
     
@@ -46,6 +48,13 @@ public class JinyBeacon: JinyNativeAssist {
         setAlignment()
         
         show()
+    }
+    
+    func presentBeacon(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+        
+        presentBeacon()
     }
     
     public override func show() {
@@ -87,7 +96,7 @@ public class JinyBeacon: JinyNativeAssist {
     /// Sets alignment of the component (JinyBeacon).
     func setAlignment() {
         
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to: inView)
+        let globalToViewFrame = webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
                 
         switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topLeft {
             

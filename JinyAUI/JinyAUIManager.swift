@@ -263,18 +263,18 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist = spot
                 spot?.delegate = self
                 spot?.presentSpot()
-        
-            case BEACON:
-                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
-                currentAssist = beacon
-                beacon?.delegate = self
-                beacon?.presentBeacon()
                 
             case LABEL:
                 label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 currentAssist = label
                 label?.delegate = self
                 label?.presentLabel()
+                
+            case BEACON:
+                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon()
                 
             case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
                 swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
@@ -348,6 +348,18 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist = spot
                 spot?.delegate = self
                 spot?.presentSpot(toRect: rect, inView: inWebview)
+                
+            case LABEL:
+                label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = label
+                label?.delegate = self
+                label?.presentLabel(toRect: rect, inView: inWebview)
+                
+            case BEACON:
+                beacon = JinyBeacon(withDict: assistInfo, toView: inWebview!)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon(toRect: rect, inView: inWebview)
             
             default:
                 performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)

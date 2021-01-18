@@ -86,4 +86,9 @@ public class JinyInViewAssist: JinyWebAssist {
         webView.clipsToBounds = true
         webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
     }
+    
+    func getGlobalToViewFrame() -> CGRect {
+        
+        return webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
+    }
 }

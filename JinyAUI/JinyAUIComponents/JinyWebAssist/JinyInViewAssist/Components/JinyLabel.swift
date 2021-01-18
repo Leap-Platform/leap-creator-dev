@@ -21,17 +21,17 @@ public class JinyLabel: JinyInViewAssist {
         show()
     }
     
+    func presentLabel(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+                
+        presentLabel()
+    }
+    
     /// sets up toView, inView and webView.
     func setupView() {
         
-        if toView?.window != UIApplication.shared.keyWindow {
-            
-            inView = toView!.window
-            
-        } else {
-            
-            inView = UIApplication.getCurrentVC()?.view
-        }
+        inView = toView?.window
         
         self.frame = CGRect.zero
         
@@ -43,14 +43,14 @@ public class JinyLabel: JinyInViewAssist {
     /// sets alignment of the JinyLabel.
     func setAlignment() {
         
-        guard let toViewSuperView = toView?.superview else {
+        guard toView?.superview != nil || webRect != nil else {
             
             return
         }
         
-        let globalToViewFrame = toViewSuperView.convert(toView!.frame, to: inView)
+        let globalToViewFrame = getGlobalToViewFrame()
                 
-        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topCenter {
+        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topLeft {
             
         case .topLeft:
             
