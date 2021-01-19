@@ -60,6 +60,7 @@ class JinyAssistInfo {
     var autoFocus:Bool
     var type:String?
     var identifier:String?
+    var isWeb:Bool
     
     init(withDict infoDict:Dictionary<String,Any>) {
 
@@ -74,7 +75,7 @@ class JinyAssistInfo {
         if let delay = infoDict[constant_autoDismissDelay] as? Float {
             autoDismissDelay = (delay/1000)
         }
-        
+        isWeb = infoDict[constant_isWeb] as? Bool ?? false
     }
 }
 

@@ -18,6 +18,9 @@ class JinyContext {
     var isWeb:Bool
     var taggedEvents:JinyTaggedEvent?
     var checkpoint:Bool
+    var instruction:JinyInstruction?
+    var instructionInfoDict:Dictionary<String,Any>?
+    var trigger: JinyTrigger?
     
     init(with dict:Dictionary<String,Any>) {
         id = dict[constant_id] as? Int ?? -1
@@ -28,6 +31,13 @@ class JinyContext {
         isWeb = dict[constant_isWeb] as? Bool ?? false
         if let taggedEventsDict = dict[constant_taggedEvents] as? Dictionary<String,Any> {
             taggedEvents = JinyTaggedEvent(withDict: taggedEventsDict)
+        }
+        if let instructionDict = dict[constant_instruction] as? Dictionary<String,Any>{
+            instruction = JinyInstruction(withDict: instructionDict)
+            instructionInfoDict = instructionDict
+        }
+        if let trigger = dict[constant_trigger] as? Dictionary<String, Any> {
+            self.trigger = JinyTrigger(with: trigger)
         }
         checkpoint = dict[constant_checkPoint] as? Bool ?? false
     }

@@ -36,6 +36,7 @@ class JinyPage:JinyContext {
         copy.isWeb = self.isWeb
         copy.taggedEvents = self.taggedEvents
         copy.checkpoint = self.checkpoint
+        copy.trigger = self.trigger
         return copy
     }
 }

@@ -34,8 +34,6 @@ class JinyStage:JinyContext {
     let frequencyPerFlow:Int
     let isSuccess:Bool
     let branchInfo:JinyBranchInfo?
-    let instruction:JinyInstruction?
-    let instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
@@ -46,13 +44,6 @@ class JinyStage:JinyContext {
         if let branchDict = stageDict[constant_branchInfo] as? Dictionary<String,Any> {
             branchInfo = JinyBranchInfo(withDict: branchDict)
         } else { branchInfo = nil }
-        if let instructionDict = stageDict[constant_instruction] as? Dictionary<String,Any> {
-            instruction = JinyInstruction(withDict: instructionDict)
-            instructionInfoDict = instructionDict
-        } else {
-            instruction = nil
-            instructionInfoDict = nil
-        }
         super.init(with: stageDict)
     }
     
@@ -66,6 +57,9 @@ class JinyStage:JinyContext {
         copy.isWeb = self.isWeb
         copy.taggedEvents = self.taggedEvents
         copy.checkpoint = self.checkpoint
+        copy.instruction = self.instruction
+        copy.instructionInfoDict = self.instructionInfoDict
+        copy.trigger = self.trigger
         return copy
     }
 }

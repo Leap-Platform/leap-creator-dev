@@ -60,6 +60,7 @@ class JinyFlowTerminationFrequency: JinyFrequency {
         super.init(with: dict)
         nSession = dict[constant_nSession]
         nDismissByUser = dict[constant_nDismissByUser]
+        
     }
 }
 
@@ -70,10 +71,7 @@ class JinyDiscovery:JinyContext {
     var autoStart:Bool
     var frequency:JinyFlowTerminationFrequency?
     var flowId:Int?
-    var instruction:JinyInstruction?
-    var trigger:JinyTrigger?
     var triggerFrequency: JinyTriggerFrequency?
-    var instructionInfoDict:Dictionary<String,Any>?
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
         triggerMode = JinyTriggerMode(rawValue: (discoveryDict[constant_triggerMode] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
@@ -83,13 +81,6 @@ class JinyDiscovery:JinyContext {
             frequency = JinyFlowTerminationFrequency(with: freqDict)
         }
         flowId = discoveryDict[constant_flowId] as? Int
-        if let instructionDict = discoveryDict[constant_instruction] as? Dictionary<String,Any> {
-            instructionInfoDict = instructionDict
-            instruction = JinyInstruction(withDict: instructionDict)
-        }
-        if let triggerDict = discoveryDict[constant_trigger] as? Dictionary<String,Any> {
-            trigger = JinyTrigger(with: triggerDict)
-        }
         if let triggerFrequencyDict = discoveryDict[constant_triggerFrequency] as? Dictionary<String,String> {
             triggerFrequency = JinyTriggerFrequency(with: triggerFrequencyDict)
         }
@@ -118,7 +109,6 @@ extension JinyDiscovery {
         copy.isWeb = self.isWeb
         copy.weight = self.weight
         copy.checkpoint = self.checkpoint
-        
         copy.enableIcon = self.enableIcon
         copy.triggerMode = self.triggerMode
         copy.autoStart = self.autoStart
