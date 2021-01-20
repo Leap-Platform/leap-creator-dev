@@ -23,9 +23,14 @@ class JinyAuthInternal : NSObject{
         self.appDelegate = UIApplication.shared.delegate!
     }
     
+    deinit {
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+    }
+    
     
     func start() {
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
         self.authManager = JinyAuthManager(key: self.apiKey!, delegate: self)
         self.authManager?.fetchAuthConfig()
     }
@@ -42,11 +47,23 @@ extension JinyAuthInternal: AuthManagerDelegate {
     func fetchConfigSuccess() {
         
         startSendingBeacons()
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
     func fetchConfigFailure() {
         
         print("Fetch Auth Config Failed")
+    }
+    
+    @objc func internetConnected() {
+       
+        if JinyAuthShared.shared.authConfig == nil {
+            
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+            
+            start()
+        }
     }
 }
     
@@ -61,5 +78,4 @@ extension String {
         let stopIndex = self.index(self.startIndex, offsetBy: range.startIndex + range.count)
         return self[startIndex..<stopIndex]
     }
-
 }

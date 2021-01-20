@@ -14,7 +14,8 @@ public class JinyAuth {
     private var authInternal:JinyAuthInternal?
     private var token:String?
   
-    public func initialize(withToken apiKey:String) -> Void{
+    public func initialize(withToken apiKey:String) -> Void {
+        ReachabilityManager.shared.initialize()
         token = apiKey
         authInternal = JinyAuthInternal(apiKey: apiKey)
         authInternal?.apiKey = token
