@@ -47,7 +47,7 @@ class JinyContextManager:NSObject {
         }
         assistManager?.setAssistsToCheck(assists: assistsCopy)
         discoveryManager?.setAllDiscoveries(config.discoveries)
-        UIApplication.shared.keyWindow?.swizzle()
+//        UIApplication.shared.keyWindow?.swizzle()
         startSoundDownload()
         contextDetector?.start()
     }
@@ -69,20 +69,6 @@ extension JinyContextManager {
 extension JinyContextManager:JinyContextDetectorDelegate {
     
     // MARK: - Identifier Methods
-    
-    
-    func getAllNativeIds() -> Array<String> {
-        return configuration?.nativeIdentifiers.map({ (key, value) -> String in
-            return key
-        }) ?? []
-    }
-    
-    func getAllWebIds() -> Array<String> {
-        return configuration?.webIdentifiers.map({ (key, value) -> String in
-            return key
-        }) ?? []
-    }
-    
     func getWebIdentifier(identifierId: String) -> JinyWebIdentifier? {
         return configuration!.webIdentifiers[identifierId]
     }
@@ -95,19 +81,35 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return configuration!.iconSetting
     }
     
+    
+    // MARK: - Context Methods
+    
+    func contextDetected(context: JinyContext, view: UIView?, rect: CGRect?, webview: UIView?) {
+        
+    }
+    
+    func contextsDetected(contextObjs:Array<(JinyContext,UIView?,CGRect?, UIView?)>) {
+        
+    }
+    
+    func noContextDetected() {
+        
+    }
+    
     // MARK: - Assist Methods
     
-    func getAllAssistsToCheck() -> Array<JinyAssist> {
+    func getAssistsToCheck() -> Array<JinyAssist> {
         return assistManager?.getAssistsToCheck() ?? []
     }
     
-    func assistFound(assist: JinyAssist, view: UIView?, rect: CGRect?, webview: UIView?) {
+    func assistsFound(assists: Array<(JinyAssist, UIView?, CGRect?, UIView?)>) {
         discoveryManager?.resetCurrentDiscovery()
-        assistManager?.assistIdentified(assist: assist, view: view, rect: rect, webview: webview)
+        assistManager?.assistsIdentified(assistObjs: assists)
+//        assistManager?.assistIdentified(assist: assist, view: view, rect: rect, webview: webview)
     }
     
     func assistNotFound() {
-        assistManager?.noAssistFound()
+        assistManager?.noAssistsIdentified()
     }
     
     // MARK: - Discovery Methods
@@ -173,13 +175,9 @@ extension JinyContextManager:JinyAssistManagerDelegate {
        }
     }
     
-    func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) {
-        
-    }
+    func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) { }
     
-    func dismissAssist() {
-        auiHandler?.removeAllViews()
-    }
+    func dismissAssist() { auiHandler?.removeAllViews() }
     
 }
 

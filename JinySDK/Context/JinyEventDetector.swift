@@ -34,17 +34,17 @@ class JinyEventDetector {
     
 }
 
-extension UIWindow {
-    public func swizzle() {
-        if (isSwizzled) { return }
-        let sendEvent = class_getInstanceMethod(object_getClass(self), #selector(UIApplication.sendEvent(_:)))
-        let swizzledSendEvent = class_getInstanceMethod(object_getClass(self), #selector(UIWindow.swizzledSendEvent(_:)))
-        method_exchangeImplementations(sendEvent!, swizzledSendEvent!)
-        isSwizzled = true
-    }
-    
-    @objc public func swizzledSendEvent(_ event: UIEvent) {
-        JinyEventDetector.shared.eventReceived(event: event)
-        swizzledSendEvent(event)
-    }
-}
+//extension UIWindow {
+//    public func swizzle() {
+//        if (isSwizzled) { return }
+//        let sendEvent = class_getInstanceMethod(object_getClass(self), #selector(UIApplication.sendEvent(_:)))
+//        let swizzledSendEvent = class_getInstanceMethod(object_getClass(self), #selector(UIWindow.swizzledSendEvent(_:)))
+//        method_exchangeImplementations(sendEvent!, swizzledSendEvent!)
+//        isSwizzled = true
+//    }
+//    
+//    @objc public func swizzledSendEvent(_ event: UIEvent) {
+//        JinyEventDetector.shared.eventReceived(event: event)
+//        swizzledSendEvent(event)
+//    }
+//}
