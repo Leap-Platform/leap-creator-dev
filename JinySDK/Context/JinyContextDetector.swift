@@ -16,18 +16,11 @@ protocol JinyContextDetectorDelegate:NSObjectProtocol {
     func getWebIdentifier(identifierId:String) -> JinyWebIdentifier?
     func getNativeIdentifier(identifierId:String) -> JinyNativeIdentifier?
     
+    func getContextsToCheck() -> Array<JinyContext>
+    func getLiveContext() -> JinyContext?
     func contextDetected(context:JinyContext, view:UIView?, rect: CGRect?, webview:UIView?)
-    func contextsDetected(contextObjs:Array<(JinyContext,UIView?,CGRect?, UIView?)>)
     func noContextDetected()
-    
-    func getAssistsToCheck() -> Array<JinyAssist>
-    func assistsFound(assists:Array<(JinyAssist, UIView?, CGRect?, UIView?)>)
-    func assistNotFound()
-    
-    func getDiscoveriesToCheck()->Array<JinyDiscovery>
-    func discoveriesFound(discoveries:Array<(JinyDiscovery, UIView?, CGRect?, UIView?)>)
-    func noDiscoveryFound()
-    
+
     func getCurrentFlow() -> JinyFlow?
     func getParentFlow() -> JinyFlow?
     func pageIdentified(_ page:JinyPage)
@@ -168,14 +161,23 @@ extension JinyContextDetector {
     /// Finds the eligible assists and discoveries when state = .Discovery
     /// - Parameter hierarchy: views to check for eligibility
     private func findIdentifiableAssistsAndDiscoveries(in hierarchy:Array<UIView>) {
-        let contextsToCheck:Array<JinyContext> = (delegate?.getAssistsToCheck() ?? []) + (delegate?.getDiscoveriesToCheck() ?? [])
+        let contextsToCheck:Array<JinyContext> =  delegate?.getContextsToCheck() ?? []
         getPassingIdentifiers(for: contextsToCheck, in: hierarchy) { (passedNativeIds, passedWebIds) in
             let contextsIdentified = contextsToCheck.filter { self.isContextPassing(passedWebIds, passedNativeIds, $0.webIdentifiers, $0.nativeIdentifiers) }
             guard contextsIdentified.count > 0 else {
                 self.delegate?.noContextDetected()
                 return
             }
-            self.findContextToTrigger(contextsIdentified, allViews: hierarchy)
+            if let liveContext = self.delegate?.getLiveContext() {
+                if contextsIdentified.contains(where: { (tempContext) -> Bool in
+                    return tempContext.id == liveContext.id
+                }) {
+                    let assistInfo = liveContext.instruction?.assistInfo
+                    self.getViewOrRect(allView: hierarchy, id: assistInfo?.identifier, isWeb: (assistInfo?.isWeb ?? false)) { (anchorView, anchorRect, anchorWebview) in
+                        self.delegate?.contextDetected(context: liveContext, view: anchorView, rect: anchorRect, webview: anchorWebview)
+                    }
+                } else { self.findContextToTrigger(contextsIdentified, allViews: hierarchy) }
+            } else { self.findContextToTrigger(contextsIdentified, allViews: hierarchy)}
         }
     }
     
@@ -232,6 +234,19 @@ extension JinyContextDetector {
     ///   - contexts: contexts that was identified by context detection
     ///   - allViews: current hierarchy
     private func findContextToTrigger(_ contexts:Array<JinyContext>, allViews:Array<UIView>) {
+        
+        if let liveContext = delegate?.getLiveContext() {
+            
+            if contexts.contains(where: { ( context) -> Bool in
+                return context.id == liveContext.id
+            }) {
+                let assistInfo = liveContext.instruction?.assistInfo
+                getViewOrRect(allView: allViews, id: assistInfo?.identifier, isWeb: (assistInfo?.isWeb ?? false)) { (view, rect, webview) in
+                    
+                    return
+                }
+            }
+        }
         
         // Check for assist/discoveries with instant or delay trigger.
         let instantOrDelayedContexts = contexts.filter { (contextToCheck) -> Bool in
@@ -695,7 +710,7 @@ extension JinyContextDetector {
 
 extension JinyContextDetector:JinyClickHandlerDelegate {
     func nativeClickEventForContext(id: Int, onView: UIView) {
-        let allContexts = (delegate?.getAssistsToCheck() ?? []) + (delegate?.getDiscoveriesToCheck() ?? [])
+        guard let allContexts = delegate?.getContextsToCheck() else { return }
         let contextFound = allContexts.first { $0.id == id }
         guard let triggerContext = contextFound else { return }
         stop()
@@ -704,7 +719,7 @@ extension JinyContextDetector:JinyClickHandlerDelegate {
     }
     
     func webClickEventForContext(id:Int) {
-        let allContexts = (delegate?.getAssistsToCheck() ?? []) + (delegate?.getDiscoveriesToCheck() ?? [])
+        guard let allContexts = delegate?.getContextsToCheck() else { return }
         let contextFound = allContexts.first { $0.id == id }
         guard let triggerContext = contextFound,
               let identifierId = triggerContext.instruction?.assistInfo?.identifier,

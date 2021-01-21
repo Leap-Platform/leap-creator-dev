@@ -47,7 +47,6 @@ class JinyContextManager:NSObject {
         }
         assistManager?.setAssistsToCheck(assists: assistsCopy)
         discoveryManager?.setAllDiscoveries(config.discoveries)
-//        UIApplication.shared.keyWindow?.swizzle()
         startSoundDownload()
         contextDetector?.start()
     }
@@ -77,54 +76,33 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return configuration!.nativeIdentifiers[identifierId]
     }
     
+    func getContextsToCheck() -> Array<JinyContext> {
+        return (assistManager?.getAssistsToCheck() ?? []) + (discoveryManager?.getDiscoveriesToCheck() ?? [])
+    }
+    
+    func getLiveContext() -> JinyContext? {
+        if let currentAssist = assistManager?.getCurrentAssist() { return currentAssist }
+        else if let currentDiscovery = discoveryManager?.getCurrentDiscovery() { return currentDiscovery }
+        return nil
+    }
+    
     func getIconSetting() -> Dictionary<String, IconSetting> {
         return configuration!.iconSetting
     }
     
     
     // MARK: - Context Methods
-    
     func contextDetected(context: JinyContext, view: UIView?, rect: CGRect?, webview: UIView?) {
-        
-    }
-    
-    func contextsDetected(contextObjs:Array<(JinyContext,UIView?,CGRect?, UIView?)>) {
-        
+        if let assist = context as? JinyAssist {
+            assistManager?.triggerAssist(assist, view, rect, webview)
+        }
+        else if let discovery = context as? JinyDiscovery {
+            assistManager?.resetManager()
+        }
     }
     
     func noContextDetected() {
-        
-    }
-    
-    // MARK: - Assist Methods
-    
-    func getAssistsToCheck() -> Array<JinyAssist> {
-        return assistManager?.getAssistsToCheck() ?? []
-    }
-    
-    func assistsFound(assists: Array<(JinyAssist, UIView?, CGRect?, UIView?)>) {
-        discoveryManager?.resetCurrentDiscovery()
-        assistManager?.assistsIdentified(assistObjs: assists)
-//        assistManager?.assistIdentified(assist: assist, view: view, rect: rect, webview: webview)
-    }
-    
-    func assistNotFound() {
-        assistManager?.noAssistsIdentified()
-    }
-    
-    // MARK: - Discovery Methods
-    func getDiscoveriesToCheck() -> Array<JinyDiscovery> {
-        return discoveryManager?.getDiscoveriesToCheck() ?? []
-    }
-    
-    
-    func discoveriesFound(discoveries: Array<(JinyDiscovery, UIView?, CGRect?, UIView?)>) {
-        discoveryManager?.discoveriesFound(discoveries)
-    }
-    
-    func noDiscoveryFound() {
-        discoveryManager?.discoveryNotFound()
-        
+        assistManager?.resetManager()
     }
     
     // MARK: - Flow Methods
@@ -167,7 +145,6 @@ extension JinyContextManager:JinyContextDetectorDelegate {
 extension JinyContextManager:JinyAssistManagerDelegate {
     
     func newAssistIdentified(_ assist: JinyAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
-        auiHandler?.removeAllViews()
        if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: assist.instructionInfoDict!, rect: anchorRect, inWebview: inWebview, iconInfo: [:])
        } else {
@@ -175,7 +152,9 @@ extension JinyContextManager:JinyAssistManagerDelegate {
        }
     }
     
-    func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) { }
+    func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) {
+        if let anchorRect = rect { auiHandler?.updateRect(rect: anchorRect, inWebView: inWebview) }
+    }
     
     func dismissAssist() { auiHandler?.removeAllViews() }
     
@@ -655,7 +634,7 @@ extension JinyContextManager:JinyAUICallback {
             autoDismissTimer = nil
             contextDetector?.switchState()
             discoveryManager?.resetCurrentDiscovery()
-            assistManager?.noAssistFound()
+            assistManager?.resetManager()
         }
         contextDetector?.start()
     }
