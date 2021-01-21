@@ -74,7 +74,6 @@ class JinyContextDetector:NSObject {
 }
 
 // MARK: - TIMER HANDLER
-
 extension JinyContextDetector {
     
     /// Start context detection by starting one second timer
@@ -272,13 +271,54 @@ extension JinyContextDetector {
         }
         
         // Get views for corresponding native contexts and assign listener
+        addNativeListeners(nativeContexts: nativeContexts, in: allViews)
+        
+        
+        // Add listeners for web elements
+        guard let wkwebviews = allViews.filter({ $0.isKind(of: WKWebView.self) }) as? Array<WKWebView>, wkwebviews.count > 0, webContexts.count > 0 else { return }
+        addWebListeners(webContexts: webContexts, in: wkwebviews)
+    }
+    
+    private func addNativeListeners(nativeContexts:Array<JinyContext>, in hierarchy:Array<UIView>) {
         let nativeContextAndViewArray:Array<(Int,UIView)> = nativeContexts.map { (context) -> (Int, UIView)? in
             let identifier = context.instruction!.assistInfo!.identifier!
-            guard let view = getViewsForIdentifer(identifierId: identifier, hierarchy: allViews)?.first else { return nil }
+            guard let view = getViewsForIdentifer(identifierId: identifier, hierarchy: hierarchy)?.first else { return nil }
             return (context.id,view)
         }.compactMap{ return $0 }
         clickHandler.addClickListeners(nativeContextAndViewArray)
+    }
+    
+    private func addWebListeners(webContexts:Array<JinyContext>, in webviews:Array<WKWebView>) {
         
+        var webIdsToCheck = webContexts.map { (context) -> String? in
+            return context.instruction?.assistInfo?.identifier
+        }.compactMap{ return $0 }
+        var passingIdsAndWebView:Dictionary<WKWebView,Array<Dictionary<String,Any>>> = [:]
+        webIdsToCheck = Array(Set(webIdsToCheck))
+        var counter = 0
+        var checkCompletion:((_:Array<String>)->Void)?
+        checkCompletion = { passedIds in
+            if passedIds.count > 0 {
+                webIdsToCheck = webIdsToCheck.filter { !passedIds.contains($0) }
+                var contextInfoArray:Array<Dictionary<String,Any>> = []
+                for passedId in passedIds {
+                    let contextsForPassedId = webContexts.filter{ $0.instruction?.assistInfo?.identifier ?? "" == passedId }
+                    let contextInfo = contextsForPassedId.map { (context) -> Dictionary<String,Any>? in
+                        guard let webId = self.delegate?.getWebIdentifier(identifierId: passedId) else { return nil }
+                        return ["id":context.id, "identifier":webId]
+                    }.compactMap { return $0 }
+                    contextInfoArray.append(contentsOf: contextInfo)
+                }
+                passingIdsAndWebView[webviews[counter]] = contextInfoArray
+            }
+            counter += 1
+            if webIdsToCheck.count > 0, counter < webviews.count {
+                self.getPassingWebIds(webIdsToCheck, inSingleWebview: webviews[counter], completion: checkCompletion!)
+            } else {
+                self.clickHandler.addClickListener(to: passingIdsAndWebView)
+            }
+        }
+        getPassingWebIds(webIdsToCheck, inSingleWebview: webviews[counter], completion: checkCompletion!)
     }
     
     /// Get list of passing native identifiers and webidentifires
@@ -502,7 +542,6 @@ extension JinyContextDetector {
             }
         }
         getPassingWebIds(webIds, inSingleWebview: inAllWebviews[counter], completion: passingWebIdsInSingleWebViewCompletion!)
-        
     }
     
     /// Get passing web ids in specific webviwe
@@ -655,7 +694,6 @@ extension JinyContextDetector {
 
 
 extension JinyContextDetector:JinyClickHandlerDelegate {
-    
     func nativeClickEventForContext(id: Int, onView: UIView) {
         let allContexts = (delegate?.getAssistsToCheck() ?? []) + (delegate?.getDiscoveriesToCheck() ?? [])
         let contextFound = allContexts.first { $0.id == id }
@@ -665,4 +703,18 @@ extension JinyContextDetector:JinyClickHandlerDelegate {
         start()
     }
     
+    func webClickEventForContext(id:Int) {
+        let allContexts = (delegate?.getAssistsToCheck() ?? []) + (delegate?.getDiscoveriesToCheck() ?? [])
+        let contextFound = allContexts.first { $0.id == id }
+        guard let triggerContext = contextFound,
+              let identifierId = triggerContext.instruction?.assistInfo?.identifier,
+              let webIdentifier = delegate?.getWebIdentifier(identifierId: identifierId),
+              let webviews = fetchViewHierarchy().filter({ $0.isKind(of: WKWebView.self) }) as? Array<WKWebView>
+        else { return }
+        stop()
+        getRectForIdentifier(id: webIdentifier, webviews: webviews) { (rect, webview) in
+            self.delegate?.contextDetected(context: triggerContext, view: nil, rect: rect, webview: webview)
+            self.start()
+        }
+    }
 }

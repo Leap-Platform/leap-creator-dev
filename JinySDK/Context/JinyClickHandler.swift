@@ -19,8 +19,11 @@ class WeakView {
 protocol JinyClickHandlerDelegate:NSObjectProtocol {
     
     func nativeClickEventForContext(id:Int, onView:UIView)
+    func webClickEventForContext(id:Int)
     
 }
+
+fileprivate let jinyClickListener = "jinyClickListener"
 
 class JinyClickHandler:NSObject {
     
@@ -39,8 +42,24 @@ class JinyClickHandler:NSObject {
         })
     }
     
-    func addClickListener(identifier:JinyWebIdentifier, inWebview:WKWebView) {
-        
+    func addClickListener(to webElements:Dictionary<WKWebView, Array<Dictionary<String,Any>>>) {
+        webElements.forEach { (webview, elementsToObserve) in
+            webview.configuration.userContentController.removeScriptMessageHandler(forName: jinyClickListener)
+            webview.configuration.userContentController.add(self, name: jinyClickListener)
+            for element in elementsToObserve {
+                guard let webIdentifier = element["identifier"] as? JinyWebIdentifier,
+                      let contextId = element["id"] as? Int else { continue }
+                let basicElementJs = JinyJSMaker.generateBasicElementScript(id: webIdentifier)
+                let dictString = "{\"contextId\":\(contextId)}"
+                let script = """
+                    var element = \(basicElementJs);
+                    try { element.removeEventListener("click",clickFunction_\(contextId)); } catch(e){ }
+                    clickFunction_\(contextId) =  function(){ window.webkit.messageHandlers.jinyClickListener.postMessage('\(dictString)'); };
+                    element.addEventListener('click', clickFunction_\(contextId));
+                """
+                webview.evaluateJavaScript(script,completionHandler: nil)
+            }
+        }
     }
     
     func removeAllClickListeners() {
@@ -69,7 +88,11 @@ class JinyClickHandler:NSObject {
 extension JinyClickHandler:WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        
+        guard let body = message.body as? String,
+              let bodyData = body.data(using: .utf8),
+              let bodyJson = try? JSONSerialization.jsonObject(with: bodyData, options: .allowFragments) as? Dictionary<String,Int> ,
+              let contextId = bodyJson["contextId"] else { return }
+        self.delegate?.webClickEventForContext(id: contextId)
     }
     
 }
