@@ -81,17 +81,11 @@ class JinyAssistInfo {
 
 class JinyFrequency {
     /// number of times a discovery is shown in a session until flow complete
-    let perSession:Int?
     let perApp:Int?
-    let perSessionWoJiny:Int?
-    let perAppWoJiny:Int?
     let perFlow:Int?
     
     init(with dict:Dictionary<String,Int>) {
-        perSession = dict[constant_perSession]
         perApp = dict[constant_perApp]
-        perSessionWoJiny = dict[constant_perSessionWOJiny]
-        perAppWoJiny = dict[constant_perSessionWOJiny]
         perFlow = dict[constant_perFlow]
     }
     

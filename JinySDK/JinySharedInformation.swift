@@ -18,6 +18,8 @@ enum JinyDownloadStatus {
 
 class JinySharedInformation {
     static let shared = JinySharedInformation()
+    let constant_assistsPresented = "jiny_assists_presented"
+    let constant_assistsDismissedByUser = "jiny_assists_dismissed"
     private let prefs = UserDefaults.standard
     private var apiKey:String?
     private var sessionId:String?
@@ -68,6 +70,33 @@ extension JinySharedInformation {
         return audioLanguageCode
     }
     
+}
+
+// MARK: - ASSIST HANDLING
+extension JinySharedInformation {
+    
+    func assistPresented(assistId:Int) {
+        var assistsPresent = prefs.value(forKey: constant_assistsPresented) as? Dictionary<Int,Int> ?? [:]
+        let currentAssistCount = assistsPresent[assistId] ?? 0
+        assistsPresent[assistId] = currentAssistCount + 1
+        prefs.setValue(assistsPresent, forKey: constant_assistsPresented)
+        prefs.synchronize()
+    }
+    
+    func assistDismissedByUser(assistId:Int) {
+        var assistsDismissed = prefs.value(forKey: constant_assistsDismissedByUser) as? Array<Int> ?? []
+        if !assistsDismissed.contains(assistId) { assistsDismissed.append(assistId) }
+        prefs.setValue(assistsDismissed, forKey: constant_assistsDismissedByUser)
+        prefs.synchronize()
+    }
+    
+    func getAssistsPresentedInfo() -> Dictionary<Int, Int>{
+        return (prefs.value(forKey: constant_assistsPresented) as? Dictionary<Int,Int>) ?? [:]
+    }
+    
+    func getDismissedAssistInfo() -> Array<Int> {
+        return (prefs.value(forKey: constant_assistsDismissedByUser) as? Array<Int>) ?? []
+    }
 }
 
 // MARK: - SESSION ID GENERATOR, GETTER AND SETTER

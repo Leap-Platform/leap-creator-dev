@@ -88,9 +88,9 @@ class JinyDiscoveryManager {
                 if counter >= perAppUntilFlowComplete { return false }
             }
             
-            if let perSessionUntilFlowComplete = freq.perSession, perSessionUntilFlowComplete > 0, let counter = JinySharedInformation.shared.sessionFlowCountDict[String(allowedDiscovery.id)] {
-                if counter >= perSessionUntilFlowComplete { return false }
-            }
+//            if let perSessionUntilFlowComplete = freq.perSession, perSessionUntilFlowComplete > 0, let counter = JinySharedInformation.shared.sessionFlowCountDict[String(allowedDiscovery.id)] {
+//                if counter >= perSessionUntilFlowComplete { return false }
+//            }
 
             return true
         })
