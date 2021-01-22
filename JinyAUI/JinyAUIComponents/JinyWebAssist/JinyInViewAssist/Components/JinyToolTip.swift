@@ -89,10 +89,6 @@ public class JinyToolTip: JinyTipView {
        if assistInfo?.highlightAnchor ?? false {
            
           highlightAnchor()
-           
-       } else {
-           
-          self.backgroundColor = .clear
        }
     }
       

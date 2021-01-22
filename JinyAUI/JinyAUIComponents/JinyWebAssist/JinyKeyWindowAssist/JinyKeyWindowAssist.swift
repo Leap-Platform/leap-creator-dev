@@ -69,6 +69,11 @@ public class JinyKeyWindowAssist: JinyWebAssist {
           self.backgroundColor = UIColor.black.withAlphaComponent(0.65)
         }
         
+        if !(self.assistInfo?.highlightAnchor ?? false) {
+            
+            self.backgroundColor = .clear
+        }
+        
         self.isHidden = true
         
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))

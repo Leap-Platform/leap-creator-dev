@@ -73,6 +73,11 @@ public class JinyInViewAssist: JinyWebAssist {
           self.backgroundColor = UIColor.clear
         }
         
+        if !(self.assistInfo?.highlightAnchor ?? false) {
+            
+            self.backgroundColor = .clear
+        }
+        
         self.isHidden = true
     }
     
