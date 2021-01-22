@@ -14,7 +14,7 @@ import UIKit
     case NegativeUI
 }
 
-@objc public protocol JinyAUIHandler:NSObjectProtocol {
+public protocol JinyAUIHandler:NSObjectProtocol {
     
     func startMediaFetch()
     func hasClientCallBack() -> Bool
@@ -24,7 +24,7 @@ import UIKit
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
-    func presentJinyButton(with html: String?, color: String, iconEnabled: Bool)
+    func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool)
     func presentLanguagePanel(languages: Array<String>)
     func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()
@@ -87,7 +87,7 @@ import UIKit
         super.init()
     }
     
-    @objc public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:JinyAUIHandler?) -> JinyAUICallback? {
+    public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:JinyAUIHandler?) -> JinyAUICallback? {
         assert(token != "", "Incorrect token")
         self.apiKey = token
         self.isTest = isTest

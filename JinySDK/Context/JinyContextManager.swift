@@ -202,7 +202,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard !JinySharedInformation.shared.isMuted() else {
-            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl, color: getIconSetting()[String(discovery.id)]?.bgColor ?? "#000000", iconEnabled: discovery.enableIcon)
+        auiHandler?.presentJinyButton(for: getIconSetting()[String(discovery.id)] ?? IconSetting(with: [:]), iconEnabled: discovery.enableIcon)
             return
         }
         auiHandler?.removeAllViews()
@@ -246,7 +246,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
                 return true
             }
         case .manualTrigger:
-               auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl, color: getIconSetting()[String(discovery.id)]?.bgColor ?? "#000000", iconEnabled: discovery.enableIcon)
+            auiHandler?.presentJinyButton(for: getIconSetting()[String(discovery.id)] ?? IconSetting(with: [:]), iconEnabled: discovery.enableIcon)
                 return false
         case .everySessionUntilDismissed:
             if (JinySharedInformation.shared.getDiscoveryDismissCount()["\(discovery.id)"] ?? 0) > 0 {
@@ -269,7 +269,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func showJinyIcon() {
         auiHandler?.removeAllViews()
-        auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
+        auiHandler?.presentJinyButton(for: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         discoveryManager?.currentDiscoveryOptOut = false
     }
 }
@@ -300,7 +300,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
         auiHandler?.removeAllViews()
-        auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
+        auiHandler?.presentJinyButton(for: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
         if let anchorRect = rect {
             auiHandler?.performInstrcution(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
