@@ -63,6 +63,13 @@ public class JinySpot: JinyTipView {
         
         show()
     }
+    
+    func presentSpot(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+                
+        presentSpot()
+    }
         
     /// setup toView, inView, toolTipView and webView.
     func setupView() {
@@ -138,9 +145,9 @@ public class JinySpot: JinyTipView {
           return
         }
         
-        let globalToView = toView?.superview?.convert(toView!.frame, to: inView)
+        let globalToView = getGlobalToViewFrame()
         
-        let midX: CGFloat = globalToView!.midX
+        let midX: CGFloat = globalToView.midX
         
         var midY: CGFloat = 0.0
         
@@ -150,7 +157,7 @@ public class JinySpot: JinyTipView {
             
         case .top:
             
-            midY = (globalToView?.origin.y)! + (globalToView?.size.height)!
+            midY = (globalToView.origin.y) + (globalToView.size.height)
             
             if assistInfo?.highlightAnchor ?? true {
                 
@@ -161,7 +168,7 @@ public class JinySpot: JinyTipView {
             
         case .bottom:
             
-            midY = (globalToView?.origin.y)!
+            midY = (globalToView.origin.y)
             
             if assistInfo?.highlightAnchor ?? true {
                 
@@ -198,11 +205,11 @@ public class JinySpot: JinyTipView {
     /// configures circular view.
     func configureCircularView() {
         
-        let toViewFrame = toView?.superview?.convert(toView!.frame, to: nil)
+        let toViewFrame = getGlobalToViewFrame()
         
-        let toViewOrigin = toViewFrame!.origin
+        let toViewOrigin = toViewFrame.origin
         
-        let toViewSize = toViewFrame!.size
+        let toViewSize = toViewFrame.size
         
         var xSpacing = highlightSpacing
         
@@ -322,8 +329,13 @@ public class JinySpot: JinyTipView {
         
     /// gets the arrow direction - top or bottom.
     func getArrowDirection() -> JinyTooltipArrowDirection? {
+        
+        guard toView?.superview != nil || webRect != nil else {
+            
+            return .none
+        }
     
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to: inView)
+        let globalToViewFrame = getGlobalToViewFrame()
 
         let toViewTop = globalToViewFrame.origin.y
         
@@ -358,7 +370,7 @@ public class JinySpot: JinyTipView {
     ///   - direction: ToolTip arrow direction.
     func setOriginForDirection(direction: JinyTooltipArrowDirection) {
             
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to:inView)
+        let globalToViewFrame = getGlobalToViewFrame()
         
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
         
@@ -553,11 +565,11 @@ public class JinySpot: JinyTipView {
         
         manipulatedHighlightSpacing = highlightSpacing
         
-        let globalToView = toView?.superview?.convert(toView!.frame, to: nil)
+        let globalToView = getGlobalToViewFrame()
 
-        let origin = globalToView!.origin
+        let origin = globalToView.origin
         
-        let size = globalToView!.size
+        let size = globalToView.size
         
         let path = UIBezierPath(rect: inView!.bounds)
                 

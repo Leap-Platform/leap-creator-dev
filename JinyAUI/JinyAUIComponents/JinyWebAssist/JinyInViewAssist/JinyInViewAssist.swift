@@ -17,6 +17,8 @@ public class JinyInViewAssist: JinyWebAssist {
     /// source view of the toView for which the aui component is relatively positioned.
     weak var inView: UIView?
     
+    var webRect: CGRect?
+    
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type AssistInfo.
     ///   - toView: target view to which the tooltip is attached.
@@ -83,5 +85,10 @@ public class JinyInViewAssist: JinyWebAssist {
         
         webView.clipsToBounds = true
         webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
+    }
+    
+    func getGlobalToViewFrame() -> CGRect {
+        
+        return webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
     }
 }
