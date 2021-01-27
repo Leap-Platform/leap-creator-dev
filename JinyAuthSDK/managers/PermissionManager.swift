@@ -34,6 +34,8 @@ class PermissionManager: AppStateProtocol{
     let timeout: TimeInterval = (JinyAuthShared.shared.authConfig?.permission?.timeOutDuration ?? 15000)/1000
     private var permissionAlert: UIAlertController?
     
+    private var decisionTaken: Bool?
+    
     init(permissionListener: PermissionListener){
         self.permissionListener = permissionListener
         self.application = UIApplication.shared
@@ -41,25 +43,27 @@ class PermissionManager: AppStateProtocol{
     }
     
     //call start in MasterManager
-    func start()->Void{
-        //seek permission to allow communication to take place
+    func start()->Void {
         
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        
+        //seek permission to allow communication to take place
         DispatchQueue.main.async {
                         
-            self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.permissionDenied), userInfo: nil, repeats: false)
+            self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.timedout), userInfo: nil, repeats: false)
             
             self.permissionAlert = UIAlertController(title: JinyAuthShared.shared.authConfig?.permission?.dialogTitle ?? "Streaming Permission ", message: JinyAuthShared.shared.authConfig?.permission?.dialogDescription ?? "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
 
             self.permissionAlert?.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
             
-                self.permissionTimer?.invalidate()
-                self.permissionTimer = nil
-                // update the Alfred server that permission has been granted
-                self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
+                self.permissionAccepted()
                 
             }))
             self.permissionAlert?.addAction(UIAlertAction(title: "No", style: .cancel, handler:{ (action) in
-                 self.permissionDenied()
+                
+                self.permissionDenied()
             }))
 
             
@@ -89,7 +93,6 @@ class PermissionManager: AppStateProtocol{
   
         let json = "{ \"permissionStatus\": \"\(permission)\"}"
         let data = Data(json.utf8)
-       // let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .fragmentsAllowed)
         urlRequest.httpBody = data
     
         let _: Void = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
@@ -99,6 +102,10 @@ class PermissionManager: AppStateProtocol{
             
             if data != nil {
                 self.permissionListener.onPermissionStatusUpdation(permission: permission)
+                self.permissionTimer?.invalidate()
+                self.permissionTimer = nil
+                self.decisionTaken = nil
+                NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
             }
         }.resume()
         
@@ -111,16 +118,89 @@ class PermissionManager: AppStateProtocol{
         NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
-    @objc private func appDidEnterBackground(){
-        permissionDenied()
+    @objc private func appDidEnterBackground() {
+        
+        if decisionTaken == nil {
+            permissionDenied()
+            self.permissionTimer?.invalidate()
+            self.permissionTimer = nil
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        }
+    }
+    
+    @objc private func permissionAccepted() {
+        
+        guard self.decisionTaken == nil else {
+            
+            return
+        }
+        
+        guard self.permissionTimer != nil else { return }
+        
+        self.decisionTaken = true
+        // update the Alfred server that permission has been granted
+        self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
     }
     
     @objc private func permissionDenied() {
-        guard permissionTimer != nil else { return }
-        permissionTimer?.invalidate()
-        permissionTimer = nil
+        
+        guard self.decisionTaken == nil else {
+            
+            return
+        }
+        
+        guard self.permissionTimer != nil else { return }
+        
+        self.decisionTaken = false
         self.permissionAlert?.dismiss(animated: true, completion: nil)
         self.permissionListener.onPermissionRejected(permnission: self.permissionRejected)
+    }
+    
+    @objc private func timedout() {
+        
+        self.permissionTimer?.invalidate()
+        self.permissionTimer = nil
+        
+        guard self.decisionTaken == nil else {
+            
+            return
+        }
+        
+        self.permissionAlert?.dismiss(animated: true, completion: nil)
+        self.permissionListener.onPermissionStatusUpdation(permission: "")
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+    }
+    
+    @objc func internetConnected() {
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+     
+        guard let decision = self.decisionTaken else {
+            
+            self.permissionListener.onPermissionStatusUpdation(permission: "")
+            
+            return
+        }
+        
+        self.decisionTaken = nil
+        
+        guard self.permissionTimer != nil else {
+            
+            timedout()
+            
+            return
+        }
+        
+        if decision {
+            
+            // update the Alfred server that permission has been granted
+            self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
+        
+        } else {
+            
+            self.permissionDenied()
+        }
     }
 }
 

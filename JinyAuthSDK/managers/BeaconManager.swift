@@ -22,6 +22,8 @@ class BeaconManager {
     var task: DispatchWorkItem?
     let interval: TimeInterval = (JinyAuthShared.shared.authConfig?.beacon?.interval ?? 3000)/1000
     
+    private var sendFirstBeacon: Bool?
+        
     var roomID: String? {
         get{
             return roomId
@@ -31,6 +33,12 @@ class BeaconManager {
     init(beaconListener: BeaconListener) {
         self.beaconListener = beaconListener
         self.roomId = ""
+        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+    }
+    
+    deinit {
+        
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
     public func start(appId: String){
@@ -56,10 +64,11 @@ class BeaconManager {
         
         let jsonData = Data(json.utf8)
         urlRequest.httpBody = jsonData
-    
+        sendFirstBeacon = false
         let discoveryTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
             if let data = data {
                 _ = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                self.sendFirstBeacon = true
                 self.sendSubsequentBeacons()
             }
         }
@@ -93,10 +102,27 @@ class BeaconManager {
     /*
      Stop the beacon manager to stop sending the beacons once the connection is active
      */
-    func stop()->Void{
+    func stop()->Void {
         self.task?.cancel()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
+    @objc func internetConnected() {
+        
+        guard sendFirstBeacon != nil else {
+            
+            return
+        }
+        
+        if (sendFirstBeacon ?? false) {
+            
+            sendSubsequentBeacons()
+        
+        } else {
+            
+            start(appId: self.appId!)
+        }
+    }
 }
 
 protocol BeaconListener{
