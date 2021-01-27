@@ -107,10 +107,6 @@ public class JinySpot: JinyTipView {
        if assistInfo?.highlightAnchor ?? true {
            
           highlightAnchor()
-           
-       } else {
-           
-          self.backgroundColor = .clear
        }
         
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
