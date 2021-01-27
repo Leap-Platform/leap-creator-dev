@@ -15,6 +15,7 @@ class JinyContextManager:NSObject {
     private var contextDetector:JinyContextDetector?
     private var discoveryManager:JinyDiscoveryManager?
     private var flowManager:JinyFlowManager?
+    private var pageManager:JinyPageManager?
     private var stageManager:JinyStageManager?
     private var analyticsManager:JinyAnalyticsManager?
     private var configuration:JinyConfig?
@@ -34,6 +35,7 @@ class JinyContextManager:NSObject {
         assistManager = JinyAssistManager(self)
         discoveryManager = JinyDiscoveryManager(self)
         flowManager = JinyFlowManager(self)
+        pageManager = JinyPageManager(self)
         stageManager = JinyStageManager(self)
         analyticsManager = JinyAnalyticsManager(self)
         self.start()
@@ -76,6 +78,13 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return configuration!.nativeIdentifiers[identifierId]
     }
     
+    func getIconSetting() -> Dictionary<String, IconSetting> {
+        return configuration!.iconSetting
+    }
+    
+    
+    // MARK: - Context Methods
+    
     func getContextsToCheck() -> Array<JinyContext> {
         return (assistManager?.getAssistsToCheck() ?? []) + (discoveryManager?.getDiscoveriesToCheck() ?? [])
     }
@@ -86,23 +95,20 @@ extension JinyContextManager:JinyContextDetectorDelegate {
         return nil
     }
     
-    func getIconSetting() -> Dictionary<String, IconSetting> {
-        return configuration!.iconSetting
-    }
-    
-    
-    // MARK: - Context Methods
     func contextDetected(context: JinyContext, view: UIView?, rect: CGRect?, webview: UIView?) {
         if let assist = context as? JinyAssist {
+            discoveryManager?.resetDiscoveryManager()
             assistManager?.triggerAssist(assist, view, rect, webview)
         }
         else if let discovery = context as? JinyDiscovery {
             assistManager?.resetManager()
+            discoveryManager?.triggerDiscovery(discovery, view, rect, webview)
         }
     }
     
     func noContextDetected() {
         assistManager?.resetManager()
+        discoveryManager?.resetDiscoveryManager()
     }
     
     // MARK: - Flow Methods
@@ -116,13 +122,11 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     
     // MARK: - Page Methods
     func pageIdentified(_ page: JinyPage) {
-        stageManager?.setArrayOfStagesFromPage(page.stages)
-        stageManager?.setCurrentPage(page)
+        pageManager?.setCurrentPage(page)
     }
     
     func pageNotIdentified() {
-        stageManager?.setCurrentPage(nil)
-        stageManager?.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
+        pageManager?.setCurrentPage(nil)
     }
     
     
@@ -141,7 +145,6 @@ extension JinyContextManager:JinyContextDetectorDelegate {
 }
 
 // MARK: - ASSIST MANAGER DELEGATE METHODS
-
 extension JinyContextManager:JinyAssistManagerDelegate {
     
     func newAssistIdentified(_ assist: JinyAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
@@ -160,22 +163,8 @@ extension JinyContextManager:JinyAssistManagerDelegate {
     
 }
 
-
 // MARK: - DISCOVERY MANAGER DELEGATE METHODS
-
 extension JinyContextManager:JinyDiscoveryManagerDelegate {
-    
-    func getMutedDiscoveryIds() -> Array<Int> {
-        return JinySharedInformation.shared.getMutedDiscoveryIds()
-    }
-    
-    func addDiscoveryIdToMutedList(id: Int) {
-        JinySharedInformation.shared.addToMutedDiscovery(id)
-    }
-    
-    func getTriggeredEvents() -> Dictionary<String, Any> {
-        return taggedEvents
-    }
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard !JinySharedInformation.shared.isMuted() else {
@@ -193,62 +182,11 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     }
     
     func sameDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
-        
+        if let anchorRect = rect { auiHandler?.updateRect(rect: anchorRect, inWebView: webview) }
     }
     
-    func noDiscoveryIdentified() { auiHandler?.removeAllViews() }
-    
-    func startFlow(id: Int, disId:Int) {
-        let flow = configuration?.flows.first(where: { (flow) -> Bool in
-            flow.id! == id
-        })
-        guard let selectedFlow = flow else { return }
-        contextDetector?.switchState()
-        JinyEventDetector.shared.delegate = nil
-        flowManager?.addNewFlow(selectedFlow.copy(), false, disId)
-        contextDetector?.start()
-        sendContextInfoEvent(eventTag: "jinyFlowOptInEvent")
-    }
-    
-    func canTriggerBasedOnTriggerFrequency(discovery: JinyDiscovery) -> Bool {
-        
-        switch discovery.triggerFrequency?.type {
-        case .everySession:
-            return true
-        case .playOnce:
-            if (JinySharedInformation.shared.getDiscoveryCount()["\(discovery.id)"] ?? 0) > 0 {
-                auiHandler?.removeAllViews()
-                return false
-            } else {
-                return true
-            }
-        case .manualTrigger:
-               auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl, color: getIconSetting()[String(discovery.id)]?.bgColor ?? "#000000", iconEnabled: discovery.enableIcon)
-                return false
-        case .everySessionUntilDismissed:
-            if (JinySharedInformation.shared.getDiscoveryDismissCount()["\(discovery.id)"] ?? 0) > 0 {
-                auiHandler?.removeAllViews()
-                return false
-            } else {
-                return true
-            }
-        case .everySessionUntilFlowComplete:
-            if (JinySharedInformation.shared.getDiscoveryFlowCount()["\(discovery.id)"] ?? 0) > 0 {
-                auiHandler?.removeAllViews()
-                return false
-            } else {
-                return true
-            }
-        default:
-            return true
-        }
-    }
-    
-    func showJinyIcon() {
-        auiHandler?.removeAllViews()
-        auiHandler?.presentJinyButton(with: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.htmlUrl, color: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)]?.bgColor ?? "#000000", iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
-        discoveryManager?.currentDiscoveryOptOut = false
-    }
+    func dismissDiscovery() { auiHandler?.removeAllViews() }
+
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
@@ -259,6 +197,11 @@ extension JinyContextManager:JinyFlowManagerDelegate {
         autoDismissTimer = nil
         contextDetector?.switchState()
     }
+    
+}
+
+// MARK: - PAGE MANAGER DELEGATE METHODS
+extension JinyContextManager:JinyPageManagerDelegate {
     
 }
 
@@ -297,28 +240,27 @@ extension JinyContextManager:JinyStageManagerDelegate {
     func removeStage(_ stage: JinyStage) { flowManager?.removeStage(stage) }
     
     func isSuccessStagePerformed() {
-        if let discoveryId = flowManager?.getDiscoveryId() {
-            JinySharedInformation.shared.flowCompletedFor(discoveryId: discoveryId)
-        }
+//        if let discoveryId = flowManager?.getDiscoveryId() {
+//            JinySharedInformation.shared.flowCompletedFor(discoveryId: discoveryId)
+//        }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
     }
     
 }
 
-
 // MARK: - CREATE AND SEND ANALYTICS EVENT
 extension JinyContextManager {
     
     func getContextInfoEventFor(eventTag:String) -> JinyAnalyticsEvent? {
-        guard let fm = flowManager, let sm = stageManager else { return nil }
+        guard let fm = flowManager, let pm = pageManager, let sm = stageManager else { return nil }
         let flowsArray = fm.getArrayOfFlows()
         guard flowsArray.count > 0 else { return nil }
         let mainFlow = flowsArray.count > 1 ? flowsArray[(flowsArray.count - 2)] : flowsArray[(flowsArray.count - 1)]
         let subFlow = flowsArray.count > 1 ? flowsArray[(flowsArray.count - 1)] : nil
         let event = JinyAnalyticsEvent()
         event.jiny_custom_events = JinyCustomEvent(with: eventTag)
-        event.jiny_custom_events?.context_info = JinyContextInfo(flow: mainFlow, subFlow: subFlow, page: sm.getCurrentPage(), stage: sm.getCurrentStage())
+        event.jiny_custom_events?.context_info = JinyContextInfo(flow: mainFlow, subFlow: subFlow, page: pm.getCurrentPage(), stage: sm.getCurrentStage())
         return event
         
     }
@@ -382,7 +324,6 @@ extension JinyContextManager {
     
 }
 
-
 // MARK: - ANALYTICS MANAGER DELEGATE METHODS
 extension JinyContextManager:JinyAnalyticsManagerDelegate {
     
@@ -419,7 +360,7 @@ extension JinyContextManager:JinyAnalyticsManagerDelegate {
     
 }
 
-
+// MARK: - AUICALLBACK METHODS
 extension JinyContextManager:JinyAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Any> {
@@ -461,13 +402,8 @@ extension JinyContextManager:JinyAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            if let am = assistManager, let _ = am.getCurrentAssist() {
-                sendAssistInfoEvent(eventTag: "assistVisibleEvent")
-            }
-            else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
-                sendDiscoveryInfoEvent(eventTag: "discoveryVisibleEvent")
-                discoveryPresented()
-            }
+            if let am = assistManager, let _ = am.getCurrentAssist() { sendAssistInfoEvent(eventTag: "assistVisibleEvent") }
+            else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {sendDiscoveryInfoEvent(eventTag: "discoveryVisibleEvent") }
         case .Stage:
             break
         }
@@ -481,7 +417,17 @@ extension JinyContextManager:JinyAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            break
+            autoDismissTimer?.invalidate()
+            autoDismissTimer = nil
+            guard let liveContext = getLiveContext(),
+                  let autoDismissDelay = liveContext.instruction?.assistInfo?.autoDismissDelay else { return }
+            autoDismissTimer = Timer(timeInterval: TimeInterval(autoDismissDelay), repeats: false, block: { (timer) in
+                self.autoDismissTimer?.invalidate()
+                self.autoDismissTimer = nil
+                if let _ = liveContext as? JinyAssist { self.dismissAssist()}
+                else if let _ = liveContext as? JinyDiscovery { self.dismissDiscovery() }
+            })
+            RunLoop.main.add(autoDismissTimer!, forMode: .default)
         case .Stage:
             guard let sm = stageManager else { return }
             guard let currentStage = sm.getCurrentStage() else { return }
@@ -515,10 +461,9 @@ extension JinyContextManager:JinyAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
-                dm.currentDiscoveryOptOut = true
-                discoveryDismissed()
-            }
+            guard let liveContext = getLiveContext() else { return }
+            if let _ = liveContext as? JinyAssist { assistManager?.assistDismissed(byUser: true) }
+            else if let _ = liveContext as? JinyDiscovery { discoveryManager?.discoveryDismissed(byUser: true) }
         case .Stage:
             guard let sm = stageManager, let currentStage = sm.getCurrentStage() else { return }
             if currentStage.type != .Normal { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)}
@@ -547,15 +492,7 @@ extension JinyContextManager:JinyAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            guard let currentDiscoveryObject = discoveryManager?.currentDiscoveryObject, let discovery = discoveryManager?.getCurrentDiscovery() else {
-                return
-            }
-            if canTriggerBasedOnTriggerFrequency(discovery: discovery) || discovery.triggerFrequency?.type == .manualTrigger {
-                newDiscoveryIdentified(discovery: currentDiscoveryObject.0, view: currentDiscoveryObject.1, rect: currentDiscoveryObject.2, webview: currentDiscoveryObject.3)
-            } else {
-               discoveryManager?.resetCurrentDiscovery()
-            }
-            return
+            break
         case .Stage:
             auiHandler?.presentOptionPanel(mute: "Mute", repeatText: "Repeat", language: "Change Language")
             break
@@ -563,9 +500,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func discoveryPresented() {
-        if let discoveryManager = discoveryManager {
-            discoveryManager.currentDiscoveryPresented()
-        }
+        
     }
     
     func discoveryMuted() {
@@ -577,7 +512,7 @@ extension JinyContextManager:JinyAUICallback {
         sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
         guard let dm = discoveryManager, let disc = dm.getCurrentDiscovery() else { return }
         guard let flowId = disc.flowId else { return }
-        startFlow(id: flowId, disId: disc.id)
+//        startFlow(id: flowId, disId: disc.id)
     }
     
     func discoveryReset() {
@@ -586,7 +521,7 @@ extension JinyContextManager:JinyAUICallback {
     
     func discoveryDismissed() {
         if let discoveryManager = discoveryManager {
-            discoveryManager.currentDiscoveryDismissed()
+//            discoveryManager.currentDiscoveryDismissed()
         }
     }
     
@@ -633,7 +568,6 @@ extension JinyContextManager:JinyAUICallback {
             autoDismissTimer?.invalidate()
             autoDismissTimer = nil
             contextDetector?.switchState()
-            discoveryManager?.resetCurrentDiscovery()
             assistManager?.resetManager()
         }
         contextDetector?.start()

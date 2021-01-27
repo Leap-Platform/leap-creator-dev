@@ -10,8 +10,7 @@ import Foundation
 import UIKit
 
 protocol JinyAssistManagerDelegate:NSObjectProtocol {
-    
-    func getTriggeredEvents() -> Dictionary<String,Any>
+
     func newAssistIdentified(_ assist:JinyAssist, view:UIView?, rect:CGRect?, inWebview:UIView?)
     func sameAssistIdentified(view:UIView?, rect:CGRect?, inWebview:UIView?)
     func dismissAssist()
@@ -23,7 +22,7 @@ class JinyAssistManager {
     
     private weak var delegate:JinyAssistManagerDelegate?
     private var allAssists:Array<JinyAssist> = []
-    private var currentAssist:JinyAssist?
+    private weak var currentAssist:JinyAssist?
     private var assistTimer:Timer?
     private var assistsCompletedInSession:Array<Int> = []
     
@@ -41,7 +40,7 @@ class JinyAssistManager {
                 if dismissByUser > 0 && assistsDismissedByUser.contains(tempAssist.id) { return false }
                 let nSessions = terminationFreq.nSession ?? -1
                 if nSessions == -1 { return true }
-                let currentAssistSessionCount = assistSessionCount[tempAssist.id] ?? 0
+                let currentAssistSessionCount = assistSessionCount[String(tempAssist.id)] ?? 0
                 if currentAssistSessionCount >= nSessions { return false }
             }
             return true
@@ -64,9 +63,7 @@ class JinyAssistManager {
             if assistTimer != nil {
                 assistTimer?.invalidate()
                 assistTimer = nil
-            } else {
-                self.delegate?.dismissAssist()
-            }
+            } else { self.delegate?.dismissAssist() }
         }
         
         let type =  currentAssist?.trigger?.type ?? "instant"
@@ -76,12 +73,10 @@ class JinyAssistManager {
                 self.assistTimer?.invalidate()
                 self.assistTimer = nil
                 self.delegate?.newAssistIdentified(assist, view: view, rect: rect, inWebview: webview)
-                JinySharedInformation.shared.assistPresented(assistId: assist.id)
             })
             RunLoop.main.add(assistTimer!, forMode: .default)
         } else  {
             delegate?.newAssistIdentified(assist, view: view, rect: rect, inWebview: webview)
-            JinySharedInformation.shared.assistPresented(assistId: assist.id)
         }
     }
     
@@ -93,9 +88,11 @@ class JinyAssistManager {
         currentAssist = nil
     }
     
-    func assistDismissedByUser() {
+    func assistDismissed(byUser:Bool) {
         guard let assist = currentAssist else { return }
-        JinySharedInformation.shared.assistDismissedByUser(assistId: assist.id)
+        if !(assistsCompletedInSession.contains(assist.id)) { assistsCompletedInSession.append(assist.id) }
+        if byUser { JinySharedInformation.shared.assistDismissedByUser(assistId: assist.id) }
+        JinySharedInformation.shared.assistPresented(assistId: assist.id)
         currentAssist = nil
     }
     

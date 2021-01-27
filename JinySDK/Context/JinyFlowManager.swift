@@ -10,9 +10,7 @@ import Foundation
 import UIKit
 
 protocol JinyFlowManagerDelegate:NSObjectProtocol {
-    
     func noActiveFlows()
-    
 }
 
 class JinyFlowManager {
