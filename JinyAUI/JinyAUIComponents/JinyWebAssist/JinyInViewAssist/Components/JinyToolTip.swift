@@ -48,6 +48,13 @@ public class JinyToolTip: JinyTipView {
         
         show()
     }
+    
+    func presentPointer(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+                
+        presentPointer()
+    }
         
     /// setup toView, inView, toolTipView and webView
     func setupView() {
@@ -89,10 +96,6 @@ public class JinyToolTip: JinyTipView {
        if assistInfo?.highlightAnchor ?? false {
            
           highlightAnchor()
-           
-       } else {
-           
-          self.backgroundColor = .clear
        }
     }
       
@@ -132,12 +135,12 @@ public class JinyToolTip: JinyTipView {
     /// gets the arrow direction - top or bottom.
     func getArrowDirection() -> JinyTooltipArrowDirection? {
         
-        guard let toViewSuperView = toView?.superview else {
+        guard toView?.superview != nil || webRect != nil else {
             
             return .none
         }
     
-        let globalToViewFrame = toViewSuperView.convert(toView!.frame, to: inView)
+        let globalToViewFrame = getGlobalToViewFrame()
 
         let toViewTop = globalToViewFrame.origin.y
         
@@ -167,7 +170,7 @@ public class JinyToolTip: JinyTipView {
     ///   - direction: ToolTip arrow direction.
     func setOriginForDirection(direction: JinyTooltipArrowDirection) {
             
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to:inView)
+        let globalToViewFrame = getGlobalToViewFrame()
         
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
         
@@ -285,9 +288,9 @@ public class JinyToolTip: JinyTipView {
         
         path.addArc(withCenter: CGPoint(x: cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
             
-        let globalToView = toView?.superview?.convert(toView!.frame, to: inView)
+        let globalToView = getGlobalToViewFrame()
         
-        let arrowMidX: CGFloat = globalToView!.midX - toolTipView.frame.origin.x
+        let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
                     
         path.addLine(to: CGPoint(x: arrowMidX-halfWidthForArrow, y: minimalSpacing))
         
@@ -323,9 +326,9 @@ public class JinyToolTip: JinyTipView {
         
         path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
             
-        let globalToView = toView?.superview?.convert(toView!.frame, to: inView)
+        let globalToView = getGlobalToViewFrame()
         
-        let arrowMidX: CGFloat = globalToView!.midX - toolTipView.frame.origin.x
+        let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
                 
         path.addLine(to: CGPoint(x: arrowMidX+halfWidthForArrow, y: contentSize.height-minimalSpacing))
         
@@ -376,11 +379,11 @@ public class JinyToolTip: JinyTipView {
     /// Highlights the toView to which the tooltipView is pointed to.
     private func highlightAnchor() {
         
-        let globalToView = toView?.superview?.convert(toView!.frame, to: nil)
+        let globalToView = getGlobalToViewFrame()
 
-        let origin = globalToView!.origin
+        let origin = globalToView.origin
         
-        let size = globalToView!.size
+        let size = globalToView.size
         
         let path = UIBezierPath(rect: inView!.bounds)
                 

@@ -33,6 +33,8 @@
 		2DB7E7EB25A5A4280005F109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* Constants.swift */; };
 		2DB7E7EC25A5A4280005F109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* Constants.swift */; };
 		2DB7E7ED25A5A4290005F109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* Constants.swift */; };
+		2DD0E35325B6D7E700EBB9B8 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD0E35225B6D7E700EBB9B8 /* Reachability.swift */; };
+		2DD0E35C25B7159400EBB9B8 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD0E35B25B7159400EBB9B8 /* ReachabilityManager.swift */; };
 		2DD7445E25BB108200D7609A /* jiny_ping_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD7445D25BB108200D7609A /* jiny_ping_close.png */; };
 		2DFFF57525A5D0DB001051D3 /* AUIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFFF57425A5D0DB001051D3 /* AUIConstants.swift */; };
 		B6153A33253E98DB008CA08F /* BeaconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A32253E98DB008CA08F /* BeaconManager.swift */; };
@@ -316,6 +318,8 @@
 		2D31F8C225B987790027E80F /* JinyPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPing.swift; sourceTree = "<group>"; };
 		2DB7E7EA25A5A4280005F109 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
+		2DD0E35225B6D7E700EBB9B8 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		2DD0E35B25B7159400EBB9B8 /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
 		2DFFF57425A5D0DB001051D3 /* AUIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIConstants.swift; sourceTree = "<group>"; };
 		B6153A32253E98DB008CA08F /* BeaconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeaconManager.swift; sourceTree = "<group>"; };
@@ -638,6 +642,8 @@
 				B64FCAFE25408173008BB342 /* TopViewController.swift */,
 				B64FCB532542B95E008BB342 /* ScreenHelper.swift */,
 				B6E276FC2542F6410094C491 /* JinyAuthShared.swift */,
+				2DD0E35225B6D7E700EBB9B8 /* Reachability.swift */,
+				2DD0E35B25B7159400EBB9B8 /* ReachabilityManager.swift */,
 			);
 			path = JinyAuthSDK;
 			sourceTree = "<group>";
@@ -1437,6 +1443,7 @@
 				B6EC702B254C08FB0022452D /* AppStateProtocol.swift in Sources */,
 				B6E276FD2542F6410094C491 /* JinyAuthShared.swift in Sources */,
 				B69D8E33258A6D00004D858D /* DeviceManager.swift in Sources */,
+				2DD0E35C25B7159400EBB9B8 /* ReachabilityManager.swift in Sources */,
 				B64FCB0825418D8E008BB342 /* JinyUtils.swift in Sources */,
 				B64FCB232541C8AA008BB342 /* ScreenCaptureManager.swift in Sources */,
 				B6153A33253E98DB008CA08F /* BeaconManager.swift in Sources */,
@@ -1444,6 +1451,7 @@
 				D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */,
 				D049F5F7249D242000372324 /* JinyAuth.swift in Sources */,
 				B64FCAFF25408173008BB342 /* TopViewController.swift in Sources */,
+				2DD0E35325B6D7E700EBB9B8 /* Reachability.swift in Sources */,
 				B6153A5B253E9FC5008CA08F /* AppIdManager.swift in Sources */,
 				B64FCB2D2541C8DF008BB342 /* StreamingManager.swift in Sources */,
 				B6153A51253E9A59008CA08F /* MasterManager.swift in Sources */,
