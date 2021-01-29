@@ -9,7 +9,7 @@
 import Foundation
 
 protocol JinyPageManagerDelegate:NSObjectProtocol {
-    
+    func newPageIdentified()
 }
 
 class JinyPageManager {
@@ -22,15 +22,17 @@ class JinyPageManager {
     }
     
     func setCurrentPage(_ page:JinyPage?) {
-        guard let identifiedPage = page else {
-            currentPage = nil
-            return
-        }
-        currentPage = identifiedPage.copy()
+        if currentPage == nil && page == nil { return }
+        if currentPage == page { return }
+        currentPage = page?.copy()
+        if page != nil { delegate?.newPageIdentified() }
     }
     
-    func getCurrentPage() -> JinyPage? {
-        return currentPage
+    func getCurrentPage() -> JinyPage? { return currentPage }
+    
+    func removeStage(_ stage:JinyStage) {
+        guard let _ = currentPage else { return }
+        currentPage!.stages = currentPage!.stages.filter{ $0 != stage }
     }
     
 }

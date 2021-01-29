@@ -51,21 +51,23 @@ class JinyAssistManager {
     func getCurrentAssist() -> JinyAssist? { return currentAssist }
     
     func triggerAssist(_ assist:JinyAssist,_ view:UIView?,_ rect:CGRect?,_ webview:UIView?) {
-        let prevAssist = currentAssist
-        currentAssist = assist
         
-        if prevAssist == currentAssist {
-            if assistTimer == nil { self.delegate?.sameAssistIdentified(view: view, rect: rect, inWebview: webview)}
+        if assist == currentAssist {
+            if assistTimer == nil  { self.delegate?.sameAssistIdentified(view: view, rect: rect, inWebview: webview) }
             return
         }
         
-        if prevAssist != nil {
+        if currentAssist != nil {
             if assistTimer != nil {
                 assistTimer?.invalidate()
                 assistTimer = nil
-            } else { self.delegate?.dismissAssist() }
+            } else {
+                self.delegate?.dismissAssist()
+                markCurrentAssistComplete()
+            }
         }
         
+        currentAssist = assist
         let type =  currentAssist?.trigger?.type ?? "instant"
         if type == "delay" {
             let delay = currentAssist?.trigger?.delay ?? 0
@@ -80,18 +82,28 @@ class JinyAssistManager {
         }
     }
     
-    func resetManager() {
+    func resetAssistManager() {
         guard let _ = currentAssist else { return }
-        assistTimer?.invalidate()
-        assistTimer = nil
-        self.delegate?.dismissAssist()
-        currentAssist = nil
+        if assistTimer != nil {
+            assistTimer?.invalidate()
+            assistTimer = nil
+            currentAssist = nil
+        } else {
+            self.delegate?.dismissAssist()
+            markCurrentAssistComplete()
+        }
     }
     
-    func assistDismissed(byUser:Bool) {
+    func assistDismissed(byUser:Bool, autoDimsissed:Bool) {
+        guard byUser || autoDimsissed  else { return }
+        guard let assist = currentAssist else { return }
+        if byUser { JinySharedInformation.shared.assistDismissedByUser(assistId: assist.id) }
+        markCurrentAssistComplete()
+    }
+    
+    func markCurrentAssistComplete() {
         guard let assist = currentAssist else { return }
         if !(assistsCompletedInSession.contains(assist.id)) { assistsCompletedInSession.append(assist.id) }
-        if byUser { JinySharedInformation.shared.assistDismissedByUser(assistId: assist.id) }
         JinySharedInformation.shared.assistPresented(assistId: assist.id)
         currentAssist = nil
     }

@@ -72,19 +72,22 @@ class JinyDiscoveryManager {
     }
     
     func triggerDiscovery(_ discovery:JinyDiscovery,_ view:UIView?,_ rect:CGRect?,_ webview:UIView?) {
-        let prevDiscovery = currentDiscovery
-        currentDiscovery = discovery
-        if prevDiscovery == currentDiscovery {
-            delegate?.sameDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
+        if discovery == currentDiscovery {
+            if discoveryTimer == nil { delegate?.sameDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview) }
             return
         }
         
-        if prevDiscovery != nil {
+        if currentDiscovery != nil {
             if discoveryTimer != nil {
                 discoveryTimer?.invalidate()
                 discoveryTimer = nil
-            } else { delegate?.dismissDiscovery() }
+            } else {
+                delegate?.dismissDiscovery()
+                markCurrentDiscoveryComplete()
+            }
         }
+        
+        currentDiscovery = discovery
         
         let type =  currentDiscovery?.trigger?.type ?? "instant"
         if type == "delay" {
@@ -101,17 +104,34 @@ class JinyDiscoveryManager {
         
     }
     
-    func resetDiscoveryManager() {
-        guard let _ = currentDiscovery else { return }
+    func resetDiscovery() {
         discoveryTimer?.invalidate()
         discoveryTimer = nil
-        delegate?.dismissDiscovery()
+        currentDiscovery = nil
+    }
+    
+    func resetDiscoveryManager() {
+        guard let _ = currentDiscovery else { return }
+        if discoveryTimer != nil {
+            discoveryTimer?.invalidate()
+            discoveryTimer = nil
+            currentDiscovery = nil
+        } else {
+            delegate?.dismissDiscovery()
+            markCurrentDiscoveryComplete()
+        }
+        
     }
     
     func discoveryDismissed(byUser:Bool) {
         guard let discovery = currentDiscovery else { return }
-        if !(completedDiscoveriesInSession.contains(discovery.id)) { completedDiscoveriesInSession.append(discovery.id) }
         if byUser { JinySharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id) }
+        markCurrentDiscoveryComplete()
+    }
+    
+    func markCurrentDiscoveryComplete() {
+        guard let discovery = currentDiscovery else { return }
+        if !(completedDiscoveriesInSession.contains(discovery.id)) { completedDiscoveriesInSession.append(discovery.id) }
         JinySharedInformation.shared.discoveryPresent(discoveryId: discovery.id)
         currentDiscovery = nil
     }

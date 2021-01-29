@@ -10,75 +10,66 @@ import Foundation
 import UIKit
 
 protocol JinyStageManagerDelegate:NSObjectProtocol {
-
-    func newPageIdentified(_ page:JinyPage)
-    func samePageIdentified(_ page:JinyPage)
     func newStageFound(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
     func sameStageFound(_ stage:JinyStage, newRect:CGRect?, webviewForRect:UIView?)
+    func dismissStage()
     func removeStage(_ stage:JinyStage)
-    func noStageFound()
     func isSuccessStagePerformed()
 }
 
 class JinyStageManager {
     private weak var delegate:JinyStageManagerDelegate?
     private var currentStage:JinyStage?
-    private var currentPage:JinyPage?
-    private var stagesToCheck:Array<JinyStage> = []
     private var stageTracker:Dictionary<String,Int> = [:]
+    private var stageTimer:Timer?
     
     init(_ stageDelegate:JinyStageManagerDelegate) {
         delegate = stageDelegate
     }
     
-    func setArrayOfStagesFromPage(_ stages:Array<JinyStage>) { stagesToCheck = stages }
-    
-    func getArrayOfStagesToCheck() -> Array<JinyStage> { return stagesToCheck }
-    
-    func setCurrentStage(_ stage:JinyStage?, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
+    func setCurrentStage(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
+        if currentStage == stage {
+            if stageTimer == nil { delegate?.sameStageFound(stage, newRect: rect, webviewForRect: webviewForRect) }
+            return
+        }
         
-        let previousStage = currentStage
+        if currentStage != nil {
+            if stageTimer != nil {
+                stageTimer?.invalidate()
+                stageTimer = nil
+            } else {
+                delegate?.dismissStage()
+                stagePerformed()
+            }
+        }
+        
         currentStage = stage
         
-        // If both current and previous stages are not identified do nothing
-        if currentStage == nil && previousStage == nil {
-            delegate?.noStageFound()
-            return
+        let type =  currentStage?.trigger?.type ?? "instant"
+        if type == "delay" {
+            let delay = currentStage?.trigger?.delay ?? 0
+            stageTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
+                self.stageTimer?.invalidate()
+                self.stageTimer = nil
+                self.delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
+            })
+            RunLoop.main.add(stageTimer!, forMode: .default)
+        } else  {
+            delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
+        }
+    }
+    
+    func resetStageManager() {
+        guard let stage = currentStage else { return }
+        if stageTimer != nil {
+            stageTimer?.invalidate()
+            stageTimer = nil
+        } else {
+            delegate?.dismissStage()
+            stagePerformed()
         }
         
-        // If no current stage identified, mark previous stage as performed, if previous stage isSuccess stage pop the flow and wait for new stage info
-        if currentStage == nil {
-            stagePerformed(previousStage!)
-            delegate?.noStageFound()
-            if previousStage!.isSuccess { delegate!.isSuccessStagePerformed() }
-            return
-        }
         
-        // If previous stage is not present and a new stage was identified, inform delegate
-        if previousStage == nil {
-            delegate!.newStageFound(stage!, view: view, rect: rect, webviewForRect: webviewForRect)
-            return
-        }
-        
-        // If current stage and previous stage are present, check if it is the same
-        // If same inform delegate same stage identifed
-        if currentStage == previousStage {
-            sameStage(currentStage!, view, rect, webviewForRect)
-            return
-        }
-        
-        // If current stage and previous stages are not empty but are different, mark previous stage as performed
-        // If previous stage is isSuccess stage, then send success stage performed to delegate and reset current stage to nil and wait for new stage info
-        stagePerformed(previousStage!)
-        if previousStage!.isSuccess {
-            delegate!.isSuccessStagePerformed()
-            currentStage = nil
-            return
-        }
-        
-        // If previous stage is not isSuccess, identify current stage as new stage
-        delegate!.newStageFound(stage!, view: view, rect: rect, webviewForRect: webviewForRect)
-       
     }
     
     // Called in case to reidentify same stage as new stage next time
@@ -90,14 +81,17 @@ class JinyStageManager {
     
     func getCurrentStage() -> JinyStage? { return currentStage }
     
-    func currentStageViewPresented() {
-        
+    func stageDismissed(byUser:Bool) {
+        guard byUser else { return }
+        stagePerformed()
     }
     
-    func stagePerformed(_ stage:JinyStage) {
+    func stagePerformed() {
+        guard let stage = currentStage else { return }
         if stageTracker[stage.name] == nil { stageTracker[stage.name] = 0 }
         stageTracker[stage.name]!  += 1
         if stageTracker[stage.name]! >= stage.frequencyPerFlow { delegate!.removeStage(stage) }
+        currentStage = nil
     }
 
     

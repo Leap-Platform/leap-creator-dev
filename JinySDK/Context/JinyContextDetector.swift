@@ -23,10 +23,12 @@ protocol JinyContextDetectorDelegate:NSObjectProtocol {
 
     func getCurrentFlow() -> JinyFlow?
     func getParentFlow() -> JinyFlow?
+    
     func pageIdentified(_ page:JinyPage)
     func pageNotIdentified()
     
     func getStagesToCheck() -> Array<JinyStage>
+    func getCurrentStage() -> JinyStage?
     func stageIdentified(_ stage:JinyStage, pointerView:UIView?, pointerRect:CGRect?, webviewForRect:UIView?)
     func stageNotIdentified()
 }
@@ -188,7 +190,7 @@ extension JinyContextDetector {
     private func findIdentifiablePage(in hierarchy:Array<UIView>, forFlow flowToCheck:JinyFlow?) {
         guard let flow = flowToCheck else {
             // No flow. Hence no stage can be identified
-            delegate?.stageNotIdentified()
+            delegate?.pageNotIdentified()
             return
         }
         getPassingIdentifiers(for: flow.pages, in: hierarchy) { (passingNativeIds, passingWebIds) in
@@ -211,21 +213,21 @@ extension JinyContextDetector {
     /// - Parameter hierarchy: views to check for eligibilty
     private func findIdentifiableStage(in hierarchy:Array<UIView>) {
         guard let stages = delegate?.getStagesToCheck(), stages.count > 0 else {
-            self.findIdentifiablePage(in: hierarchy, forFlow: delegate?.getParentFlow())
+            delegate?.stageNotIdentified()
             return
         }
         getPassingIdentifiers(for: stages, in: hierarchy) { (passedNativeIds, passedWebIds) in
             let passingStages = stages.filter{ self.isContextPassing(passedWebIds, passedNativeIds, $0.webIdentifiers, $0.nativeIdentifiers) }
             guard passingStages.count > 0 else {
-                self.findIdentifiablePage(in: hierarchy, forFlow: self.delegate?.getParentFlow())
+                self.delegate?.stageNotIdentified()
                 return
             }
-            let identifiedStage = passingStages.reduce(passingStages[0]) { (currentStage, stageToCheck) -> JinyStage in
-                return currentStage.weight < stageToCheck.weight ? stageToCheck : currentStage
-            }
-            self.getViewOrRect(allView: hierarchy, id: identifiedStage.instruction?.assistInfo?.identifier, isWeb: identifiedStage.instruction?.assistInfo?.isWeb ?? false) { (anchorView, anchorRect, anchorWebview) in
-                self.delegate?.stageIdentified(identifiedStage, pointerView: anchorView, pointerRect: anchorRect, webviewForRect: anchorWebview)
-            }
+            if let liveStage = self.delegate?.getCurrentStage(), passingStages.contains(liveStage) {
+                let assistInfo = liveStage.instruction?.assistInfo
+                self.getViewOrRect(allView: hierarchy, id: assistInfo?.identifier, isWeb: assistInfo?.isWeb ?? false) { (anchorView, anchorRect, webview) in
+                    self.delegate?.stageIdentified(liveStage, pointerView: anchorView, pointerRect: anchorRect, webviewForRect: webview)
+                }
+            } else { self.findContextToTrigger(passingStages, allViews: hierarchy) }
         }
     }
     
@@ -234,19 +236,6 @@ extension JinyContextDetector {
     ///   - contexts: contexts that was identified by context detection
     ///   - allViews: current hierarchy
     private func findContextToTrigger(_ contexts:Array<JinyContext>, allViews:Array<UIView>) {
-        
-        if let liveContext = delegate?.getLiveContext() {
-            
-            if contexts.contains(where: { ( context) -> Bool in
-                return context.id == liveContext.id
-            }) {
-                let assistInfo = liveContext.instruction?.assistInfo
-                getViewOrRect(allView: allViews, id: assistInfo?.identifier, isWeb: (assistInfo?.isWeb ?? false)) { (view, rect, webview) in
-                    
-                    return
-                }
-            }
-        }
         
         // Check for assist/discoveries with instant or delay trigger.
         let instantOrDelayedContexts = contexts.filter { (contextToCheck) -> Bool in
@@ -264,7 +253,13 @@ extension JinyContextDetector {
             clickHandler.removeAllClickListeners()
             let assistInfo =  toTriggerContext.instruction?.assistInfo
             getViewOrRect(allView: allViews, id: assistInfo?.identifier, isWeb: assistInfo?.isWeb ?? false) { (anchorview, anchorRect, anchorWebview) in
-                self.delegate?.contextDetected(context: toTriggerContext, view: anchorview, rect: anchorRect, webview: anchorWebview)
+                if self.state == .Discovery {
+                    self.delegate?.contextDetected(context: toTriggerContext, view: anchorview, rect: anchorRect, webview: anchorWebview)
+                } else {
+                    guard let stage = toTriggerContext as? JinyStage else { return }
+                    self.delegate?.stageIdentified(stage, pointerView: anchorview, pointerRect: anchorRect, webviewForRect: anchorWebview)
+                }
+                
             }
         } else {
             // No instant or delay trigger found. Add click listeners.
@@ -710,16 +705,22 @@ extension JinyContextDetector {
 
 extension JinyContextDetector:JinyClickHandlerDelegate {
     func nativeClickEventForContext(id: Int, onView: UIView) {
-        guard let allContexts = delegate?.getContextsToCheck() else { return }
+        guard let allContexts = state == .Discovery ? delegate?.getContextsToCheck() : delegate?.getStagesToCheck() else { return }
         let contextFound = allContexts.first { $0.id == id }
         guard let triggerContext = contextFound else { return }
         stop()
-        delegate?.contextDetected(context: triggerContext, view: onView, rect: nil, webview: nil)
+        switch self.state {
+        case .Discovery:
+            self.delegate?.contextDetected(context: triggerContext, view: onView, rect: nil, webview: nil)
+        case .Stage:
+            guard let stage = triggerContext as? JinyStage else { return }
+            self.delegate?.stageIdentified(stage, pointerView: onView, pointerRect: nil, webviewForRect: nil)
+        }
         start()
     }
     
     func webClickEventForContext(id:Int) {
-        guard let allContexts = delegate?.getContextsToCheck() else { return }
+        guard let allContexts = state == .Discovery ? delegate?.getContextsToCheck() : delegate?.getStagesToCheck() else { return }
         let contextFound = allContexts.first { $0.id == id }
         guard let triggerContext = contextFound,
               let identifierId = triggerContext.instruction?.assistInfo?.identifier,
@@ -728,7 +729,13 @@ extension JinyContextDetector:JinyClickHandlerDelegate {
         else { return }
         stop()
         getRectForIdentifier(id: webIdentifier, webviews: webviews) { (rect, webview) in
-            self.delegate?.contextDetected(context: triggerContext, view: nil, rect: rect, webview: webview)
+            switch self.state {
+            case .Discovery:
+                self.delegate?.contextDetected(context: triggerContext, view: nil, rect: rect, webview: webview)
+            case .Stage:
+                guard let stage = triggerContext as? JinyStage else { return }
+                self.delegate?.stageIdentified(stage, pointerView: nil, pointerRect: rect, webviewForRect: webview)
+            }
             self.start()
         }
     }
