@@ -52,6 +52,9 @@ class JinyAUIManager:NSObject {
     var jinyButtonBottomConstraint:NSLayoutConstraint?
     var scrollArrowBottomConstraint:NSLayoutConstraint?
     
+    var pingAssistInfo: Dictionary<String,Any>?
+    var pingIconInfo: Dictionary<String,Any>?
+    
     func addIdentifier(identifier:String, value:Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
     }
@@ -444,6 +447,10 @@ extension JinyAUIManager:JinyAUIHandler {
                 UIApplication.shared.keyWindow?.addSubview(jinyCarousel)
                 jinyCarousel.showCarousel()
                 
+            case PING:
+                pingAssistInfo = assistInfo
+                pingIconInfo = iconInfo
+    
             default:
                 break
             }
@@ -497,33 +504,55 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
 
-    func presentJinyButton(with html: String?, color: String, iconEnabled: Bool) {
+    func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool) {
         guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
-            JinySharedAUI.shared.iconHtml = html
-            JinySharedAUI.shared.iconColor = color
+            JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
+            JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
             jinyButton?.isHidden = false
             return
         }
-        JinySharedAUI.shared.iconHtml = html
-        JinySharedAUI.shared.iconColor = color
-        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: color) ?? .black)
+        JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
+        JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
         jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
         jinyButton!.tapGestureRecognizer.delegate = self
         jinyButton!.stateDelegate = self
-        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
-        let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
-        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
-        jinyButton!.htmlUrl = html
-        jinyButton!.iconSize = 56
+        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: mainIconConstraintConstant)
+        var distance = mainIconConstraintConstant
+        var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
+        if iconSetting.leftAlign ?? false {
+            cornerAttribute = .leading
+            distance = -mainIconConstraintConstant
+        }
+        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: jinyButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
+        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, cornerConstraint])
+        jinyButton!.htmlUrl = iconSetting.htmlUrl
+        jinyButton!.iconSize = mainIconSize
         jinyButton?.configureIconButon()
     }
 }
 
 extension JinyAUIManager: UIGestureRecognizerDelegate {
     
-    @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
+    @objc func jinyButtonTap() {
+        
+        guard let assistInfo = pingAssistInfo, let iconInfo = pingIconInfo else {
+            
+            auiManagerCallBack?.jinyTapped()
+            
+            return
+        }
+        
+        jinyButton?.isHidden = true
+        
+        let jinyPing = JinyPing(withDict: assistInfo, iconDict: iconInfo)
+        currentAssist = jinyPing
+        currentAssist?.delegate = self
+        UIApplication.shared.keyWindow?.addSubview(jinyPing)
+        jinyPing.showPing()
+    }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
@@ -776,6 +805,12 @@ extension JinyAUIManager: JinyAssistDelegate {
         currentAssist = nil
         auiManagerCallBack?.didDismissView()
         
+        guard pingAssistInfo != nil, pingIconInfo != nil else {
+            
+            return
+        }
+        
+        jinyButton?.isHidden = false
     }
     
     func didSendAction(dict: Dictionary<String, Any>) {
