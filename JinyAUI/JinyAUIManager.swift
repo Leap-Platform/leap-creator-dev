@@ -241,7 +241,8 @@ extension JinyAUIManager:JinyAUIHandler {
             switch type {
                 
             case FINGER_RIPPLE:
-                pointer = JinyFingerRipplePointer()
+                pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+                currentAssist = pointer
                 pointer?.pointerDelegate = self
                 pointer?.presentPointer(view: inView)
                 
@@ -256,12 +257,6 @@ extension JinyAUIManager:JinyAUIHandler {
                 currentAssist = highlight
                 highlight?.delegate = self
                 highlight?.presentHighlight()
-        
-            case BEACON:
-                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
-                currentAssist = beacon
-                beacon?.delegate = self
-                beacon?.presentBeacon()
                 
             case SPOT:
                 spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
@@ -275,9 +270,16 @@ extension JinyAUIManager:JinyAUIHandler {
                 label?.delegate = self
                 label?.presentLabel()
                 
+            case BEACON:
+                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon()
+                
             case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-                swipePointer = JinySwipePointer()
+                swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
                 swipePointer?.type = JinySwipePointerType(rawValue: type)!
+                currentAssist = swipePointer
                 swipePointer?.pointerDelegate = self
                 swipePointer?.presentPointer(view: inView)
             
@@ -316,8 +318,49 @@ extension JinyAUIManager:JinyAUIHandler {
                     }
                 }
                 
-                pointer = JinyFingerRipplePointer()
+                pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = pointer
+                pointer?.pointerDelegate = self
                 pointer?.presentPointer(toRect: rect, inView: inWebview)
+            
+            case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
+                
+                swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                swipePointer?.type = JinySwipePointerType(rawValue: type)!
+                currentAssist = swipePointer
+                swipePointer?.pointerDelegate = self
+                swipePointer?.presentPointer(toRect: rect, inView: inWebview)
+                
+            case TOOLTIP:
+                tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = tooltip
+                tooltip?.delegate = self
+                tooltip?.presentPointer(toRect: rect, inView: inWebview)
+                
+            case HIGHLIGHT_WITH_DESC:
+                highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = highlight
+                highlight?.delegate = self
+                highlight?.presentHighlight(toRect: rect, inView: inWebview)
+                
+            case SPOT:
+                spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = spot
+                spot?.delegate = self
+                spot?.presentSpot(toRect: rect, inView: inWebview)
+                
+            case LABEL:
+                label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
+                currentAssist = label
+                label?.delegate = self
+                label?.presentLabel(toRect: rect, inView: inWebview)
+                
+            case BEACON:
+                beacon = JinyBeacon(withDict: assistInfo, toView: inWebview!)
+                currentAssist = beacon
+                beacon?.delegate = self
+                beacon?.presentBeacon(toRect: rect, inView: inWebview)
+            
             default:
                 performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
             }
@@ -441,11 +484,6 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func keepOnlyJinyButtonIfPresent() {
-        
-        pointer?.removePointer()
-        pointer = nil
-        swipePointer?.removePointer()
-        swipePointer = nil
         currentAssist?.remove()
         currentAssist = nil
         optionPanel?.dismissOptionPanel { self.optionPanel = nil }
@@ -453,10 +491,6 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func removeAllViews() {
-        pointer?.removePointer()
-        pointer = nil
-        swipePointer?.removePointer()
-        swipePointer = nil
         currentAssist?.remove()
         currentAssist = nil
         jinyButton?.isHidden = true
