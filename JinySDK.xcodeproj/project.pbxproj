@@ -29,11 +29,13 @@
 		2D2334C6258B16D70084768E /* JinyCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2334C5258B16D70084768E /* JinyCarousel.swift */; };
 		2D25C4782577EC4B008F04C9 /* JinyIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */; };
 		2D2AE919258D00AF0038A5C3 /* JinySharedAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2AE918258D00AF0038A5C3 /* JinySharedAUI.swift */; };
+		2D31F8C325B987790027E80F /* JinyPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D31F8C225B987790027E80F /* JinyPing.swift */; };
 		2DB7E7EB25A5A4280005F109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* Constants.swift */; };
 		2DB7E7EC25A5A4280005F109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* Constants.swift */; };
 		2DB7E7ED25A5A4290005F109 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* Constants.swift */; };
 		2DD0E35325B6D7E700EBB9B8 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD0E35225B6D7E700EBB9B8 /* Reachability.swift */; };
 		2DD0E35C25B7159400EBB9B8 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD0E35B25B7159400EBB9B8 /* ReachabilityManager.swift */; };
+		2DD7445E25BB108200D7609A /* jiny_ping_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD7445D25BB108200D7609A /* jiny_ping_close.png */; };
 		2DFFF57525A5D0DB001051D3 /* AUIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFFF57425A5D0DB001051D3 /* AUIConstants.swift */; };
 		B6153A33253E98DB008CA08F /* BeaconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A32253E98DB008CA08F /* BeaconManager.swift */; };
 		B6153A3D253E9933008CA08F /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A3C253E9933008CA08F /* PermissionManager.swift */; };
@@ -313,10 +315,12 @@
 		2D25C4772577EC4B008F04C9 /* JinyIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIconSetting.swift; sourceTree = "<group>"; };
 		2D2AE918258D00AF0038A5C3 /* JinySharedAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinySharedAUI.swift; sourceTree = "<group>"; };
 		2D2F661A258361EC004FDE16 /* jiny_default_icon.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_default_icon.html; sourceTree = "<group>"; };
+		2D31F8C225B987790027E80F /* JinyPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPing.swift; sourceTree = "<group>"; };
 		2DB7E7EA25A5A4280005F109 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2DC9EC4A2582660300B4039C /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
 		2DD0E35225B6D7E700EBB9B8 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		2DD0E35B25B7159400EBB9B8 /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
+		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
 		2DFFF57425A5D0DB001051D3 /* AUIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIConstants.swift; sourceTree = "<group>"; };
 		B6153A32253E98DB008CA08F /* BeaconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeaconManager.swift; sourceTree = "<group>"; };
 		B6153A3C253E9933008CA08F /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
@@ -737,6 +741,7 @@
 				D07FEB152492C7F2004FFD99 /* jiny_mute.png */,
 				D07FEB142492C7F2004FFD99 /* jiny_powered_by.png */,
 				D07FEB1A2492C7F2004FFD99 /* jiny_repeat.png */,
+				2DD7445D25BB108200D7609A /* jiny_ping_close.png */,
 			);
 			path = JinyImages;
 			sourceTree = "<group>";
@@ -1007,6 +1012,7 @@
 				D0B793262543186D00DB94DD /* JinyBottomSheet.swift */,
 				D0B793272543186D00DB94DD /* JinySlideIn.swift */,
 				2D2334C5258B16D70084768E /* JinyCarousel.swift */,
+				2D31F8C225B987790027E80F /* JinyPing.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1391,6 +1397,7 @@
 				D032C58D24B6FF35006E8F2B /* jiny_powered_by.png in Resources */,
 				D032C58E24B6FF35006E8F2B /* jiny_repeat.png in Resources */,
 				2D1702122591D13700F33729 /* jiny_default_icon.html in Resources */,
+				2DD7445E25BB108200D7609A /* jiny_ping_close.png in Resources */,
 				D032C58B24B6FF35006E8F2B /* jiny_language.png in Resources */,
 				D032C58A24B6FF35006E8F2B /* jiny_icon.png in Resources */,
 				2D1702132591D13700F33729 /* jiny_audio_anim.html in Resources */,
@@ -1586,6 +1593,7 @@
 				D032C59324B700B0006E8F2B /* JinyFlowSelector.swift in Sources */,
 				D032C58224B6FF35006E8F2B /* JinyDragRect.swift in Sources */,
 				D0938E0E251DD67100FD462E /* JinyMediaManager.swift in Sources */,
+				2D31F8C325B987790027E80F /* JinyPing.swift in Sources */,
 				2DB7E7ED25A5A4290005F109 /* Constants.swift in Sources */,
 				2DFFF57525A5D0DB001051D3 /* AUIConstants.swift in Sources */,
 				D032C59C24B74C72006E8F2B /* JinyAUIUtils.swift in Sources */,

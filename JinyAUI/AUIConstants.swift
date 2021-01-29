@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 let FINGER_RIPPLE = "FINGER_RIPPLE"
 let TOOLTIP = "TOOLTIP"
@@ -26,3 +27,8 @@ let BOTTOMUP = "BOTTOMUP"
 let NOTIFICATION = "NOTIFICATION"
 let SLIDEIN = "SLIDEIN"
 let CAROUSEL = "CAROUSEL"
+let PING = "PING"
+
+// Value Constants
+let mainIconSize: CGFloat = 56
+let mainIconConstraintConstant: CGFloat = 45
