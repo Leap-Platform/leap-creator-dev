@@ -68,6 +68,17 @@ extension JinySharedInformation {
     
 }
 
+// MARK: - APP INFO
+extension JinySharedInformation {
+    func getVersionCode() -> String {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+    }
+    
+    func getVersionName() -> String {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+    }
+    
+}
 
 // MARK: - AUDIO LANGUAGE CODE GETTER AND SETTER
 extension JinySharedInformation {

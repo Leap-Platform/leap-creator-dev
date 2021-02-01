@@ -21,7 +21,6 @@ class JinyInternal:NSObject {
         super.init()
         JinySharedInformation.shared.setAPIKey(apikey)
         JinySharedInformation.shared.setSessionId()
-        addObservers()
         fetchConfig()
     }
     
@@ -30,37 +29,6 @@ class JinyInternal:NSObject {
     }
     
 }
-
-
-// MARK: - OBSERVER AND LISTENER METHODS
-
-extension JinyInternal {
-    
-    private func addObservers() {
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(appLaunched), name: UIApplication.didFinishLaunchingNotification, object: nil)
-        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        nc.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
-    }
-    
-    @objc private func appLaunched() {
-        
-    }
-    
-    @objc private func appWillEnterForeground() {
-        
-    }
-    
-    @objc private func appDidEnterBackground() {
-        
-    }
-    
-    @objc private func appWillTerminate() {
-        
-    }
-}
-
 
 // MARK: - FETCH CONFIGURATION AND AUDIO DOWNLOAD
 
@@ -73,10 +41,7 @@ extension JinyInternal {
         let dict:Dictionary<String,String> = [:]
         let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
         req.httpBody = jsonData
-        req.addValue("2c9fba13-57ad-4948-a359-5180180cc7b7", forHTTPHeaderField: "x-jiny-client-id")
-        req.addValue("1", forHTTPHeaderField: "x-app-version-code")
-        req.addValue("0.1.1", forHTTPHeaderField: "x-app-version-name")
-        req.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
             guard let resultData = data else { return }
             guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
@@ -89,18 +54,6 @@ extension JinyInternal {
             self.startContextDetection()
         }
         configTask.resume()
-//        let url = URL(string: "http://dashboard.jiny.mockable.io/newIosData")
-//        var req = URLRequest(url: url!)
-//        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
-//        let session = URLSession.shared
-//        let configTask = session.dataTask(with: req) { (data, response, error) in
-//            guard let resultData = data else { return }
-//            guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
-//            self.jinyConfiguration = JinyConfig(withDict: configDict)
-//            self.setupDefaultLanguage()
-//            self.startContextDetection()
-//        }
-//        configTask.resume()
     }
     
     func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
@@ -113,6 +66,17 @@ extension JinyInternal {
         let prefs = UserDefaults.standard
         prefs.set(toSaveHeaders, forKey: "jiny_saved_headers")
         prefs.synchronize()
+    }
+    
+    func getHeaders() -> Dictionary<String,String> {
+        var headers = [
+            "x-jiny-client-id"      : JinySharedInformation.shared.getAPIKey(),
+            "x-app-version-code"    : JinySharedInformation.shared.getVersionCode(),
+            "x-app-version-name"    : JinySharedInformation.shared.getVersionName(),
+            "Content-Type"          : "application/json"
+        ]
+        getSavedHeaders().forEach { headers[$0.key] = $0.value }
+        return headers
     }
     
     func getSavedHeaders() -> Dictionary<String,String> {
