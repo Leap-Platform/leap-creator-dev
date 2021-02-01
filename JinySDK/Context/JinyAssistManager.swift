@@ -93,11 +93,11 @@ class JinyAssistManager {
         if assistTimer != nil {
             assistTimer?.invalidate()
             assistTimer = nil
-            currentAssist = nil
         } else {
             self.delegate?.dismissAssist()
             markCurrentAssistComplete()
         }
+        currentAssist = nil
     }
     
     func assistDismissed(byUser:Bool, autoDismissed:Bool) {

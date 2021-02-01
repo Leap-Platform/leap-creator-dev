@@ -38,9 +38,6 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
     
-    func tryTTS() -> String?
-    func getAudioFilePath() -> String?
-    func getTTSText() -> String?
     func getLanguages() -> Array<String>
     func getLanguageCode() -> String
     
@@ -57,12 +54,6 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func stagePerformed()
     
     func jinyTapped()
-    
-    func discoveryPresented()
-    func discoveryMuted()
-    func discoveryOptedInFlow(atIndex:Int)
-    func discoveryReset()
-    func discoveryDismissed()
     
     func languagePanelOpened()
     func languagePanelClosed()

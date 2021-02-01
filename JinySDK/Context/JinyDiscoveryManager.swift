@@ -123,12 +123,11 @@ class JinyDiscoveryManager {
         if discoveryTimer != nil {
             discoveryTimer?.invalidate()
             discoveryTimer = nil
-            currentDiscovery = nil
         } else {
             delegate?.dismissDiscovery()
             markCurrentDiscoveryComplete()
         }
-        
+        currentDiscovery = nil
     }
     
     func discoveryDismissed(byUser:Bool, optIn:Bool) {

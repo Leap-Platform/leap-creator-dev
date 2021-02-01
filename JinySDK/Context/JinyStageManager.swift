@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 protocol JinyStageManagerDelegate:NSObjectProtocol {
+    func getCurrentPage() -> JinyPage?
     func newStageFound(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
     func sameStageFound(_ stage:JinyStage, newRect:CGRect?, webviewForRect:UIView?)
     func dismissStage()
@@ -27,6 +28,16 @@ class JinyStageManager {
         delegate = stageDelegate
     }
     
+    func getStagesToCheck() -> Array<JinyStage> {
+        guard let page = delegate?.getCurrentPage(), page.stages.count > 0 else { return [] }
+        let stagesToCheck = page.stages.filter { (tempStage) -> Bool in
+            guard let freq = tempStage.terminationFrequency, let perFlow = freq.perFlow, perFlow != -1 else { return true }
+            let stagePlayedCount = stageTracker[tempStage.name] ?? 0
+            return stagePlayedCount < perFlow
+        }
+        return stagesToCheck
+    }
+    
     func setCurrentStage(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
         if currentStage == stage {
             if stageTimer == nil { delegate?.sameStageFound(stage, newRect: rect, webviewForRect: webviewForRect) }
@@ -42,6 +53,7 @@ class JinyStageManager {
                 stagePerformed()
                 if stage.isSuccess {
                     currentStage = nil
+                    stageTracker = [:]
                     return
                 }
             }
@@ -96,8 +108,13 @@ class JinyStageManager {
         guard let stage = currentStage else { return }
         if stageTracker[stage.name] == nil { stageTracker[stage.name] = 0 }
         stageTracker[stage.name]!  += 1
-        if stageTracker[stage.name]! >= stage.frequencyPerFlow { delegate?.removeStage(stage) }
-        if stage.isSuccess { delegate?.isSuccessStagePerformed() }
+        if let terminationFrequency = stage.terminationFrequency, let perFlow = terminationFrequency.perFlow, perFlow != -1 {
+            if stageTracker[stage.name]! >= perFlow { delegate?.removeStage(stage) }
+        }
+        if stage.isSuccess {
+            delegate?.isSuccessStagePerformed()
+            stageTracker = [:]
+        }
     }
 
     

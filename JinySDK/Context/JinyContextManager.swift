@@ -55,7 +55,6 @@ class JinyContextManager:NSObject {
 }
 
 // MARK: - SOUND DOWNLOAD INITIATION
-
 extension JinyContextManager {
     func startSoundDownload() {
         guard let aui = auiHandler else { return }
@@ -133,7 +132,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     
     // MARK: - Stage Methods
     func getStagesToCheck() -> Array<JinyStage> {
-        return pageManager?.getCurrentPage()?.stages ?? []
+        return stageManager?.getStagesToCheck() ?? []
     }
     
     func getCurrentStage() -> JinyStage? {
@@ -212,6 +211,10 @@ extension JinyContextManager:JinyPageManagerDelegate {
 // MARK: - STAGE MANAGER DELEGATE METHODS
 extension JinyContextManager:JinyStageManagerDelegate {
     
+    func getCurrentPage() -> JinyPage? {
+        return pageManager?.getCurrentPage()
+    }
+    
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
         auiHandler?.presentJinyButton(for: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
@@ -232,7 +235,9 @@ extension JinyContextManager:JinyStageManagerDelegate {
     func removeStage(_ stage: JinyStage) { pageManager?.removeStage(stage) }
     
     func isSuccessStagePerformed() {
-        if let discoveryId = flowManager?.getDiscoveryId() { JinySharedInformation.shared.discoveryFlowCompleted(discoveryId: discoveryId) }
+        if let discoveryId = flowManager?.getDiscoveryId() {
+            JinySharedInformation.shared.discoveryFlowCompleted(discoveryId: discoveryId)
+        }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
     }
@@ -357,18 +362,6 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
-    func tryTTS() -> String? {
-        return nil
-    }
-    
-    func getAudioFilePath() -> String? {
-        return nil
-    }
-    
-    func getTTSText() -> String? {
-        return nil
-    }
-    
     func getLanguages() -> Array<String> {
         return (configuration?.languages.map({ (language) -> String in
             return language.script
@@ -390,6 +383,7 @@ extension JinyContextManager:JinyAUICallback {
             if let am = assistManager, let _ = am.getCurrentAssist() { sendAssistInfoEvent(eventTag: "assistVisibleEvent") }
             else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {sendDiscoveryInfoEvent(eventTag: "discoveryVisibleEvent") }
         case .Stage:
+            print("hello")
             break
         }
     }
@@ -416,21 +410,7 @@ extension JinyContextManager:JinyAUICallback {
         case .Discovery:
             guard let liveContext = getLiveContext() else { return }
             if let _  = liveContext as? JinyAssist { assistManager?.assistDismissed(byUser: byUser, autoDismissed: autoDismissed) }
-            else if let _ = liveContext as? JinyDiscovery {
-                if let body = action?["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool ?? false {
-                    if optIn {
-                        sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
-                        guard let dm = discoveryManager,
-                              let discovery = dm.getCurrentDiscovery(),
-                              let flowId = discovery.flowId else { return }
-                        let flowSelected = configuration?.flows.first { $0.id == flowId }
-                        guard let flow = flowSelected, let fm = flowManager else { return }
-                        fm.addNewFlow(flow, false, discovery.id)
-                        contextDetector?.switchState()
-                    }
-                    discoveryManager?.discoveryDismissed(byUser: byUser, optIn: optIn)
-                } else { discoveryManager?.discoveryDismissed(byUser: true, optIn: false)}
-            }
+            else if let _ = liveContext as? JinyDiscovery { handleDiscoveryDismiss(byUser: byUser, action: action) }
         case .Stage:
             guard let sm = stageManager, let _ = sm.getCurrentStage() else { return }
             sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
@@ -479,26 +459,6 @@ extension JinyContextManager:JinyAUICallback {
         }
     }
     
-    func discoveryPresented() {
-        
-    }
-    
-    func discoveryMuted() {
-        
-    }
-    
-    func discoveryOptedInFlow(atIndex: Int) {
-        
-    }
-    
-    func discoveryReset() {
-        
-    }
-    
-    func discoveryDismissed() {
-        
-    }
-    
     func languagePanelOpened() {
         sendContextInfoEvent(eventTag: "changeLangClickedEvent")
     }
@@ -543,6 +503,31 @@ extension JinyContextManager:JinyAUICallback {
             assistManager?.resetAssistManager()
         }
         contextDetector?.start()
+    }
+    
+}
+
+// MARK: - ADDITIONAL METHODS
+extension JinyContextManager {
+    
+    func handleDiscoveryDismiss(byUser:Bool, action:Dictionary<String,Any>?) {
+        guard let body = action?["body"] as? Dictionary<String,Any>,
+              let optIn = body["optIn"] as? Bool, optIn,
+              let dm = discoveryManager,
+              let discovery = dm.getCurrentDiscovery(),
+              let flowId = discovery.flowId else {
+            discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
+            return
+        }
+        let flowSelected = configuration?.flows.first { $0.id == flowId }
+        guard let flow = flowSelected, let fm = flowManager else {
+            discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
+            return
+        }
+        sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
+        fm.addNewFlow(flow, false, discovery.id)
+        contextDetector?.switchState()
+        discoveryManager?.discoveryDismissed(byUser: true, optIn: true)
     }
     
 }
