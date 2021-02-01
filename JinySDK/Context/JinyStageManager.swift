@@ -45,8 +45,8 @@ class JinyStageManager {
         
         currentStage = stage
         
-        let type =  currentStage?.trigger?.type ?? "instant"
-        if type == "delay" {
+        let type =  currentStage?.trigger?.type ?? .instant
+        if type == .delay {
             let delay = currentStage?.trigger?.delay ?? 0
             stageTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
                 self.stageTimer?.invalidate()
@@ -76,13 +76,15 @@ class JinyStageManager {
     func resetCurrentStage() { currentStage = nil }
     
     func sameStage (_ newStage:JinyStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?) {
-        delegate!.sameStageFound(newStage, newRect: rect, webviewForRect: webviewForRect)
+        delegate?.sameStageFound(newStage, newRect: rect, webviewForRect: webviewForRect)
     }
     
     func getCurrentStage() -> JinyStage? { return currentStage }
     
-    func stageDismissed(byUser:Bool) {
-        guard byUser else { return }
+    func stageDismissed(byUser:Bool, autoDismissed:Bool) {
+        guard byUser || autoDismissed else { return }
+        guard let stage = currentStage else { return }
+        if stage.type == .Sequence || stage.type == .ManualSequence { delegate?.removeStage(stage) }
         stagePerformed()
     }
     
@@ -90,7 +92,7 @@ class JinyStageManager {
         guard let stage = currentStage else { return }
         if stageTracker[stage.name] == nil { stageTracker[stage.name] = 0 }
         stageTracker[stage.name]!  += 1
-        if stageTracker[stage.name]! >= stage.frequencyPerFlow { delegate!.removeStage(stage) }
+        if stageTracker[stage.name]! >= stage.frequencyPerFlow { delegate?.removeStage(stage) }
         currentStage = nil
     }
 

@@ -31,7 +31,7 @@ class JinyDiscoveryInfo:Codable {
             let assistType = assistInfo[constant_type] as? String {
             assist_type = assistType
         } else { assist_type = "" }
-        trigger_type = dis.trigger?.type ?? ""
+        trigger_type = dis.trigger?.type.rawValue ?? ""
         if let type = dis.trigger?.event?[constant_type], let value = dis.trigger?.event?[constant_value], type == constant_click, value == constant_showDiscovery {
             trigger_delay = Float(dis.trigger?.delay ?? 0)
             trigger_on_anchor_click = true

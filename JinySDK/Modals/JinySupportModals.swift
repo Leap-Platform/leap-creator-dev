@@ -82,6 +82,7 @@ class JinyAssistInfo {
 class JinyFrequency {
     /// number of times a discovery is shown in a session until flow complete
     let perApp:Int?
+    /// number of times a stage is shown inside a flow
     let perFlow:Int?
     
     init(with dict:Dictionary<String,Int>) {

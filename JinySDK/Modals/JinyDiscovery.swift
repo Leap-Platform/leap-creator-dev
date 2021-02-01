@@ -8,6 +8,12 @@
 
 import Foundation
 
+enum JinyTriggerType:String {
+    case instant = "instant"
+    case delay = "delay"
+    case event = "event"
+}
+
 enum JinyTriggerFrequencyType: String {
     /// Triggers every session.
     case everySession = "EVERY_SESSION"
@@ -23,14 +29,14 @@ enum JinyTriggerFrequencyType: String {
 
 class JinyTrigger {
     /// type could be 'instant' or 'delay'
-    let type:String
+    let type:JinyTriggerType
     /// delay time (ms) if the type is 'delay'
     let delay:Double?
     /// event type - 'click' and value could be 'optIn' or 'showDiscovery'
     let event:Dictionary<String, String>?
     
     init(with dict:Dictionary<String,Any>) {
-        type = dict[constant_type] as? String ?? constant_instant
+        type =  JinyTriggerType(rawValue: (dict[constant_type] as? String ?? constant_instant)) ?? .instant
         delay = dict[constant_delay] as? Double
         event = dict[constant_event] as? Dictionary<String, String>
     }
@@ -69,7 +75,7 @@ class JinyDiscovery:JinyContext {
     var enableIcon:Bool
     var triggerMode:JinyTriggerMode
     var autoStart:Bool
-    var frequency:JinyFlowTerminationFrequency?
+    var terminationfrequency:JinyFlowTerminationFrequency?
     var flowId:Int?
     var triggerFrequency: JinyTriggerFrequency?
     
@@ -78,7 +84,7 @@ class JinyDiscovery:JinyContext {
         enableIcon = discoveryDict[constant_enableIcon] as? Bool ?? false
         autoStart = discoveryDict[constant_autoStart] as? Bool ?? false
         if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Int> {
-            frequency = JinyFlowTerminationFrequency(with: freqDict)
+            terminationfrequency = JinyFlowTerminationFrequency(with: freqDict)
         }
         flowId = discoveryDict[constant_flowId] as? Int
         if let triggerFrequencyDict = discoveryDict[constant_triggerFrequency] as? Dictionary<String,String> {
@@ -112,7 +118,7 @@ extension JinyDiscovery {
         copy.enableIcon = self.enableIcon
         copy.triggerMode = self.triggerMode
         copy.autoStart = self.autoStart
-        copy.frequency = self.frequency
+        copy.terminationfrequency = self.terminationfrequency
         copy.flowId = self.flowId
         copy.trigger = self.trigger
         copy.instruction = self.instruction

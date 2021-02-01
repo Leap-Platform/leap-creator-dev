@@ -457,6 +457,35 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
+    func didDismissView(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?) {
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
+        guard let state = contextDetector?.getState() else { return }
+        switch state {
+        case .Discovery:
+            guard let liveContext = getLiveContext() else { return }
+            if let _  = liveContext as? JinyAssist { assistManager?.assistDismissed(byUser: byUser, autoDismissed: autoDismissed) }
+            else if let _ = liveContext as? JinyDiscovery {
+                if let body = action?["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool ?? false {
+                    if optIn {
+                        sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
+                        guard let dm = discoveryManager,
+                              let discovery = dm.getCurrentDiscovery(),
+                              let flowId = discovery.flowId else { return }
+                        let flowSelected = configuration?.flows.first { $0.id == flowId }
+                        guard let flow = flowSelected, let fm = flowManager else { return }
+                        fm.addNewFlow(flow, false, discovery.id)
+                        contextDetector?.switchState()
+                    }
+                    discoveryManager?.discoveryDismissed(byUser: byUser, optIn: optIn)
+                } else { discoveryManager?.discoveryDismissed(byUser: true, optIn: false)}
+            }
+        case .Stage:
+            guard let sm = stageManager, let _ = sm.getCurrentStage() else { return }
+            sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
+        }
+    }
+    
     func didDismissView() {
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
@@ -464,8 +493,8 @@ extension JinyContextManager:JinyAUICallback {
         switch state {
         case .Discovery:
             guard let liveContext = getLiveContext() else { return }
-            if let _ = liveContext as? JinyAssist { assistManager?.assistDismissed(byUser: true, autoDimsissed: false) }
-            else if let _ = liveContext as? JinyDiscovery { discoveryManager?.discoveryDismissed(byUser: false) }
+            if let _ = liveContext as? JinyAssist { assistManager?.assistDismissed(byUser: true, autoDismissed: false) }
+//            else if let _ = liveContext as? JinyDiscovery { discoveryManager?.discoveryDismissed(byUser: false) }
         case .Stage:
             guard let sm = stageManager, let currentStage = sm.getCurrentStage() else { return }
             

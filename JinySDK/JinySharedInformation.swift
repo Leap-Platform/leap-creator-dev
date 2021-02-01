@@ -121,8 +121,9 @@ extension JinySharedInformation {
     }
     
     func discoveryFlowCompleted(discoveryId:Int) {
-        var discoveryFlowCompleted = prefs.value(forKey: constant_discoveryFlowCompleted) as? Array<Int> ?? []
-        if !(discoveryFlowCompleted.contains(discoveryId)) { discoveryFlowCompleted.append(discoveryId) }
+        var discoveryFlowCompleted = prefs.value(forKey: constant_discoveryFlowCompleted) as? Dictionary<String,Int> ?? [:]
+        let flowCount =  (discoveryFlowCompleted[String(discoveryId)] ?? 0) + 1
+        discoveryFlowCompleted[String(discoveryId)] = flowCount
         prefs.setValue(discoveryFlowCompleted, forKey: constant_discoveryFlowCompleted)
         prefs.synchronize()
     }
@@ -135,8 +136,8 @@ extension JinySharedInformation {
         return (prefs.value(forKey: constant_discoveryDismissedByUser) as? Array<Int>) ?? []
     }
     
-    func getDiscoveryFlowCompletedInfo() -> Array<Int> {
-        return (prefs.value(forKey: constant_discoveryFlowCompleted) as? Array<Int>) ?? []
+    func getDiscoveryFlowCompletedInfo() -> Dictionary<String,Int> {
+        return (prefs.value(forKey: constant_discoveryFlowCompleted) as? Dictionary<String,Int>) ?? [:]
     }
     
 }

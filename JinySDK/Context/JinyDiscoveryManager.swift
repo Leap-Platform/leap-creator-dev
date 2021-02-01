@@ -33,7 +33,7 @@ class JinyDiscoveryManager {
     func getCurrentDiscovery() -> JinyDiscovery? { return currentDiscovery }
     
     func getDiscoveriesToCheck() -> Array<JinyDiscovery> {
-        var discoveriesToCheck = allDiscoveries.filter { !completedDiscoveriesInSession.contains($0.id) }
+        var discoveriesToCheck = allDiscoveries
         guard discoveriesToCheck.count > 0 else { return [] }
         let discoveryPresentedCount = JinySharedInformation.shared.getDiscoveriesPresentedInfo()
         let discoveryDismissInfo = JinySharedInformation.shared.getDismissedDiscoveryInfo()
@@ -41,29 +41,16 @@ class JinyDiscoveryManager {
         discoveriesToCheck = discoveriesToCheck.filter({ (discovery) -> Bool in
             let presentedCount = discoveryPresentedCount[String(discovery.id)] ?? 0
             let hasBeenDismissed = discoveryDismissInfo.contains(discovery.id)
-            let discoveryFlowCompleted = discoveryFlowInfo.contains(discovery.id)
-            if let triggerFrequencyType = discovery.triggerFrequency?.type {
-                switch triggerFrequencyType {
-                case .everySessionUntilDismissed:
+            let discoveryFlowCompletedCount = discoveryFlowInfo[String(discovery.id)] ?? 0
+            if let terminationFreq = discovery.terminationfrequency {
+                if let nSessionCount = terminationFreq.nSession, nSessionCount != -1 {
+                    if presentedCount >= nSessionCount { return false }
+                }
+                if let perAppCount = terminationFreq.perApp, perAppCount != -1 {
+                    if discoveryFlowCompletedCount >= perAppCount { return false }
+                }
+                if let nDismissedByUser = terminationFreq.nDismissByUser, nDismissedByUser != -1 {
                     if hasBeenDismissed { return false }
-                case .everySessionUntilFlowComplete:
-                    if discoveryFlowCompleted { return false }
-                    break
-                case .playOnce:
-                    if presentedCount > 0 { return false }
-                default:
-                    break
-                }
-            }
-            if let terminationFreq = discovery.frequency {
-                if let nSessionCount = terminationFreq.nSession {
-                    if nSessionCount != -1 &&  presentedCount >= nSessionCount { return false }
-                }
-                if let perAppCount = terminationFreq.perApp {
-                    if perAppCount != -1 && presentedCount >= perAppCount { return false }
-                }
-                if let nDismissedByUser = terminationFreq.nDismissByUser {
-                    if nDismissedByUser != -1 && hasBeenDismissed { return false }
                 }
             }
             return true
@@ -89,8 +76,8 @@ class JinyDiscoveryManager {
         
         currentDiscovery = discovery
         
-        let type =  currentDiscovery?.trigger?.type ?? "instant"
-        if type == "delay" {
+        let type =  currentDiscovery?.trigger?.type ?? .instant
+        if type == .delay {
             let delay = currentDiscovery?.trigger?.delay ?? 0
             discoveryTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
                 self.discoveryTimer?.invalidate()
@@ -102,6 +89,26 @@ class JinyDiscoveryManager {
             delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
         }
         
+    }
+    
+    func isManualTrigger() -> Bool {
+        guard let disc = currentDiscovery else { return false }
+        if completedDiscoveriesInSession.contains(disc.id) { return true }
+        if let triggerType = disc.triggerFrequency?.type {
+            switch triggerType {
+            case .everySession:
+                 return false
+            case .everySessionUntilDismissed:
+                return JinySharedInformation.shared.getDismissedDiscoveryInfo().contains(disc.id)
+            case .everySessionUntilFlowComplete:
+                return (JinySharedInformation.shared.getDiscoveryFlowCompletedInfo()[String(disc.id)] ?? 0) > 0
+            case .playOnce:
+                return (JinySharedInformation.shared.getDiscoveriesPresentedInfo()[String(disc.id)] ?? 0) > 0
+            case .manualTrigger:
+                return true
+            }
+        }
+        return false
     }
     
     func resetDiscovery() {
@@ -123,9 +130,9 @@ class JinyDiscoveryManager {
         
     }
     
-    func discoveryDismissed(byUser:Bool) {
-        guard let discovery = currentDiscovery else { return }
-        if byUser { JinySharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id) }
+    func discoveryDismissed(byUser:Bool, optIn:Bool) {
+        guard let discovery = currentDiscovery, byUser || optIn else { return }
+        if byUser && !optIn { JinySharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id) }
         markCurrentDiscoveryComplete()
     }
     

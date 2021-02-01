@@ -240,7 +240,7 @@ extension JinyContextDetector {
         // Check for assist/discoveries with instant or delay trigger.
         let instantOrDelayedContexts = contexts.filter { (contextToCheck) -> Bool in
             guard let trigger = contextToCheck.trigger else { return true }
-            return trigger.type == "instant" || trigger.type == "delay"
+            return trigger.type == .instant || trigger.type == .delay
         }
         
         // Get most weighted assist/discovery

@@ -74,8 +74,8 @@ class JinyAssistManager {
         }
         
         currentAssist = assist
-        let type =  currentAssist?.trigger?.type ?? "instant"
-        if type == "delay" {
+        let type =  currentAssist?.trigger?.type ?? .instant
+        if type == .delay {
             let delay = currentAssist?.trigger?.delay ?? 0
             assistTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
                 self.assistTimer?.invalidate()

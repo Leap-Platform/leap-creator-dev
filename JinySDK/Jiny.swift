@@ -51,6 +51,7 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func failedToPerform()
     func willDismissView()
     func didDismissView()
+    func didDismissView(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?)
     func didReceiveInstruction(dict:Dictionary<String,Any>)
     
     func stagePerformed()
