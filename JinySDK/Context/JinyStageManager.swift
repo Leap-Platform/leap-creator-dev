@@ -40,6 +40,10 @@ class JinyStageManager {
             } else {
                 delegate?.dismissStage()
                 stagePerformed()
+                if stage.isSuccess {
+                    currentStage = nil
+                    return
+                }
             }
         }
         
@@ -60,7 +64,7 @@ class JinyStageManager {
     }
     
     func resetStageManager() {
-        guard let stage = currentStage else { return }
+        guard let _ = currentStage else { return }
         if stageTimer != nil {
             stageTimer?.invalidate()
             stageTimer = nil
@@ -68,8 +72,7 @@ class JinyStageManager {
             delegate?.dismissStage()
             stagePerformed()
         }
-        
-        
+        currentStage = nil
     }
     
     // Called in case to reidentify same stage as new stage next time
@@ -86,6 +89,7 @@ class JinyStageManager {
         guard let stage = currentStage else { return }
         if stage.type == .Sequence || stage.type == .ManualSequence { delegate?.removeStage(stage) }
         stagePerformed()
+        currentStage = nil
     }
     
     func stagePerformed() {
@@ -93,7 +97,7 @@ class JinyStageManager {
         if stageTracker[stage.name] == nil { stageTracker[stage.name] = 0 }
         stageTracker[stage.name]!  += 1
         if stageTracker[stage.name]! >= stage.frequencyPerFlow { delegate?.removeStage(stage) }
-        currentStage = nil
+        if stage.isSuccess { delegate?.isSuccessStagePerformed() }
     }
 
     

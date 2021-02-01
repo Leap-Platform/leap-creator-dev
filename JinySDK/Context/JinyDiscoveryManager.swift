@@ -112,6 +112,7 @@ class JinyDiscoveryManager {
     }
     
     func resetDiscovery() {
+        guard let _ = currentDiscovery else { return }
         discoveryTimer?.invalidate()
         discoveryTimer = nil
         currentDiscovery = nil

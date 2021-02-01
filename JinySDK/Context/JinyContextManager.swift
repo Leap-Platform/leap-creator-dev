@@ -153,11 +153,11 @@ extension JinyContextManager:JinyContextDetectorDelegate {
 extension JinyContextManager:JinyAssistManagerDelegate {
     
     func newAssistIdentified(_ assist: JinyAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
-       if let anchorRect = rect {
+        if let anchorRect = rect {
             auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, rect: anchorRect, inWebview: inWebview, iconInfo: [:])
-       } else {
+        } else {
             auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, inView: view, iconInfo: [:])
-       }
+        }
     }
     
     func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) {
@@ -177,8 +177,6 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
             //present jiny button
             return
         }
-        auiHandler?.removeAllViews()
-        
         let iconInfo = [constant_isLeftAligned: getIconSetting()[String(discovery.id)]?.leftAlign ?? false, constant_isEnabled: discovery.enableIcon, constant_backgroundColor: getIconSetting()[String(discovery.id)]?.bgColor ?? "", constant_htmlUrl: getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]
         if let anchorRect = rect {
             auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
@@ -192,7 +190,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     }
     
     func dismissDiscovery() { auiHandler?.removeAllViews() }
-
+    
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
@@ -215,33 +213,26 @@ extension JinyContextManager:JinyPageManagerDelegate {
 extension JinyContextManager:JinyStageManagerDelegate {
     
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
-        auiHandler?.removeAllViews()
         auiHandler?.presentJinyButton(for: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
         if let anchorRect = rect {
             auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
         } else {
-            
             auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: view, iconInfo: [:])
         }
         sendContextInfoEvent(eventTag: "jinyInstructionEvent")
     }
     
     func sameStageFound(_ stage: JinyStage, newRect: CGRect?, webviewForRect:UIView?) {
-        
+        if let rect = newRect { auiHandler?.updateRect(rect: rect, inWebView: webviewForRect) }
     }
     
-    func dismissStage() {
-        auiHandler?.removeAllViews()
-    }
-    
+    func dismissStage() { auiHandler?.removeAllViews() }
     
     func removeStage(_ stage: JinyStage) { pageManager?.removeStage(stage) }
     
     func isSuccessStagePerformed() {
-        if let discoveryId = flowManager?.getDiscoveryId() {
-            JinySharedInformation.shared.discoveryFlowCompleted(discoveryId: discoveryId)
-        }
+        if let discoveryId = flowManager?.getDiscoveryId() { JinySharedInformation.shared.discoveryFlowCompleted(discoveryId: discoveryId) }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
     }
@@ -303,19 +294,14 @@ extension JinyContextManager {
     
     func sendEvent(event:JinyAnalyticsEvent) {
         guard let am = analyticsManager else { return }
-        if let aui = auiHandler {
-            if aui.hasClientCallBack() {
-                let standardEvent = JinyStandardEvent(withEvent: event)
-                let jsonEncoder = JSONEncoder()
-                jsonEncoder.outputFormatting = .prettyPrinted
-                if let eventData = try? jsonEncoder.encode(standardEvent) {
-                    if let eventPayload = try? JSONSerialization.jsonObject(with: eventData, options: .mutableContainers) as? Dictionary<String,Dictionary<String,String>> {
-                        if eventPayload != [:] {
-                            event.jiny_standard_event = JinyStandardEvent(withEvent: event)
-                            auiHandler?.sendEvent(event: eventPayload)
-                        }
-                    }
-                }
+        if let aui = auiHandler,aui.hasClientCallBack() {
+            let standardEvent = JinyStandardEvent(withEvent: event)
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.outputFormatting = .prettyPrinted
+            if let eventData = try? jsonEncoder.encode(standardEvent),
+               let eventPayload = try? JSONSerialization.jsonObject(with: eventData, options: .mutableContainers) as? Dictionary<String,Dictionary<String,String>>, eventPayload != [:] {
+                event.jiny_standard_event = JinyStandardEvent(withEvent: event)
+                auiHandler?.sendEvent(event: eventPayload)
             }
         }
         am.sendEvent(event)
@@ -413,7 +399,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didPlayAudio() {
-
+        
     }
     
     func failedToPerform() {
@@ -502,7 +488,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func discoveryOptedInFlow(atIndex: Int) {
-
+        
     }
     
     func discoveryReset() {
@@ -510,7 +496,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func discoveryDismissed() {
-       
+        
     }
     
     func languagePanelOpened() {
