@@ -34,14 +34,20 @@ class JinyAssistManager {
         let assistSessionCount = JinySharedInformation.shared.getAssistsPresentedInfo()
         let assistsDismissedByUser = JinySharedInformation.shared.getDismissedAssistInfo()
         let assistsToCheck = allAssists.filter { (tempAssist) -> Bool in
+            /// Eliminate assists already presented in current session
             if assistsCompletedInSession.contains(tempAssist.id) { return false }
+            
+            /// Elimination using termination frequency
             if let terminationFreq = tempAssist.terminationFrequency {
-                let dismissByUser = terminationFreq.nDismissByUser ?? -1
-                if dismissByUser > 0 && assistsDismissedByUser.contains(tempAssist.id) { return false }
-                let nSessions = terminationFreq.nSession ?? -1
-                if nSessions == -1 { return true }
-                let currentAssistSessionCount = assistSessionCount[String(tempAssist.id)] ?? 0
-                if currentAssistSessionCount >= nSessions { return false }
+                ///Eliminate nDismissByUser
+                if let dismissByUser = terminationFreq.nDismissByUser ?? -1, dismissByUser > -1 {
+                    if assistsDismissedByUser.contains(tempAssist.id) { return false }
+                }
+                /// Eliminate nSessions
+                if let nSessions = terminationFreq.nSession ?? -1, nSessions > -1 {
+                    let currentAssistSessionCount = assistSessionCount[String(tempAssist.id)] ?? 0
+                    if currentAssistSessionCount >= nSessions { return false }
+                }
             }
             return true
         }
@@ -94,9 +100,8 @@ class JinyAssistManager {
         }
     }
     
-    func assistDismissed(byUser:Bool, autoDimsissed:Bool) {
-        guard byUser || autoDimsissed  else { return }
-        guard let assist = currentAssist else { return }
+    func assistDismissed(byUser:Bool, autoDismissed:Bool) {
+        guard let assist = currentAssist, byUser || autoDismissed  else { return }
         if byUser { JinySharedInformation.shared.assistDismissedByUser(assistId: assist.id) }
         markCurrentAssistComplete()
     }
