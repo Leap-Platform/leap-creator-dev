@@ -21,7 +21,6 @@ class JinyContextManager:NSObject {
     private var analyticsManager:JinyAnalyticsManager?
     private var configuration:JinyConfig?
     private weak var auiHandler:JinyAUIHandler?
-    private var autoDismissTimer:Timer?
     private var taggedEvents:Dictionary<String,Any> = [:]
     
     init(withUIHandler uiHandler:JinyAUIHandler?) {
@@ -173,8 +172,9 @@ extension JinyContextManager:JinyAssistManagerDelegate {
 extension JinyContextManager:JinyDiscoveryManagerDelegate {
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
-        guard !JinySharedInformation.shared.isMuted() else {
-//            auiHandler?.presentJinyButton(with: getIconSetting()[String(discovery.id)]?.htmlUrl, color: getIconSetting()[String(discovery.id)]?.bgColor ?? "#000000", iconEnabled: discovery.enableIcon)
+        guard let dm = discoveryManager else { return }
+        guard !dm.isManualTrigger()  else {
+            //present jiny button
             return
         }
         auiHandler?.removeAllViews()
@@ -215,8 +215,6 @@ extension JinyContextManager:JinyPageManagerDelegate {
 extension JinyContextManager:JinyStageManagerDelegate {
     
     func newStageFound(_ stage: JinyStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
         auiHandler?.removeAllViews()
         auiHandler?.presentJinyButton(for: getIconSetting()[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
@@ -241,9 +239,9 @@ extension JinyContextManager:JinyStageManagerDelegate {
     func removeStage(_ stage: JinyStage) { pageManager?.removeStage(stage) }
     
     func isSuccessStagePerformed() {
-//        if let discoveryId = flowManager?.getDiscoveryId() {
-//            JinySharedInformation.shared.flowCompletedFor(discoveryId: discoveryId)
-//        }
+        if let discoveryId = flowManager?.getDiscoveryId() {
+            JinySharedInformation.shared.discoveryFlowCompleted(discoveryId: discoveryId)
+        }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
     }
@@ -415,38 +413,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didPlayAudio() {
-        guard let state = contextDetector?.getState() else { return }
-        switch state {
-        case .Discovery:
-            autoDismissTimer?.invalidate()
-            autoDismissTimer = nil
-            guard let liveContext = getLiveContext(),
-                  let autoDismissDelay = liveContext.instruction?.assistInfo?.autoDismissDelay else { return }
-            autoDismissTimer = Timer(timeInterval: TimeInterval(autoDismissDelay), repeats: false, block: { (timer) in
-                self.autoDismissTimer?.invalidate()
-                self.autoDismissTimer = nil
-                if let _ = liveContext as? JinyAssist { self.dismissAssist()}
-                else if let _ = liveContext as? JinyDiscovery { self.dismissDiscovery() }
-            })
-            RunLoop.main.add(autoDismissTimer!, forMode: .default)
-        case .Stage:
-//            guard let sm = stageManager else { return }
-//            guard let currentStage = sm.getCurrentStage() else { return }
-//            if currentStage.type == .Sequence{
-//                let delay = currentStage.instruction?.assistInfo?.autoDismissDelay
-//                if delay == nil || delay == 0 { sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil) }
-//                else {
-//                    autoDismissTimer = Timer(timeInterval: TimeInterval(delay!), repeats: false, block: { (timer) in
-//                        timer.invalidate()
-//                        self.autoDismissTimer = nil
-//                        sm.setCurrentStage(nil, view: nil, rect: nil, webviewForRect: nil)
-//
-//                    })
-//                    RunLoop.main.add(autoDismissTimer!, forMode: .default)
-//                }
-//            }
-        break
-        }
+
     }
     
     func failedToPerform() {
@@ -458,8 +425,6 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didDismissView(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?) {
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
@@ -487,21 +452,6 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didDismissView() {
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
-        guard let state = contextDetector?.getState() else { return }
-        switch state {
-        case .Discovery:
-            guard let liveContext = getLiveContext() else { return }
-            if let _ = liveContext as? JinyAssist { assistManager?.assistDismissed(byUser: true, autoDismissed: false) }
-//            else if let _ = liveContext as? JinyDiscovery { discoveryManager?.discoveryDismissed(byUser: false) }
-        case .Stage:
-            guard let sm = stageManager, let currentStage = sm.getCurrentStage() else { return }
-            
-        }
-    }
-    
-    func didDismissView(action: Dictionary<String, Any>?) {
         
     }
     
@@ -528,9 +478,7 @@ extension JinyContextManager:JinyAUICallback {
         sendContextInfoEvent(eventTag: "jinyIconClickedEvent")
         if JinySharedInformation.shared.isMuted() {
             if contextDetector?.getState() == .Stage {
-                flowManager?.resetFlowsArray()
-                autoDismissTimer?.invalidate()
-                autoDismissTimer = nil
+                flowManager?.resetFlowsArray()    
                 contextDetector?.switchState()
             }
             JinySharedInformation.shared.unmuteJiny()
@@ -605,8 +553,6 @@ extension JinyContextManager:JinyAUICallback {
             stageManager?.resetCurrentStage()
             JinySharedInformation.shared.muteJiny()
             flowManager?.resetFlowsArray()
-            autoDismissTimer?.invalidate()
-            autoDismissTimer = nil
             contextDetector?.switchState()
             assistManager?.resetAssistManager()
         }
