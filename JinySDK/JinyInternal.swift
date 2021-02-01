@@ -30,7 +30,7 @@ class JinyInternal:NSObject {
     
 }
 
-// MARK: - FETCH CONFIGURATION AND AUDIO DOWNLOAD
+// MARK: - CONFIGURATION DOWNLOAD AND HANDLING
 
 extension JinyInternal {
     
@@ -87,18 +87,17 @@ extension JinyInternal {
     
     func setupDefaultLanguage() {
         guard let config = self.jinyConfiguration else { return }
-        if let lang = JinySharedInformation.shared.getLanguage() {
-            for language in config.languages { if lang == language.localeId { return } }
+        if let currentLocaleId = JinySharedInformation.shared.getLanguage() {
+            let currentDefaultLanguage = config.languages.first { (tempLanguage) -> Bool in
+                return tempLanguage.localeId == currentLocaleId
+            }
+            if currentDefaultLanguage != nil { return }
         }
-        var newDefault:String?
-        for lang in config.languages {
-            if lang.localeId == "" { continue }
-            newDefault = lang.localeId
-            break
+        let newDefaultLanguage = config.languages.first { (languageToCheck) -> Bool in
+            return !languageToCheck.localeId.isEmpty
         }
-        guard let defaultLang = newDefault else { return }
-        JinySharedInformation.shared.setLanguage(defaultLang)
-        
+        guard let defaultLanguage = newDefaultLanguage else { return }
+        JinySharedInformation.shared.setLanguage(defaultLanguage.localeId)
     }
 }
 
