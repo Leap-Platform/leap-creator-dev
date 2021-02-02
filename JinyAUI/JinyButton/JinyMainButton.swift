@@ -146,7 +146,16 @@ extension JinyMainButton: JinyDraggableDelegate {
             self.center = CGPoint(x: self.jinyDraggable.lastLocation.x, y: self.center.y)
             self.jinyDraggable.setTranslation(.zero, in: self)
         }
-                
-        self.bottomConstraint?.constant = (UIApplication.shared.keyWindow?.frame.size.height ?? 0.0) - self.frame.origin.y - self.frame.size.height
+        
+        let constant = (UIApplication.shared.keyWindow?.frame.size.height ?? 0.0) - self.frame.origin.y - self.frame.size.height
+        
+        if constant < mainIconConstraintConstant {
+            
+            self.bottomConstraint?.constant = mainIconConstraintConstant
+        
+        } else {
+            
+            self.bottomConstraint?.constant = constant
+        }
     }
 }

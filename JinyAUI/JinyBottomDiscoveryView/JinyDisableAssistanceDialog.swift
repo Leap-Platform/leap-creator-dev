@@ -125,7 +125,7 @@ class JinyDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: jinyIcon, attribute: .centerX, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerX, multiplier: 1, constant: 0))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: jinyIcon, attribute: .top, relatedBy: .equal, toItem: bottomDialogView, attribute: .top, multiplier: 1, constant: 30))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: jinyIcon, attribute: .top, relatedBy: .equal, toItem: bottomDialogView, attribute: .top, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
         
         jinyIcon.iconSize = mainIconSize
         jinyIcon.configureIconButton()
@@ -143,7 +143,7 @@ class JinyDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogLabel, attribute: .leading, relatedBy: .equal, toItem: bottomDialogView, attribute: .leading, multiplier: 1, constant: 30))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogLabel, attribute: .top, relatedBy: .equal, toItem: jinyIcon, attribute: .bottom, multiplier: 1, constant: 30))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogLabel, attribute: .top, relatedBy: .equal, toItem: jinyIcon, attribute: .bottom, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
         
         dialogLabel.numberOfLines = 2
         
@@ -158,7 +158,7 @@ class JinyDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .centerX, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerX, multiplier: 1, constant: -60))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .top, relatedBy: .equal, toItem: dialogLabel, attribute: .bottom, multiplier: 1, constant: 30))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .top, relatedBy: .equal, toItem: dialogLabel, attribute: .bottom, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
         
         dialogButton1.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100))
         
@@ -183,7 +183,7 @@ class JinyDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .centerX, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerX, multiplier: 1, constant: 60))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .top, relatedBy: .equal, toItem: dialogLabel, attribute: .bottom, multiplier: 1, constant: 30))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .top, relatedBy: .equal, toItem: dialogLabel, attribute: .bottom, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
         
         dialogButton2.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100))
         
