@@ -128,7 +128,7 @@ public class JinyCarousel: JinyKeyWindowAssist {
             superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: verticalDistance))
         }
         
-        jinyIconView.configureIconButon()
+        jinyIconView.configureIconButton()
     }
     
     /// This is a custom configuration of constraints for the Carousel type.

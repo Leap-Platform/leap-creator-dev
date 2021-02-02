@@ -72,6 +72,10 @@ public class JinyIconView: UIView {
     /// loading layer for download progress.
     var loadingLayer: CAShapeLayer?
     
+    private var iconHeightConstraint: NSLayoutConstraint?
+    
+    private var iconWidthConstraint: NSLayoutConstraint?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -95,11 +99,7 @@ public class JinyIconView: UIView {
         configuration.allowsInlineMediaPlayback = true
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
         configuration.preferences.javaScriptEnabled = true
-        if #available(iOS 10.0, *) {
-            configuration.dataDetectorTypes = [.all]
-        } else {
-            // Fallback on earlier versions
-        }
+        configuration.dataDetectorTypes = [.all]
         
         self.iconWebView = WKWebView(frame: .zero, configuration: configuration)
         self.iconWebView?.scrollView.isScrollEnabled = false
@@ -122,11 +122,7 @@ public class JinyIconView: UIView {
         configuration.allowsInlineMediaPlayback = true
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
         configuration.preferences.javaScriptEnabled = true
-        if #available(iOS 10.0, *) {
-            configuration.dataDetectorTypes = [.all]
-        } else {
-            // Fallback on earlier versions
-        }
+        configuration.dataDetectorTypes = [.all]
         
         self.audioWebView = WKWebView(frame: .zero, configuration: configuration)
         self.audioWebView?.navigationDelegate = self
@@ -135,7 +131,7 @@ public class JinyIconView: UIView {
     }
     
     /// sets iconButton's constraints w.r.t self.
-    func configureIconButon() {
+    func configureIconButton() {
         
         self.addSubview(iconWebView!)
         
@@ -153,9 +149,11 @@ public class JinyIconView: UIView {
         
         // set width and height constraints to JinyIconView
         
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize))
+        iconWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
         
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize))
+        iconHeightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
+        
+        NSLayoutConstraint.activate([iconWidthConstraint!, iconHeightConstraint!])
         
         self.iconWebView?.clipsToBounds = true
         self.iconWebView?.layer.cornerRadius = iconSize/2
@@ -163,6 +161,16 @@ public class JinyIconView: UIView {
         self.iconWebView?.contentMode = .scaleAspectFit
                 
         loadJinyIcon()
+    }
+    
+    /// resizes icon size, iconSize should be given explicitly
+    func resizeIconButton() {
+        
+        iconHeightConstraint?.constant = iconSize
+        iconWidthConstraint?.constant = iconSize
+        
+        self.iconWebView?.layer.cornerRadius = iconSize/2
+        self.audioWebView?.layer.cornerRadius = iconSize/2
     }
     
     /// sets iconButton's constraints w.r.t self.
@@ -184,9 +192,11 @@ public class JinyIconView: UIView {
         
         // set width and height constraints to JinyIconView
         
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize))
+        iconWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
         
-        self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize))
+        iconHeightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
+        
+        NSLayoutConstraint.activate([iconWidthConstraint!, iconHeightConstraint!])
         
         self.audioWebView?.clipsToBounds = true
         self.audioWebView?.layer.cornerRadius = iconSize/2

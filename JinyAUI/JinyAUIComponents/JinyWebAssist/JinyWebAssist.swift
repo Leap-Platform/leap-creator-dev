@@ -44,11 +44,8 @@ public class JinyWebAssist: UIView, JinyAssist {
         preferences.javaScriptEnabled = true
         preferences.javaScriptCanOpenWindowsAutomatically = true
         configuration.preferences = preferences
-        if #available(iOS 10.0, *) {
-            configuration.dataDetectorTypes = [.all]
-        } else {
-            // Fallback on earlier versions
-        }
+        configuration.dataDetectorTypes = [.all]
+
         
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         self.webView.scrollView.isScrollEnabled = true
@@ -413,7 +410,7 @@ public class JinyWebAssist: UIView, JinyAssist {
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
         
-        jinyIconView.configureIconButon()
+        jinyIconView.configureIconButton()
     }
     
     /// call the method when you want the webView content to be in the desired user's language.
@@ -476,12 +473,8 @@ extension JinyWebAssist: WKScriptMessageHandler {
         
         if let urlString = dictBody[constant_external_url] as? String, let url = URL(string: urlString) {
 
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url)
-            } else {
-                // Fallback on earlier versions
-            }
-                
+           UIApplication.shared.open(url)
+
            return
         }
         

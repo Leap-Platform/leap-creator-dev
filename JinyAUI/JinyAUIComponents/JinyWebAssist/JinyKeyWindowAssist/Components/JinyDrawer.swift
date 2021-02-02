@@ -166,7 +166,7 @@ public class JinyDrawer: JinyKeyWindowAssist {
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType3, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: verticalDistance))
         
-        jinyIconView.configureIconButon()
+        jinyIconView.configureIconButton()
     }
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

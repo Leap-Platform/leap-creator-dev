@@ -105,7 +105,7 @@ public class JinyPing: JinyKeyWindowAssist {
         
         NSLayoutConstraint.activate([bottomConstraint!])
         
-        jinyIconView.configureIconButon()
+        jinyIconView.configureIconButton()
     }
     
     private func configurePingClose(superView: UIView, toItemView: UIView) {
