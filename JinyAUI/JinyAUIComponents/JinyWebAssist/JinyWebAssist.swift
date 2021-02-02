@@ -446,7 +446,7 @@ extension JinyWebAssist: WKNavigationDelegate {
         
         self.isHidden = false
         
-        changeLanguage(locale: UserDefaults.standard.object(forKey: "audio_language_code") as! String)
+        changeLanguage(locale: UserDefaults.standard.object(forKey: "jiny_audio_language_code") as! String)
                 
         didFinish(webView, didFinish: navigation)
                 
@@ -485,7 +485,7 @@ extension JinyWebAssist: WKScriptMessageHandler {
            return
         }
         
-        if close && !opt {
+        if close {
             
            self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
         }

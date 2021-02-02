@@ -293,7 +293,7 @@ extension JinyAUIManager:JinyAUIHandler {
         
     }
     
-    func performInstrcution(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?, iconInfo:Dictionary<String,Any>) {
+    func performInstruction(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?, iconInfo:Dictionary<String,Any>) {
         currentInstruction = instruction
         currentTargetView = nil
         currentWebView = inWebview
@@ -813,40 +813,15 @@ extension JinyAUIManager: JinyAssistDelegate {
         jinyButton?.isHidden = false
     }
     
+    func didDismissAssist(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?) {
+        auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, action: action)
+    }
+    
     func didSendAction(dict: Dictionary<String, Any>) {
         auiManagerCallBack?.didReceiveInstruction(dict: dict)
-        if let body = dict[constant_body] as? Dictionary<String,Any> {
-            if let opt_in = body[constant_optIn] as? Bool {
-                if opt_in{
-                    auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0)
-                }
-            }
-        }
     }
     
     func didExitAnimation() { auiManagerCallBack?.willDismissView() }
     
     func didTapAssociatedJinyIcon() { auiManagerCallBack?.jinyTapped() }
-}
-
-extension JinyAUIManager: JinyBottomDiscoveryDelegate {
-    func discoveryPresentedWithOptInButton(_ button: UIButton) {
-        
-    }
-    
-    func discoverySheetDismissed() {
-        auiManagerCallBack?.discoveryDismissed()
-    }
-    
-    func optOutButtonClicked() {
-        auiManagerCallBack?.discoveryDismissed()
-    }
-    
-    func optInButtonClicked() {
-        
-    }
-    
-    func discoveryLanguageButtonClicked() {
-        
-    }
 }
