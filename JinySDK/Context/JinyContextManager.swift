@@ -174,6 +174,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         guard let dm = discoveryManager else { return }
         guard !dm.isManualTrigger()  else {
             //present jiny button
+            auiHandler?.presentJinyButton(for: getIconSetting()[String(discovery.id)] ?? IconSetting(with: [:]), iconEnabled: discovery.enableIcon)
             return
         }
         let iconInfo = [constant_isLeftAligned: getIconSetting()[String(discovery.id)]?.leftAlign ?? false, constant_isEnabled: discovery.enableIcon, constant_backgroundColor: getIconSetting()[String(discovery.id)]?.bgColor ?? "", constant_htmlUrl: getIconSetting()[String(discovery.id)]?.htmlUrl] as [String : Any?]

@@ -52,9 +52,6 @@ class JinyAUIManager:NSObject {
     var jinyButtonBottomConstraint:NSLayoutConstraint?
     var scrollArrowBottomConstraint:NSLayoutConstraint?
     
-    var pingAssistInfo: Dictionary<String,Any>?
-    var pingIconInfo: Dictionary<String,Any>?
-    
     func addIdentifier(identifier:String, value:Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
     }
@@ -448,8 +445,23 @@ extension JinyAUIManager:JinyAUIHandler {
                 jinyCarousel.showCarousel()
                 
             case PING:
-                pingAssistInfo = assistInfo
-                pingIconInfo = iconInfo
+                
+                self.jinyButton?.layoutIfNeeded()
+                
+                UIView.animate(withDuration: 0.2) {
+                    
+                    self.jinyButtonBottomConstraint?.constant = mainIconConstraintConstant
+                    
+                    self.jinyButton?.layoutIfNeeded()
+                }
+                
+                jinyButton?.isHidden = true
+
+                let jinyPing = JinyPing(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyPing
+                currentAssist?.delegate = self
+                UIApplication.shared.keyWindow?.addSubview(jinyPing)
+                jinyPing.showPing()
     
             default:
                 break
@@ -539,21 +551,8 @@ extension JinyAUIManager:JinyAUIHandler {
 extension JinyAUIManager: UIGestureRecognizerDelegate {
     
     @objc func jinyButtonTap() {
-        
-        guard let assistInfo = pingAssistInfo, let iconInfo = pingIconInfo else {
-            
-            auiManagerCallBack?.jinyTapped()
-            
-            return
-        }
-        
-        jinyButton?.isHidden = true
-        
-        let jinyPing = JinyPing(withDict: assistInfo, iconDict: iconInfo)
-        currentAssist = jinyPing
-        currentAssist?.delegate = self
-        UIApplication.shared.keyWindow?.addSubview(jinyPing)
-        jinyPing.showPing()
+                    
+        auiManagerCallBack?.jinyTapped()
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -813,11 +812,6 @@ extension JinyAUIManager: JinyAssistDelegate {
     func didDismissAssist() {
         currentAssist = nil
         auiManagerCallBack?.didDismissView()
-        
-        guard pingAssistInfo != nil, pingIconInfo != nil else {
-            
-            return
-        }
         
         jinyButton?.isHidden = false
     }
