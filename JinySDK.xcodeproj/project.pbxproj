@@ -823,12 +823,12 @@
 		D071662924629C69001937EE /* Context */ = {
 			isa = PBXGroup;
 			children = (
-				D022817125C3E1490036D8C6 /* JinyPageManager.swift */,
 				D071662E24629D5D001937EE /* JinyContextManager.swift */,
 				D071662C24629D3E001937EE /* JinyContextDetector.swift */,
 				D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */,
 				D084A13924AB58810093E8AB /* JinyDiscoveryManager.swift */,
 				D09C722D246A987A0060E054 /* JinyFlowManager.swift */,
+				D022817125C3E1490036D8C6 /* JinyPageManager.swift */,
 				D09C722F246A98860060E054 /* JinyStageManager.swift */,
 				D0C9B67725B6EECD00250133 /* JinyClickHandler.swift */,
 			);
@@ -1813,6 +1813,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleApp;
 				PRODUCT_NAME = "Jiny Sample App";
 				SWIFT_VERSION = 5.0;
@@ -1833,6 +1834,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleApp;
 				PRODUCT_NAME = "Jiny Sample App";
 				SWIFT_VERSION = 5.0;

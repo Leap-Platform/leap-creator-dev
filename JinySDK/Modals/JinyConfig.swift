@@ -55,29 +55,37 @@ class JinyConfig {
                 }
             }
             if let flowDictsArray = configDict[constant_flows] as? Array<Dictionary<String,Any>> {
-                for flowDicts in flowDictsArray {
-                    flows.append(JinyFlow(withDict: flowDicts))
-                }
+                flows += flowDictsArray.map({ (flowDict) -> JinyFlow? in
+                    let flow = JinyFlow(withDict: flowDict)
+                    if flows.contains(flow) { return nil }
+                    return flow
+                }).compactMap { return $0}
             }
             if let languageDictsArray = configDict[constant_languages] as? Array<Dictionary<String,Any>> {
-                for languageDict in languageDictsArray {
-                    languages.append(JinyLanguage(withLanguageDict: languageDict))
-                }
+                languages += languageDictsArray.map { (langDict) -> JinyLanguage? in
+                    let lang = JinyLanguage(withLanguageDict: langDict)
+                    if languages.contains(lang) { return nil }
+                    return lang
+                }.compactMap{ return $0 }
             }
             if let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>> {
-                for discoveryDict in discoveryDictsArray {
-                    discoveries.append(JinyDiscovery(withDict: discoveryDict))
+                discoveries += discoveryDictsArray.map({ (discoveryDict) -> JinyDiscovery? in
+                    let discovery = JinyDiscovery(withDict: discoveryDict)
+                    if discoveries.contains(discovery) { return nil }
                     if let discoveryId = discoveryDict[constant_id] as? Int, let iconSetting = configDict[constant_iconSetting] as? Dictionary<String, Any> {
                         if let discoveryIconSetting = iconSetting[String(discoveryId)] as? Dictionary<String, Any> {
                            self.iconSetting[String(discoveryId)] = IconSetting(with: discoveryIconSetting)
                         }
                     }
-                }
+                    return discovery
+                }).compactMap{ return $0 }
             }
             if let assistsDictsArray = configDict[constant_assists] as? Array<Dictionary<String,Any>> {
-                for assistDict in assistsDictsArray {
-                    assists.append(JinyAssist(withDict: assistDict))
-                }
+                assists += assistsDictsArray.map({ (assistDict) -> JinyAssist? in
+                    let assist = JinyAssist(withDict: assistDict)
+                    if assists.contains(assist) { return nil }
+                    return assist
+                }).compactMap{ return $0 }
             }
             if let discoverySoundsDict = configDict[constant_discoverySounds] as? Dictionary<String,Any> {
                 discoverySounds.append(discoverySoundsDict)

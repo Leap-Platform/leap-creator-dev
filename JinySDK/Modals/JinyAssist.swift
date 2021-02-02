@@ -23,15 +23,6 @@ class JinyAssist:JinyContext {
     }
 }
 
-
-extension JinyAssist:Equatable {
-    
-    static func == (lhs:JinyAssist, rhs:JinyAssist)-> Bool {
-        return lhs.id == rhs.id && lhs.name == rhs.name
-    }
-    
-}
-
 extension JinyAssist {
     
     func copy(with zone: NSZone? = nil) -> JinyAssist {

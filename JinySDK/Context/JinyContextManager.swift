@@ -383,7 +383,7 @@ extension JinyContextManager:JinyAUICallback {
             if let am = assistManager, let _ = am.getCurrentAssist() { sendAssistInfoEvent(eventTag: "assistVisibleEvent") }
             else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {sendDiscoveryInfoEvent(eventTag: "discoveryVisibleEvent") }
         case .Stage:
-            print("hello")
+            
             break
         }
     }

@@ -95,14 +95,6 @@ class JinyDiscovery:JinyContext {
     
 }
 
-extension JinyDiscovery:Equatable {
-    
-    static func == (lhs:JinyDiscovery, rhs:JinyDiscovery) -> Bool {
-        return lhs.id == rhs.id && lhs.name == rhs.name
-    }
-    
-}
-
 extension JinyDiscovery {
     
     func copy(with zone: NSZone? = nil) -> JinyDiscovery {

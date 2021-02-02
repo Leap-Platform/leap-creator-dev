@@ -40,11 +40,3 @@ class JinyPage:JinyContext {
         return copy
     }
 }
-
-extension JinyPage:Equatable {
-    
-    static func == (lhs:JinyPage, rhs:JinyPage) -> Bool {
-        return lhs.id == rhs.id && lhs.name == rhs.name
-    }
-    
-}

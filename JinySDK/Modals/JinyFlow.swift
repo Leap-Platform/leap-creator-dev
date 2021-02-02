@@ -36,3 +36,11 @@ class JinyFlow {
     }
     
 }
+
+extension JinyFlow:Equatable {
+    
+    static func == (lhs:JinyFlow, rhs:JinyFlow) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
+    }
+    
+}

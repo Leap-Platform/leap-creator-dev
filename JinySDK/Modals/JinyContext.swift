@@ -42,3 +42,12 @@ class JinyContext {
         checkpoint = dict[constant_checkPoint] as? Bool ?? false
     }
 }
+
+
+extension JinyContext:Equatable {
+    
+    static func == (lhs:JinyContext, rhs:JinyContext) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
+    }
+    
+}

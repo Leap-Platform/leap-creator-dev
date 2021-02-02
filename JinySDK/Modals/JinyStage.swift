@@ -67,15 +67,6 @@ class JinyStage:JinyContext {
     }
 }
 
-extension JinyStage:Equatable {
-    
-    static func == (lhs:JinyStage, rhs:JinyStage) -> Bool {
-        return lhs.id == rhs.id && lhs.name == rhs.name
-    }
-    
-}
-
-
 class JinyBranchInfo {
     
     let branchTitle:Dictionary<String,Any>
