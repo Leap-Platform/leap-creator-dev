@@ -405,7 +405,7 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
-    func didDismissView(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?) {
+    func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
@@ -418,23 +418,19 @@ extension JinyContextManager:JinyAUICallback {
         }
     }
     
-    func didDismissView() {
-        
-    }
-    
     func didReceiveInstruction(dict: Dictionary<String, Any>) {
-        sendContentActionInfoEvent(eventTag: "auiContentInteractionEvent", contentAction: dict, type: dict[constant_type] as? String ?? "action_taken")
-        guard let body = dict["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool else { return }
-        if optIn {
-            sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
-            guard let dm = discoveryManager,
-                  let discovery = dm.getCurrentDiscovery(),
-                  let flowId = discovery.flowId else { return }
-            let flowSelected = configuration?.flows.first { $0.id == flowId }
-            guard let flow = flowSelected, let fm = flowManager else { return }
-            fm.addNewFlow(flow, false, discovery.id)
-            contextDetector?.switchState()
-        }
+//        sendContentActionInfoEvent(eventTag: "auiContentInteractionEvent", contentAction: dict, type: dict[constant_type] as? String ?? "action_taken")
+//        guard let body = dict["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool else { return }
+//        if optIn {
+//            sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
+//            guard let dm = discoveryManager,
+//                  let discovery = dm.getCurrentDiscovery(),
+//                  let flowId = discovery.flowId else { return }
+//            let flowSelected = configuration?.flows.first { $0.id == flowId }
+//            guard let flow = flowSelected, let fm = flowManager else { return }
+//            fm.addNewFlow(flow, false, discovery.id)
+//            contextDetector?.switchState()
+//        }
     }
     
     func stagePerformed() {

@@ -122,9 +122,10 @@ class JinyPointer: JinyInViewAssist {
         pointerLayer.removeFromSuperlayer()
     }
     
-    override func remove() {
-        super.remove()
+    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
     }
+    
 }
 
 class JinyFingerRipplePointer:JinyPointer {
@@ -279,9 +280,9 @@ class JinyFingerRipplePointer:JinyPointer {
         super.removePointer()
     }
     
-    override func remove() {
+    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         removePointer()
-        super.remove()
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
     }
 }
 
@@ -425,9 +426,9 @@ class JinyHighlightManualSequencePointer:JinyHighlightPointer {
         super.removePointer()
     }
     
-    override func remove() {
+    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         removePointer()
-        super.remove()
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
     }
 }
 
@@ -659,8 +660,8 @@ class JinySwipePointer: JinyPointer {
         super.removePointer()
     }
     
-    override func remove() {
+    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         removePointer()
-        super.remove()
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
     }
 }

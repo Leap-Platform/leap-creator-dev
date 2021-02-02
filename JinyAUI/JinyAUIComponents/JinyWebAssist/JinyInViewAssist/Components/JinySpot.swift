@@ -714,8 +714,7 @@ public class JinySpot: JinyTipView {
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
-            
-           remove()
+           remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
         }
     }
 }

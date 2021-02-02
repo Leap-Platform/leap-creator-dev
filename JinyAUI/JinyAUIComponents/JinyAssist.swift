@@ -21,11 +21,8 @@ public protocol JinyAssistDelegate: class {
     /// failed to present AUIComponent
     func failedToPresentAssist()
     
-    /// AUIComponent is successfully dismissed.
-    func didDismissAssist()
-    
     /// AUIComponent dismissed, with complete info
-    func didDismissAssist(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?)
+    func didDismissAssist(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     
     /// A webview action when user interacts and the callback dictionary is passed as a param.
     func didSendAction(dict: Dictionary<String, Any>)
@@ -81,8 +78,8 @@ public protocol JinyAssist {
     /// performs exit animation after the enter animation
     /// - Parameters:
     ///   - animation: Exit Animation Type.
-    func performExitAnimation(animation: String)
+    func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     
     /// removes the AUIComponent
-    func remove()
+    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
 }

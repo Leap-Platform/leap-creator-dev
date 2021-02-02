@@ -70,18 +70,15 @@ public class JinyTipView: JinyInViewAssist {
         }
     }
     
-    public override func remove() {
-        
+    public override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         toolTipView.removeFromSuperview()
         
         if let userInteraction = toViewOriginalInteraction {
             
            toView?.isUserInteractionEnabled = userInteraction
         }
-        
-        performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-        
-        super.remove()
+        performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -97,7 +94,7 @@ public class JinyTipView: JinyInViewAssist {
                 
                 if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
                     
-                    remove()
+                    remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
                 return nil

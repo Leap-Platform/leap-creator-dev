@@ -142,8 +142,7 @@ public class JinyPing: JinyKeyWindowAssist {
     }
     
     @objc func closePing() {
-        
-        performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
+        performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen:false, action: nil)
     }
     
     /// Set height constraint for ping.
@@ -215,7 +214,7 @@ public class JinyPing: JinyKeyWindowAssist {
            }
     }
     
-    public override func performExitAnimation(animation: String) {
+    public override func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?){
         
         self.layoutIfNeeded()
         
@@ -229,7 +228,7 @@ public class JinyPing: JinyKeyWindowAssist {
             
             self.delegate?.didExitAnimation()
             
-            self.remove()
+            self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
         }
     }
 }

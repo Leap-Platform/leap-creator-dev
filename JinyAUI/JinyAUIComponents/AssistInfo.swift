@@ -22,6 +22,8 @@ public class AssistInfo {
     /// A boolean value to set autoFocus to true only when highlightAnchor and highlightClickable are true.
     var autoFocus: Bool = false         // default is false
     
+    let autoDismissDelay:Double?
+    
     /// A layoutInfo property for the type LayoutInfo
     public var layoutInfo: LayoutInfo?
 
@@ -31,6 +33,8 @@ public class AssistInfo {
     /// - Parameters:
     ///   - assistDict: A dictionary for the type AssistInfo.
     public init(withDict assistDict: Dictionary<String,Any>) {
+        
+        autoDismissDelay = assistDict[constant_autoDismissDelay] as? Double
         
         if let layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> {
             

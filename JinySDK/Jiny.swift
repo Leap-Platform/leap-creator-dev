@@ -28,7 +28,6 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func presentLanguagePanel(languages: Array<String>)
     func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()
-    func keepOnlyJinyButtonIfPresent()
     func dismissCurrentAssist()
     func removeAllViews()
 }
@@ -47,8 +46,7 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func didPlayAudio()
     func failedToPerform()
     func willDismissView()
-    func didDismissView()
-    func didDismissView(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?)
+    func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     func didReceiveInstruction(dict:Dictionary<String,Any>)
     
     func stagePerformed()

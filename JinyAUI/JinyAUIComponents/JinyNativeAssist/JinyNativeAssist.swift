@@ -43,13 +43,12 @@ public class JinyNativeAssist: UIView, JinyAssist {
         
     }
     
-    public func performExitAnimation(animation: String) {
-        
+    public func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen:Bool, action: Dictionary<String, Any>?) {
         delegate?.didExitAnimation()
     }
     
-    public func remove() {
-       
-        delegate?.didDismissAssist()
+    public func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
+        
     }
+
 }
