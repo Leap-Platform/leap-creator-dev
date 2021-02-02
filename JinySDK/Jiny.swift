@@ -63,6 +63,8 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func optionPanelClosed()
     func optionPanelRepeatClicked()
     func optionPanelMuteClicked()
+    
+    func disableAssistance()
 }
 
 

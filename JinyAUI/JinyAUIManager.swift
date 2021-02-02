@@ -513,13 +513,15 @@ extension JinyAUIManager:JinyAUIHandler {
         }
         JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
         JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
-        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black)
+        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
         jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
         jinyButton!.tapGestureRecognizer.delegate = self
         jinyButton!.stateDelegate = self
         jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: mainIconConstraintConstant)
+        jinyButton?.bottomConstraint = jinyButtonBottomConstraint!
+        jinyButton?.disableDialog.delegate = self
         var distance = mainIconConstraintConstant
         var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
         if iconSetting.leftAlign ?? false {
@@ -530,7 +532,7 @@ extension JinyAUIManager:JinyAUIHandler {
         NSLayoutConstraint.activate([jinyButtonBottomConstraint!, cornerConstraint])
         jinyButton!.htmlUrl = iconSetting.htmlUrl
         jinyButton!.iconSize = mainIconSize
-        jinyButton?.configureIconButon()
+        jinyButton?.configureIconButton()
     }
 }
 
@@ -575,6 +577,13 @@ extension JinyAUIManager: JinyIconStateDelegate {
                 self.jinyButton?.changeToAudioPlay()
             }
         }
+    }
+}
+
+extension JinyAUIManager: JinyDisableAssistanceDelegate {
+    func shouldDisableAssistance() {
+     
+        auiManagerCallBack?.disableAssistance()
     }
 }
 

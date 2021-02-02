@@ -167,7 +167,7 @@ extension JinyLanguagePanel {
         
         setupIconWebView()
         jinyIcon.iconSize = iconHolder.frame.size.height
-        jinyIcon.configureIconButon()
+        jinyIcon.configureIconButton()
     }
     
     private func setupIconWebView() {

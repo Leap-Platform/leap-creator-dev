@@ -40,11 +40,11 @@ class JinyAssistManager {
             /// Elimination using termination frequency
             if let terminationFreq = tempAssist.terminationFrequency {
                 ///Eliminate nDismissByUser
-                if let dismissByUser = terminationFreq.nDismissByUser ?? -1, dismissByUser > -1 {
+                if let dismissByUser = terminationFreq.nDismissByUser, dismissByUser > -1 {
                     if assistsDismissedByUser.contains(tempAssist.id) { return false }
                 }
                 /// Eliminate nSessions
-                if let nSessions = terminationFreq.nSession ?? -1, nSessions > -1 {
+                if let nSessions = terminationFreq.nSession, nSessions > -1 {
                     let currentAssistSessionCount = assistSessionCount[String(tempAssist.id)] ?? 0
                     if currentAssistSessionCount >= nSessions { return false }
                 }

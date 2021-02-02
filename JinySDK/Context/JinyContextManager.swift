@@ -423,7 +423,7 @@ extension JinyContextManager:JinyAUICallback {
     
     func didReceiveInstruction(dict: Dictionary<String, Any>) {
         sendContentActionInfoEvent(eventTag: "auiContentInteractionEvent", contentAction: dict, type: dict[constant_type] as? String ?? "action_taken")
-        guard let body = dict["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool ?? false else { return }
+        guard let body = dict["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool else { return }
         if optIn {
             sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
             guard let dm = discoveryManager,
@@ -503,6 +503,11 @@ extension JinyContextManager:JinyAUICallback {
             assistManager?.resetAssistManager()
         }
         contextDetector?.start()
+    }
+    
+    func disableAssistance() {
+        
+        
     }
     
 }
