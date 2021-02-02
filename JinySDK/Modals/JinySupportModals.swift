@@ -60,6 +60,7 @@ class JinyAssistInfo {
     var autoFocus:Bool
     var type:String?
     var identifier:String?
+    var isWeb:Bool
     
     init(withDict infoDict:Dictionary<String,Any>) {
 
@@ -74,23 +75,18 @@ class JinyAssistInfo {
         if let delay = infoDict[constant_autoDismissDelay] as? Float {
             autoDismissDelay = (delay/1000)
         }
-        
+        isWeb = infoDict[constant_isWeb] as? Bool ?? false
     }
 }
 
 class JinyFrequency {
     /// number of times a discovery is shown in a session until flow complete
-    let perSession:Int?
     let perApp:Int?
-    let perSessionWoJiny:Int?
-    let perAppWoJiny:Int?
+    /// number of times a stage is shown inside a flow
     let perFlow:Int?
     
     init(with dict:Dictionary<String,Int>) {
-        perSession = dict[constant_perSession]
         perApp = dict[constant_perApp]
-        perSessionWoJiny = dict[constant_perSessionWOJiny]
-        perAppWoJiny = dict[constant_perSessionWOJiny]
         perFlow = dict[constant_perFlow]
     }
     

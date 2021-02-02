@@ -20,7 +20,7 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func hasClientCallBack() -> Bool
     func sendEvent(event:Dictionary<String,Any>)
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>)
-    func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
+    func performInstruction(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
     func performInstruction(instruction:Dictionary<String,Any>)
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
@@ -38,9 +38,6 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
     
-    func tryTTS() -> String?
-    func getAudioFilePath() -> String?
-    func getTTSText() -> String?
     func getLanguages() -> Array<String>
     func getLanguageCode() -> String
     
@@ -51,17 +48,12 @@ public protocol JinyAUIHandler:NSObjectProtocol {
     func failedToPerform()
     func willDismissView()
     func didDismissView()
+    func didDismissView(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?)
     func didReceiveInstruction(dict:Dictionary<String,Any>)
     
     func stagePerformed()
     
     func jinyTapped()
-    
-    func discoveryPresented()
-    func discoveryMuted()
-    func discoveryOptedInFlow(atIndex:Int)
-    func discoveryReset()
-    func discoveryDismissed()
     
     func languagePanelOpened()
     func languagePanelClosed()

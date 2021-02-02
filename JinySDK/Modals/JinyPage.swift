@@ -36,14 +36,7 @@ class JinyPage:JinyContext {
         copy.isWeb = self.isWeb
         copy.taggedEvents = self.taggedEvents
         copy.checkpoint = self.checkpoint
+        copy.trigger = self.trigger
         return copy
     }
-}
-
-extension JinyPage:Equatable {
-    
-    static func == (lhs:JinyPage, rhs:JinyPage) -> Bool {
-        return lhs.id == rhs.id && lhs.name == rhs.name
-    }
-    
 }

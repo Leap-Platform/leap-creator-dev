@@ -197,7 +197,8 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                     self.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+//                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byUser: true, autoDismissed: false, action: nil)
                 }
                 
             case (.down, .bottom):
@@ -214,7 +215,8 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                     self.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+//                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byUser: true, autoDismissed: false, action: nil)
                 }
                 
             case (.left, .top), (.left, .bottom):
@@ -231,7 +233,8 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                     self.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+//                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byUser: true, autoDismissed: false, action: nil)
                 }
                 
             case (.up, .top):
@@ -248,7 +251,8 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                     self.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+//                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byUser: true, autoDismissed: false, action: nil)
                 }
                 
             default:

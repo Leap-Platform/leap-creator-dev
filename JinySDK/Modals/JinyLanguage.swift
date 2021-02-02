@@ -29,3 +29,11 @@ class JinyLanguage {
     }
     
 }
+
+extension JinyLanguage:Equatable {
+    
+    static func == (lhs:JinyLanguage, rhs:JinyLanguage) -> Bool {
+        return lhs.localeId == rhs.localeId
+    }
+    
+}

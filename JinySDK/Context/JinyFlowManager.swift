@@ -10,9 +10,7 @@ import Foundation
 import UIKit
 
 protocol JinyFlowManagerDelegate:NSObjectProtocol {
-    
     func noActiveFlows()
-    
 }
 
 class JinyFlowManager {
@@ -63,11 +61,4 @@ class JinyFlowManager {
     
     func resetFlowsArray () { flowsArray = [] }
     
-    func removeStage(_ stage:JinyStage) {
-        for flow in flowsArray {
-            for page in flow.pages {
-                page.stages = page.stages.filter { $0 != stage }
-            }
-        }
-    }
 }

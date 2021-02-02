@@ -210,7 +210,8 @@ public class JinySlideIn: JinyKeyWindowAssist {
                     
                     self.webView.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+//                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byUser: true, autoDismissed: false, action: nil)
                 }
                 
             case (.left, .left):
@@ -225,7 +226,8 @@ public class JinySlideIn: JinyKeyWindowAssist {
                     
                     self.webView.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+//                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byUser: true, autoDismissed: false, action: nil)
                 }
                 
             default:

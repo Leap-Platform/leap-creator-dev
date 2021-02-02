@@ -63,9 +63,8 @@
 		D00B8F6B249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
 		D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D00E859A24F51914000D8E5B /* JinyAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E859924F51914000D8E5B /* JinyAssist.swift */; };
+		D022817225C3E1490036D8C6 /* JinyPageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D022817125C3E1490036D8C6 /* JinyPageManager.swift */; };
 		D02E8A7024A8DF1E00374DE8 /* JinyIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */; };
-		D032BC38258CC96300BEA8D8 /* Gzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; };
-		D032BC39258CC96300BEA8D8 /* Gzip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D032C57C24B6FF11006E8F2B /* JinyLanguageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB062492C600004FFD99 /* JinyLanguageButton.swift */; };
 		D032C57E24B6FF35006E8F2B /* JinyBottomDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB072492C600004FFD99 /* JinyBottomDiscoveryView.swift */; };
 		D032C57F24B6FF35006E8F2B /* JinyOptInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB082492C600004FFD99 /* JinyOptInButton.swift */; };
@@ -104,7 +103,6 @@
 		D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */; };
 		D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04BBA362472832000DF9716 /* LoginOptionViewController.swift */; };
 		D0521CA124F6401F00EEE719 /* JinyAssistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */; };
-		D0521CA324F6434E00EEE719 /* JinyEventDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA224F6434E00EEE719 /* JinyEventDetector.swift */; };
 		D0521CA524F8ECF900EEE719 /* JinyFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA424F8ECF900EEE719 /* JinyFeature.swift */; };
 		D0592E81241FA6E3007782A8 /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
 		D0592E86241FA6E3007782A8 /* JinySDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0592E85241FA6E3007782A8 /* JinySDKTests.swift */; };
@@ -176,10 +174,13 @@
 		D0BC371D249DCF24002648FF /* JinyViewProps.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC371C249DCF24002648FF /* JinyViewProps.swift */; };
 		D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC371E249DFB41002648FF /* AutomaticViewController.swift */; };
 		D0BC9ED824AE243000CE5364 /* MultipleWebViewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */; };
+		D0C9B67825B6EECD00250133 /* JinyClickHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9B67725B6EECD00250133 /* JinyClickHandler.swift */; };
 		D0D7293424AC9B0000F75D0D /* JinyJSMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D7293324AC9B0000F75D0D /* JinyJSMaker.swift */; };
 		D0DC3EFE2553ED9E00B6FA93 /* JinySupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* JinySupportModals.swift */; };
 		D0DC3F0025540A8900B6FA93 /* JinyContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFF25540A8900B6FA93 /* JinyContext.swift */; };
 		D0E55D592479747E005B3EAB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
+		D0E5DC7725B80BFD00D0580A /* Gzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; };
+		D0E5DC7825B80BFD00D0580A /* Gzip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 		D0FDAC2624B48B3C00D9332B /* JinyAUI.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* JinyAUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0FDAC3124B4A49700D9332B /* JinyAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3024B4A49700D9332B /* JinyAUI.swift */; };
@@ -269,17 +270,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D032BC3A258CC96300BEA8D8 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D032BC39258CC96300BEA8D8 /* Gzip.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D073E9372425E04E00764EF5 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -288,6 +278,17 @@
 			files = (
 				D032C59724B71CE5006E8F2B /* JinyAUI.framework in Embed Frameworks */,
 				D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0E5DC7925B80BFE00D0580A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D0E5DC7825B80BFD00D0580A /* Gzip.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,6 +348,7 @@
 		D00B8F65249B2988006F4CA1 /* JinyAuthSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthSDKTests.swift; sourceTree = "<group>"; };
 		D00B8F67249B2988006F4CA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D00E859924F51914000D8E5B /* JinyAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyAssist.swift; sourceTree = "<group>"; };
+		D022817125C3E1490036D8C6 /* JinyPageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyPageManager.swift; sourceTree = "<group>"; };
 		D02E8A6F24A8DF1E00374DE8 /* JinyIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyIdentifier.swift; sourceTree = "<group>"; };
 		D032BC37258CC96300BEA8D8 /* Gzip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Gzip.framework; sourceTree = "<group>"; };
 		D032C59B24B74C72006E8F2B /* JinyAUIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAUIUtils.swift; sourceTree = "<group>"; };
@@ -371,7 +373,6 @@
 		D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthInternal.swift; sourceTree = "<group>"; };
 		D04BBA362472832000DF9716 /* LoginOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOptionViewController.swift; sourceTree = "<group>"; };
 		D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAssistManager.swift; sourceTree = "<group>"; };
-		D0521CA224F6434E00EEE719 /* JinyEventDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyEventDetector.swift; sourceTree = "<group>"; };
 		D0521CA424F8ECF900EEE719 /* JinyFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFeature.swift; sourceTree = "<group>"; };
 		D0592E77241FA6E3007782A8 /* JinySDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JinySDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0592E7A241FA6E3007782A8 /* JinySDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JinySDK.h; sourceTree = "<group>"; };
@@ -464,6 +465,7 @@
 		D0BC371C249DCF24002648FF /* JinyViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyViewProps.swift; sourceTree = "<group>"; };
 		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
 		D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleWebViewsViewController.swift; sourceTree = "<group>"; };
+		D0C9B67725B6EECD00250133 /* JinyClickHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyClickHandler.swift; sourceTree = "<group>"; };
 		D0D7293324AC9B0000F75D0D /* JinyJSMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyJSMaker.swift; sourceTree = "<group>"; };
 		D0DC3EFD2553ED9E00B6FA93 /* JinySupportModals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinySupportModals.swift; sourceTree = "<group>"; };
 		D0DC3EFF25540A8900B6FA93 /* JinyContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyContext.swift; sourceTree = "<group>"; };
@@ -526,7 +528,7 @@
 				D077C92124B9B328001A04DF /* WebKit.framework in Frameworks */,
 				D077C91F24B9B2BF001A04DF /* AdSupport.framework in Frameworks */,
 				D0592E95241FAD99007782A8 /* UIKit.framework in Frameworks */,
-				D032BC38258CC96300BEA8D8 /* Gzip.framework in Frameworks */,
+				D0E5DC7725B80BFD00D0580A /* Gzip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -826,8 +828,9 @@
 				D0521CA024F6401F00EEE719 /* JinyAssistManager.swift */,
 				D084A13924AB58810093E8AB /* JinyDiscoveryManager.swift */,
 				D09C722D246A987A0060E054 /* JinyFlowManager.swift */,
+				D022817125C3E1490036D8C6 /* JinyPageManager.swift */,
 				D09C722F246A98860060E054 /* JinyStageManager.swift */,
-				D0521CA224F6434E00EEE719 /* JinyEventDetector.swift */,
+				D0C9B67725B6EECD00250133 /* JinyClickHandler.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
@@ -1177,7 +1180,7 @@
 				D0592E73241FA6E3007782A8 /* Sources */,
 				D0592E74241FA6E3007782A8 /* Frameworks */,
 				D0592E75241FA6E3007782A8 /* Resources */,
-				D032BC3A258CC96300BEA8D8 /* Embed Frameworks */,
+				D0E5DC7925B80BFE00D0580A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1512,7 +1515,7 @@
 				D0ABD022248122A80069FA67 /* JinyTimeInfo.swift in Sources */,
 				D0B792CB2542F8F600DB94DD /* JinyStandardEvent.swift in Sources */,
 				D0084C90248681F90082508C /* JinyStage.swift in Sources */,
-				D0521CA324F6434E00EEE719 /* JinyEventDetector.swift in Sources */,
+				D0C9B67825B6EECD00250133 /* JinyClickHandler.swift in Sources */,
 				D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */,
 				D0B793472544237800DB94DD /* JinyDiscoveryInfo.swift in Sources */,
 				D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */,
@@ -1545,6 +1548,7 @@
 				D0B792C92542F86300DB94DD /* JinyCustomEvent.swift in Sources */,
 				D0ABD028248123D60069FA67 /* JinyFlowInfo.swift in Sources */,
 				D0084C92248682A80082508C /* JinyDiscovery.swift in Sources */,
+				D022817225C3E1490036D8C6 /* JinyPageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1804,11 +1808,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WP8MNQC9P9;
 				INFOPLIST_FILE = JinySampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleApp;
 				PRODUCT_NAME = "Jiny Sample App";
 				SWIFT_VERSION = 5.0;
@@ -1824,11 +1829,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WP8MNQC9P9;
 				INFOPLIST_FILE = JinySampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jiny.JinySampleApp;
 				PRODUCT_NAME = "Jiny Sample App";
 				SWIFT_VERSION = 5.0;
@@ -2043,7 +2049,6 @@
 		D0592E8C241FA6E3007782A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -2076,7 +2081,6 @@
 		D0592E8D241FA6E3007782A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;

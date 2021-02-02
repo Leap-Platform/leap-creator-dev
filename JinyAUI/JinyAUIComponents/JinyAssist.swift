@@ -24,6 +24,9 @@ public protocol JinyAssistDelegate: class {
     /// AUIComponent is successfully dismissed.
     func didDismissAssist()
     
+    /// AUIComponent dismissed, with complete info
+    func didDismissAssist(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?)
+    
     /// A webview action when user interacts and the callback dictionary is passed as a param.
     func didSendAction(dict: Dictionary<String, Any>)
     
