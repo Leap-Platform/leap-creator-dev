@@ -24,7 +24,6 @@ class JinyDraggable: UIPanGestureRecognizer {
     init() {
         super.init(target: nil, action: nil)
         self.addTarget(self, action: #selector(panView(_:)))
-        self.delaysTouchesEnded = true
     }
     
     @objc func panView(_ sender: UIPanGestureRecognizer) {
@@ -41,14 +40,17 @@ class JinyDraggable: UIPanGestureRecognizer {
             
             if let viewToDrag = sender.view {
                 
+                if (viewToDrag.frame.origin.y + translation.y) > mainIconConstraintConstant && (viewToDrag.frame.origin.y + translation.y) <= (viewToDrag.superview!.frame.maxY - mainIconConstraintConstant - viewToDrag.frame.height)  {
+                
                 viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
                     y: viewToDrag.center.y + translation.y)
                 sender.setTranslation(CGPoint(x: 0, y: 0), in: viewToDrag)
                 
-                DispatchQueue.main.async {
+                  DispatchQueue.main.async {
                 
-                    self.draggableDelegate?.iconDidDrag()
-                }
+                     self.draggableDelegate?.iconDidDrag()
+                  }
+               }
             }
         
         } else if sender.state == .ended {
