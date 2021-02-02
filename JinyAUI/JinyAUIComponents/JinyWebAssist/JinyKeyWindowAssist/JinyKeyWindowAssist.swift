@@ -69,7 +69,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
           self.backgroundColor = UIColor.black.withAlphaComponent(0.65)
         }
         
-        if !(self.assistInfo?.highlightAnchor ?? false) {
+        if let highlightAnchor = self.assistInfo?.highlightAnchor, !highlightAnchor {
             
             self.backgroundColor = .clear
         }
