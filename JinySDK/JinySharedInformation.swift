@@ -18,6 +18,7 @@ struct JinySharedInformationConstants {
     static let discoveryFlowCompleted = "jiny_discovery_flow_completed"
     static let languageCode = "jiny_audio_language_code"
     static let muted = "jiny_muted"
+    static let languageSetByUser = "jiny_language_set_by_user"
 }
 
 enum JinyDownloadStatus {
@@ -83,13 +84,18 @@ extension JinySharedInformation {
 // MARK: - AUDIO LANGUAGE CODE GETTER AND SETTER
 extension JinySharedInformation {
     
-    func setLanguage(_ language: String) {
+    func setLanguage(_ language: String, byUser:Bool) {
         prefs.setValue(language, forKey: JinySharedInformationConstants.languageCode)
+        prefs.setValue(byUser, forKey: JinySharedInformationConstants.languageSetByUser)
         prefs.synchronize()
     }
     
     func getLanguage() -> String? {
         return prefs.value(forKey: JinySharedInformationConstants.languageCode) as? String
+    }
+    
+    func isLanguageSetByUser() -> Bool {
+        return prefs.bool(forKey: JinySharedInformationConstants.languageSetByUser) 
     }
 }
 

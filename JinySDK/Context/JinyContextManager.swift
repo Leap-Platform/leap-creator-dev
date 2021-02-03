@@ -419,18 +419,6 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func didReceiveInstruction(dict: Dictionary<String, Any>) {
-//        sendContentActionInfoEvent(eventTag: "auiContentInteractionEvent", contentAction: dict, type: dict[constant_type] as? String ?? "action_taken")
-//        guard let body = dict["body"] as? Dictionary<String,Any>, let optIn = body["optIn"] as? Bool else { return }
-//        if optIn {
-//            sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
-//            guard let dm = discoveryManager,
-//                  let discovery = dm.getCurrentDiscovery(),
-//                  let flowId = discovery.flowId else { return }
-//            let flowSelected = configuration?.flows.first { $0.id == flowId }
-//            guard let flow = flowSelected, let fm = flowManager else { return }
-//            fm.addNewFlow(flow, false, discovery.id)
-//            contextDetector?.switchState()
-//        }
     }
     
     func stagePerformed() {
@@ -439,17 +427,10 @@ extension JinyContextManager:JinyAUICallback {
     
     func jinyTapped() {
         sendContextInfoEvent(eventTag: "jinyIconClickedEvent")
-        if JinySharedInformation.shared.isMuted() {
-            if contextDetector?.getState() == .Stage {
-                flowManager?.resetFlowsArray()    
-                contextDetector?.switchState()
-            }
-            JinySharedInformation.shared.unmuteJiny()
-        }
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            break
+            manuallyTriggerCurrentDiscovery()
         case .Stage:
             auiHandler?.presentOptionPanel(mute: "Mute", repeatText: "Repeat", language: "Change Language")
             break
@@ -468,7 +449,7 @@ extension JinyContextManager:JinyAUICallback {
         sendContextInfoEvent(eventTag: "langSelectedFromPanelEvent")
         guard let config = configuration else { return }
         let languageSelected = config.languages[atIndex].localeId
-        JinySharedInformation.shared.setLanguage(languageSelected)
+        JinySharedInformation.shared.setLanguage(languageSelected, byUser: true)
         auiHandler?.startMediaFetch()
         contextDetector?.start()
         guard let state = contextDetector?.getState(), state == .Stage else { return }
@@ -511,6 +492,25 @@ extension JinyContextManager:JinyAUICallback {
 
 // MARK: - ADDITIONAL METHODS
 extension JinyContextManager {
+    
+    func manuallyTriggerCurrentDiscovery() {
+        guard let dm = discoveryManager,
+              let liveDiscovery = dm.getCurrentDiscovery(),
+              dm.isManualTrigger(),
+              let cd = contextDetector else { return }
+        guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
+            auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: nil, iconInfo: [:])
+            return
+        }
+        let isWeb = liveDiscovery.instruction?.assistInfo?.isWeb ?? false
+        contextDetector?.getViewOrRect(allView: cd.fetchViewHierarchy(), id: identifier, isWeb: isWeb, targetCheckCompleted: { (view, rect, webview) in
+            if let anchorRect = rect {
+                self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: [:])
+            } else {
+                self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: view, iconInfo: [:])
+            }
+        })
+    }
     
     func handleDiscoveryDismiss(byUser:Bool, action:Dictionary<String,Any>?) {
         guard let body = action?["body"] as? Dictionary<String,Any>,
