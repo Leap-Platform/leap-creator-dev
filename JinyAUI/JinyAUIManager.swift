@@ -238,15 +238,16 @@ extension JinyAUIManager:JinyAUIHandler {
         
     }
     
-    fileprivate func extractedFunc(_ localeHtmlUrl: String?, _ iconInfo: [String : Any], _ localeCodes: [[String : String]], _ handler: ((Bool) -> Void)?) {
+    func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
+                
         func showLanguageOptions() {
             
             let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
             self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 
                 DispatchQueue.main.async {
-                    
-                    let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
+                
+                let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
                         
                         if success, let code = languageCode {
                             
@@ -254,7 +255,7 @@ extension JinyAUIManager:JinyAUIHandler {
                             self?.currentLanguage = code
                             
                             handler?(true)
-                            
+                        
                         } else {
                             
                             handler?(false)
@@ -292,16 +293,11 @@ extension JinyAUIManager:JinyAUIHandler {
             }
             
             showLanguageOptions()
-            
+        
         } else {
             
             showLanguageOptions()
         }
-    }
-    
-    func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
-                
-        extractedFunc(localeHtmlUrl, iconInfo, localeCodes, handler)
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>, localeCodes: [String]?, languageOption: [String : String]?) {
