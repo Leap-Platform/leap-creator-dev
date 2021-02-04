@@ -64,7 +64,9 @@ public class JinyBeacon: JinyNativeAssist {
         pulsator.start()
     }
     
-    public override func remove() {
+    
+    
+    public override func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
         pulsator.stop()
         
@@ -76,7 +78,7 @@ public class JinyBeacon: JinyNativeAssist {
             }
         }
                 
-        super.remove()
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     /// sets up customised JinyBeacon's class, toView and inView.
@@ -163,7 +165,6 @@ extension JinyBeacon: JinyPulsatorDelegate {
     }
     
     func didStopAnimation() {
-        
-        super.performExitAnimation(animation: "")
+        super.performExitAnimation(animation: "", byUser: false, autoDismissed: false, byContext: true, panelOpen: false, action: nil)
     }
 }

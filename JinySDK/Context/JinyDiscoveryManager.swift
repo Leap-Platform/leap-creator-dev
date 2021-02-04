@@ -12,6 +12,7 @@ import UIKit
 
 protocol JinyDiscoveryManagerDelegate:AnyObject {
     
+    func getAllDiscoveries() -> Array<JinyDiscovery>
     func newDiscoveryIdentified(discovery:JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func sameDiscoveryIdentified(discovery:JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func dismissDiscovery()
@@ -21,20 +22,16 @@ protocol JinyDiscoveryManagerDelegate:AnyObject {
 class JinyDiscoveryManager {
     
     private weak var delegate:JinyDiscoveryManagerDelegate?
-    private var allDiscoveries:Array<JinyDiscovery> = []
     private var completedDiscoveriesInSession:Array<Int> = []
     private weak var currentDiscovery:JinyDiscovery?
     private var discoveryTimer:Timer?
     
     init(_ withDelegate:JinyDiscoveryManagerDelegate) { delegate = withDelegate }
-    
-    func setAllDiscoveries(_ discoveries:Array<JinyDiscovery>) { allDiscoveries = discoveries }
-    
+        
     func getCurrentDiscovery() -> JinyDiscovery? { return currentDiscovery }
     
     func getDiscoveriesToCheck() -> Array<JinyDiscovery> {
-        var discoveriesToCheck = allDiscoveries
-        guard discoveriesToCheck.count > 0 else { return [] }
+        guard var discoveriesToCheck = delegate?.getAllDiscoveries(), discoveriesToCheck.count > 0 else { return [] }
         let discoveryPresentedCount = JinySharedInformation.shared.getDiscoveriesPresentedInfo()
         let discoveryDismissInfo = JinySharedInformation.shared.getDismissedDiscoveryInfo()
         let discoveryFlowInfo = JinySharedInformation.shared.getDiscoveryFlowCompletedInfo()

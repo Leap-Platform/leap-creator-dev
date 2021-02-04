@@ -95,7 +95,7 @@ extension JinyContextDetector {
     
     /// Get all views in the current hierarchy
     /// - Returns: an array of all visible and relevant `UIViews`
-    private func fetchViewHierarchy() -> [UIView] {
+    func fetchViewHierarchy() -> [UIView] {
         var views:[UIView] = []
         var allWindows:Array<UIWindow> = []
         allWindows = UIApplication.shared.windows
@@ -384,7 +384,7 @@ extension JinyContextDetector {
     ///   - view: the corresponding native view if the identifier is native identifier
     ///   - rect: the corresponding CGRect value  if the identifier is web identifier
     ///   - webview: the corresponding webview for the rect if the identifier is web identifier
-    private func getViewOrRect(allView:Array<UIView>,id:String?, isWeb:Bool, targetCheckCompleted:@escaping(_ view:UIView?,_ rect:CGRect?, _ webview:UIView?)->Void) {
+    func getViewOrRect(allView:Array<UIView>,id:String?, isWeb:Bool, targetCheckCompleted:@escaping(_ view:UIView?,_ rect:CGRect?, _ webview:UIView?)->Void) {
         guard let identifier = id else {
             targetCheckCompleted (nil, nil, nil)
             return

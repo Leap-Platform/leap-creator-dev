@@ -11,6 +11,7 @@ import UIKit
 
 protocol JinyAssistManagerDelegate:NSObjectProtocol {
 
+    func getAllAssists() -> Array<JinyAssist>
     func newAssistIdentified(_ assist:JinyAssist, view:UIView?, rect:CGRect?, inWebview:UIView?)
     func sameAssistIdentified(view:UIView?, rect:CGRect?, inWebview:UIView?)
     func dismissAssist()
@@ -21,18 +22,16 @@ protocol JinyAssistManagerDelegate:NSObjectProtocol {
 class JinyAssistManager {
     
     private weak var delegate:JinyAssistManagerDelegate?
-    private var allAssists:Array<JinyAssist> = []
     private weak var currentAssist:JinyAssist?
     private var assistTimer:Timer?
     private var assistsCompletedInSession:Array<Int> = []
     
     init(_ assistDelegate:JinyAssistManagerDelegate) { delegate = assistDelegate }
     
-    func setAssistsToCheck(assists:Array<JinyAssist>) { allAssists = assists }
-    
     func getAssistsToCheck() -> Array<JinyAssist> {
         let assistSessionCount = JinySharedInformation.shared.getAssistsPresentedInfo()
         let assistsDismissedByUser = JinySharedInformation.shared.getDismissedAssistInfo()
+        guard let allAssists = delegate?.getAllAssists() else { return [] }
         let assistsToCheck = allAssists.filter { (tempAssist) -> Bool in
             /// Eliminate assists already presented in current session
             if assistsCompletedInSession.contains(tempAssist.id) { return false }

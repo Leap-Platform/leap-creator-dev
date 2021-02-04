@@ -655,7 +655,7 @@ public class JinyHighlight: JinyTipView {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             
-           remove()
+            remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
         }
     }
 }

@@ -250,7 +250,7 @@ public class JinyWebAssist: UIView, JinyAssist {
     /// method to perform exit animation.
     /// - Parameters:
     ///   - animation: string to describe the type of animation.
-    public func performExitAnimation(animation: String) {
+    public func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
         if !animation.isEmpty {
             
@@ -272,7 +272,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
                         self.alpha = 0
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -294,7 +294,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
                         self.alpha = 0
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -316,7 +316,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
                         self.alpha = 0
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -338,27 +338,27 @@ public class JinyWebAssist: UIView, JinyAssist {
                     
                     if success {
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
                 }
                 
-            default: self.remove()
+            default: self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                 
             }
         
         } else {
             
-            remove()
+            self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
         }
     }
     
-    public func remove() {
-      
+    public func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         self.removeFromSuperview()
-        self.delegate?.didDismissAssist()
+        self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
+    
     
     /// method to configure JinyIconView constraints.
     /// - Parameters:
@@ -467,7 +467,6 @@ extension JinyWebAssist: WKScriptMessageHandler {
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
         guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
         guard let close = dictBody[constant_close] as? Bool else {return}
-        let opt = (dictBody[constant_optIn] as? Bool) ?? false
         
         delegate?.didSendAction(dict: dict)
         
@@ -479,8 +478,7 @@ extension JinyWebAssist: WKScriptMessageHandler {
         }
         
         if close {
-            
-           self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
+            self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: dict)
         }
     }
 }

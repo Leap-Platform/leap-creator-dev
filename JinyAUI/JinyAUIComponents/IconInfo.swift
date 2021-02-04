@@ -27,17 +27,14 @@ public class IconInfo {
     ///   - iconDict: A dictionary value for the type IconInfo.
     init(withDict iconDict: Dictionary<String, Any>) {
         
-        if let isLeftAligned = iconDict[constant_isLeftAligned] as? Bool {
+        if let isLeftAligned = iconDict[constant_leftAlign] as? Bool {
             
             self.isLeftAligned = isLeftAligned
         }
         
-        if let isEnabled = iconDict[constant_isEnabled] as? Bool {
-            
-            self.isEnabled = isEnabled
-        }
+        self.isEnabled = true
         
-        if let backgroundColor = iconDict[constant_backgroundColor] as? String {
+        if let backgroundColor = iconDict[constant_bgColor] as? String {
             
             self.backgroundColor = backgroundColor
         }

@@ -97,7 +97,7 @@ extension JinyInternal {
             return !languageToCheck.localeId.isEmpty
         }
         guard let defaultLanguage = newDefaultLanguage else { return }
-        JinySharedInformation.shared.setLanguage(defaultLanguage.localeId)
+        JinySharedInformation.shared.setLanguage(defaultLanguage.localeId, byUser:false)
     }
 }
 
