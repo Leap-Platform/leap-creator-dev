@@ -78,7 +78,7 @@ public class JinyBeacon: JinyNativeAssist {
             }
         }
                 
-        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     /// sets up customised JinyBeacon's class, toView and inView.

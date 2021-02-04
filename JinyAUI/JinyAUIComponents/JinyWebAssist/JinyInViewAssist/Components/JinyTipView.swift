@@ -77,7 +77,6 @@ public class JinyTipView: JinyInViewAssist {
             
            toView?.isUserInteractionEnabled = userInteraction
         }
-        performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
         super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     

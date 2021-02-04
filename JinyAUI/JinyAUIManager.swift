@@ -140,9 +140,9 @@ extension JinyAUIManager {
                 
                 player.play()
 
-            } catch let error as NSError {
+            } catch  {
                 
-                print(error.description)
+                
             }
         }
     }
@@ -205,6 +205,10 @@ extension JinyAUIManager:JinyAUIHandler {
     
     func sendEvent(event: Dictionary<String, Any>) {
         delegate?.eventGenerated(event: event)
+    }
+    
+    func performAssist(instruction:Dictionary<String,Any>, view:UIView?, rect:CGRect?, webview:UIView?, iconInfo:Dictionary<String,Any>) {
+        
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>) {
@@ -515,6 +519,10 @@ extension JinyAUIManager:JinyAUIHandler {
         jinyButton?.isHidden = true
     }
     
+    func presentJinyButton(for iconSetting:Dictionary<String,Any>) {
+        
+    }
+    
 
     func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool) {
         guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
@@ -551,8 +559,12 @@ extension JinyAUIManager:JinyAUIHandler {
 extension JinyAUIManager: UIGestureRecognizerDelegate {
     
     @objc func jinyButtonTap() {
-                    
-        auiManagerCallBack?.jinyTapped()
+        
+        guard let _ = currentAssist else {
+            auiManagerCallBack?.jinyTapped()
+            return
+        }
+        presentOptionPanel(mute: "", repeatText: "", language: "")
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -623,7 +635,6 @@ extension JinyAUIManager {
                 self.soundsJson = jinySoundsJson
                 self.startStageSoundDownload()
             } catch {
-                print("Error")
                 return
             }
         }
@@ -835,8 +846,8 @@ extension JinyAUIManager: JinyAssistDelegate {
    
     func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         currentAssist = nil
+        jinyButton?.isHidden = true
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
-        jinyButton?.isHidden = false
     }
     
     func didDismissAssist(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?) {
