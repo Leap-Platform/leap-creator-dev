@@ -52,7 +52,10 @@ class JinyAUIManager:NSObject {
     var jinyButtonBottomConstraint:NSLayoutConstraint?
     var scrollArrowBottomConstraint:NSLayoutConstraint?
     
+    var currentLanguage: String?
+    
     var autoDismissTimer:Timer?
+    private var baseUrl = String()
     
     func addIdentifier(identifier:String, value:Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
@@ -176,6 +179,7 @@ extension JinyAUIManager:JinyAUIHandler {
             if let auiContentDicts = initialSounds[constant_auiContent]  as? Array<Dictionary<String,Any>> {
                 for auiContentDict in auiContentDicts {
                     if let baseUrl = auiContentDict[constant_baseUrl] as? String, let contents = auiContentDict[constant_content] as? Array<String> {
+                        self.baseUrl = baseUrl
                         htmlBaseUrl = baseUrl
                         for content in contents {
                             let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
@@ -187,12 +191,15 @@ extension JinyAUIManager:JinyAUIHandler {
             
             if let iconSettingDict = initialSounds[constant_iconSetting] as? Dictionary<String, IconSetting> {
                 if let baseUrl = htmlBaseUrl {
+                    self.baseUrl = baseUrl
                     for (_, value) in iconSettingDict {
                         let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
                         self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
                     }
                 }
             }
+            
+        
             self.fetchSoundConfig()
             
         }
@@ -207,11 +214,77 @@ extension JinyAUIManager:JinyAUIHandler {
         delegate?.eventGenerated(event: event)
     }
     
-    func performAssist(instruction:Dictionary<String,Any>, view:UIView?, rect:CGRect?, webview:UIView?, iconInfo:Dictionary<String,Any>) {
+    func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String) {
         
     }
     
-    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>) {
+    func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String) {
+        
+    }
+    
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
+        
+    }
+    
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
+        
+    }
+    
+    func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, Any>) {
+        
+    }
+    
+    func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>) {
+        
+    }
+    
+    func showLanguageOptions(withLocaleCodes localCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
+        
+        if localCodes.count == 1 {
+            currentLanguage = "ang"
+            handler?(true)
+            
+            return
+        }
+        
+        if let language = JinyPreferences.shared.getUserLanguage() {
+            
+            // if local codes has language
+            
+            handler?(true)
+        
+        } else {
+            
+            let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
+            self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
+                
+                DispatchQueue.main.async {
+                    
+                let languageArray = [["localeId":"hin","localeName":"Hindi","localeScript":"हिंदी"],["localeId":"ang","localeName":"English","localeScript":"English"],["localeId":"tam","localeName":"Tamil","localeScript":"தமிழ்"],["localeId":"tel","localeName":"Telugu","localeScript":"తెలుగు"]]
+                
+                let jinyBottomSheet = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: languageArray, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
+                        
+                        if success, let code = languageCode {
+                            
+                            JinyPreferences.shared.setUserLanguage(code)
+                            self?.currentLanguage = code
+                            handler?(true)
+                        
+                        } else {
+                            
+                            handler?(false)
+                        }
+                    }
+                    self.currentAssist = jinyBottomSheet
+                    self.currentAssist?.delegate = self
+                    UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
+                    jinyBottomSheet.showBottomSheet()
+                }
+            })
+        }
+    }
+    
+    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>, localeCodes: [String]?, languageOption: [String : String]?) {
         
         currentInstruction = instruction
         currentTargetView = inView
@@ -228,7 +301,22 @@ extension JinyAUIManager:JinyAUIHandler {
             
             guard let inView = inView else {
                 
-                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+                showLanguageOptions(withLocaleCodes: [], iconInfo: iconInfo, localeHtmlUrl: languageOption?[constant_htmlUrl]) { [weak self] (success) in
+                    
+                    if success {
+                        
+                        DispatchQueue.main.async {
+                        
+                           self?.performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+                        }
+                    
+                    } else {
+                        
+                        let iconSettings = IconSetting(with: iconInfo)
+                        
+                        self?.presentJinyButton(for: iconSettings, iconEnabled: true)
+                    }
+                }
                 
                 return
             }

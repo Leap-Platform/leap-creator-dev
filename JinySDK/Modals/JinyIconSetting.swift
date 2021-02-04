@@ -18,7 +18,7 @@ import Foundation
     public var htmlUrl: String? //can also be base64
     public var contentUrls: [String]?
     
-    init(with dict: Dictionary<String, Any>) {
+    public init(with dict: Dictionary<String, Any>) {
         
         if let dragEnabled = dict[constant_dragEnabled] as? Bool {
             self.dragEnabled = dragEnabled

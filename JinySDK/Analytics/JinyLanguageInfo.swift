@@ -14,7 +14,7 @@ class JinyLanguageInfo:Codable {
     var app_lang:String?
     
     init() {
-        jiny_lang = JinySharedInformation.shared.getLanguage() ?? ""
+        jiny_lang = JinyPreferences.shared.getUserLanguage() ?? ""
         app_lang = Locale.current.languageCode
     }
     
