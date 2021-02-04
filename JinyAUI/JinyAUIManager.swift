@@ -238,50 +238,70 @@ extension JinyAUIManager:JinyAUIHandler {
         
     }
     
-    func showLanguageOptions(withLocaleCodes localCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
-        
-        if localCodes.count == 1 {
-            currentLanguage = "ang"
-            handler?(true)
-            
-            return
-        }
-        
-        if let language = JinyPreferences.shared.getUserLanguage() {
-            
-            // if local codes has language
-            
-            handler?(true)
-        
-        } else {
+    fileprivate func extractedFunc(_ localeHtmlUrl: String?, _ iconInfo: [String : Any], _ localeCodes: [[String : String]], _ handler: ((Bool) -> Void)?) {
+        func showLanguageOptions() {
             
             let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
             self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 
                 DispatchQueue.main.async {
                     
-                let languageArray = [["localeId":"hin","localeName":"Hindi","localeScript":"हिंदी"],["localeId":"ang","localeName":"English","localeScript":"English"],["localeId":"tam","localeName":"Tamil","localeScript":"தமிழ்"],["localeId":"tel","localeName":"Telugu","localeScript":"తెలుగు"]]
-                
-                let jinyBottomSheet = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: languageArray, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
+                    let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
                         
                         if success, let code = languageCode {
                             
                             JinyPreferences.shared.setUserLanguage(code)
                             self?.currentLanguage = code
+                            
                             handler?(true)
-                        
+                            
                         } else {
                             
                             handler?(false)
                         }
                     }
-                    self.currentAssist = jinyBottomSheet
+                    self.currentAssist = jinyLanguageOptions
                     self.currentAssist?.delegate = self
-                    UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
-                    jinyBottomSheet.showBottomSheet()
+                    UIApplication.shared.keyWindow?.addSubview(jinyLanguageOptions)
+                    jinyLanguageOptions.showBottomSheet()
                 }
             })
         }
+        
+        if localeCodes.count == 1 {
+            
+            currentLanguage = localeCodes.first?[constant_localeId]
+            
+            handler?(true)
+            
+            return
+        }
+        
+        if let userLanguage = JinyPreferences.shared.getUserLanguage() {
+            
+            for localCode in localeCodes {
+                
+                if let localeId = localCode[constant_localeId], localeId == userLanguage {
+                    
+                    currentLanguage = localeId
+                    
+                    handler?(true)
+                    
+                    return
+                }
+            }
+            
+            showLanguageOptions()
+            
+        } else {
+            
+            showLanguageOptions()
+        }
+    }
+    
+    func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
+                
+        extractedFunc(localeHtmlUrl, iconInfo, localeCodes, handler)
     }
     
     func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>, localeCodes: [String]?, languageOption: [String : String]?) {
