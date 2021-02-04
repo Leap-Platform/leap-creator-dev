@@ -252,14 +252,11 @@ extension JinyAUIManager:JinyAUIHandler {
                         if success, let code = languageCode {
                             
                             JinyPreferences.shared.setUserLanguage(code)
-                            self?.currentLanguage = code
-                            
-                            handler?(true)
-                        
-                        } else {
-                            
-                            handler?(false)
                         }
+                    
+                        self?.currentLanguage = languageCode
+                    
+                        handler?(success)
                     }
                     self.currentAssist = jinyLanguageOptions
                     self.currentAssist?.delegate = self
