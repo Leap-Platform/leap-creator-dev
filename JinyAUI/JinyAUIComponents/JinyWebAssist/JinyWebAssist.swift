@@ -272,7 +272,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
                         self.alpha = 0
                         
-                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -294,7 +294,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
                         self.alpha = 0
                         
-                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -316,7 +316,7 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
                         self.alpha = 0
                         
-                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -338,19 +338,19 @@ public class JinyWebAssist: UIView, JinyAssist {
                     
                     if success {
                         
-                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
                 }
                 
-            default: self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+            default: self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                 
             }
         
         } else {
             
-            self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: nil)
+            self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
         }
     }
     

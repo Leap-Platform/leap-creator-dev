@@ -14,7 +14,7 @@ import UIKit
     case NegativeUI
 }
 
-public protocol JinyAUIHandler:NSObjectProtocol {
+@objc public protocol JinyAUIHandler:NSObjectProtocol {
     
     func startMediaFetch()
     func hasClientCallBack() -> Bool

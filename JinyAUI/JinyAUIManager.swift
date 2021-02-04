@@ -519,11 +519,6 @@ extension JinyAUIManager:JinyAUIHandler {
         jinyButton?.isHidden = true
     }
     
-    func presentJinyButton(for iconSetting:Dictionary<String,Any>) {
-        
-    }
-    
-
     func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool) {
         guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
             JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl

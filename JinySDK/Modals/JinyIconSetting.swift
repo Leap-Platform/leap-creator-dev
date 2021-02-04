@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class IconSetting {
+@objc public class IconSetting:NSObject,Codable {
     
     public var dragEnabled: Bool?
     public var dismissible: Bool?
