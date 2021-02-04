@@ -87,7 +87,7 @@ extension JinyInternal {
     
     func setupDefaultLanguage() {
         guard let config = self.jinyConfiguration else { return }
-        if let currentLocaleId = JinySharedInformation.shared.getLanguage() {
+        if let currentLocaleId = JinyPreferences.shared.getUserLanguage() {
             let currentDefaultLanguage = config.languages.first { (tempLanguage) -> Bool in
                 return tempLanguage.localeId == currentLocaleId
             }
@@ -97,7 +97,7 @@ extension JinyInternal {
             return !languageToCheck.localeId.isEmpty
         }
         guard let defaultLanguage = newDefaultLanguage else { return }
-        JinySharedInformation.shared.setLanguage(defaultLanguage.localeId, byUser:false)
+        JinyPreferences.shared.setUserLanguage(defaultLanguage.localeId)
     }
 }
 

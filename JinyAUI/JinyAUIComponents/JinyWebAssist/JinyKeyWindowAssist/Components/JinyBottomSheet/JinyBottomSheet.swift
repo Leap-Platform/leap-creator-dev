@@ -71,9 +71,9 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
         
-        // Support Constraint
+        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([heightConstraint!])
     }
     
     /// Set height constraint for the bottomSheet.
@@ -81,14 +81,20 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
     ///   - height: Height of the content of the webview.
     private func configureHeightConstraint(height: CGFloat) {
         
-        let proportionalHeight = (((self.assistInfo?.layoutInfo?.style.maxHeight ?? 80.0) * Double(self.frame.height)) / 100)
+        let proportionalHeight = (((CGFloat((self.assistInfo?.layoutInfo?.style.maxHeight ?? 0.8))*100) * self.frame.height) / 100)
         
-        if height > 0 && height < CGFloat(proportionalHeight) {
+        var sizeHeight: CGFloat = 0
+        
+        if height <= 0 || height > proportionalHeight {
             
-           self.assistInfo?.layoutInfo?.style.maxHeight = (Double(height) / Double(self.frame.height)) * 100
+            sizeHeight = proportionalHeight
+        
+        } else if height <= proportionalHeight {
+            
+            sizeHeight = height
         }
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: CGFloat((self.assistInfo?.layoutInfo?.style.maxHeight ?? 80.0)/100), constant: 0))
+        heightConstraint?.constant = sizeHeight
     }
     
     public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

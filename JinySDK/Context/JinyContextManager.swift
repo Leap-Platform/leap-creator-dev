@@ -150,7 +150,7 @@ extension JinyContextManager:JinyAssistManagerDelegate {
         if let anchorRect = rect {
             auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, rect: anchorRect, inWebview: inWebview, iconInfo: [:])
         } else {
-            auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, inView: view, iconInfo: [:])
+            auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, inView: view, iconInfo: [:], localeCodes: [], languageOption: [:])
         }
     }
     
@@ -181,7 +181,7 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
         if let anchorRect = rect {
             auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: iconInfo)
         } else {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: view, iconInfo: iconInfo)
+            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: view, iconInfo: iconInfo as Dictionary<String, Any>, localeCodes: discovery.localeCodes, languageOption: discovery.languageOption)
         }
     }
     
@@ -229,7 +229,7 @@ extension JinyContextManager:JinyStageManagerDelegate {
         if let anchorRect = rect {
             auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
         } else {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: view, iconInfo: [:])
+            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: view, iconInfo: [:], localeCodes: [], languageOption: [:])
         }
         sendContextInfoEvent(eventTag: "jinyInstructionEvent")
     }
@@ -377,7 +377,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func getLanguageCode() -> String {
-        return JinySharedInformation.shared.getLanguage() ?? "hin"
+        return JinyPreferences.shared.getUserLanguage() ?? "hin"
     }
     
     func willPresentView() {
@@ -456,7 +456,7 @@ extension JinyContextManager:JinyAUICallback {
         sendContextInfoEvent(eventTag: "langSelectedFromPanelEvent")
         guard let config = configuration else { return }
         let languageSelected = config.languages[atIndex].localeId
-        JinySharedInformation.shared.setLanguage(languageSelected, byUser: true)
+        JinyPreferences.shared.setUserLanguage(languageSelected)
         auiHandler?.startMediaFetch()
         contextDetector?.start()
         guard let state = contextDetector?.getState(), state == .Stage else { return }
@@ -507,7 +507,7 @@ extension JinyContextManager {
               let cd = contextDetector else { return }
         let iconInfo:Dictionary<String,Any> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
-            auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: nil, iconInfo: iconInfo)
+            auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: nil, iconInfo: iconInfo, localeCodes: [], languageOption: [:])
             return
         }
         let isWeb = liveDiscovery.instruction?.assistInfo?.isWeb ?? false
@@ -515,7 +515,7 @@ extension JinyContextManager {
             if let anchorRect = rect {
                 self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: iconInfo)
             } else {
-                self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: view, iconInfo: iconInfo)
+                self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: view, iconInfo: iconInfo, localeCodes: [], languageOption: [:])
             }
         })
     }
