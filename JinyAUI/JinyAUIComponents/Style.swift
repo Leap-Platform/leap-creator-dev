@@ -11,7 +11,7 @@ import Foundation
 public class Style {
     
     /// background color of the overlay
-    public var bgColor: String
+    public var bgColor: String?
     
     /// elevation of the content
     public var elevation: Double?
@@ -44,10 +44,6 @@ public class Style {
         if let bgColor = styleDict[constant_bgColor] as? String {
             
             self.bgColor = bgColor
-            
-        } else {
-            
-            self.bgColor = "default"
         }
         
         if let elevation = styleDict[constant_elevation] as? Double {
