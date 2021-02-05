@@ -62,7 +62,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
 
         if let colorString = self.assistInfo?.layoutInfo?.style.bgColor {
         
-          self.backgroundColor = UIColor.init(hex: colorString)
+          self.backgroundColor = UIColor.init(hex: colorString) ?? UIColor.black.withAlphaComponent(0.65)
         
         } else {
             

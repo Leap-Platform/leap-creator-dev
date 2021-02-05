@@ -442,8 +442,10 @@ extension JinyWebAssist: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.isHidden = false
+        
         if let language = JinyPreferences.shared.currentLanguage {
-            changeLanguage(locale: language)
+            
+           changeLanguage(locale: language)
         }
         
         didFinish(webView, didFinish: navigation)
@@ -479,6 +481,7 @@ extension JinyWebAssist: WKScriptMessageHandler {
         }
         
         if close {
+            
             self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: dict)
         }
     }

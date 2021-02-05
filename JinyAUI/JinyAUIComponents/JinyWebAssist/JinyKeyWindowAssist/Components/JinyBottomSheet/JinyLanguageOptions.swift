@@ -30,9 +30,7 @@ class JinyLanguageOptions: JinyBottomSheet {
         self.init(withDict: assisDict, iconDict: iconDict)
         
         self.completionHandler = handler
-        
-        assistInfo?.layoutInfo?.style.maxHeight = 0.8
-        
+                
         if let htmlUrl = htmlUrl {
             
             assistInfo?.htmlUrl = htmlUrl
@@ -48,7 +46,7 @@ class JinyLanguageOptions: JinyBottomSheet {
         webView.scrollView.isScrollEnabled = false
     }
     
-    func getLanguages() {
+    private func getLanguages() {
         webView.evaluateJavaScript("initIOSHtml('\(discoveryLanguagesScript)', '\(self.iconInfo?.backgroundColor ?? "#00000000")')", completionHandler: nil)
     }
     

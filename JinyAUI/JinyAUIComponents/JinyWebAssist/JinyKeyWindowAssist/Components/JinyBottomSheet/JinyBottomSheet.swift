@@ -16,14 +16,11 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
     public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
         super.init(withDict: assistDict, iconDict: iconDict)
                         
-        if let layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> {
+        var layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> ?? [:]
             
-           var layoutInfo = layoutInfo
-            
-           layoutInfo[constant_alignment] = "bottom"
+        layoutInfo[constant_alignment] = "bottom"
                         
-           self.assistInfo?.layoutInfo = LayoutInfo(withDict: layoutInfo)
-        }
+        self.assistInfo?.layoutInfo = LayoutInfo(withDict: layoutInfo)
         
         // comment this if you want value from config
         assistInfo?.layoutInfo?.style.elevation = 8 // hardcoded value
