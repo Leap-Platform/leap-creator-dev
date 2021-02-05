@@ -115,13 +115,17 @@ extension JinyAUIManager {
         
         callback.willPlayAudio()
         
-        let code = callback.getLanguageCode()
+        guard let code = JinyPreferences.shared.currentLanguage else {
+            
+            return
+        }
         
         guard let mediaName = currentInstruction?[constant_soundName] as? String else {
             callback.didPlayAudio()
             startAutoDismissTimer()
             return
         }
+        
         if mediaManager?.isAlreadyDownloaded(mediaName: mediaName, langCode: code) ?? false {
             
             let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -143,10 +147,7 @@ extension JinyAUIManager {
                 
                 player.play()
                 
-            } catch  {
-                
-                
-            }
+            } catch  { }
         }
     }
 }
