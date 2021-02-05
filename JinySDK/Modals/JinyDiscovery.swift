@@ -78,8 +78,8 @@ class JinyDiscovery:JinyContext {
     var terminationfrequency:JinyFlowTerminationFrequency?
     var flowId:Int?
     var triggerFrequency: JinyTriggerFrequency?
-    var localeCodes: [String]?
-    var languageOption: [String : String]?
+    var localeCodes: Array<String>?
+    var languageOption: Dictionary<String,String>?
     
     init(withDict discoveryDict:Dictionary<String,Any>) {
         triggerMode = JinyTriggerMode(rawValue: (discoveryDict[constant_triggerMode] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  JinyTriggerMode.Single
@@ -124,6 +124,8 @@ extension JinyDiscovery {
         copy.trigger = self.trigger
         copy.instruction = self.instruction
         copy.instructionInfoDict = self.instructionInfoDict
+        copy.localeCodes = self.localeCodes
+        copy.languageOption = self.languageOption
         return copy
     }
     

@@ -442,9 +442,10 @@ extension JinyWebAssist: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.isHidden = false
+        if let language = JinyPreferences.shared.currentLanguage {
+            changeLanguage(locale: language)
+        }
         
-        changeLanguage(locale: UserDefaults.standard.object(forKey: "jiny_audio_language_code") as! String)
-                
         didFinish(webView, didFinish: navigation)
                 
         performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")

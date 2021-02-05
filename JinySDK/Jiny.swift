@@ -19,9 +19,6 @@ import UIKit
     func startMediaFetch()
     func hasClientCallBack() -> Bool
     func sendEvent(event:Dictionary<String,Any>)
-    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>, localeCodes: [String]?, languageOption: [String : String]?)
-    func performInstruction(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?, iconInfo:Dictionary<String,Any>)
-    func performInstruction(instruction:Dictionary<String,Any>)
     func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String)
     func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String)
     func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?)

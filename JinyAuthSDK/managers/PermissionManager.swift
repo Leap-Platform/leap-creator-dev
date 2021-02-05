@@ -25,7 +25,7 @@ class PermissionManager: AppStateProtocol{
     
     
     let ALFRED_URL_LOCAL: String = "http://192.168.1.3:8080";
-    let ALFRED_URL_DEV: String = "https://alfred-dev-0-0-1-gke.jiny.io";
+    let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is";
     var permissionListener: PermissionListener
     var application: UIApplication
     let permissionGranted: String = "PERMISSION_GRANTED"

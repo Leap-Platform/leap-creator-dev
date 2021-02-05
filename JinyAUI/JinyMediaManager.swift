@@ -36,6 +36,7 @@ class JinyMediaManager {
         }
         if isAlreadyDownloaded(mediaName: forMedia.name, langCode: code){
             statusTracker[forMedia.name] = .downloaded
+            completion?(true)
             return
         }
         

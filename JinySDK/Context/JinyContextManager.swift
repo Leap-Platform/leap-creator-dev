@@ -147,15 +147,18 @@ extension JinyContextManager:JinyAssistManagerDelegate {
     }
     
     func newAssistIdentified(_ assist: JinyAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
+        guard let aui = auiHandler else { return }
         if let anchorRect = rect {
-            auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, rect: anchorRect, inWebview: inWebview, iconInfo: [:])
+            aui.performWebAssist(instruction: assist.instructionInfoDict!, rect: anchorRect, webview: inWebview, localeCode: assist.localeCode)
         } else {
-            auiHandler?.performInstruction(instruction: assist.instructionInfoDict!, inView: view, iconInfo: [:], localeCodes: [], languageOption: [:])
+            aui.performNativeAssist(instruction: assist.instructionInfoDict!, view: view, localeCode: assist.localeCode)
+
         }
     }
     
     func sameAssistIdentified(view: UIView?, rect: CGRect?, inWebview: UIView?) {
         if let anchorRect = rect { auiHandler?.updateRect(rect: anchorRect, inWebView: inWebview) }
+        else if let anchorView = view { auiHandler?.updateView(inView: anchorView) }
     }
     
     func dismissAssist() { auiHandler?.removeAllViews() }
@@ -171,22 +174,26 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
     }
     
     func newDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
-        guard let dm = discoveryManager else { return }
+        guard  let aui = auiHandler, let dm = discoveryManager else { return }
         guard !dm.isManualTrigger()  else {
             //present jiny button
-            auiHandler?.presentJinyButton(for: configuration!.iconSetting[String(discovery.id)] ?? IconSetting(with: [:]), iconEnabled: discovery.enableIcon)
+            aui.presentJinyButton(for: configuration!.iconSetting[String(discovery.id)] ?? IconSetting(with: [:]), iconEnabled: discovery.enableIcon)
             return
         }
+        let instruction = discovery.instructionInfoDict!
         let iconInfo:Dictionary<String,Any> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
+        let localeCode = generateLangDicts(localeCodes: discovery.localeCodes)
+        let htmlUrl = discovery.languageOption?["htmlUrl"]
         if let anchorRect = rect {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: iconInfo)
+            aui.performWebDiscovery(instruction: instruction, rect: anchorRect, webview: webview, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
         } else {
-            auiHandler?.performInstruction(instruction: discovery.instructionInfoDict!, inView: view, iconInfo: iconInfo as Dictionary<String, Any>, localeCodes: discovery.localeCodes, languageOption: discovery.languageOption)
+            aui.performNativeDiscovery(instruction: instruction, view: view, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
         }
     }
     
     func sameDiscoveryIdentified(discovery: JinyDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         if let anchorRect = rect { auiHandler?.updateRect(rect: anchorRect, inWebView: webview) }
+        else if let anchorView = view { auiHandler?.updateView(inView: anchorView) }
     }
     
     func dismissDiscovery() { auiHandler?.removeAllViews() }
@@ -227,15 +234,16 @@ extension JinyContextManager:JinyStageManagerDelegate {
         auiHandler?.presentJinyButton(for: configuration!.iconSetting[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
         if let anchorRect = rect {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, rect: anchorRect, inWebview: webviewForRect, iconInfo: [:])
+            auiHandler?.performWebStage(instruction: stage.instructionInfoDict!, rect: anchorRect, webview: webviewForRect, iconInfo: iconInfo)
         } else {
-            auiHandler?.performInstruction(instruction: stage.instructionInfoDict!, inView: view, iconInfo: [:], localeCodes: [], languageOption: [:])
+            auiHandler?.performNativeStage(instruction: stage.instructionInfoDict!, view: view, iconInfo: iconInfo)
         }
         sendContextInfoEvent(eventTag: "jinyInstructionEvent")
     }
     
-    func sameStageFound(_ stage: JinyStage, newRect: CGRect?, webviewForRect:UIView?) {
+    func sameStageFound(_ stage: JinyStage, view:UIView?, newRect: CGRect?, webviewForRect:UIView?) {
         if let rect = newRect { auiHandler?.updateRect(rect: rect, inWebView: webviewForRect) }
+        else if let anchorView = view { auiHandler?.updateView(inView: anchorView) }
     }
     
     func dismissStage() { auiHandler?.removeAllViews() }
@@ -503,19 +511,19 @@ extension JinyContextManager {
     func manuallyTriggerCurrentDiscovery() {
         guard let dm = discoveryManager,
               let liveDiscovery = dm.getCurrentDiscovery(),
-              dm.isManualTrigger(),
               let cd = contextDetector else { return }
         let iconInfo:Dictionary<String,Any> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
+        let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
-            auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: nil, iconInfo: iconInfo, localeCodes: [], languageOption: [:])
+            auiHandler?.performNativeDiscovery(instruction: liveDiscovery.instructionInfoDict!, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
             return
         }
         let isWeb = liveDiscovery.instruction?.assistInfo?.isWeb ?? false
         contextDetector?.getViewOrRect(allView: cd.fetchViewHierarchy(), id: identifier, isWeb: isWeb, targetCheckCompleted: { (view, rect, webview) in
             if let anchorRect = rect {
-                self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, rect: anchorRect, inWebview: webview, iconInfo: iconInfo)
+                self.auiHandler?.performWebDiscovery(instruction: liveDiscovery.instructionInfoDict!, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
             } else {
-                self.auiHandler?.performInstruction(instruction: liveDiscovery.instructionInfoDict!, inView: view, iconInfo: iconInfo, localeCodes: [], languageOption: [:])
+                self.auiHandler?.performNativeDiscovery(instruction: liveDiscovery.instructionInfoDict!, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
             }
         })
     }
@@ -547,6 +555,16 @@ extension JinyContextManager {
               let iconInfoData = try? jsonEncoder.encode(iconInfo),
               let iconInfoDict = try? JSONSerialization.jsonObject(with: iconInfoData, options: .allowFragments) as? Dictionary<String,Any> else { return [:] }
         return iconInfoDict
+    }
+    
+    func generateLangDicts(localeCodes:Array<String>?) -> Array<Dictionary<String,String>>{
+        guard let codes = localeCodes else { return [] }
+        let langDicts = codes.map { (langCode) -> Dictionary<String,String>? in
+            let tempLanguage = configuration?.languages.first { $0.localeId == langCode }
+            guard let language = tempLanguage else { return nil }
+            return ["localeId":language.localeId, "localeName":language.name, "localeScript":language.script]
+        }.compactMap { return $0 }
+        return langDicts
     }
     
 }

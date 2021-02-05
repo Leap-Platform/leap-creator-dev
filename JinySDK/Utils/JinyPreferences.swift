@@ -14,6 +14,7 @@ class JinyPreferences {
     static let shared = JinyPreferences()
     
     let prefs = UserDefaults.standard
+    var currentLanguage:String?
     
     let languageCode = "jiny_audio_language_code"
     

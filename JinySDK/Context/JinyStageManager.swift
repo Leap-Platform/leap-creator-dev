@@ -12,7 +12,7 @@ import UIKit
 protocol JinyStageManagerDelegate:NSObjectProtocol {
     func getCurrentPage() -> JinyPage?
     func newStageFound(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
-    func sameStageFound(_ stage:JinyStage, newRect:CGRect?, webviewForRect:UIView?)
+    func sameStageFound(_ stage:JinyStage, view:UIView?, newRect:CGRect?, webviewForRect:UIView?)
     func dismissStage()
     func removeStage(_ stage:JinyStage)
     func isSuccessStagePerformed()
@@ -40,7 +40,7 @@ class JinyStageManager {
     
     func setCurrentStage(_ stage:JinyStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
         if currentStage == stage {
-            if stageTimer == nil { delegate?.sameStageFound(stage, newRect: rect, webviewForRect: webviewForRect) }
+            if stageTimer == nil { delegate?.sameStageFound(stage, view:view, newRect: rect, webviewForRect: webviewForRect) }
             return
         }
         
@@ -91,7 +91,7 @@ class JinyStageManager {
     func resetCurrentStage() { currentStage = nil }
     
     func sameStage (_ newStage:JinyStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?) {
-        delegate?.sameStageFound(newStage, newRect: rect, webviewForRect: webviewForRect)
+        delegate?.sameStageFound(newStage,view: view, newRect: rect, webviewForRect: webviewForRect)
     }
     
     func getCurrentStage() -> JinyStage? { return currentStage }

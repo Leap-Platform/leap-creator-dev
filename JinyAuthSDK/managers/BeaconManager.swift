@@ -11,7 +11,7 @@ import Foundation
 class BeaconManager {
     private static let TAG: String = " Jiny - BeaconManager "
     private let ALFRED_URL_LOCAL: String  = "http://192.168.1.3:8080"
-    private let ALFRED_URL_DEV: String = "https://alfred-dev-0-0-1-gke.jiny.io"
+    private let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is"
     
     let json = "{\"id\":\"\(JinyAuthShared.shared.apiKey!)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(JinyAuthShared.shared.apiKey!)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
     
