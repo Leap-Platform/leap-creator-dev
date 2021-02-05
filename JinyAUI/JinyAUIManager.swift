@@ -26,33 +26,35 @@ class JinyAUIManager:NSObject {
     weak var auiManagerCallBack:JinyAUICallback?
     weak var delegate:JinyAUIManagerDelegate?
     
+    var currentAssist:JinyAssist? {
+        didSet {
+            if var _ = currentAssist {
+                currentAssist?.delegate = self
+            }
+        }
+    }
+    
     var keyboardHeight:Float = 0
+    var jinyButtonBottomConstraint:NSLayoutConstraint?
+    var scrollArrowBottomConstraint:NSLayoutConstraint?
+    
     var audioPlayer:AVAudioPlayer?
-    var pointer:JinyPointer?
-    var tooltip: JinyToolTip?
-    var highlight: JinyHighlight?
-    var beacon: JinyBeacon?
-    var spot: JinySpot?
-    var label: JinyLabel?
-    var swipePointer: JinySwipePointer?
     var optionPanel:JinyOptionPanel?
     var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
+    
     var synthesizer:AVSpeechSynthesizer?
     var utterance:AVSpeechUtterance?
     let audioSession = AVAudioSession.sharedInstance()
-    var currentAssist:JinyAssist?
     var mediaManager:JinyMediaManager?
+    
     var soundsJson:Dictionary<String,Any>?
     var scrollArrow:UIButton?
+    
     var currentInstruction:Dictionary<String,Any>?
     weak var currentTargetView:UIView?
     var currentTargetRect:CGRect?
     weak var currentWebView:UIView?
-    var jinyButtonBottomConstraint:NSLayoutConstraint?
-    var scrollArrowBottomConstraint:NSLayoutConstraint?
-    
-    var currentLanguage: String?
     
     var autoDismissTimer:Timer?
     private var baseUrl = String()
@@ -71,16 +73,14 @@ extension JinyAUIManager {
     }
     
     @objc func keyboardDidShow(_ notification:NSNotification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+           let targetView = currentTargetView, isViewHiddenByKeyboard(targetView)
+        {
             let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight = Float(keyboardRectangle.height)
-            if let targetView = currentTargetView {
-                if isViewHiddenByKeyboard(targetView) {
-                    showArrow()
-                    scrollArrowBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
-                    scrollArrow?.updateConstraints()
-                }
-            }
+            showArrow()
+            scrollArrowBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
+            scrollArrow?.updateConstraints()
         }
         if jinyButton != nil {
             jinyButtonBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
@@ -123,7 +123,7 @@ extension JinyAUIManager {
             return
         }
         if mediaManager?.isAlreadyDownloaded(mediaName: mediaName, langCode: code) ?? false {
-        
+            
             let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             var jinyMediaPath = documentPath.appendingPathComponent(Constants.Networking.downloadsFolder)
             
@@ -142,7 +142,7 @@ extension JinyAUIManager {
                 self.jinyButton?.iconState = .audioPlay
                 
                 player.play()
-
+                
             } catch  {
                 
                 
@@ -152,7 +152,7 @@ extension JinyAUIManager {
 }
 
 extension JinyAUIManager:JinyAUIHandler {
-   
+    
     func startMediaFetch() {
         
         DispatchQueue.main.async {
@@ -199,7 +199,7 @@ extension JinyAUIManager:JinyAUIHandler {
                 }
             }
             
-        
+            
             self.fetchSoundConfig()
             
         }
@@ -215,308 +215,80 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String) {
-        
+        setupDefaultValues(instruction:instruction, langCode: localeCode, view: view, rect: nil, webview: nil)
+        guard let view = currentTargetView else {
+            performKeyWindowInstruction(instruction: instruction, iconInfo: [:])
+            return
+        }
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        performInViewNativeInstruction(instruction: instruction, inView: view, type: type)
     }
     
     func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String) {
-        
+        setupDefaultValues(instruction:instruction, langCode: localeCode, view: nil, rect: rect, webview: webview)
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String,
+              let anchorWebview = webview else { return }
+        performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
     }
     
     func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
-        
+        setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
+            self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+            if languageChose {
+                guard let anchorView = view else {
+                    self.performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+                    return
+                }
+                guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+                      let type = assistInfo[constant_type] as? String else { return }
+                self.performInViewNativeInstruction(instruction: instruction, inView: anchorView, type: type)
+                self.dismissJinyButton()
+            }
+            else { self.presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true) }
+        }
     }
     
     func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
-        
+        setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+        showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
+            if languageChose {
+                self.setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+                guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+                      let type = assistInfo[constant_type] as? String,
+                      let anchorWebview = webview else { return }
+                self.dismissJinyButton()
+                self.performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
+            }
+            else { self.presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true) }
+        }
     }
     
     func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, Any>) {
-        
+        setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        guard let view = currentTargetView else {
+            performKeyWindowInstruction(instruction: instruction, iconInfo: nil)
+            return
+        }
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        performInViewNativeInstruction(instruction: instruction, inView: view, type: type)
+        presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
     }
     
     func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>) {
-        
-    }
-    
-    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView?, iconInfo: Dictionary<String, Any>, localeCodes: [String]?, languageOption: [String : String]?) {
-        
-        currentInstruction = instruction
-        currentTargetView = inView
-        currentWebView = nil
-        currentTargetRect = nil
-                
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
-            return
-        }
-        
-        if let type = assistInfo[constant_type] as? String {
-            auiManagerCallBack?.willPresentView()
-            
-            guard let inView = inView else {
-                
-                showLanguageOptions(withLocaleCodes: [], iconInfo: iconInfo, localeHtmlUrl: languageOption?[constant_htmlUrl]) { [weak self] (success) in
-                    
-                    if success {
-                        
-                        DispatchQueue.main.async {
-                        
-                           self?.performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
-                        }
-                    
-                    } else {
-                        
-                        let iconSettings = IconSetting(with: iconInfo)
-                        
-                        self?.presentJinyButton(for: iconSettings, iconEnabled: true)
-                    }
-                }
-                
-                return
-            }
-            
-            if !isViewInVisibleArea(view: inView) {
-                if let autoscroll = assistInfo[constant_autoScroll] as? Bool {
-                    let scrollViews = getScrollViews(inView)
-                    if scrollViews.count > 0 {
-                        if autoscroll { makeViewVisible(scrollViews, false) }
-                        else { showArrow() }
-                    }
-                } else {
-                    showArrow()
-                }
-            }
-            
-            switch type {
-                
-            case FINGER_RIPPLE:
-                pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
-                currentAssist = pointer
-                pointer?.pointerDelegate = self
-                pointer?.presentPointer(view: inView)
-                
-            case TOOLTIP:
-                tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
-                currentAssist = tooltip
-                tooltip?.delegate = self
-                tooltip?.presentPointer()
-                
-            case HIGHLIGHT_WITH_DESC:
-                highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
-                currentAssist = highlight
-                highlight?.delegate = self
-                highlight?.presentHighlight()
-                
-            case SPOT:
-                spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
-                currentAssist = spot
-                spot?.delegate = self
-                spot?.presentSpot()
-                
-            case LABEL:
-                label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
-                currentAssist = label
-                label?.delegate = self
-                label?.presentLabel()
-                
-            case BEACON:
-                beacon = JinyBeacon(withDict: assistInfo, toView: inView)
-                currentAssist = beacon
-                beacon?.delegate = self
-                beacon?.presentBeacon()
-                
-            case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-                swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
-                swipePointer?.type = JinySwipePointerType(rawValue: type)!
-                currentAssist = swipePointer
-                swipePointer?.pointerDelegate = self
-                swipePointer?.presentPointer(view: inView)
-            
-            default:
-                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
-            }
-        }
-        
-    }
-    
-    func performInstruction(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?, iconInfo:Dictionary<String,Any>) {
-        currentInstruction = instruction
-        currentTargetView = nil
-        currentWebView = inWebview
-        currentTargetRect = rect
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
-            return
-        }
-        if let type = assistInfo[constant_type] as? String {
-            switch type {
-                
-            case FINGER_RIPPLE:
-                if !isRectInVisbleArea(rect: rect, inView: inWebview!) {
-                    if let autoscroll = assistInfo[constant_autoScroll] as? Bool {
-                        if autoscroll {
-                            if let wkweb = inWebview as? WKWebView {
-                                wkweb.scrollView.scrollRectToVisible(rect, animated: false)
-                            }
-                        }
-                        else {
-                            
-                        }
-                    } else {
-                        
-                    }
-                }
-                
-                pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
-                currentAssist = pointer
-                pointer?.pointerDelegate = self
-                pointer?.presentPointer(toRect: rect, inView: inWebview)
-            
-            case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-                
-                swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
-                swipePointer?.type = JinySwipePointerType(rawValue: type)!
-                currentAssist = swipePointer
-                swipePointer?.pointerDelegate = self
-                swipePointer?.presentPointer(toRect: rect, inView: inWebview)
-                
-            case TOOLTIP:
-                tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
-                currentAssist = tooltip
-                tooltip?.delegate = self
-                tooltip?.presentPointer(toRect: rect, inView: inWebview)
-                
-            case HIGHLIGHT_WITH_DESC:
-                highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
-                currentAssist = highlight
-                highlight?.delegate = self
-                highlight?.presentHighlight(toRect: rect, inView: inWebview)
-                
-            case SPOT:
-                spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
-                currentAssist = spot
-                spot?.delegate = self
-                spot?.presentSpot(toRect: rect, inView: inWebview)
-                
-            case LABEL:
-                label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview!, insideView: nil)
-                currentAssist = label
-                label?.delegate = self
-                label?.presentLabel(toRect: rect, inView: inWebview)
-                
-            case BEACON:
-                beacon = JinyBeacon(withDict: assistInfo, toView: inWebview!)
-                currentAssist = beacon
-                beacon?.delegate = self
-                beacon?.presentBeacon(toRect: rect, inView: inWebview)
-            
-            default:
-                performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
-            }
-        }
+        setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview)
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        guard let anchorWebview = webview else { return }
+        performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
+        presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
     }
     
     func dismissCurrentAssist() {
         
-    }
-    
-    func performInstruction(instruction: Dictionary<String,Any>) {
-        currentInstruction = instruction
-        currentTargetView = nil
-        currentWebView = nil
-        currentTargetRect = nil
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
-            playAudio()
-            return
-        }
-        if let type = assistInfo[constant_type] as? String {
-            switch type {
-                
-            case FINGER_RIPPLE:
-                auiManagerCallBack?.failedToPerform()
-                break
-            default:
-                performKeyWindowInstruction(instruction: instruction)
-            }
-        }
-    }
-    
-    func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
-
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
-            return
-        }
-        
-        if let type = assistInfo[constant_type] as? String {
-            switch type {
-            case POPUP:
-                let jinyPopup = JinyPopup(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyPopup
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
-                jinyPopup.showPopup()
-            case DRAWER:
-                let jinyDrawer = JinyDrawer(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyDrawer
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
-                jinyDrawer.showDrawer()
-            case FULLSCREEN:
-                let jinyFullScreen = JinyFullScreen(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyFullScreen
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
-                jinyFullScreen.showFullScreen()
-            case BOTTOMUP:
-                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyBottomSheet
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
-                jinyBottomSheet.showBottomSheet()
-            case NOTIFICATION:
-                let jinyNotification = JinyNotification(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyNotification
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyNotification)
-                jinyNotification.showNotification()
-            case SLIDEIN:
-                let jinySlideIn = JinySlideIn(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinySlideIn
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinySlideIn)
-                jinySlideIn.showSlideIn()
-            case CAROUSEL:
-                let jinyCarousel = JinyCarousel(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyCarousel
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyCarousel)
-                jinyCarousel.showCarousel()
-                
-            case PING:
-                
-                self.jinyButton?.layoutIfNeeded()
-                
-                UIView.animate(withDuration: 0.2) {
-                    
-                    self.jinyButtonBottomConstraint?.constant = mainIconConstraintConstant
-                    
-                    self.jinyButton?.layoutIfNeeded()
-                }
-                
-                jinyButton?.isHidden = true
-
-                let jinyPing = JinyPing(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyPing
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyPing)
-                jinyPing.showPing()
-    
-            default:
-                break
-            }
-            currentAssist?.delegate = self
-        }
     }
     
     func updateRect(rect:CGRect, inWebView:UIView?) {
@@ -550,11 +322,9 @@ extension JinyAUIManager:JinyAUIHandler {
     }
     
     func dismissJinyButton() {
-        guard let mainButton = jinyButton, mainButton.superview != nil else { return }
-        mainButton.removeFromSuperview()
-        jinyButton = nil
+        jinyButton?.isHidden = true
     }
-   
+    
     func removeAllViews() {
         currentAssist?.remove(byContext: true, byUser: false, autoDismissed: false, panelOpen: false, action: nil)
         currentAssist = nil
@@ -630,7 +400,7 @@ extension JinyAUIManager: JinyIconStateDelegate {
 
 extension JinyAUIManager: JinyDisableAssistanceDelegate {
     func shouldDisableAssistance() {
-     
+        
         auiManagerCallBack?.disableAssistance()
     }
 }
@@ -708,27 +478,26 @@ extension JinyAUIManager: JinyPointerDelegate {
 extension JinyAUIManager {
     
     func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
-                
+        
         func showLanguageOptions() {
             
             let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
             self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 
                 DispatchQueue.main.async {
-                
-                let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
+                    
+                    let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
                         
                         if success, let code = languageCode {
                             
                             JinyPreferences.shared.setUserLanguage(code)
                         }
-                    
-                        self?.currentLanguage = languageCode
-                    
+                        
+                        JinyPreferences.shared.currentLanguage = languageCode
+                        
                         handler?(success)
                     }
-                    self.currentAssist = jinyLanguageOptions
-                    self.currentAssist?.delegate = self
+
                     UIApplication.shared.keyWindow?.addSubview(jinyLanguageOptions)
                     jinyLanguageOptions.showBottomSheet()
                 }
@@ -737,7 +506,7 @@ extension JinyAUIManager {
         
         if localeCodes.count == 1 {
             
-            currentLanguage = localeCodes.first?[constant_localeId]
+            JinyPreferences.shared.currentLanguage = localeCodes.first?[constant_localeId]
             
             handler?(true)
             
@@ -750,7 +519,7 @@ extension JinyAUIManager {
                 
                 if let localeId = localCode[constant_localeId], localeId == userLanguage {
                     
-                    currentLanguage = localeId
+                    JinyPreferences.shared.currentLanguage = localeId
                     
                     handler?(true)
                     
@@ -759,12 +528,203 @@ extension JinyAUIManager {
             }
             
             showLanguageOptions()
-        
+            
         } else {
             
             showLanguageOptions()
         }
     }
+}
+
+// MARK: - PRESENT AUI COMPONENTS
+extension JinyAUIManager {
+    
+    private func setupDefaultValues(instruction:Dictionary<String,Any>, langCode:String?, view:UIView?, rect:CGRect?, webview:UIView?) {
+        if let code = langCode { JinyPreferences.shared.currentLanguage = code }
+        currentInstruction = instruction
+        currentTargetView = view
+        currentTargetRect = rect
+        currentWebView = webview
+    }
+    
+    private func performInViewNativeInstruction(instruction:Dictionary<String,Any>, inView:UIView, type:String, iconInfo:Dictionary<String,Any>? = nil) {
+        // Set autoscroll
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        
+        if !isViewInVisibleArea(view: inView) {
+            if let autoScroll = assistInfo[constant_autoScroll] as? Bool, autoScroll { arrowClicked() }
+            else { showArrow() }
+        }
+        
+        //Set autofocus
+        if let autoFocus = assistInfo[constant_autoFocus] as? Bool, autoFocus { inView.becomeFirstResponder() }
+        
+        // Present Assist
+        switch type {
+        case FINGER_RIPPLE:
+            let fingerPointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = fingerPointer
+            fingerPointer.pointerDelegate = self
+            fingerPointer.presentPointer(view: inView)
+            
+        case TOOLTIP:
+            let tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = tooltip
+            tooltip.presentPointer()
+            
+        case HIGHLIGHT_WITH_DESC:
+            let highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = highlight
+            highlight.presentHighlight()
+            
+        case SPOT:
+            let spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = spot
+            spot.presentSpot()
+            
+        case LABEL:
+            let label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = label
+            label.presentLabel()
+            
+        case BEACON:
+            let beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+            currentAssist = beacon
+            beacon.presentBeacon()
+            
+        case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
+            let swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            swipePointer.type = JinySwipePointerType(rawValue: type)!
+            currentAssist = swipePointer
+            swipePointer.pointerDelegate = self
+            swipePointer.presentPointer(view: inView)
+        default:
+            performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+        }
+    }
+    
+    private func performInViewWebInstruction(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView, type:String, iconInfo:Dictionary<String,Any>? = nil) {
+        
+        guard  let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        
+        if !isRectInVisbleArea(rect: rect, inView: inWebview){
+            if let autoScroll = assistInfo[constant_autoScroll] as? Bool, autoScroll { arrowClicked() }
+            else { showArrow() }
+        }
+        
+        let autoFocus = assistInfo[constant_assistInfo] as? Bool ?? false
+        if autoFocus, let webIdentfier = assistInfo[constant_identifier] as? String {
+            //Do auto focus for web element
+            fatalError("Hello! No js script to focus on web element")
+        }
+        switch type {
+        case FINGER_RIPPLE:
+            let pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = pointer
+            pointer.pointerDelegate = self
+            pointer.presentPointer(toRect: rect, inView: inWebview)
+            
+        case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
+            let swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            swipePointer.type = JinySwipePointerType(rawValue: type)!
+            currentAssist = swipePointer
+            swipePointer.pointerDelegate = self
+            swipePointer.presentPointer(toRect: rect, inView: inWebview)
+            
+        case TOOLTIP:
+            let tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = tooltip
+            tooltip.presentPointer(toRect: rect, inView: inWebview)
+            
+        case HIGHLIGHT_WITH_DESC:
+            let highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = highlight
+            highlight.presentHighlight(toRect: rect, inView: inWebview)
+            
+        case SPOT:
+            let spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = spot
+            spot.presentSpot(toRect: rect, inView: inWebview)
+            
+        case LABEL:
+            let label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = label
+            label.presentLabel(toRect: rect, inView: inWebview)
+            
+        case BEACON:
+            let beacon = JinyBeacon(withDict: assistInfo, toView: inWebview)
+            currentAssist = beacon
+            beacon.presentBeacon(toRect: rect, inView: inWebview)
+            
+        default:
+            performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+        }
+    }
+    
+    private func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
+        
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        
+        if let type = assistInfo[constant_type] as? String {
+            switch type {
+            case POPUP:
+                let jinyPopup = JinyPopup(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyPopup
+                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
+                jinyPopup.showPopup()
+            case DRAWER:
+                let jinyDrawer = JinyDrawer(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyDrawer
+                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
+                jinyDrawer.showDrawer()
+            case FULLSCREEN:
+                let jinyFullScreen = JinyFullScreen(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyFullScreen
+                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
+                jinyFullScreen.showFullScreen()
+            case BOTTOMUP:
+                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyBottomSheet
+                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
+                jinyBottomSheet.showBottomSheet()
+            case NOTIFICATION:
+                let jinyNotification = JinyNotification(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyNotification
+                UIApplication.shared.keyWindow?.addSubview(jinyNotification)
+                jinyNotification.showNotification()
+            case SLIDEIN:
+                let jinySlideIn = JinySlideIn(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinySlideIn
+                UIApplication.shared.keyWindow?.addSubview(jinySlideIn)
+                jinySlideIn.showSlideIn()
+            case CAROUSEL:
+                let jinyCarousel = JinyCarousel(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyCarousel
+                UIApplication.shared.keyWindow?.addSubview(jinyCarousel)
+                jinyCarousel.showCarousel()
+                
+            case PING:
+                self.jinyButton?.layoutIfNeeded()
+                UIView.animate(withDuration: 0.2) {
+                    self.jinyButtonBottomConstraint?.constant = mainIconConstraintConstant
+                    self.jinyButton?.layoutIfNeeded()
+                }
+                jinyButton?.isHidden = true
+                
+                let jinyPing = JinyPing(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyPing
+                UIApplication.shared.keyWindow?.addSubview(jinyPing)
+                jinyPing.showPing()
+                
+            default:
+                break
+            }
+        }
+    }
+    
 }
 
 extension JinyAUIManager: JinyLanguagePanelDelegate {
@@ -843,7 +803,7 @@ extension JinyAUIManager {
     }
     
     func isRectInVisbleArea(rect:CGRect, inView:UIView) -> Bool {
-        return true
+        return inView.frame.contains(rect)
     }
     
     func isViewHiddenByKeyboard(_ view:UIView) -> Bool {
@@ -897,11 +857,22 @@ extension JinyAUIManager {
     }
     
     @objc func arrowClicked() {
-        let nestedScrolls = getScrollViews(currentTargetView!)
-        makeViewVisible(nestedScrolls, true)
-        let currentVc = UIApplication.getCurrentVC()
-        let view = currentVc!.view!
-        view.endEditing(true)
+        guard let assistInfo = currentInstruction?[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        let isWeb = assistInfo[constant_isWeb] as? Bool ?? false
+        if isWeb {
+            guard let webview = currentWebView, let rect = currentTargetRect else { return }
+            if let wkweb = webview as? WKWebView {
+                wkweb.scrollView.scrollRectToVisible(rect, animated: true)
+            } else if let uiweb = webview as? UIWebView {
+                uiweb.scrollView.scrollRectToVisible(rect, animated: false)
+            }
+        } else {
+            let nestedScrolls = getScrollViews(currentTargetView!)
+            makeViewVisible(nestedScrolls, true)
+            let currentVc = UIApplication.getCurrentVC()
+            let view = currentVc!.view!
+            view.endEditing(true)
+        }
         scrollArrow?.removeFromSuperview()
         scrollArrow = nil
     }
@@ -933,14 +904,14 @@ extension JinyAUIManager: JinyAssistDelegate {
     func willPresentAssist() { auiManagerCallBack?.willPresentView() }
     
     func didPresentAssist() {
-                
+        
         playAudio()
         
         auiManagerCallBack?.didPresentView()
     }
     
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
-   
+    
     func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         currentAssist = nil
         jinyButton?.isHidden = true

@@ -35,7 +35,8 @@ class JinyInternal:NSObject {
 extension JinyInternal {
     
     func fetchConfig() {
-        let url = URL(string: "https://odin-dev-gke.jiny.io/odin/api/v3/config")
+        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/config")
+//        let url = URL(string: "https://odin-dev-gke.jiny.io/odin/api/v3/config")
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"
         let dict:Dictionary<String,String> = [:]
@@ -50,7 +51,7 @@ extension JinyInternal {
                 let headers = httpResponse.allHeaderFields
                 self.saveHeaders(headers: headers)
             }
-            self.setupDefaultLanguage()
+//            self.setupDefaultLanguage()
             self.startContextDetection()
         }
         configTask.resume()

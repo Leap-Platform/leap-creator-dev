@@ -90,7 +90,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     let CASE_KILL_AUTH = "KILL_AUTH"
 
 //    let SOCKET_URL: String? = "ws://15.206.167.18:4000/ws"
-    let SOCKET_URL: String? = "wss://raven.jiny.io/ws"
+    let SOCKET_URL: String? = "wss://raven-dev-gke.leap.is/ws"
     
     var protocolListener: ProtocolListener
     var applicationInstance: UIApplication

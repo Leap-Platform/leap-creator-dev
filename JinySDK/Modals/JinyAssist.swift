@@ -12,9 +12,11 @@ class JinyAssist:JinyContext {
     
     var type:String
     var terminationFrequency:JinyFlowTerminationFrequency?
+    var localeCode:String
     
     init(withDict assistDict:Dictionary<String,Any>) {
         type = assistDict[constant_type] as? String ?? "NORMAL"
+        localeCode = assistDict[constant_localeCode]  as? String ?? ""
         if let terminationFrequencyDict = assistDict[constant_terminationFrequency] as? Dictionary<String,Int> {
             terminationFrequency = JinyFlowTerminationFrequency(with: terminationFrequencyDict)
         }
@@ -41,6 +43,7 @@ extension JinyAssist {
         copy.terminationFrequency = self.terminationFrequency
         copy.instruction = self.instruction
         copy.instructionInfoDict = self.instructionInfoDict
+        copy.localeCode = self.localeCode
         return copy
     }
     
