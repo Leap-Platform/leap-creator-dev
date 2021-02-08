@@ -19,19 +19,23 @@ import UIKit
     func startMediaFetch()
     func hasClientCallBack() -> Bool
     func sendEvent(event:Dictionary<String,Any>)
+    
     func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String)
     func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String)
+    
     func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?)
     func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?)
+    
     func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, Any>)
     func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>)
+    
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
+    
     func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool)
     func presentLanguagePanel(languages: Array<String>)
     func presentOptionPanel(mute: String, repeatText: String, language: String?)
     func dismissJinyButton()
-    func dismissCurrentAssist()
     func removeAllViews()
 }
 
@@ -43,16 +47,9 @@ import UIKit
     func getLanguages() -> Array<String>
     func getLanguageCode() -> String
     
-    func willPresentView()
     func didPresentView()
-    func willPlayAudio()
-    func didPlayAudio()
     func failedToPerform()
-    func willDismissView()
     func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
-    func didReceiveInstruction(dict:Dictionary<String,Any>)
-    
-    func stagePerformed()
     
     func jinyTapped()
     

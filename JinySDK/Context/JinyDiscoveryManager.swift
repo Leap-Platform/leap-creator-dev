@@ -91,6 +91,7 @@ class JinyDiscoveryManager {
     func isManualTrigger() -> Bool {
         guard let disc = currentDiscovery else { return false }
         if completedDiscoveriesInSession.contains(disc.id) { return true }
+        if JinySharedInformation.shared.getMutedDiscoveries().contains(disc.id) { return true }
         if let triggerType = disc.triggerFrequency?.type {
             switch triggerType {
             case .everySession:

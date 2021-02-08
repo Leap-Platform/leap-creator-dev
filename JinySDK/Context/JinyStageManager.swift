@@ -96,7 +96,7 @@ class JinyStageManager {
     
     func getCurrentStage() -> JinyStage? { return currentStage }
     
-    func stageDismissed(byUser:Bool, autoDismissed:Bool) {
+    func stageDismissed(byUser:Bool, autoDismissed:Bool, endFlow:Bool) {
         guard byUser || autoDismissed else { return }
         guard let stage = currentStage else { return }
         if stage.type == .Sequence || stage.type == .ManualSequence { delegate?.removeStage(stage) }
