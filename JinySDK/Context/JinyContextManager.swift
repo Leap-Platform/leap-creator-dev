@@ -419,7 +419,7 @@ extension JinyContextManager:JinyAUICallback {
                 flowManager?.resetFlowsArray()
                 contextDetector?.switchState()
             }
-            sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed, endFlow:endFlow)
+            sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
         }
     }
     
