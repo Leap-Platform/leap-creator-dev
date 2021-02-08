@@ -11,15 +11,12 @@ import UIKit
 import AdSupport
 
 class JinyInternal:NSObject {
-    private var apikey:String
-    var jinyConfiguration:JinyConfig?
     var contextManager:JinyContextManager
     
     init(_ token : String, uiManager:JinyAUIHandler?) {
-        self.apikey = token
         self.contextManager = JinyContextManager(withUIHandler: uiManager)
         super.init()
-        JinySharedInformation.shared.setAPIKey(apikey)
+        JinySharedInformation.shared.setAPIKey(token)
         JinySharedInformation.shared.setSessionId()
         fetchConfig()
     }
@@ -34,9 +31,8 @@ class JinyInternal:NSObject {
 
 extension JinyInternal {
     
-    func fetchConfig() {
-        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/config")
-//        let url = URL(string: "https://odin-dev-gke.jiny.io/odin/api/v3/config")
+    private func fetchConfig() {
+        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch")
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"
         let dict:Dictionary<String,String> = [:]
@@ -44,20 +40,34 @@ extension JinyInternal {
         req.httpBody = jsonData
         getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
-            guard let resultData = data else { return }
-            guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
-            self.jinyConfiguration = JinyConfig(withDict: configDict)
-            if let httpResponse = response as? HTTPURLResponse {
-                let headers = httpResponse.allHeaderFields
-                self.saveHeaders(headers: headers)
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode != 304,
+                  let resultData = data,
+                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
             }
-//            self.setupDefaultLanguage()
-            self.startContextDetection()
+            self.saveHeaders(headers: httpResponse.allHeaderFields)
+            self.saveConfig(config: configDict)
+            self.startContextDetection(config: configDict)
         }
         configTask.resume()
     }
     
-    func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
+    private func getHeaders() -> Dictionary<String,String> {
+        var headers = [
+            "x-jiny-client-id"      : JinySharedInformation.shared.getAPIKey(),
+            "x-app-version-code"    : JinySharedInformation.shared.getVersionCode(),
+            "x-app-version-name"    : JinySharedInformation.shared.getVersionName(),
+            "Content-Type"          : "application/json"
+        ]
+        getSavedHeaders().forEach { headers[$0.key] = $0.value }
+        return headers
+    }
+    
+    private func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
         var toSaveHeaders:Dictionary<String,String> = [:]
         headers.forEach { (key,value) in
             if let headerField = key as? String, let valueField = value as? String {
@@ -69,45 +79,30 @@ extension JinyInternal {
         prefs.synchronize()
     }
     
-    func getHeaders() -> Dictionary<String,String> {
-        var headers = [
-            "x-jiny-client-id"      : JinySharedInformation.shared.getAPIKey(),
-            "x-app-version-code"    : JinySharedInformation.shared.getVersionCode(),
-            "x-app-version-name"    : JinySharedInformation.shared.getVersionName(),
-            "Content-Type"          : "application/json"
-        ]
-        getSavedHeaders().forEach { headers[$0.key] = $0.value }
-        return headers
-    }
-    
-    func getSavedHeaders() -> Dictionary<String,String> {
+    private func getSavedHeaders() -> Dictionary<String,String> {
         let prefs = UserDefaults.standard
         let headers = prefs.object(forKey: "jiny_saved_headers") as? Dictionary<String,String> ?? [:]
         return headers
     }
     
-    func setupDefaultLanguage() {
-        guard let config = self.jinyConfiguration else { return }
-        if let currentLocaleId = JinyPreferences.shared.getUserLanguage() {
-            let currentDefaultLanguage = config.languages.first { (tempLanguage) -> Bool in
-                return tempLanguage.localeId == currentLocaleId
-            }
-            if currentDefaultLanguage != nil { return }
-        }
-        let newDefaultLanguage = config.languages.first { (languageToCheck) -> Bool in
-            return !languageToCheck.localeId.isEmpty
-        }
-        guard let defaultLanguage = newDefaultLanguage else { return }
-        JinyPreferences.shared.setUserLanguage(defaultLanguage.localeId)
+    private func saveConfig(config:Dictionary<String,AnyHashable>) {
+        let prefs = UserDefaults.standard
+        prefs.setValue(config, forKey: "jiny_config")
+        prefs.synchronize()
+    }
+    
+    private func getSavedConfig() -> Dictionary<String,AnyHashable> {
+        let prefs = UserDefaults.standard
+        guard let config = prefs.value(forKey: "jiny_config") as? Dictionary<String,AnyHashable> else { return [:] }
+        return config
     }
 }
 
 // MARK: - CONTEXT DETECTION METHODS
 extension JinyInternal {
-    
-    func startContextDetection() {
-        guard let configuration = self.jinyConfiguration else { return }
+    private func startContextDetection(config:Dictionary<String,AnyHashable>) {
         DispatchQueue.main.async {
+            let configuration = JinyConfig(withDict: config)
             self.contextManager.initialize(withConfig: configuration)
         }
     }
