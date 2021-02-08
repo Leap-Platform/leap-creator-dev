@@ -123,6 +123,7 @@
 		D077C92324B9B330001A04DF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92224B9B330001A04DF /* AVFoundation.framework */; };
 		D077C92424B9B346001A04DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; };
 		D077C92524B9B34C001A04DF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92024B9B328001A04DF /* WebKit.framework */; };
+		D07EA68825D174BE00DC0F36 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = D07EA68725D174BE00DC0F36 /* Gzip */; };
 		D07FEB282494A95A004FFD99 /* SearchHotelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */; };
 		D084A13A24AB58810093E8AB /* JinyDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* JinyDiscoveryManager.swift */; };
 		D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */; };
@@ -184,8 +185,6 @@
 		D0DC3EFE2553ED9E00B6FA93 /* JinySupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* JinySupportModals.swift */; };
 		D0DC3F0025540A8900B6FA93 /* JinyContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFF25540A8900B6FA93 /* JinyContext.swift */; };
 		D0E55D592479747E005B3EAB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
-		D0E5DC7725B80BFD00D0580A /* Gzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; };
-		D0E5DC7825B80BFD00D0580A /* Gzip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 		D0FDAC2624B48B3C00D9332B /* JinyAUI.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* JinyAUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0FDAC3124B4A49700D9332B /* JinyAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3024B4A49700D9332B /* JinyAUI.swift */; };
@@ -283,17 +282,6 @@
 			files = (
 				D032C59724B71CE5006E8F2B /* JinyAUI.framework in Embed Frameworks */,
 				D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D0E5DC7925B80BFE00D0580A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D0E5DC7825B80BFD00D0580A /* Gzip.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,10 +522,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D077C92324B9B330001A04DF /* AVFoundation.framework in Frameworks */,
+				D07EA68825D174BE00DC0F36 /* Gzip in Frameworks */,
 				D077C92124B9B328001A04DF /* WebKit.framework in Frameworks */,
 				D077C91F24B9B2BF001A04DF /* AdSupport.framework in Frameworks */,
 				D0592E95241FAD99007782A8 /* UIKit.framework in Frameworks */,
-				D0E5DC7725B80BFD00D0580A /* Gzip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1201,13 +1189,15 @@
 				D0592E73241FA6E3007782A8 /* Sources */,
 				D0592E74241FA6E3007782A8 /* Frameworks */,
 				D0592E75241FA6E3007782A8 /* Resources */,
-				D0E5DC7925B80BFE00D0580A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = JinySDK;
+			packageProductDependencies = (
+				D07EA68725D174BE00DC0F36 /* Gzip */,
+			);
 			productName = JinySDK;
 			productReference = D0592E77241FA6E3007782A8 /* JinySDK.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1332,6 +1322,7 @@
 			mainGroup = D0592E6D241FA6E3007782A8;
 			packageReferences = (
 				B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */,
+				D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = D0592E78241FA6E3007782A8 /* Products */;
 			projectDirPath = "";
@@ -2399,6 +2390,14 @@
 				minimumVersion = 4.0.4;
 			};
 		};
+		D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2406,6 +2405,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		D07EA68725D174BE00DC0F36 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
