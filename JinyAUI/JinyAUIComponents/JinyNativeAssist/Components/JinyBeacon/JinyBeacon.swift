@@ -41,7 +41,6 @@ public class JinyBeacon: JinyNativeAssist {
     /// presents beacon after setting up view, setting up alignment and when start() method called.
     func presentBeacon() {
         
-        delegate?.willPresentAssist()
         
         setupView()
                 

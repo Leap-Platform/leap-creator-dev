@@ -204,7 +204,6 @@ public class JinySlideIn: JinyKeyWindowAssist {
                     
                   self.webView.frame.origin.x = UIScreen.main.bounds.width
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
@@ -219,7 +218,6 @@ public class JinySlideIn: JinyKeyWindowAssist {
                     
                   self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     

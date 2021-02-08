@@ -26,13 +26,7 @@ class JinyAUIManager:NSObject {
     weak var auiManagerCallBack:JinyAUICallback?
     weak var delegate:JinyAUIManagerDelegate?
     
-    var currentAssist:JinyAssist? {
-        didSet {
-            if var _ = currentAssist {
-                currentAssist?.delegate = self
-            }
-        }
-    }
+    var currentAssist:JinyAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
     
     var keyboardHeight:Float = 0
     var jinyButtonBottomConstraint:NSLayoutConstraint?
@@ -110,43 +104,23 @@ extension JinyAUIManager {
     }
     
     func playAudio() {
-        
-        guard let callback = auiManagerCallBack else { return }
-        
-        callback.willPlayAudio()
-        
-        guard let code = JinyPreferences.shared.currentLanguage else {
-            
-            return
-        }
-        
-        guard let mediaName = currentInstruction?[constant_soundName] as? String else {
-            callback.didPlayAudio()
+        guard let code = JinyPreferences.shared.currentLanguage,
+              let mediaName = currentInstruction?[constant_soundName] as? String else {
             startAutoDismissTimer()
             return
         }
         
         if mediaManager?.isAlreadyDownloaded(mediaName: mediaName, langCode: code) ?? false {
-            
             let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             var jinyMediaPath = documentPath.appendingPathComponent(Constants.Networking.downloadsFolder)
-            
             jinyMediaPath = jinyMediaPath.appendingPathComponent(code).appendingPathComponent(mediaName).appendingPathExtension("mp3")
-            
             do {
-                
                 try AVAudioSession.sharedInstance().setActive(true)
-                
                 self.audioPlayer = try AVAudioPlayer(contentsOf: jinyMediaPath, fileTypeHint: AVFileType.mp3.rawValue)
-                
                 self.audioPlayer?.delegate = self
-                
                 guard let player = self.audioPlayer else { return }
-                
                 self.jinyButton?.iconState = .audioPlay
-                
                 player.play()
-                
             } catch  { }
         }
     }
@@ -199,10 +173,7 @@ extension JinyAUIManager:JinyAUIHandler {
                     }
                 }
             }
-            
-            
             self.fetchSoundConfig()
-            
         }
     }
     
@@ -286,10 +257,6 @@ extension JinyAUIManager:JinyAUIHandler {
         guard let anchorWebview = webview else { return }
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
         presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
-    }
-    
-    func dismissCurrentAssist() {
-        
     }
     
     func updateRect(rect:CGRect, inWebView:UIView?) {
@@ -411,15 +378,13 @@ extension JinyAUIManager {
     
     func startDefaultSoundDownload(_ dict:Dictionary<String,Any>) {
         let langCode = auiManagerCallBack?.getLanguageCode()
-        if let baseUrl = dict[constant_baseUrl] as? String, let code = langCode {
-            if let allLangSoundsDict = dict[constant_jinySounds] as? Dictionary<String,Any>,
-               let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> {
-                for soundDict in soundsDictArray {
-                    if let url = soundDict[constant_url] as? String{
-                        let sound = JinySound(baseUrl: baseUrl, location: url, code: code, info: soundDict)
-                        mediaManager?.startDownload(forMedia: sound, atPriority: .normal)
-                    }
-                }
+        guard let baseUrl = dict[constant_baseUrl] as? String, let code = langCode,
+           let allLangSoundsDict = dict[constant_jinySounds] as? Dictionary<String,Any>,
+           let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> else { return }
+        for soundDict in soundsDictArray {
+            if let url = soundDict[constant_url] as? String{
+                let sound = JinySound(baseUrl: baseUrl, location: url, code: code, info: soundDict)
+                mediaManager?.startDownload(forMedia: sound, atPriority: .normal)
             }
         }
     }
@@ -454,9 +419,7 @@ extension JinyAUIManager {
         for soundDict in soundDictsArray {
             let sound = JinySound(baseUrl: soundDict[constant_url] as! String, location: "", code: code, info: soundDict)
             mediaManager?.startDownload(forMedia: sound, atPriority: .low, completion: { [weak self] (_) in
-                DispatchQueue.main.async {
-                    self?.playAudio()
-                }
+                DispatchQueue.main.async { self?.playAudio() }
             })
         }
     }
@@ -468,7 +431,7 @@ extension JinyAUIManager: JinyPointerDelegate {
         self.didPresentAssist()
     }
     
-    func nextClicked() { auiManagerCallBack?.stagePerformed() }
+    func nextClicked() {}
     
     func pointerRemoved() {
         
@@ -481,24 +444,14 @@ extension JinyAUIManager {
     func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
         
         func showLanguageOptions() {
-            
             let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
             self.mediaManager?.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
-                
                 DispatchQueue.main.async {
-                    
-                    let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { [weak self] (success, languageCode) in
-                        
-                        if success, let code = languageCode {
-                            
-                            JinyPreferences.shared.setUserLanguage(code)
-                        }
-                        
+                    let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { success, languageCode in
+                        if success, let code = languageCode { JinyPreferences.shared.setUserLanguage(code) }
                         JinyPreferences.shared.currentLanguage = languageCode
-                        
                         handler?(success)
                     }
-
                     UIApplication.shared.keyWindow?.addSubview(jinyLanguageOptions)
                     jinyLanguageOptions.showBottomSheet()
                 }
@@ -506,34 +459,21 @@ extension JinyAUIManager {
         }
         
         if localeCodes.count == 1 {
-            
             JinyPreferences.shared.currentLanguage = localeCodes.first?[constant_localeId]
-            
             handler?(true)
-            
             return
         }
-        
-        if let userLanguage = JinyPreferences.shared.getUserLanguage() {
-            
-            for localCode in localeCodes {
-                
-                if let localeId = localCode[constant_localeId], localeId == userLanguage {
-                    
-                    JinyPreferences.shared.currentLanguage = localeId
-                    
-                    handler?(true)
-                    
-                    return
-                }
-            }
-            
+        guard let userLanguage = JinyPreferences.shared.getUserLanguage() else {
             showLanguageOptions()
-            
-        } else {
-            
-            showLanguageOptions()
+            return
         }
+        let localeDict = localeCodes.first { $0[constant_localeId] == userLanguage }
+        guard let alreadySelectedLanguageDict = localeDict, let langCode = alreadySelectedLanguageDict[constant_localeId] else {
+            showLanguageOptions()
+            return
+        }
+        JinyPreferences.shared.currentLanguage = langCode
+        handler?(true)
     }
 }
 
@@ -771,13 +711,11 @@ extension JinyAUIManager:AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         jinyButton?.iconState = .rest
-        self.auiManagerCallBack?.didPlayAudio()
         startAutoDismissTimer()
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         jinyButton?.iconState = .rest
-        self.auiManagerCallBack?.didPlayAudio()
         startAutoDismissTimer()
     }
 }
@@ -785,7 +723,6 @@ extension JinyAUIManager:AVAudioPlayerDelegate {
 extension JinyAUIManager:AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        auiManagerCallBack?.didPlayAudio()
         startAutoDismissTimer()
     }
 }
@@ -893,41 +830,23 @@ extension JinyAUIManager {
         })
         RunLoop.main.add(autoDismissTimer!, forMode: .default)
     }
-    
-    
-    func removeViews(byContext:Bool, autoDismiss:Bool, panelOpen:Bool) {
-        
-    }
 }
 
 extension JinyAUIManager: JinyAssistDelegate {
     
-    func willPresentAssist() { auiManagerCallBack?.willPresentView() }
-    
     func didPresentAssist() {
-        
         playAudio()
-        
         auiManagerCallBack?.didPresentView()
     }
     
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
     func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
         currentAssist = nil
         jinyButton?.isHidden = true
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
-    func didDismissAssist(byUser:Bool, autoDismissed:Bool, action:Dictionary<String,Any>?) {
-        
-    }
-    
-    func didSendAction(dict: Dictionary<String, Any>) {
-        auiManagerCallBack?.didReceiveInstruction(dict: dict)
-    }
-    
-    func didExitAnimation() { auiManagerCallBack?.willDismissView() }
-    
-    func didTapAssociatedJinyIcon() { auiManagerCallBack?.jinyTapped() }
 }

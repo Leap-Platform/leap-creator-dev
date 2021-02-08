@@ -191,7 +191,6 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.frame.origin.x = UIScreen.main.bounds.width
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
@@ -208,7 +207,6 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.frame.origin.y = UIScreen.main.bounds.height
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
@@ -225,7 +223,6 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.frame.origin.x = -(UIScreen.main.bounds.width)
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
@@ -242,7 +239,6 @@ public class JinyNotification: JinyKeyWindowAssist {
                     
                   self.frame.origin.y = -(UIScreen.main.bounds.height)
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     

@@ -12,9 +12,6 @@ import UIKit
 // The type that has methods which is used by the developer when certain action gets called.
 public protocol JinyAssistDelegate: class {
     
-    /// going to present the AUIComponent.
-    func willPresentAssist()
-    
     /// AUIComponent is successfully presented.
     func didPresentAssist()
     
@@ -23,15 +20,6 @@ public protocol JinyAssistDelegate: class {
     
     /// AUIComponent dismissed, with complete info
     func didDismissAssist(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
-    
-    /// A webview action when user interacts and the callback dictionary is passed as a param.
-    func didSendAction(dict: Dictionary<String, Any>)
-    
-    /// This method is called when the first set of animation exits, usually after 180ms.
-    func didExitAnimation()
-    
-    /// This method is called when the jinyIcon is tapped.
-    func didTapAssociatedJinyIcon()
 }
 
 // The type that has properties and methods which is used by each AUIComponent when necessary
