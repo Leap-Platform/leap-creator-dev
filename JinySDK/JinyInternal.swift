@@ -86,14 +86,18 @@ extension JinyInternal {
     }
     
     private func saveConfig(config:Dictionary<String,AnyHashable>) {
+        guard let configData = try? JSONSerialization.data(withJSONObject: config, options: .prettyPrinted),
+              let configString = String(data: configData, encoding: .utf8) else { return }
         let prefs = UserDefaults.standard
-        prefs.setValue(config, forKey: "jiny_config")
+        prefs.setValue(configString, forKey: "jiny_config")
         prefs.synchronize()
     }
     
     private func getSavedConfig() -> Dictionary<String,AnyHashable> {
         let prefs = UserDefaults.standard
-        guard let config = prefs.value(forKey: "jiny_config") as? Dictionary<String,AnyHashable> else { return [:] }
+        guard let configString = prefs.value(forKey: "jiny_config") as? String,
+              let configData = configString.data(using: .utf8),
+              let config = try? JSONSerialization.jsonObject(with: configData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
         return config
     }
 }
