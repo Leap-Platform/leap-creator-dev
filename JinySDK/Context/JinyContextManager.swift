@@ -116,7 +116,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     
     func pageNotIdentified() {
         pageManager?.setCurrentPage(nil)
-        stageManager?.resetStageManager()
+        stageManager?.noStageFound()
     }
     
     
@@ -134,7 +134,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     }
     
     func stageNotIdentified() {
-        stageManager?.resetStageManager()
+        stageManager?.noStageFound()
     }
 }
 
@@ -204,6 +204,8 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
 extension JinyContextManager:JinyFlowManagerDelegate {
     
     func noActiveFlows() {
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
         contextDetector?.switchState()
     }
     
@@ -377,6 +379,13 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
+    func getWebScript(_ identifier:String) -> String? {
+        guard let webId = getWebIdentifier(identifierId: identifier) else { return nil }
+        let basicElementScript = JinyJSMaker.generateBasicElementScript(id: webId)
+        let focusScript = "(\(basicElementScript)).focus()"
+        return focusScript
+    }
+    
     func getLanguages() -> Array<String> {
         return (configuration?.languages.map({ (language) -> String in
             return language.script
@@ -417,6 +426,8 @@ extension JinyContextManager:JinyAUICallback {
             if endFlow {
                 if let disId = flowManager?.getDiscoveryId() { JinySharedInformation.shared.muteDisovery(disId) }
                 flowManager?.resetFlowsArray()
+                pageManager?.resetPageManager()
+                stageManager?.resetStageManager()
                 contextDetector?.switchState()
             }
             sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
@@ -482,8 +493,6 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func disableAssistance() {
-        
-        
     }
     
 }

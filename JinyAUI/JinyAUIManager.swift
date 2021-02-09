@@ -489,16 +489,13 @@ extension JinyAUIManager {
     }
     
     private func performInViewNativeInstruction(instruction:Dictionary<String,Any>, inView:UIView, type:String, iconInfo:Dictionary<String,Any>? = nil) {
-        // Set autoscroll
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         
-        if !isViewInVisibleArea(view: inView) {
-            if let autoScroll = assistInfo[constant_autoScroll] as? Bool, autoScroll { arrowClicked() }
-            else { showArrow() }
-        }
+        // Autoscroll
+        arrowClicked()
         
         //Set autofocus
-        if let autoFocus = assistInfo[constant_autoFocus] as? Bool, autoFocus { inView.becomeFirstResponder() }
+        inView.becomeFirstResponder()
         
         // Present Assist
         switch type {
@@ -548,16 +545,14 @@ extension JinyAUIManager {
         
         guard  let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         
-        if !isRectInVisbleArea(rect: rect, inView: inWebview){
-            if let autoScroll = assistInfo[constant_autoScroll] as? Bool, autoScroll { arrowClicked() }
-            else { showArrow() }
+        arrowClicked()
+        
+        if let webIdentfier = assistInfo[constant_identifier] as? String, let focusScript = auiManagerCallBack?.getWebScript(webIdentfier) {
+            //Do auto focus for web element
+            if let wkweb = inWebview as? WKWebView { wkweb.evaluateJavaScript(focusScript,completionHandler: nil) }
+            else if let uiweb = inWebview as? UIWebView { let _ = uiweb.stringByEvaluatingJavaScript(from: focusScript) }
         }
         
-        let autoFocus = assistInfo[constant_assistInfo] as? Bool ?? false
-        if autoFocus, let webIdentfier = assistInfo[constant_identifier] as? String {
-            //Do auto focus for web element
-            fatalError("Hello! No js script to focus on web element")
-        }
         switch type {
         case FINGER_RIPPLE:
             let pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)

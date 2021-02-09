@@ -6,20 +6,6 @@
 	objectVersion = 53;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		D073E9382425FF7600764EF5 /* JinySDKUniversal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D073E9392425FF7600764EF5 /* Build configuration list for PBXAggregateTarget "JinySDKUniversal" */;
-			buildPhases = (
-				D073E93C2425FF8B00764EF5 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = JinySDKUniversal;
-			productName = JinySDKUniversal;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		2D08591825A31FE9002D7993 /* JinyAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08591725A31FE9002D7993 /* JinyAuthManager.swift */; };
 		2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */; };
@@ -1298,9 +1284,6 @@
 						CreatedOnToolsVersion = 11.3.1;
 						TestTargetID = D03E44DF2420AABA00A43FEA;
 					};
-					D073E9382425FF7600764EF5 = {
-						CreatedOnToolsVersion = 11.3.1;
-					};
 					D077C91024B9A68D001A04DF = {
 						CreatedOnToolsVersion = 11.5;
 						TestTargetID = D03E44DF2420AABA00A43FEA;
@@ -1329,7 +1312,6 @@
 			projectRoot = "";
 			targets = (
 				D0592E76241FA6E3007782A8 /* JinySDK */,
-				D073E9382425FF7600764EF5 /* JinySDKUniversal */,
 				D0592E7F241FA6E3007782A8 /* JinySDKTests */,
 				D03E44DF2420AABA00A43FEA /* JinySampleApp */,
 				D03E44F42420AABC00A43FEA /* JinySampleAppTests */,
@@ -1421,26 +1403,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		D073E93C2425FF8B00764EF5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -z \"$XCODE_VERSION_CORRECT\" ]\nthen\n    export SUDO_ASKPASS=\"${PROJECT_DIR}/../scripts/askpass.sh\"\nfi\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 1. Build Device and Simulator versions\n# add BITCODE_GENERATION_MODE=bitcode to support bitcode\necho \"Building for devices\"\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphoneos ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# add BITCODE_GENERATION_MODE=marker to support bitcode\necho \"Building for simulators\"\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\necho \"Copying framework structure\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\necho \"Copying simulator Swift modules\"\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create new combined simulator and device swift header file\nCOMBINED_PATH=\"${BUILD_DIR}/iOS + iOS Simulator/${PROJECT_NAME}-Swift.h\"\nmkdir -p \"${BUILD_DIR}/iOS + iOS Simulator/\"\ntouch \"${COMBINED_PATH}\"\necho \"#if TARGET_OS_SIMULATOR\" >> \"${COMBINED_PATH}\"\ncat \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" >> \"${COMBINED_PATH}\"\necho \"#else\" >> \"${COMBINED_PATH}\"\necho \"//Start of iphoneos\" >> \"${COMBINED_PATH}\"\ncat \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" >> \"${COMBINED_PATH}\"\necho \"#endif\" >> \"${COMBINED_PATH}\"\n\n\n# Step 5. Create universal binary file using lipo and place the combined executable in the copied framework directory\necho \"Creating universal binary using lipo\"\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\n\n# Step 6. Overwrite generated -Swift.h file with combined -Swift.h file -- Kknown Issue with XCode 10.2 https://developer.apple.com/documentation/xcode_release_notes/xcode_10_2_release_notes#3141454\ncat \"$COMBINED_PATH\" > \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" \n\n# Step 7. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework\" \"${PROJECT_DIR}/${PROJECT_NAME}.framework\"\n\n# Step 8. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D00B8F52249B2988006F4CA1 /* Sources */ = {
@@ -1726,6 +1688,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -1754,6 +1717,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -1944,6 +1908,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2009,6 +1974,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2066,6 +2032,7 @@
 		D0592E8C241FA6E3007782A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -2098,6 +2065,7 @@
 		D0592E8D241FA6E3007782A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -2164,24 +2132,6 @@
 			};
 			name = Release;
 		};
-		D073E93A2425FF7600764EF5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		D073E93B2425FF7600764EF5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		D077C91924B9A68D001A04DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2226,6 +2176,7 @@
 		D0FDAC2B24B48B3C00D9332B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -2254,6 +2205,7 @@
 		D0FDAC2C24B48B3C00D9332B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -2348,15 +2300,6 @@
 			buildConfigurations = (
 				D0592E8F241FA6E3007782A8 /* Debug */,
 				D0592E90241FA6E3007782A8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		D073E9392425FF7600764EF5 /* Build configuration list for PBXAggregateTarget "JinySDKUniversal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D073E93A2425FF7600764EF5 /* Debug */,
-				D073E93B2425FF7600764EF5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

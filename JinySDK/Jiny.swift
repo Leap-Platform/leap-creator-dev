@@ -43,6 +43,7 @@ import UIKit
     
     func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
+    func getWebScript(_ identifier:String) -> String?
     
     func getLanguages() -> Array<String>
     func getLanguageCode() -> String

@@ -34,5 +34,6 @@ class JinyPageManager {
         guard let _ = currentPage else { return }
         currentPage!.stages = currentPage!.stages.filter{ $0 != stage }
     }
+    func resetPageManager() { currentPage = nil }
     
 }

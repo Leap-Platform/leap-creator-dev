@@ -132,15 +132,14 @@ extension JinyContextDetector {
     /// - Parameter views: Array of views to be filtered for only visible siblings
     /// - Returns: array of views not completely overlapped by younger siblings
     private func getVisibleChildren(_ views: Array<UIView>) -> Array<UIView> {
-        var visibleViews = views
-        for view in views.reversed() {
-            if !visibleViews.contains(view) { continue }
-            let indexOfView =  views.firstIndex(of: view)
-            if indexOfView == nil  { break }
-            if indexOfView == 0 { break }
-            let viewsToCheck = visibleViews[0..<indexOfView!]
-            let hiddenViews = viewsToCheck.filter { view.frame.contains($0.frame) }
-            visibleViews = visibleViews.filter { !hiddenViews.contains($0) }
+        var visibleViews:Array<UIView> = views
+        for coveringView in views.reversed() {
+            if !visibleViews.contains(coveringView) { continue }
+            let index = views.firstIndex(of: coveringView)
+            if index == nil || index == 0 { continue }
+            let elderSiblings = views[0..<index!]
+            let elderSiblingsHiddenByCoveringView = elderSiblings.filter { !visibleViews.contains($0) || coveringView.frame.contains($0.frame) }
+            visibleViews = visibleViews.filter { !elderSiblingsHiddenByCoveringView.contains($0) }
         }
         return visibleViews
     }
