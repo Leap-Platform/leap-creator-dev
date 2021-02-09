@@ -16,9 +16,8 @@ struct JinySharedInformationConstants {
     static let discoveryPresented = "jiny_discovery_presented"
     static let discoveryDismissedByUser = "jiny_discovery_dismissed"
     static let discoveryFlowCompleted = "jiny_discovery_flow_completed"
-    static let languageCode = "jiny_audio_language_code"
+    static let mutedDiscoveries = "jiny_muted_discoveries"
     static let muted = "jiny_muted"
-    static let languageSetByUser = "jiny_language_set_by_user"
 }
 
 enum JinyDownloadStatus {
@@ -132,6 +131,24 @@ extension JinySharedInformation {
         discoveryFlowCompleted[String(discoveryId)] = flowCount
         prefs.setValue(discoveryFlowCompleted, forKey: JinySharedInformationConstants.discoveryFlowCompleted)
         prefs.synchronize()
+    }
+    
+    func muteDisovery(_ id:Int) {
+        var mutedDiscoveries = prefs.array(forKey: JinySharedInformationConstants.mutedDiscoveries) as? Array<Int> ?? []
+        if !mutedDiscoveries.contains(id) { mutedDiscoveries.append(id) }
+        prefs.setValue(mutedDiscoveries, forKey: JinySharedInformationConstants.mutedDiscoveries)
+        prefs.synchronize()
+    }
+    
+    func unmuteDiscovery(_ id:Int) {
+        var mutedDiscoveries = prefs.array(forKey: JinySharedInformationConstants.mutedDiscoveries) as? Array<Int> ?? []
+        mutedDiscoveries = mutedDiscoveries.filter{ $0 != id }
+        prefs.setValue(mutedDiscoveries, forKey: JinySharedInformationConstants.mutedDiscoveries)
+        prefs.synchronize()
+    }
+    
+    func getMutedDiscoveries() -> Array<Int> {
+        return prefs.array(forKey: JinySharedInformationConstants.mutedDiscoveries) as? Array <Int> ?? []
     }
     
     func getDiscoveriesPresentedInfo() -> Dictionary<String,Int> {

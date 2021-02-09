@@ -92,10 +92,7 @@ public class JinyWebAssist: UIView, JinyAssist {
     }
     
     public func show() {
-            
         setContent(htmlUrl: self.assistInfo?.htmlUrl ?? "", appLocale: self.appLocale, contentFileUriMap: nil)
-        
-        delegate?.willPresentAssist()
     }
     
     /// method to perform enter animation.
@@ -264,8 +261,6 @@ public class JinyWebAssist: UIView, JinyAssist {
                                         
                     self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
                     
-                    self.delegate?.didExitAnimation()
-                    
                 }) { (_) in
                     
                     UIView.animate(withDuration: 0.04) {
@@ -286,8 +281,6 @@ public class JinyWebAssist: UIView, JinyAssist {
                                         
                     self.webView.frame.origin.x = (UIScreen.main.bounds.width)
                     
-                    self.delegate?.didExitAnimation()
-                    
                 }) { (_) in
                     
                     UIView.animate(withDuration: 0.04) {
@@ -307,8 +300,6 @@ public class JinyWebAssist: UIView, JinyAssist {
                     self.jinyIconView.alpha = 0
                     
                     self.webView.frame.origin.y = (UIScreen.main.bounds.height)
-                    
-                    self.delegate?.didExitAnimation()
                     
                 }) { (_) in
                     
@@ -331,8 +322,6 @@ public class JinyWebAssist: UIView, JinyAssist {
                     self.webView.alpha = 0
                     
                     self.alpha = 0
-                    
-                    self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
@@ -471,8 +460,6 @@ extension JinyWebAssist: WKScriptMessageHandler {
         guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
         guard let close = dictBody[constant_close] as? Bool else {return}
         
-        delegate?.didSendAction(dict: dict)
-        
         if let urlString = dictBody[constant_external_url] as? String, let url = URL(string: urlString) {
 
            UIApplication.shared.open(url)
@@ -491,7 +478,6 @@ extension JinyWebAssist: UIGestureRecognizerDelegate {
     
     @objc func jinyIconButtonTapped() {
         
-        self.delegate?.didTapAssociatedJinyIcon()
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

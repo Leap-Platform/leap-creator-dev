@@ -116,7 +116,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     
     func pageNotIdentified() {
         pageManager?.setCurrentPage(nil)
-        stageManager?.resetStageManager()
+        stageManager?.noStageFound()
     }
     
     
@@ -134,7 +134,7 @@ extension JinyContextManager:JinyContextDetectorDelegate {
     }
     
     func stageNotIdentified() {
-        stageManager?.resetStageManager()
+        stageManager?.noStageFound()
     }
 }
 
@@ -204,6 +204,8 @@ extension JinyContextManager:JinyDiscoveryManagerDelegate {
 extension JinyContextManager:JinyFlowManagerDelegate {
     
     func noActiveFlows() {
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
         contextDetector?.switchState()
     }
     
@@ -231,7 +233,6 @@ extension JinyContextManager:JinyStageManagerDelegate {
             return getIconSettings(discId)
         }()
         
-        auiHandler?.presentJinyButton(for: configuration!.iconSetting[String(discoveryManager?.getCurrentDiscovery()?.id ?? -1)] ?? IconSetting(with: [:]), iconEnabled: discoveryManager?.getCurrentDiscovery()?.enableIcon ?? false)
         guard !JinySharedInformation.shared.isMuted() else { return }
         if let anchorRect = rect {
             auiHandler?.performWebStage(instruction: stage.instructionInfoDict!, rect: anchorRect, webview: webviewForRect, iconInfo: iconInfo)
@@ -378,6 +379,13 @@ extension JinyContextManager:JinyAUICallback {
         
     }
     
+    func getWebScript(_ identifier:String) -> String? {
+        guard let webId = getWebIdentifier(identifierId: identifier) else { return nil }
+        let basicElementScript = JinyJSMaker.generateBasicElementScript(id: webId)
+        let focusScript = "(\(basicElementScript)).focus()"
+        return focusScript
+    }
+    
     func getLanguages() -> Array<String> {
         return (configuration?.languages.map({ (language) -> String in
             return language.script
@@ -386,10 +394,6 @@ extension JinyContextManager:JinyAUICallback {
     
     func getLanguageCode() -> String {
         return JinyPreferences.shared.getUserLanguage() ?? "hin"
-    }
-    
-    func willPresentView() {
-        
     }
     
     func didPresentView() {
@@ -404,19 +408,7 @@ extension JinyContextManager:JinyAUICallback {
         }
     }
     
-    func willPlayAudio() {
-        
-    }
-    
-    func didPlayAudio() {
-        
-    }
-    
     func failedToPerform() {
-        
-    }
-    
-    func willDismissView() {
         
     }
     
@@ -429,15 +421,17 @@ extension JinyContextManager:JinyAUICallback {
             else if let _ = liveContext as? JinyDiscovery { handleDiscoveryDismiss(byUser: byUser, action: action) }
         case .Stage:
             guard let sm = stageManager, let _ = sm.getCurrentStage() else { return }
+            var endFlow = false
+            if let body = action?[constant_body] as? Dictionary<String, Any> { endFlow = body["endFlow"] as? Bool ?? false }
+            if endFlow {
+                if let disId = flowManager?.getDiscoveryId() { JinySharedInformation.shared.muteDisovery(disId) }
+                flowManager?.resetFlowsArray()
+                pageManager?.resetPageManager()
+                stageManager?.resetStageManager()
+                contextDetector?.switchState()
+            }
             sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
         }
-    }
-    
-    func didReceiveInstruction(dict: Dictionary<String, Any>) {
-    }
-    
-    func stagePerformed() {
-        
     }
     
     func jinyTapped() {
@@ -499,8 +493,6 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func disableAssistance() {
-        
-        
     }
     
 }
@@ -512,6 +504,7 @@ extension JinyContextManager {
         guard let dm = discoveryManager,
               let liveDiscovery = dm.getCurrentDiscovery(),
               let cd = contextDetector else { return }
+        JinySharedInformation.shared.unmuteDiscovery(liveDiscovery.id)
         let iconInfo:Dictionary<String,Any> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {

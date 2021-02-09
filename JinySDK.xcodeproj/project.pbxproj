@@ -6,20 +6,6 @@
 	objectVersion = 53;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		D073E9382425FF7600764EF5 /* JinySDKUniversal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D073E9392425FF7600764EF5 /* Build configuration list for PBXAggregateTarget "JinySDKUniversal" */;
-			buildPhases = (
-				D073E93C2425FF8B00764EF5 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = JinySDKUniversal;
-			productName = JinySDKUniversal;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		2D08591825A31FE9002D7993 /* JinyAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08591725A31FE9002D7993 /* JinyAuthManager.swift */; };
 		2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */; };
@@ -123,6 +109,7 @@
 		D077C92324B9B330001A04DF /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92224B9B330001A04DF /* AVFoundation.framework */; };
 		D077C92424B9B346001A04DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; };
 		D077C92524B9B34C001A04DF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92024B9B328001A04DF /* WebKit.framework */; };
+		D07EA68825D174BE00DC0F36 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = D07EA68725D174BE00DC0F36 /* Gzip */; };
 		D07FEB282494A95A004FFD99 /* SearchHotelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */; };
 		D084A13A24AB58810093E8AB /* JinyDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* JinyDiscoveryManager.swift */; };
 		D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */; };
@@ -184,8 +171,6 @@
 		D0DC3EFE2553ED9E00B6FA93 /* JinySupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* JinySupportModals.swift */; };
 		D0DC3F0025540A8900B6FA93 /* JinyContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFF25540A8900B6FA93 /* JinyContext.swift */; };
 		D0E55D592479747E005B3EAB /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
-		D0E5DC7725B80BFD00D0580A /* Gzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; };
-		D0E5DC7825B80BFD00D0580A /* Gzip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D032BC37258CC96300BEA8D8 /* Gzip.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 		D0FDAC2624B48B3C00D9332B /* JinyAUI.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* JinyAUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0FDAC3124B4A49700D9332B /* JinyAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3024B4A49700D9332B /* JinyAUI.swift */; };
@@ -283,17 +268,6 @@
 			files = (
 				D032C59724B71CE5006E8F2B /* JinyAUI.framework in Embed Frameworks */,
 				D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D0E5DC7925B80BFE00D0580A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D0E5DC7825B80BFD00D0580A /* Gzip.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,10 +508,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D077C92324B9B330001A04DF /* AVFoundation.framework in Frameworks */,
+				D07EA68825D174BE00DC0F36 /* Gzip in Frameworks */,
 				D077C92124B9B328001A04DF /* WebKit.framework in Frameworks */,
 				D077C91F24B9B2BF001A04DF /* AdSupport.framework in Frameworks */,
 				D0592E95241FAD99007782A8 /* UIKit.framework in Frameworks */,
-				D0E5DC7725B80BFD00D0580A /* Gzip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1201,13 +1175,15 @@
 				D0592E73241FA6E3007782A8 /* Sources */,
 				D0592E74241FA6E3007782A8 /* Frameworks */,
 				D0592E75241FA6E3007782A8 /* Resources */,
-				D0E5DC7925B80BFE00D0580A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = JinySDK;
+			packageProductDependencies = (
+				D07EA68725D174BE00DC0F36 /* Gzip */,
+			);
 			productName = JinySDK;
 			productReference = D0592E77241FA6E3007782A8 /* JinySDK.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1308,9 +1284,6 @@
 						CreatedOnToolsVersion = 11.3.1;
 						TestTargetID = D03E44DF2420AABA00A43FEA;
 					};
-					D073E9382425FF7600764EF5 = {
-						CreatedOnToolsVersion = 11.3.1;
-					};
 					D077C91024B9A68D001A04DF = {
 						CreatedOnToolsVersion = 11.5;
 						TestTargetID = D03E44DF2420AABA00A43FEA;
@@ -1332,13 +1305,13 @@
 			mainGroup = D0592E6D241FA6E3007782A8;
 			packageReferences = (
 				B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */,
+				D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = D0592E78241FA6E3007782A8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				D0592E76241FA6E3007782A8 /* JinySDK */,
-				D073E9382425FF7600764EF5 /* JinySDKUniversal */,
 				D0592E7F241FA6E3007782A8 /* JinySDKTests */,
 				D03E44DF2420AABA00A43FEA /* JinySampleApp */,
 				D03E44F42420AABC00A43FEA /* JinySampleAppTests */,
@@ -1430,26 +1403,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		D073E93C2425FF8B00764EF5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -z \"$XCODE_VERSION_CORRECT\" ]\nthen\n    export SUDO_ASKPASS=\"${PROJECT_DIR}/../scripts/askpass.sh\"\nfi\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 1. Build Device and Simulator versions\n# add BITCODE_GENERATION_MODE=bitcode to support bitcode\necho \"Building for devices\"\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphoneos ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# add BITCODE_GENERATION_MODE=marker to support bitcode\necho \"Building for simulators\"\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\necho \"Copying framework structure\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\necho \"Copying simulator Swift modules\"\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create new combined simulator and device swift header file\nCOMBINED_PATH=\"${BUILD_DIR}/iOS + iOS Simulator/${PROJECT_NAME}-Swift.h\"\nmkdir -p \"${BUILD_DIR}/iOS + iOS Simulator/\"\ntouch \"${COMBINED_PATH}\"\necho \"#if TARGET_OS_SIMULATOR\" >> \"${COMBINED_PATH}\"\ncat \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" >> \"${COMBINED_PATH}\"\necho \"#else\" >> \"${COMBINED_PATH}\"\necho \"//Start of iphoneos\" >> \"${COMBINED_PATH}\"\ncat \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" >> \"${COMBINED_PATH}\"\necho \"#endif\" >> \"${COMBINED_PATH}\"\n\n\n# Step 5. Create universal binary file using lipo and place the combined executable in the copied framework directory\necho \"Creating universal binary using lipo\"\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\n\n# Step 6. Overwrite generated -Swift.h file with combined -Swift.h file -- Kknown Issue with XCode 10.2 https://developer.apple.com/documentation/xcode_release_notes/xcode_10_2_release_notes#3141454\ncat \"$COMBINED_PATH\" > \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Headers/${PROJECT_NAME}-Swift.h\" \n\n# Step 7. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework\" \"${PROJECT_DIR}/${PROJECT_NAME}.framework\"\n\n# Step 8. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D00B8F52249B2988006F4CA1 /* Sources */ = {
@@ -1735,6 +1688,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -1763,6 +1717,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -1953,6 +1908,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2018,6 +1974,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2075,6 +2032,7 @@
 		D0592E8C241FA6E3007782A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -2107,6 +2065,7 @@
 		D0592E8D241FA6E3007782A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -2173,24 +2132,6 @@
 			};
 			name = Release;
 		};
-		D073E93A2425FF7600764EF5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		D073E93B2425FF7600764EF5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		D077C91924B9A68D001A04DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2235,6 +2176,7 @@
 		D0FDAC2B24B48B3C00D9332B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -2263,6 +2205,7 @@
 		D0FDAC2C24B48B3C00D9332B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -2361,15 +2304,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D073E9392425FF7600764EF5 /* Build configuration list for PBXAggregateTarget "JinySDKUniversal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D073E93A2425FF7600764EF5 /* Debug */,
-				D073E93B2425FF7600764EF5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		D077C91B24B9A68D001A04DF /* Build configuration list for PBXNativeTarget "JinyAUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2399,6 +2333,14 @@
 				minimumVersion = 4.0.4;
 			};
 		};
+		D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2406,6 +2348,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		D07EA68725D174BE00DC0F36 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

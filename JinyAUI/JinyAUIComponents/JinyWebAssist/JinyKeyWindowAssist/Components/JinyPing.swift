@@ -226,7 +226,6 @@ public class JinyPing: JinyKeyWindowAssist {
             
         } completion: { (_) in
             
-            self.delegate?.didExitAnimation()
             
             self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
         }

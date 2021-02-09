@@ -43,18 +43,18 @@ class JinyMediaManager {
         if getCurrentMediaStatus(forMedia.name) == nil  {
             let dlop = JinyDownloadOperation(forMedia) { (isRunning, isFinished, isSuccess, location) in
                 if isRunning {
-//                    self.statusTracker[forMedia.name] = .isDownloading
+                    self.statusTracker[forMedia.name] = .isDownloading
                     
                 }
                 else if isFinished{
                     if isSuccess {
                         
                         completion?(true)
-//                        self.statusTracker[forMedia.name] = .downloaded
+                        self.statusTracker[forMedia.name] = .downloaded
                         self.dlTracker[forMedia.name] = nil
                     }
                     else {
-//                        self.statusTracker[forMedia.name] = .notDownloaded
+                        self.statusTracker[forMedia.name] = .notDownloaded
                         completion?(false)
                     }
                 }

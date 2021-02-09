@@ -75,7 +75,7 @@ class JinyStageManager {
         }
     }
     
-    func resetStageManager() {
+    func noStageFound() {
         guard let _ = currentStage else { return }
         if stageTimer != nil {
             stageTimer?.invalidate()
@@ -85,6 +85,12 @@ class JinyStageManager {
             stagePerformed()
         }
         currentStage = nil
+    }
+    
+    func resetStageManager() {
+        currentStage = nil
+        stageTimer = nil
+        stageTracker = [:]
     }
     
     // Called in case to reidentify same stage as new stage next time
