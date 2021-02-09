@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D08591825A31FE9002D7993 /* JinyAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08591725A31FE9002D7993 /* JinyAuthManager.swift */; };
 		2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */; };
+		2D16BB0C25D29815001F57BD /* ManualScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */; };
 		2D1702122591D13700F33729 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702102591D13700F33729 /* jiny_default_icon.html */; };
 		2D1702132591D13700F33729 /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702112591D13700F33729 /* jiny_audio_anim.html */; };
 		2D1B5DEA25CC514200CAF4CE /* JinyPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* JinyPreferences.swift */; };
@@ -288,6 +289,7 @@
 /* Begin PBXFileReference section */
 		2D08591725A31FE9002D7993 /* JinyAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthManager.swift; sourceTree = "<group>"; };
 		2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyAuthConfig.swift; sourceTree = "<group>"; };
+		2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScrollViewController.swift; sourceTree = "<group>"; };
 		2D1702102591D13700F33729 /* jiny_default_icon.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_default_icon.html; sourceTree = "<group>"; };
 		2D1702112591D13700F33729 /* jiny_audio_anim.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jiny_audio_anim.html; sourceTree = "<group>"; };
 		2D1B5DE925CC514200CAF4CE /* JinyPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyPreferences.swift; sourceTree = "<group>"; };
@@ -703,6 +705,7 @@
 				D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */,
 				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
 				D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */,
+				2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */,
 			);
 			path = JinySampleApp;
 			sourceTree = "<group>";
@@ -982,6 +985,7 @@
 		D0B793192543186D00DB94DD /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D032C58F24B70056006E8F2B /* JinyPointer */,
 				D0B7931A2543186D00DB94DD /* JinyLabel.swift */,
 				2D1BC4EB25ADB10F00B39606 /* JinyTipView.swift */,
 				D0B7931B2543186D00DB94DD /* JinySpot.swift */,
@@ -1023,7 +1027,6 @@
 				D032C59A24B74C5B006E8F2B /* JinyAUIUtils */,
 				D032C59224B7008D006E8F2B /* JinyFlowSelector */,
 				D032C59024B70061006E8F2B /* JinyButton */,
-				D032C58F24B70056006E8F2B /* JinyPointer */,
 				D07FEB052492C600004FFD99 /* JinyBottomDiscoveryView */,
 				D07FEB012492C600004FFD99 /* JinyCommonUIUtils */,
 				D07FEAFB2492C600004FFD99 /* JinyLanguagePanel */,
@@ -1451,6 +1454,7 @@
 				D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */,
 				D07FEB282494A95A004FFD99 /* SearchHotelViewController.swift in Sources */,
 				D03E44E72420AABA00A43FEA /* HomeViewController.swift in Sources */,
+				2D16BB0C25D29815001F57BD /* ManualScrollViewController.swift in Sources */,
 				D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */,
 				D0BC9ED824AE243000CE5364 /* MultipleWebViewsViewController.swift in Sources */,
 				D099B0D0254055B500E66ED6 /* UIWebviewViewController.swift in Sources */,
