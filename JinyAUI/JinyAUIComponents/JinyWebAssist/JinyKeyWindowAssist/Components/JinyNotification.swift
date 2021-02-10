@@ -59,9 +59,7 @@ public class JinyNotification: JinyKeyWindowAssist {
     override func configureWebView() {
         
         self.webView.isUserInteractionEnabled = true
-        
-        self.webView.scrollView.isScrollEnabled = false
-        
+                
         self.assistInfo?.layoutInfo?.enterAnimation = self.alignment == .top ? "slide_down" : "slide_up"
                 
         if self.alignment == .top || self.alignment == .bottom {

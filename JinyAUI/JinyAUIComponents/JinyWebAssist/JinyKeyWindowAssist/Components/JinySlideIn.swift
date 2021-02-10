@@ -57,9 +57,7 @@ public class JinySlideIn: JinyKeyWindowAssist {
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
         
         self.webView.isUserInteractionEnabled = true
-        
-        self.webView.scrollView.isScrollEnabled = false
-        
+                
         self.assistInfo?.layoutInfo?.enterAnimation = self.alignment == .left ? "slide_right" : "slide_left"
                 
         if self.alignment == .left || self.alignment == .right {

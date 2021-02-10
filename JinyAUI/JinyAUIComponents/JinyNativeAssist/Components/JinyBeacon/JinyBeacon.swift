@@ -56,14 +56,19 @@ public class JinyBeacon: JinyNativeAssist {
         presentBeacon()
     }
     
+    func updateRect(newRect: CGRect, inView: UIView?) {
+        
+        webRect = newRect
+        
+        setAlignment()
+    }
+    
     public override func show() {
         
         pulsator.pulsatorDelegate = self
         
         pulsator.start()
     }
-    
-    
     
     public override func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         

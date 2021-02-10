@@ -40,6 +40,13 @@ public class JinyLabel: JinyInViewAssist {
         configureWebView()
     }
     
+    func updateRect(newRect: CGRect, inView: UIView?) {
+        
+        webRect = newRect
+        
+        setAlignment()
+    }
+    
     /// sets alignment of the JinyLabel.
     func setAlignment() {
         

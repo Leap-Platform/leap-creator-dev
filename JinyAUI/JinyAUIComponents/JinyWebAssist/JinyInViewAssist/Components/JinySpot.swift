@@ -70,6 +70,18 @@ public class JinySpot: JinyTipView {
                 
         presentSpot()
     }
+    
+    func updateSpot(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+        
+        if assistInfo?.highlightAnchor ?? true {
+            
+           highlightAnchor()
+        }
+        
+        placePointer()
+    }
         
     /// setup toView, inView, toolTipView and webView.
     func setupView() {
@@ -91,9 +103,7 @@ public class JinySpot: JinyTipView {
     
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
-        
-       self.webView.scrollView.isScrollEnabled = false
-        
+                
        toViewOriginalInteraction = self.toView?.isUserInteractionEnabled
                 
        maskLayer.bounds = self.webView.bounds

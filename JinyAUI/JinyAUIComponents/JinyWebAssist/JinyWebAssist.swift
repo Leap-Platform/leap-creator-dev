@@ -48,7 +48,7 @@ public class JinyWebAssist: UIView, JinyAssist {
 
         
         self.webView = WKWebView(frame: .zero, configuration: configuration)
-        self.webView.scrollView.isScrollEnabled = true
+        self.webView.scrollView.isScrollEnabled = false
         self.webView.navigationDelegate = self
     }
     
@@ -73,7 +73,9 @@ public class JinyWebAssist: UIView, JinyAssist {
         // Loading the html source file from the main project bundle
         guard let _ = URL(string: htmlUrl) else {
             
-            if let url = Bundle.main.url(forResource: appLocale, withExtension: "html") {
+            let bundle = Bundle(for: type(of: self))
+            
+            if let url = bundle.url(forResource: appLocale, withExtension: "html") {
                 webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
             }
             
