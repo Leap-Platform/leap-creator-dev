@@ -584,7 +584,6 @@ extension JinyAUIManager {
         if let webIdentfier = assistInfo[constant_identifier] as? String, let focusScript = auiManagerCallBack?.getWebScript(webIdentfier) {
             //Do auto focus for web element
             if let wkweb = inWebview as? WKWebView { wkweb.evaluateJavaScript(focusScript,completionHandler: nil) }
-            else if let uiweb = inWebview as? UIWebView { let _ = uiweb.stringByEvaluatingJavaScript(from: focusScript) }
         }
         
         switch type {
@@ -830,8 +829,6 @@ extension JinyAUIManager {
             guard let webview = currentWebView, let rect = currentTargetRect else { return }
             if let wkweb = webview as? WKWebView {
                 wkweb.scrollView.scrollRectToVisible(rect, animated: true)
-            } else if let uiweb = webview as? UIWebView {
-                uiweb.scrollView.scrollRectToVisible(rect, animated: false)
             }
         } else {
             let nestedScrolls = getScrollViews(currentTargetView!)
