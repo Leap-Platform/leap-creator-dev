@@ -81,7 +81,7 @@ class JinyViewProps:Codable {
         is_multiple_touch_enabled = view.isMultipleTouchEnabled
         is_exclusive_touch = view.isExclusiveTouch
         is_scroll_container = view.isKind(of: UIScrollView.self)
-        is_webview = view.isKind(of: UIWebView.self) || view.isKind(of: WKWebView.self)
+        is_webview = view.isKind(of: WKWebView.self)
         uuid = String.generateJinyAuthUUIDString()
         if let control = view as? UIControl {
             let targetActions = control.allTargets.filter{
@@ -134,12 +134,7 @@ class JinyViewProps:Codable {
         if is_webview {
             var injectionScript = ScreenHelper.layoutInjectionJSScript
             injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.nativeBounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.nativeBounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
-            if let uiweb = view as? UIWebView {
-                let res = uiweb.stringByEvaluatingJavaScript(from: injectionScript)
-                webChildren = res
-                group.leave()
-            }
-            else if let wk_web = view as? WKWebView {
+            if let wk_web = view as? WKWebView {
                 wk_web.evaluateJavaScript(injectionScript, completionHandler: { (res, error) in
                     webChildren = res as? String
                     group.leave()
@@ -175,12 +170,9 @@ class JinyViewProps:Codable {
             wkweb.evaluateJavaScript(jsString) { (res, err) in
                 completion(res as? String)
             }
-        } else if let uiweb = webview as? UIWebView {
-            completion(uiweb.stringByEvaluatingJavaScript(from: jsString))
         }
     }
 }
-
 
 extension String {
     static func generateJinyAuthUUIDString() -> String {
@@ -213,5 +205,4 @@ extension UIColor {
     func getLayoutHierarchy(wkWebView: WKWebView, finishListener: FinishListener){
         
     }
-    
 }

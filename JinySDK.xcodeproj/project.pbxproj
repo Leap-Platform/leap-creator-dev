@@ -121,7 +121,6 @@
 		D0938E10251DD7AB00FD462E /* JinyNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E0F251DD7AB00FD462E /* JinyNetworking.swift */; };
 		D0938E12251DD8E900FD462E /* JinyMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E11251DD8E900FD462E /* JinyMedia.swift */; };
 		D0938E13251E1BAC00FD462E /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C91E24B9B2BF001A04DF /* AdSupport.framework */; };
-		D099B0D0254055B500E66ED6 /* UIWebviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */; };
 		D09C722E246A987A0060E054 /* JinyFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722D246A987A0060E054 /* JinyFlowManager.swift */; };
 		D09C7230246A98860060E054 /* JinyStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* JinyStageManager.swift */; };
 		D0ABD0062481155F0069FA67 /* JinyAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0052481155F0069FA67 /* JinyAnalyticsEvent.swift */; };
@@ -403,7 +402,6 @@
 		D0938E0D251DD67000FD462E /* JinyMediaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyMediaManager.swift; sourceTree = "<group>"; };
 		D0938E0F251DD7AB00FD462E /* JinyNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JinyNetworking.swift; sourceTree = "<group>"; };
 		D0938E11251DD8E900FD462E /* JinyMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyMedia.swift; sourceTree = "<group>"; };
-		D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWebviewViewController.swift; sourceTree = "<group>"; };
 		D09C722D246A987A0060E054 /* JinyFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowManager.swift; sourceTree = "<group>"; };
 		D09C722F246A98860060E054 /* JinyStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyStageManager.swift; sourceTree = "<group>"; };
 		D09C7231247174400060E054 /* JinyFlowSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JinyFlowSelector.swift; sourceTree = "<group>"; };
@@ -1457,7 +1455,6 @@
 				2D16BB0C25D29815001F57BD /* ManualScrollViewController.swift in Sources */,
 				D084F92924ADAFAA00ED2362 /* SingleWebviewViewController.swift in Sources */,
 				D0BC9ED824AE243000CE5364 /* MultipleWebViewsViewController.swift in Sources */,
-				D099B0D0254055B500E66ED6 /* UIWebviewViewController.swift in Sources */,
 				D0BC371F249DFB41002648FF /* AutomaticViewController.swift in Sources */,
 				D03E44E32420AABA00A43FEA /* AppDelegate.swift in Sources */,
 				D04BBA372472832000DF9716 /* LoginOptionViewController.swift in Sources */,

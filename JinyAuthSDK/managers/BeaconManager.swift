@@ -90,8 +90,9 @@ class BeaconManager {
             if let data = data {
                 let jsonData = try? JSONSerialization.jsonObject(with: data,  options: []) as? [String: Any]
                 //fetch the status and room info from the json
-                self.roomId = (jsonData?[constant_roomId]) as! String
-                self.beaconListener.onBeaconSuccess(roomId: (jsonData?[constant_roomId])! as! String, status: jsonData?[constant_status]! as Any)
+                guard let roomId = (jsonData?[constant_roomId]) as? String else { return }
+                self.roomId = roomId
+                self.beaconListener.onBeaconSuccess(roomId: self.roomId, status: jsonData?[constant_status]! as Any)
                 //repeat this api call every 'm' seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: self.task!)
             }
