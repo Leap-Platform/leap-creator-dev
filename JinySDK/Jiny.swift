@@ -33,9 +33,6 @@ import UIKit
     func updateView(inView:UIView)
     
     func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool)
-    func presentLanguagePanel(languages: Array<String>)
-    func presentOptionPanel(mute: String, repeatText: String, language: String?)
-    func dismissJinyButton()
     func removeAllViews()
 }
 

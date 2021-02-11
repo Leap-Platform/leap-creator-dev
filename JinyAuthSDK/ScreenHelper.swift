@@ -40,11 +40,9 @@ class ScreenHelper {
         "            node.value = root.value;\n" +
         "            node.children = [];\n" +
         "            var childs = root.children.length;\n" +
-        "            if(node.bounds!==undefined){\n" +
-        "               for(var child=0;child<childs;child++){\n" +
-        "                    node.children.push(jinyFetchClientHierarchy(root.children[child]));\n" +
-        "               }\n" +
-        "           }\n" +
+        "            for(var child=0;child<childs;child++){\n" +
+        "               node.children.push(jinyFetchClientHierarchy(root.children[child]));\n" +
+        "            }\n" +
         "        }\n" +
         "        return node\n" +
         "    }\n" +

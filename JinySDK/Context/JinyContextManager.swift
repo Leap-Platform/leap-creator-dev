@@ -441,7 +441,6 @@ extension JinyContextManager:JinyAUICallback {
         case .Discovery:
             manuallyTriggerCurrentDiscovery()
         case .Stage:
-            auiHandler?.presentOptionPanel(mute: "Mute", repeatText: "Repeat", language: "Change Language")
             break
         }
     }
@@ -466,11 +465,13 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func optionPanelOpened() {
-        
+        stageManager?.resetCurrentStage()
+        contextDetector?.stop()
     }
     
     func optionPanelClosed() {
         sendContextInfoEvent(eventTag: "crossClickedFromPanelEvent")
+        contextDetector?.start()
     }
     
     func optionPanelRepeatClicked() {

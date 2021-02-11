@@ -28,9 +28,9 @@ class JinyPointer: JinyInViewAssist {
     }
     
     func addNotifiers() {
-//        let nc = NotificationCenter.default
-//        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-//        nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     func getInnerPath() -> UIBezierPath {

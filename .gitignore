@@ -13,6 +13,7 @@ JinySDK.framework
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
+.DS_Store
 
 ## Other
 *.moved-aside
