@@ -345,7 +345,7 @@ extension JinyContextDetector {
             return Array(Set(webIdsArray+context.webIdentifiers))
         }
         let passingNativeIds = getNativeIdentifiersPassing(toCheckNativeIds, inHierarchy: hierarchy)
-        let webviews = hierarchy.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }
+        let webviews = hierarchy.filter{ $0.isKind(of: WKWebView.self) }
         guard webviews.count > 0, toCheckWebIds.count > 0 else {
             checkCompletion(passingNativeIds,[])
             return
@@ -393,7 +393,7 @@ extension JinyContextDetector {
                 targetCheckCompleted(nil, nil, nil)
                 return
             }
-            getRectForIdentifier(id: webId, webviews: allView.filter{ $0.isKind(of: UIWebView.self) || $0.isKind(of: WKWebView.self) }) { (rect, webview) in
+            getRectForIdentifier(id: webId, webviews: allView.filter{ $0.isKind(of: WKWebView.self) }) { (rect, webview) in
                 targetCheckCompleted(nil, rect, webview)
             }
         } else {
@@ -680,9 +680,6 @@ extension JinyContextDetector {
                 if let result = res as? String { completion(result) }
                 else { completion(nil) }
             }
-        } else if let uiweb = inWebView as? UIWebView {
-            let result = uiweb.stringByEvaluatingJavaScript(from: script.replacingOccurrences(of: "\n", with: "\\n"))
-            completion(result)
         } else { completion(nil) }
     }
     

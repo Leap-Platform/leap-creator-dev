@@ -24,7 +24,7 @@ class MasterManager: ProtocolListener,
     //Beacon Listeners
     func onBeaconSuccess(roomId: String, status: Any) {
 
-        let roomStatus: String! = String(describing: status)
+        let roomStatus = String(describing: status)
         // contains needs to change, it should be equals
         if roomStatus.contains(PERMISSION_NEEDED) {
             beaconManager?.stop()

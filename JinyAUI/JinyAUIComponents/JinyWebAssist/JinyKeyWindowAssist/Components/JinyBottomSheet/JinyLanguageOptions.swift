@@ -41,9 +41,7 @@ class JinyLanguageOptions: JinyBottomSheet {
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 discoveryLanguagesScript = jsonString
             }
-        }
-        
-        webView.scrollView.isScrollEnabled = false
+        }        
     }
     
     private func getLanguages() {

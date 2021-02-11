@@ -1,24 +1,26 @@
 //
-//  UIWebviewViewController.swift
+//  ManualScrollViewController.swift
 //  JinySampleApp
 //
-//  Created by Aravind GS on 21/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Created by Ajay S on 09/02/21.
+//  Copyright © 2021 Aravind GS. All rights reserved.
 //
 
 import UIKit
 
-class UIWebviewViewController: UIViewController {
+class ManualScrollViewController: UIViewController {
 
-    @IBOutlet weak var webview: UIWebView!
+    @IBOutlet weak var manualScrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let urlString = "https://www.goibibo.com/flights"
-        guard let url = URL(string: urlString) else { return }
-        webview.loadRequest(URLRequest(url: url))
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            
+            self.manualScrollView.scrollRectToVisible(CGRect(x: 0, y: 800, width: self.view.frame.width, height: self.view.frame.height), animated: true)
+        }
     }
     
 

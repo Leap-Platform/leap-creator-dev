@@ -55,6 +55,18 @@ public class JinyToolTip: JinyTipView {
                 
         presentPointer()
     }
+    
+    func updatePointer(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+        
+        if assistInfo?.highlightAnchor ?? true {
+            
+           highlightAnchor()
+        }
+        
+        placePointer()
+    }
         
     /// setup toView, inView, toolTipView and webView
     func setupView() {
@@ -80,9 +92,7 @@ public class JinyToolTip: JinyTipView {
        assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
         
        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
-        
-       self.webView.scrollView.isScrollEnabled = false
-        
+                
        toViewOriginalInteraction = self.toView?.isUserInteractionEnabled
                 
        maskLayer.bounds = self.webView.bounds
