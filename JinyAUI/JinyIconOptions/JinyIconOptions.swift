@@ -226,10 +226,10 @@ extension JinyIconOptions {
     
     func show() {
         
-        let buttonHeightConstraint = self.button?.constraints.first { $0.firstAttribute == .height && $0.constant == self.button?.frame.height }
-        let buttonWidthConstraint = self.button?.constraints.first { $0.firstAttribute == .width && $0.constant == self.button?.frame.height }
-        
-        
+        let buttonHeightConstraint = self.button?.constraints.first { $0.firstAttribute == .height && $0.constant == self.button?.frame.height && $0.secondItem == nil}
+        let buttonWidthConstraint = self.button?.constraints.first { $0.firstAttribute == .width && $0.constant == self.button?.frame.height && $0.secondItem == nil}
+        if let htConst = buttonHeightConstraint { htConst.constant = 0 }
+        if let widthConst = buttonWidthConstraint { widthConst.constant = 0 }
         UIView.animate(withDuration: eachStageDuration) {
             if self.isLeftAligned {
                 self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: 240, height: self.frame.height)
@@ -237,8 +237,6 @@ extension JinyIconOptions {
                 let newXPosition = self.frame.minX - (240-self.button!.frame.width)
                 self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: 240, height: self.frame.height)
             }
-            if let htConst = buttonHeightConstraint { htConst.constant = 0 }
-            if let widthConst = buttonWidthConstraint { widthConst.constant = 0 }
             self.button?.layer.cornerRadius = 0
             self.button?.layoutIfNeeded()
             self.layoutIfNeeded()
@@ -255,9 +253,7 @@ extension JinyIconOptions {
             } completion: { (secondComplete) in
                 
             }
-
         }
-
     }
     
     @objc func languageClicked() {
@@ -288,29 +284,27 @@ extension JinyIconOptions {
             self.closeButton.layer.cornerRadius = 0
             self.layoutIfNeeded()
         } completion: { (_) in
-            DispatchQueue.main.async {
-                
-                let buttonHeightConstraint = self.button?.constraints.first { $0.firstAttribute == .height && $0.constant == 0 }
-                let buttonWidthConstraint = self.button?.constraints.first { $0.firstAttribute == .width && $0.constant == 0 }
-                if let htConst = buttonHeightConstraint { htConst.constant = self.frame.height}
-                if let widthConst = buttonWidthConstraint { widthConst.constant = self.frame.height }
-                UIView.animate(withDuration: self.eachStageDuration) {
-                    if self.isLeftAligned {
-                        self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
-                    } else {
-                        let newXPosition = self.button!.center.x - (self.frame.height/2)
-                        self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
-                    }
-                    self.button?.layer.cornerRadius = self.frame.height/2
-                    self.button?.layoutIfNeeded()
-                    self.layoutIfNeeded()
-                } completion: { (_) in
-                    self.removeFromSuperview()
+            self.button?.isHidden = false
+            let buttonHeightConstraint = self.button?.constraints.first { $0.firstAttribute == .height && $0.constant == 0 && $0.secondItem == nil }
+            let buttonWidthConstraint = self.button?.constraints.first { $0.firstAttribute == .width && $0.constant == 0 && $0.secondItem == nil}
+            if let htConst = buttonHeightConstraint { htConst.constant = self.frame.height}
+            if let widthConst = buttonWidthConstraint { widthConst.constant = self.frame.height }
+            UIView.animate(withDuration: self.eachStageDuration) {
+                if self.isLeftAligned {
+                    self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
+                } else {
+                    let newXPosition = self.button!.center.x - (self.frame.height/2)
+                    self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
                 }
+                self.button?.layer.cornerRadius = self.frame.height/2
+                self.button?.layoutIfNeeded()
+                self.layoutIfNeeded()
+            } completion: { (_) in
+                self.removeFromSuperview()
             }
-
+            
         }
-
+        
     }
     
 }

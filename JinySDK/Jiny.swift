@@ -33,7 +33,6 @@ import UIKit
     func updateView(inView:UIView)
     
     func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool)
-    func dismissJinyButton()
     func removeAllViews()
 }
 
