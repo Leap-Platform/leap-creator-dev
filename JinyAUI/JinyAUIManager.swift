@@ -33,8 +33,6 @@ class JinyAUIManager:NSObject {
     var scrollArrowBottomConstraint:NSLayoutConstraint?
     
     var audioPlayer:AVAudioPlayer?
-    var optionPanel:JinyOptionPanel?
-    var languagePanel:JinyLanguagePanel?
     var jinyButton:JinyMainButton?
     
     var synthesizer:AVSpeechSynthesizer?
@@ -273,22 +271,6 @@ extension JinyAUIManager:JinyAUIHandler {
         } else { if scrollArrow ==  nil { showArrow() } }
     }
     
-    func presentLanguagePanel(languages: Array<String>) {
-        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
-        currentAssist = nil
-        jinyButton?.isHidden = true
-        languagePanel = JinyLanguagePanel(withDelegate: self, frame: .zero, languageTexts: languages, theme: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        languagePanel?.presentPanel()
-    }
-    
-    func presentOptionPanel(mute: String, repeatText: String, language: String?) {
-        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
-        currentAssist = nil
-        jinyButton?.isHidden = true
-        optionPanel = JinyOptionPanel(withDelegate: self, repeatText: repeatText, muteText: mute, languageText: language)
-        optionPanel?.presentPanel()
-    }
-    
     func dismissJinyButton() {
         jinyButton?.isHidden = true
     }
@@ -314,7 +296,7 @@ extension JinyAUIManager:JinyAUIHandler {
         jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
         jinyButton!.tapGestureRecognizer.delegate = self
         jinyButton!.stateDelegate = self
-        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: mainIconConstraintConstant)
+        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .centerY, multiplier: 1, constant: mainIconConstraintConstant + (mainIconSize/2))
         jinyButton?.bottomConstraint = jinyButtonBottomConstraint!
         jinyButton?.disableDialog.delegate = self
         var distance = mainIconConstraintConstant
@@ -323,7 +305,7 @@ extension JinyAUIManager:JinyAUIHandler {
             cornerAttribute = .leading
             distance = -mainIconConstraintConstant
         }
-        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: jinyButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
+        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: jinyButton, attribute: .centerX, multiplier: 1, constant: distance - (mainIconSize/2))
         NSLayoutConstraint.activate([jinyButtonBottomConstraint!, cornerConstraint])
         jinyButton!.htmlUrl = iconSetting.htmlUrl
         jinyButton!.iconSize = mainIconSize
@@ -339,7 +321,12 @@ extension JinyAUIManager: UIGestureRecognizerDelegate {
             auiManagerCallBack?.jinyTapped()
             return
         }
-        presentOptionPanel(mute: "", repeatText: "", language: "")
+        
+        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
+        auiManagerCallBack?.optionPanelOpened()
+        guard let button = jinyButton else { return }
+        let jinyIconOptions = JinyIconOptions(withDelegate: self, stopText: "stop", languageText: "Language", jinyButton: button)
+        jinyIconOptions.show()
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -663,45 +650,6 @@ extension JinyAUIManager {
     
 }
 
-extension JinyAUIManager: JinyLanguagePanelDelegate {
-    
-    func languagePanelPresented() { auiManagerCallBack?.languagePanelOpened() }
-    
-    func failedToPresentLanguagePanel() {}
-    
-    func indexOfLanguageSelected(_ languageIndex: Int) { auiManagerCallBack?.languagePanelLanguageSelected(atIndex: languageIndex) }
-    
-    func languagePanelCloseClicked() { auiManagerCallBack?.languagePanelClosed() }
-    
-    func languagePanelSwipeDismissed() { auiManagerCallBack?.languagePanelClosed() }
-    
-    func languagePanelTappedOutside() { auiManagerCallBack?.languagePanelClosed() }
-    
-}
-
-extension JinyAUIManager: JinyOptionPanelDelegate {
-    
-    func failedToShowOptionPanel() { auiManagerCallBack?.optionPanelClosed() }
-    
-    func optionPanelPresented() { auiManagerCallBack?.optionPanelOpened() }
-    
-    func muteButtonClicked() { auiManagerCallBack?.optionPanelMuteClicked() }
-    
-    func repeatButtonClicked() { auiManagerCallBack?.optionPanelRepeatClicked() }
-    
-    func chooseLanguageButtonClicked() {
-        guard let langs = auiManagerCallBack?.getLanguages() else {
-            auiManagerCallBack?.optionPanelClosed()
-            return
-        }
-        presentLanguagePanel(languages: langs)
-    }
-    
-    func optionPanelDismissed() { auiManagerCallBack?.optionPanelClosed() }
-    
-    func optionPanelCloseClicked() { auiManagerCallBack?.optionPanelClosed() }
-}
-
 extension JinyAUIManager:AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
@@ -842,6 +790,23 @@ extension JinyAUIManager: JinyAssistDelegate {
         currentAssist = nil
         jinyButton?.isHidden = true
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+    }
+    
+}
+
+
+extension JinyAUIManager:JinyIconOptionsDelegate {
+    
+    func stopClicked() {
+        
+    }
+    
+    func languageClicked() {
+        
+    }
+    
+    func iconOptionsDismissed() {
+        auiManagerCallBack?.optionPanelClosed()
     }
     
 }
