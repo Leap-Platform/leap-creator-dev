@@ -372,7 +372,7 @@ extension JinyContextManager:JinyAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Any> {
         guard let config = configuration else { return [:] }
-        return [constant_defaultSounds:config.defaultSounds, constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
+        return [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
     }
     
     func triggerEvent(identifier: String, value: Any) {
@@ -386,14 +386,25 @@ extension JinyContextManager:JinyAUICallback {
         return focusScript
     }
     
-    func getLanguages() -> Array<String> {
-        return (configuration?.languages.map({ (language) -> String in
-            return language.script
-        }))!
+    func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>> {
+        guard let discovery = getLiveDiscovery() else { return [] }
+        return generateLangDicts(localeCodes: discovery.localeCodes)
+    }
+    
+    func getIconInfoForCurrentInstruction() -> Dictionary<String,Any>? {
+        guard let discovery = getLiveDiscovery() else { return nil }
+        return getIconSettings(discovery.id)
+    }
+    
+    func getLanguageHtmlUrl() -> String? {
+        guard let discovery = getLiveDiscovery() else { return nil }
+        return discovery.languageOption?[constant_htmlUrl]
     }
     
     func getLanguageCode() -> String {
-        return JinyPreferences.shared.getUserLanguage() ?? "hin"
+        if let code = JinyPreferences.shared.getUserLanguage() { return code }
+        if let firstLanguage = configuration?.languages.first { return firstLanguage.localeId }
+        return "ang"
     }
     
     func didPresentView() {
@@ -445,23 +456,18 @@ extension JinyContextManager:JinyAUICallback {
         }
     }
     
-    func languagePanelOpened() {
-        sendContextInfoEvent(eventTag: "changeLangClickedEvent")
-    }
-    
-    func languagePanelClosed() {
-        sendContextInfoEvent(eventTag: "crossClickedFromPanelEvent")
-    }
-    
-    func languagePanelLanguageSelected(atIndex: Int) {
-        sendContextInfoEvent(eventTag: "langSelectedFromPanelEvent")
-        guard let config = configuration else { return }
-        let languageSelected = config.languages[atIndex].localeId
-        JinyPreferences.shared.setUserLanguage(languageSelected)
-        auiHandler?.startMediaFetch()
+    func optionPanelStopClicked() {
+        guard let dis = getLiveDiscovery() else {
+            contextDetector?.start()
+            return
+        }
+        JinySharedInformation.shared.muteDisovery(dis.id)
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
+        discoveryManager?.resetDiscoveryManager()
+        if let state = contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         contextDetector?.start()
-        guard let state = contextDetector?.getState(), state == .Stage else { return }
-        stageManager?.resetCurrentStage()
     }
     
     func optionPanelOpened() {
@@ -471,25 +477,6 @@ extension JinyContextManager:JinyAUICallback {
     
     func optionPanelClosed() {
         sendContextInfoEvent(eventTag: "crossClickedFromPanelEvent")
-        contextDetector?.start()
-    }
-    
-    func optionPanelRepeatClicked() {
-        sendContextInfoEvent(eventTag: "repeatClickedEvent")
-        contextDetector?.start()
-        guard let state = contextDetector?.getState(), state == .Stage else { return }
-        stageManager?.resetCurrentStage()
-    }
-    
-    func optionPanelMuteClicked() {
-        sendContextInfoEvent(eventTag: "muteClickedEvent")
-        if contextDetector?.getState() == .Stage {
-            stageManager?.resetCurrentStage()
-            JinySharedInformation.shared.muteJiny()
-            flowManager?.resetFlowsArray()
-            contextDetector?.switchState()
-            assistManager?.resetAssistManager()
-        }
         contextDetector?.start()
     }
     
@@ -559,6 +546,13 @@ extension JinyContextManager {
             return ["localeId":language.localeId, "localeName":language.name, "localeScript":language.script]
         }.compactMap { return $0 }
         return langDicts
+    }
+    
+    func getLiveDiscovery() -> JinyDiscovery? {
+        guard let state = contextDetector?.getState(),
+              let disId = state == .Discovery ? discoveryManager?.getCurrentDiscovery()?.id : flowManager?.getDiscoveryId() else { return nil }
+        let currentDiscovery = configuration?.discoveries.first{ $0.id == disId }
+        return currentDiscovery
     }
     
 }

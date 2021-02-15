@@ -8,16 +8,9 @@
 
 import UIKit
 
-protocol JinyPointerDelegate {
-    func pointerPresented()
-    func nextClicked()
-    func pointerRemoved()
-}
-
 class JinyPointer: JinyInViewAssist {
     
     var pointerLayer = CAShapeLayer()
-    var pointerDelegate:JinyPointerDelegate?
     
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
         super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView)
@@ -169,10 +162,9 @@ class JinyFingerRipplePointer:JinyPointer {
         inView?.layer.addSublayer(pointerLayer)
         setPosition()
         toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
-
+        delegate?.didPresentAssist()
         startAnimation()
         addNotifiers()
-        self.pointerDelegate?.pointerPresented()
     }
     
     override func presentPointer(toRect: CGRect, inView:UIView?) {
@@ -183,8 +175,8 @@ class JinyFingerRipplePointer:JinyPointer {
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
         inView?.layer.addSublayer(pointerLayer)
         pointerLayer.zPosition = 10
+        delegate?.didPresentAssist()
         startAnimation()
-        self.pointerDelegate?.pointerPresented()
     }
     
     override func updateRect(newRect: CGRect, inView: UIView?) {
@@ -340,10 +332,9 @@ class JinySwipePointer: JinyPointer {
         inView?.layer.addSublayer(pointerLayer)
         setPosition()
         toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
-
+        delegate?.didPresentAssist()
         startAnimation()
         addNotifiers()
-        self.pointerDelegate?.pointerPresented()
     }
     
     override func presentPointer(toRect: CGRect, inView:UIView?) {
@@ -370,8 +361,8 @@ class JinySwipePointer: JinyPointer {
         inView?.layer.addSublayer(pointerLayer)
         pointerLayer.zPosition = 10
         toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
+        delegate?.didPresentAssist()
         startAnimation(toRect: toRect)
-        self.pointerDelegate?.pointerPresented()
     }
     
     override func updateRect(newRect: CGRect, inView: UIView?) {

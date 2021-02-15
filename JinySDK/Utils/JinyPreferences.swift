@@ -15,6 +15,7 @@ class JinyPreferences {
     
     let prefs = UserDefaults.standard
     var currentLanguage:String?
+    var apiKey:String?
     
     let languageCode = "jiny_audio_language_code"
     

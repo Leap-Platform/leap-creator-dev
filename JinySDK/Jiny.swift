@@ -42,7 +42,9 @@ import UIKit
     func triggerEvent(identifier:String, value:Any)
     func getWebScript(_ identifier:String) -> String?
     
-    func getLanguages() -> Array<String>
+    func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>>
+    func getIconInfoForCurrentInstruction() -> Dictionary<String,Any>?
+    func getLanguageHtmlUrl() -> String?
     func getLanguageCode() -> String
     
     func didPresentView()
@@ -51,15 +53,10 @@ import UIKit
     
     func jinyTapped()
     
-    func languagePanelOpened()
-    func languagePanelClosed()
-    func languagePanelLanguageSelected(atIndex:Int)
-    
     func optionPanelOpened()
+    func optionPanelStopClicked()
     func optionPanelClosed()
-    func optionPanelRepeatClicked()
-    func optionPanelMuteClicked()
-    
+
     func disableAssistance()
 }
 

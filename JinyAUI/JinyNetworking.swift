@@ -100,6 +100,13 @@ class JinyDownloadOperation: JinyOperation {
     }
     
     func downloadFile() {
+        let filePath = JinySharedAUI.shared.getFilePath(media: media)
+        guard !fm.fileExists(atPath: filePath.path) else {
+            self.executing(false)
+            self.finished(true)
+            self.statusUpdate(false,true,true,filePath)
+            return
+        }
         let request = URLRequest(url: media.url)
         let dlTask = session.downloadTask(with: request) { (fileUrl, urlResponse, error) in
             self.executing(false)
@@ -109,66 +116,23 @@ class JinyDownloadOperation: JinyOperation {
                 return
             }
             self.copyFileToJinyFolder(tempLocation)
-            self.statusUpdate(false, true, true, tempLocation)
+            self.statusUpdate(false, true, true, filePath)
         }
         dlTask.resume()
     }
     
     func copyFileToJinyFolder(_ inputLocation: URL) {
-        let documentPath = self.fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        var jinyFolderPath = documentPath.appendingPathComponent(Constants.Networking.downloadsFolder)
-        if let sound = media as? JinySound {
-            jinyFolderPath = jinyFolderPath.appendingPathComponent(sound.langCode!)
-        } else {
-            jinyFolderPath = jinyFolderPath.appendingPathComponent("aui_component")
+        let folderPath = JinySharedAUI.shared.getFolderPath(media: media)
+        if !JinySharedAUI.shared.checkIfFolderExists(folder: folderPath) {
+            do { try fm.createDirectory(at: folderPath, withIntermediateDirectories: true, attributes: [:]) }
+            catch let folderCreationError { fatalError("Failed to create Jiny folder becaues \(folderCreationError.localizedDescription)") }
         }
-        if !checkIfJinyFolderExists() {
-            do {
-                try fm.createDirectory(at: jinyFolderPath.absoluteURL, withIntermediateDirectories: true, attributes: [:])
-            } catch let err {
-                print(err.localizedDescription)
-                return
-            }
-        }
-        do {
-            var finalUrl = jinyFolderPath.appendingPathComponent(media.name)
-            if let _ = media as? JinySound {
-                finalUrl.appendPathExtension("mp3")
-            }
-            try fm.copyItem(at: inputLocation, to: finalUrl)
-            print(finalUrl.path)
-        } catch let err {
-            print(err.localizedDescription)
-            return
-        }
+        let filePath = JinySharedAUI.shared.getFilePath(media: media)
+        if fm.fileExists(atPath: filePath.path) { return }
+        do { try fm.copyItem(atPath: inputLocation.path, toPath: filePath.path) }
+        catch let fileCopyError { fatalError("Failed to copy file because \(fileCopyError.localizedDescription)") }
     }
     
-    func checkIfJinyFolderExists() -> Bool {
-        let documentPath = self.fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let jinyFolderPath = documentPath.appendingPathComponent(Constants.Networking.downloadsFolder)
-        var isDirectory = ObjCBool(true)
-        if !fm.fileExists(atPath: jinyFolderPath.absoluteString, isDirectory: &isDirectory) {return false}
-        if !(isDirectory.boolValue) {return false}
-        return true
-    }
-    
-}
-
-// MARK: - JINY DATA OPERATION CLASS - SUBCLASS OF JINY OPERATION
-
-class JinyDataOperation: JinyOperation {
-    override func main() {
-        super.main()
-        fetchAPI()
-    }
-
-    func fetchAPI() {
-        let dataTask = session.dataTask(with: request) { (data, urlResponse, error) in
-            self.executing(false)
-            self.finished(true)
-        }
-        dataTask.resume()
-    }
 }
 
 
