@@ -16,7 +16,7 @@ class JinyLanguage {
     var muteText:String
     var repeatText:String
     var changeLanguageText:String
-    var ttsInfo:Dictionary<String,String>
+    var ttsInfo:JinyTTSInfo?
     
     init(withLanguageDict dict:Dictionary<String, Any>) {
         localeId = dict[constant_localeId] as? String ?? ""
@@ -25,7 +25,7 @@ class JinyLanguage {
         muteText = dict[constant_muteText] as? String ?? ""
         repeatText = dict[constant_repeatText] as? String ?? ""
         changeLanguageText = dict[constant_changeLanguageText] as? String ?? ""
-        ttsInfo = dict[constant_ttsInfo] as? Dictionary<String,String> ?? [:]
+        if let ttsDict = dict[constant_ttsInfo] as? Dictionary<String,String> { ttsInfo = JinyTTSInfo(ttsDict) }
     }
     
 }
