@@ -14,47 +14,45 @@ import AdSupport
 import WebKit
 
 
-protocol JinyAUIManagerDelegate:NSObjectProtocol {
+protocol JinyAUIManagerDelegate: NSObjectProtocol {
     
     func isClientCallbackRequired() -> Bool
-    func eventGenerated(event:Dictionary<String,Any>)
-    
+    func eventGenerated(event: Dictionary<String,Any>)
 }
 
-class JinyAUIManager:NSObject {
+class JinyAUIManager: NSObject {
     
-    weak var auiManagerCallBack:JinyAUICallback?
-    weak var delegate:JinyAUIManagerDelegate?
+    weak var auiManagerCallBack: JinyAUICallback?
+    weak var delegate: JinyAUIManagerDelegate?
     
-    var currentAssist:JinyAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
+    var currentAssist: JinyAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
     
-    var keyboardHeight:Float = 0
-    var jinyButtonBottomConstraint:NSLayoutConstraint?
-    var scrollArrowBottomConstraint:NSLayoutConstraint?
+    var keyboardHeight: Float = 0
+    var jinyButtonBottomConstraint: NSLayoutConstraint?
+    var scrollArrowBottomConstraint: NSLayoutConstraint?
     
-    var audioPlayer:AVAudioPlayer?
+    var audioPlayer: AVAudioPlayer?
     var utterance = AVSpeechUtterance()
     let synthesizer = AVSpeechSynthesizer()
     
-    var jinyButton:JinyMainButton?
+    var jinyButton: JinyMainButton?
     var mediaManager = JinyMediaManager()
     
-    var discoverySoundsJson:Dictionary<String,Array<JinySound>> = [:]
-    var stageSoundsJson:Dictionary<String,Array<JinySound>> = [:]
-    var scrollArrow:UIButton?
+    var discoverySoundsJson: Dictionary<String,Array<JinySound>> = [:]
+    var stageSoundsJson: Dictionary<String,Array<JinySound>> = [:]
+    var scrollArrow: UIButton?
     
-    var currentInstruction:Dictionary<String,Any>?
-    weak var currentTargetView:UIView?
-    var currentTargetRect:CGRect?
-    weak var currentWebView:UIView?
+    var currentInstruction: Dictionary<String,Any>?
+    weak var currentTargetView: UIView?
+    var currentTargetRect: CGRect?
+    weak var currentWebView: UIView?
     
-    var autoDismissTimer:Timer?
+    var autoDismissTimer: Timer?
     private var baseUrl = String()
     
-    func addIdentifier(identifier:String, value:Any) {
+    func addIdentifier(identifier: String, value: Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
     }
-    
 }
 
 extension JinyAUIManager {
@@ -64,7 +62,7 @@ extension JinyAUIManager {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
-    @objc func keyboardDidShow(_ notification:NSNotification) {
+    @objc func keyboardDidShow(_ notification: NSNotification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
            let targetView = currentTargetView, isViewHiddenByKeyboard(targetView)
         {
@@ -80,7 +78,7 @@ extension JinyAUIManager {
         }
     }
     
-    @objc func keyboardDidHide(_ notification:NSNotification) {
+    @objc func keyboardDidHide(_ notification: NSNotification) {
         keyboardHeight = 0
         guard let assistInfo = currentInstruction?[constant_assistInfo] as? Dictionary<String,Any>, let autoScroll = assistInfo[constant_autoScroll] as? Bool else {
             return
@@ -104,7 +102,7 @@ extension JinyAUIManager {
 
 
 // MARK: - AUIHANDLER METHODS
-extension JinyAUIManager:JinyAUIHandler {
+extension JinyAUIManager: JinyAUIHandler {
     
     func startMediaFetch() {
         
@@ -269,7 +267,7 @@ extension JinyAUIManager:JinyAUIHandler {
         }
     }
     
-    func updateView(inView view:UIView) {
+    func updateView(inView view: UIView) {
         if isViewInVisibleArea(view: view) {
             if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
             else {
@@ -383,8 +381,8 @@ extension JinyAUIManager: JinyDisableAssistanceDelegate {
 // MARK: - MEDIA FETCH AND HANDLING
 extension JinyAUIManager {
     
-    func processSoundConfigs(configs:Array<Dictionary<String,Any>>) -> Dictionary<String, Array<JinySound>> {
-        var processedSoundsDict:Dictionary<String,Array<JinySound>> = [:]
+    func processSoundConfigs(configs: Array<Dictionary<String,Any>>) -> Dictionary<String, Array<JinySound>> {
+        var processedSoundsDict: Dictionary<String,Array<JinySound>> = [:]
         for config in configs {
             let singleConfigProcessed = processSingleConfig(config: config)
             singleConfigProcessed.forEach { (code, jinySoundsArray) in
@@ -395,8 +393,8 @@ extension JinyAUIManager {
         return processedSoundsDict
     }
     
-    private func processSingleConfig(config:Dictionary<String,Any>) -> Dictionary<String, Array<JinySound>> {
-        var processedSounds:Dictionary<String,Array<JinySound>> = [:]
+    private func processSingleConfig(config: Dictionary<String,Any>) -> Dictionary<String, Array<JinySound>> {
+        var processedSounds: Dictionary<String,Array<JinySound>> = [:]
         guard let baseUrl = config[constant_baseUrl] as? String,
               let jinySounds = config[constant_jinySounds] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
         jinySounds.forEach { (code, soundDictsArray) in
@@ -408,7 +406,7 @@ extension JinyAUIManager {
         
     }
     
-    private func processJinySounds(_ sounds:Array<Dictionary<String,Any>>, code:String, baseUrl:String) -> Array<JinySound> {
+    private func processJinySounds(_ sounds: Array<Dictionary<String,Any>>, code: String, baseUrl: String) -> Array<JinySound> {
         return sounds.map { (singleSoundDict) -> JinySound? in
             let url = singleSoundDict[constant_url] as? String
             return JinySound(baseUrl: baseUrl, location: url, code: code, info: singleSoundDict)
@@ -447,36 +445,37 @@ extension JinyAUIManager {
     }
     
     func playAudio() {
+        DispatchQueue.global().async {
         guard let code = JinyPreferences.shared.currentLanguage,
-              let mediaName = currentInstruction?[constant_soundName]  as? String else {
-            startAutoDismissTimer()
+              let mediaName = self.currentInstruction?[constant_soundName]  as? String else {
+            self.startAutoDismissTimer()
             return
         }
-        let soundsArrayForLanguage = discoverySoundsJson[code]  ?? []
+            let soundsArrayForLanguage = self.discoverySoundsJson[code]  ?? []
         var audio = soundsArrayForLanguage.first { $0.name == mediaName }
         if audio ==  nil {
-            let stageSounds = stageSoundsJson[code] ?? []
+            let stageSounds = self.stageSoundsJson[code] ?? []
             audio = stageSounds.first { $0.name == mediaName }
         }
         guard let currentAudio = audio else {
-            startAutoDismissTimer()
+            self.startAutoDismissTimer()
             return
         }
         if currentAudio.isTTS {
             if let text = currentAudio.text,
-               let ttsCode = auiManagerCallBack?.getTTSCodeFor(code: code) {
-                tryTTS(text: text, code: ttsCode)
+               let ttsCode = self.auiManagerCallBack?.getTTSCodeFor(code: code) {
+                self.tryTTS(text: text, code: ttsCode)
                 return
             }
         }
         let soundPath = JinySharedAUI.shared.getSoundFilePath(name: mediaName, code: code, format: currentAudio.format)
-        let dlStatus = mediaManager.getCurrentMediaStatus(currentAudio)
+            let dlStatus = self.mediaManager.getCurrentMediaStatus(currentAudio)
         switch dlStatus {
         case .notDownloaded:
-            mediaManager.updatePriority(mediaName: mediaName, langCode: code, toPriority: .veryHigh)
+            self.mediaManager.updatePriority(mediaName: mediaName, langCode: code, toPriority: .veryHigh)
             fallthrough
         case .isDownloading:
-            mediaManager.overrideMediaDownloadCompletion(mediaName, code: code) { [weak self] (success) in
+            self.mediaManager.overrideMediaDownloadCompletion(mediaName, code: code) { [weak self] (success) in
                 guard let instruction = self?.currentInstruction,
                       let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
                       let currentMediaName = assistInfo[constant_soundName] as? String, mediaName == currentMediaName,
@@ -484,11 +483,12 @@ extension JinyAUIManager {
                 self?.playAudioFile(filePath: soundPath)
             }
         case .downloaded:
-            playAudioFile(filePath: soundPath)
+            self.playAudioFile(filePath: soundPath)
+        }
         }
     }
     
-    func playAudioFile(filePath:URL) {
+    func playAudioFile(filePath: URL) {
         do {
             try AVAudioSession.sharedInstance().setActive(true)
             self.audioPlayer = try AVAudioPlayer(contentsOf: filePath)
@@ -499,7 +499,7 @@ extension JinyAUIManager {
         } catch  { }
     }
     
-    func tryTTS(text:String, code:String) {
+    func tryTTS(text: String, code: String) {
         utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: code)
         utterance.rate = 0.5
@@ -556,7 +556,7 @@ extension JinyAUIManager {
 // MARK: - PRESENT AUI COMPONENTS
 extension JinyAUIManager {
     
-    private func setupDefaultValues(instruction:Dictionary<String,Any>, langCode:String?, view:UIView?, rect:CGRect?, webview:UIView?) {
+    private func setupDefaultValues(instruction: Dictionary<String,Any>, langCode: String?, view: UIView?, rect: CGRect?, webview: UIView?) {
         if let code = langCode {
             JinyPreferences.shared.currentLanguage = code
             self.startDiscoverySoundDownload()
@@ -568,7 +568,7 @@ extension JinyAUIManager {
         currentWebView = webview
     }
     
-    private func performInViewNativeInstruction(instruction:Dictionary<String,Any>, inView:UIView, type:String, iconInfo:Dictionary<String,Any>? = nil) {
+    private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         
         // Autoscroll
@@ -619,7 +619,7 @@ extension JinyAUIManager {
         }
     }
     
-    private func performInViewWebInstruction(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView, type:String, iconInfo:Dictionary<String,Any>? = nil) {
+    private func performInViewWebInstruction(instruction: Dictionary<String,Any>, rect: CGRect, inWebview: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         
         guard  let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         
@@ -728,9 +728,8 @@ extension JinyAUIManager {
     }
 }
 
-
 // MARK: - AUDIO PLAYER DELEGATES
-extension JinyAUIManager:AVAudioPlayerDelegate {
+extension JinyAUIManager: AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         jinyButton?.iconState = .rest
@@ -743,9 +742,8 @@ extension JinyAUIManager:AVAudioPlayerDelegate {
     }
 }
 
-
 // MARK: - TTS HANDLING
-extension JinyAUIManager:AVSpeechSynthesizerDelegate {
+extension JinyAUIManager: AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         jinyButton?.iconState = .rest
@@ -753,28 +751,27 @@ extension JinyAUIManager:AVSpeechSynthesizerDelegate {
     }
 }
 
-
 // MARK: - ARROW AND KEYBOARD HANDLING
 extension JinyAUIManager {
     
-    func isViewInVisibleArea(view:UIView) -> Bool {
+    func isViewInVisibleArea(view: UIView) -> Bool {
         let viewFrame = view.frame
         let windowFrame = UIApplication.shared.keyWindow?.frame
         let viewFrameWRTToWindowFrame = view.superview!.convert(viewFrame, to: nil)
         return windowFrame!.contains(viewFrameWRTToWindowFrame)
     }
     
-    func isRectInVisbleArea(rect:CGRect, inView:UIView) -> Bool {
+    func isRectInVisbleArea(rect: CGRect, inView: UIView) -> Bool {
         return inView.frame.contains(rect)
     }
     
-    func isViewHiddenByKeyboard(_ view:UIView) -> Bool {
+    func isViewHiddenByKeyboard(_ view: UIView) -> Bool {
         guard keyboardHeight > 0 else { return false }
         let viewWRTWindow = view.superview!.convert(view.frame, to: nil)
         return viewWRTWindow.origin.y > (UIApplication.shared.keyWindow!.frame.height - CGFloat(keyboardHeight))
     }
     
-    func getScrollViews(_ forView:UIView) -> Array<UIView> {
+    func getScrollViews(_ forView: UIView) -> Array<UIView> {
         var scrollViews:Array<UIView> = [forView]
         guard var tempView = forView.superview else { return scrollViews }
         while !tempView.isKind(of: UIWindow.self) {
@@ -784,7 +781,7 @@ extension JinyAUIManager {
         return scrollViews
     }
     
-    func makeViewVisible(_ nestedScrolls:Array<UIView>,_ animated:Bool) {
+    func makeViewVisible(_ nestedScrolls: Array<UIView>,_ animated: Bool) {
         for i in 0..<nestedScrolls.count-1 {
             let parentView = nestedScrolls[nestedScrolls.count - 1 - i]
             let childView = nestedScrolls[nestedScrolls.count - 1 - i - 1]
