@@ -30,9 +30,16 @@ class JinyAUIContent:JinyMedia {
 class JinySound:JinyMedia {
     
     var langCode:String?
+    var format:String = "mp3"
+    let isTTS:Bool
+    let text:String?
     
     init(baseUrl: String, location: String, code:String, info:Dictionary<String,Any>) {
         langCode = code
+        let nameArray = location.split(separator: ".")
+        isTTS = info["isTTSEnabled"] as? Bool ?? false
+        text = info["text"] as? String
+        if nameArray.count == 2 { format = String(nameArray[1]) }
         super.init(baseUrl: baseUrl, location: location)
         if let newName = info[constant_name] as? String { name = newName }
     }

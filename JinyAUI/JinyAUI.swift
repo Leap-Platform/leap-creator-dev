@@ -35,6 +35,7 @@ import JinySDK
     
     @objc public func initialize(withToken apiKey:String) {
         token = apiKey
+        JinyPreferences.shared.apiKey = token
         guard token != nil, token != "" else { fatalError("Empty token. Token cannot be empty") }
         auiManager.auiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }

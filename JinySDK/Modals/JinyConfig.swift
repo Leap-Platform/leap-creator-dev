@@ -19,7 +19,6 @@ class JinyConfig {
     var languages:Array<JinyLanguage> = []
     var supportedAppLocales:Array<String> = []
     var discoverySounds:Array<Dictionary<String,Any>> = []
-    var defaultSounds:Array<Dictionary<String,Any>> = []
     var auiContent:Array<Dictionary<String,Any>> = []
     var iconSetting: Dictionary<String, IconSetting> = [:]
     var webViewList:Array<Dictionary<String,Any>> = []
@@ -87,13 +86,9 @@ class JinyConfig {
             if let discoverySoundsDict = configDict[constant_discoverySounds] as? Dictionary<String,Any> {
                 discoverySounds.append(discoverySoundsDict)
             }
-            if let defaultSoundsDict = configDict[constant_defaultSounds] as? Dictionary<String,Any> {
-                defaultSounds.append(defaultSoundsDict)
-            }
             if let auiContentsDict = configDict[constant_auiContent] as? Dictionary<String,Any> {
                 auiContent.append(auiContentsDict)
             }
-
             if let newSupportedAppLocale = configDict[constant_supportedAppLocales] as? Array<String> {
                 supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
             }
