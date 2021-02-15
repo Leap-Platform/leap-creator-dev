@@ -33,6 +33,9 @@ class JinyAUIManager:NSObject {
     var scrollArrowBottomConstraint:NSLayoutConstraint?
     
     var audioPlayer:AVAudioPlayer?
+    var utterance = AVSpeechUtterance()
+    let synthesizer = AVSpeechSynthesizer()
+    
     var jinyButton:JinyMainButton?
     var mediaManager = JinyMediaManager()
     
@@ -126,7 +129,7 @@ extension JinyAUIManager:JinyAUIHandler {
                         htmlBaseUrl = baseUrl
                         for content in contents {
                             let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
-                            self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal)
+                            if let _ = auiContent.url { self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal) }
                         }
                     }
                 }
@@ -137,7 +140,7 @@ extension JinyAUIManager:JinyAUIHandler {
                     self?.baseUrl = baseUrl
                     for (_, value) in iconSettingDict {
                         let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
-                        self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal)
+                        if let _ = auiContent.url { self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal) }
                     }
                 }
             }
@@ -339,7 +342,10 @@ extension JinyAUIManager: UIGestureRecognizerDelegate {
         currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
         auiManagerCallBack?.optionPanelOpened()
         guard let button = jinyButton else { return }
-        let jinyIconOptions = JinyIconOptions(withDelegate: self, stopText: "stop", languageText: "Language", jinyButton: button)
+        guard let optionsText = auiManagerCallBack?.getCurrentLanguageOptionsTexts() else { return }
+        let stopText = optionsText[constant_stop] ?? "Stop"
+        let languageText = optionsText[constant_language] ?? "Language"
+        let jinyIconOptions = JinyIconOptions(withDelegate: self, stopText: stopText, languageText: languageText, jinyButton: button)
         jinyIconOptions.show()
     }
     
@@ -404,7 +410,7 @@ extension JinyAUIManager {
     
     private func processJinySounds(_ sounds:Array<Dictionary<String,Any>>, code:String, baseUrl:String) -> Array<JinySound> {
         return sounds.map { (singleSoundDict) -> JinySound? in
-            guard let url = singleSoundDict[constant_url] as? String else { return nil }
+            let url = singleSoundDict[constant_url] as? String
             return JinySound(baseUrl: baseUrl, location: url, code: code, info: singleSoundDict)
         }.compactMap { return $0 }
     }
@@ -412,7 +418,7 @@ extension JinyAUIManager {
     func startDiscoverySoundDownload() {
         let code = auiManagerCallBack!.getLanguageCode()
         let discoverySoundsForCode = discoverySoundsJson[code] ?? []
-        for sound in discoverySoundsForCode { mediaManager.startDownload(forMedia: sound, atPriority: .normal) }
+        for sound in discoverySoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .normal) } }
     }
     
     func fetchSoundConfig() {
@@ -437,7 +443,7 @@ extension JinyAUIManager {
     func startStageSoundDownload() {
         let code = auiManagerCallBack!.getLanguageCode()
         let stageSoundsForCode = stageSoundsJson[code] ?? []
-        for sound in stageSoundsForCode { mediaManager.startDownload(forMedia: sound, atPriority: .low) }
+        for sound in stageSoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .low) } }
     }
     
     func playAudio() {
@@ -457,8 +463,9 @@ extension JinyAUIManager {
             return
         }
         if currentAudio.isTTS {
-            if let text = currentAudio.text {
-                tryTTS(text: text)
+            if let text = currentAudio.text,
+               let ttsCode = auiManagerCallBack?.getTTSCodeFor(code: code) {
+                tryTTS(text: text, code: ttsCode)
                 return
             }
         }
@@ -492,8 +499,13 @@ extension JinyAUIManager {
         } catch  { }
     }
     
-    func tryTTS(text:String) {
-        
+    func tryTTS(text:String, code:String) {
+        utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: code)
+        utterance.rate = 0.5
+        self.jinyButton?.iconState = .audioPlay
+        synthesizer.delegate = self
+        synthesizer.speak(utterance)
     }
 }
 
@@ -504,7 +516,7 @@ extension JinyAUIManager {
         
         func showLanguageOptions() {
             let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
-            self.mediaManager.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
+            if auiContent.url != nil { self.mediaManager.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 DispatchQueue.main.async {
                     let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { success, languageCode in
                         if success, let code = languageCode { JinyPreferences.shared.setUserLanguage(code) }
@@ -515,7 +527,7 @@ extension JinyAUIManager {
                     }
                     jinyLanguageOptions.showBottomSheet()
                 }
-            })
+            }) }
         }
         
         if localeCodes.count == 1 {
@@ -736,6 +748,7 @@ extension JinyAUIManager:AVAudioPlayerDelegate {
 extension JinyAUIManager:AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        jinyButton?.iconState = .rest
         startAutoDismissTimer()
     }
 }

@@ -42,10 +42,12 @@ import UIKit
     func triggerEvent(identifier:String, value:Any)
     func getWebScript(_ identifier:String) -> String?
     
+    func getCurrentLanguageOptionsTexts() -> Dictionary<String,String>
     func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>>
     func getIconInfoForCurrentInstruction() -> Dictionary<String,Any>?
     func getLanguageHtmlUrl() -> String?
     func getLanguageCode() -> String
+    func getTTSCodeFor(code:String) -> String?
     
     func didPresentView()
     func failedToPerform()

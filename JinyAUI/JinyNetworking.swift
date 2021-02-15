@@ -86,7 +86,7 @@ class JinyDownloadOperation: JinyOperation {
     
     init(_ file: JinyMedia, _ success: @escaping ((Bool, Bool, Bool, URL?) -> Void)) {
         media = file
-        let request = URLRequest(url: media.url)
+        let request = URLRequest(url: media.url!)
         super.init(request,success)
     }
     
@@ -107,7 +107,7 @@ class JinyDownloadOperation: JinyOperation {
             self.statusUpdate(false,true,true,filePath)
             return
         }
-        let request = URLRequest(url: media.url)
+        let request = URLRequest(url: media.url!)
         let dlTask = session.downloadTask(with: request) { (fileUrl, urlResponse, error) in
             self.executing(false)
             self.finished(true)

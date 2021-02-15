@@ -386,6 +386,15 @@ extension JinyContextManager:JinyAUICallback {
         return focusScript
     }
     
+    func getCurrentLanguageOptionsTexts() -> Dictionary<String,String> {
+        let langCode = getLanguageCode()
+        let lang = configuration?.languages.first{ $0.localeId == langCode }
+        guard let language = lang else { return [constant_stop:"Stop", constant_language:"Language"] }
+        let stopText = language.muteText
+        let languageText = language.changeLanguageText
+        return [constant_stop:stopText, constant_language:languageText]
+    }
+    
     func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>> {
         guard let discovery = getLiveDiscovery() else { return [] }
         return generateLangDicts(localeCodes: discovery.localeCodes)
@@ -405,6 +414,15 @@ extension JinyContextManager:JinyAUICallback {
         if let code = JinyPreferences.shared.getUserLanguage() { return code }
         if let firstLanguage = configuration?.languages.first { return firstLanguage.localeId }
         return "ang"
+    }
+    
+    func getTTSCodeFor(code:String) -> String? {
+        let lang = configuration?.languages.first{ $0.localeId == code }
+        guard let language = lang,
+              let ttsInfo = language.ttsInfo,
+              let locale = ttsInfo.ttsLocale,
+              let region = ttsInfo.ttsRegion else { return nil }
+        return "\(locale)-\(region)"
     }
     
     func didPresentView() {

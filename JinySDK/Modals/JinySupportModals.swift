@@ -8,6 +8,16 @@
 
 import Foundation
 
+class JinyTTSInfo{
+    let ttsLocale:String?
+    let ttsRegion:String?
+    
+    init(_ dict:Dictionary<String,String>) {
+        ttsLocale = dict["ttsLocale"]
+        ttsRegion = dict["ttsRegion"]
+    }
+}
+
 enum JinyTriggerMode:String {
     case Single =   "SINGLE_FLOW_TRIGGER"
     case Multi  =   "MULTI_FLOW_TRIGGER"
