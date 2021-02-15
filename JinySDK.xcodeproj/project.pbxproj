@@ -52,8 +52,6 @@
 		D0084C92248682A80082508C /* JinyDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C91248682A80082508C /* JinyDiscovery.swift */; };
 		D00B8F5F249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
 		D00B8F66249B2988006F4CA1 /* JinyAuthSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00B8F65249B2988006F4CA1 /* JinyAuthSDKTests.swift */; };
-		D00B8F6B249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
-		D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D00E859A24F51914000D8E5B /* JinyAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E859924F51914000D8E5B /* JinyAssist.swift */; };
 		D01BD32025D528940078324B /* JinyIconOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01BD31F25D528940078324B /* JinyIconOptions.swift */; };
 		D01BD32925D529AD0078324B /* jiny_option_language.png in Resources */ = {isa = PBXBuildFile; fileRef = D01BD32825D529AD0078324B /* jiny_option_language.png */; };
@@ -82,6 +80,12 @@
 		D03E44FA2420AABC00A43FEA /* JinySampleAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44F92420AABC00A43FEA /* JinySampleAppTests.swift */; };
 		D03E45052420AABC00A43FEA /* JinySampleAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45042420AABC00A43FEA /* JinySampleAppUITests.swift */; };
 		D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* JinyInternal.swift */; };
+		D040D47C25DA5F5E00CE09EB /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
+		D040D47D25DA5F5E00CE09EB /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D040D4E925DA658500CE09EB /* JinySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D040D4F125DA65CA00CE09EB /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
+		D040D50725DA6BBA00CE09EB /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
+		D040D50825DA6BBA00CE09EB /* JinySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D04356C32498CB7C00B90276 /* JinyLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04356C22498CB7C00B90276 /* JinyLanguage.swift */; };
 		D049F5F7249D242000372324 /* JinyAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F6249D242000372324 /* JinyAuth.swift */; };
 		D049F5F9249D2BA100372324 /* JinyAuthInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* JinyAuthInternal.swift */; };
@@ -166,8 +170,6 @@
 		D0F434CC2456CC30005D6C96 /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 		D0FDAC2624B48B3C00D9332B /* JinyAUI.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* JinyAUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0FDAC3124B4A49700D9332B /* JinyAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3024B4A49700D9332B /* JinyAUI.swift */; };
-		D0FDAC3224B4A70600D9332B /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
-		D0FDAC3324B4A70600D9332B /* JinySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0FDAC3824B4BF7100D9332B /* JinyAUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3724B4BF7100D9332B /* JinyAUIManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -185,13 +187,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D03E44DF2420AABA00A43FEA;
 			remoteInfo = JinySampleApp;
-		};
-		D00B8F69249B2988006F4CA1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D00B8F55249B2988006F4CA1;
-			remoteInfo = JinyAuthSDK;
 		};
 		D01137EC24A235AD00C8212D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -220,6 +215,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = D03E44DF2420AABA00A43FEA;
 			remoteInfo = JinySampleApp;
+		};
+		D040D47E25DA5F5E00CE09EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D00B8F55249B2988006F4CA1;
+			remoteInfo = JinyAuthSDK;
+		};
+		D040D50925DA6BBA00CE09EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0592E6E241FA6E3007782A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D0592E76241FA6E3007782A8;
+			remoteInfo = JinySDK;
 		};
 		D0592E82241FA6E3007782A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -258,19 +267,20 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D040D50825DA6BBA00CE09EB /* JinySDK.framework in Embed Frameworks */,
 				D032C59724B71CE5006E8F2B /* JinyAUI.framework in Embed Frameworks */,
-				D00B8F6C249B2988006F4CA1 /* JinyAuthSDK.framework in Embed Frameworks */,
+				D040D47D25DA5F5E00CE09EB /* JinyAuthSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D0FDAC3624B4A70600D9332B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D0FDAC3324B4A70600D9332B /* JinySDK.framework in Embed Frameworks */,
+				D040D4E925DA658500CE09EB /* JinySDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,8 +478,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D040D50725DA6BBA00CE09EB /* JinySDK.framework in Frameworks */,
 				D032C59624B71CE5006E8F2B /* JinyAUI.framework in Frameworks */,
-				D00B8F6B249B2988006F4CA1 /* JinyAuthSDK.framework in Frameworks */,
+				D040D47C25DA5F5E00CE09EB /* JinyAuthSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,7 +530,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0FDAC3224B4A70600D9332B /* JinySDK.framework in Frameworks */,
+				D040D4F125DA65CA00CE09EB /* JinySDK.framework in Frameworks */,
 				D0938E13251E1BAC00FD462E /* AdSupport.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -680,7 +691,6 @@
 				D0BC371E249DFB41002648FF /* AutomaticViewController.swift */,
 				D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */,
 				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
-				D099B0CF254055B500E66ED6 /* UIWebviewViewController.swift */,
 				2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */,
 			);
 			path = JinySampleApp;
@@ -938,7 +948,6 @@
 		D0B793192543186D00DB94DD /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				D032C58F24B70056006E8F2B /* JinyPointer */,
 				D0B7931A2543186D00DB94DD /* JinyLabel.swift */,
 				2D1BC4EB25ADB10F00B39606 /* JinyTipView.swift */,
 				D0B7931B2543186D00DB94DD /* JinySpot.swift */,
@@ -1077,8 +1086,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				D00B8F6A249B2988006F4CA1 /* PBXTargetDependency */,
 				D032C59924B71CE5006E8F2B /* PBXTargetDependency */,
+				D040D47F25DA5F5E00CE09EB /* PBXTargetDependency */,
+				D040D50A25DA6BBA00CE09EB /* PBXTargetDependency */,
 			);
 			name = JinySampleApp;
 			productName = JinySampleApp;
@@ -1208,7 +1218,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1210;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Aravind GS";
 				TargetAttributes = {
 					D00B8F55249B2988006F4CA1 = {
@@ -1563,11 +1573,6 @@
 			target = D03E44DF2420AABA00A43FEA /* JinySampleApp */;
 			targetProxy = D00B8F62249B2988006F4CA1 /* PBXContainerItemProxy */;
 		};
-		D00B8F6A249B2988006F4CA1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D00B8F55249B2988006F4CA1 /* JinyAuthSDK */;
-			targetProxy = D00B8F69249B2988006F4CA1 /* PBXContainerItemProxy */;
-		};
 		D01137ED24A235AD00C8212D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D03E44DF2420AABA00A43FEA /* JinySampleApp */;
@@ -1587,6 +1592,16 @@
 			isa = PBXTargetDependency;
 			target = D03E44DF2420AABA00A43FEA /* JinySampleApp */;
 			targetProxy = D03E45012420AABC00A43FEA /* PBXContainerItemProxy */;
+		};
+		D040D47F25DA5F5E00CE09EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D00B8F55249B2988006F4CA1 /* JinyAuthSDK */;
+			targetProxy = D040D47E25DA5F5E00CE09EB /* PBXContainerItemProxy */;
+		};
+		D040D50A25DA6BBA00CE09EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D0592E76241FA6E3007782A8 /* JinySDK */;
+			targetProxy = D040D50925DA6BBA00CE09EB /* PBXContainerItemProxy */;
 		};
 		D0592E83241FA6E3007782A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1904,6 +1919,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1964,6 +1980,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1981,6 +1998,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = WP8MNQC9P9;
@@ -2014,6 +2032,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = WP8MNQC9P9;
@@ -2124,6 +2143,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -2153,6 +2173,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = WP8MNQC9P9;
