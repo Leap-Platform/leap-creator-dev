@@ -75,40 +75,37 @@ public class JinyTipView: JinyInViewAssist {
         
         if let userInteraction = toViewOriginalInteraction {
             
-           toView?.isUserInteractionEnabled = userInteraction
+            toView?.isUserInteractionEnabled = userInteraction
         }
         super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         
-        if let viewToCheck = toView {
+        let hitTestView = super.hitTest(point, with: event)
+        
+        guard let viewToCheck = toView else {
             
-            guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-                
-                return self
-            }
-            
-            if frameForKw.contains(point) {
-                
-                if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
-                    
-                    remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
-                }
-                
-                return nil
-                
-            } else {
-                
-                return self
-            }
+            return hitTestView
         }
         
-        return self
-    }
-    
-    func simulateTap(atPoint:CGPoint, onWebview:UIView, withEvent:UIEvent) {
+        guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
+            
+            return hitTestView
+        }
+        
+        if frameForKw.contains(point) {
+            
+            if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
                 
-         onWebview.hitTest(atPoint, with: withEvent)
+                remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
+            }
+            
+            return hitTestView
+            
+        } else {
+            
+            return hitTestView
+        }
     }
 }

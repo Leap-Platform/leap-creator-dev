@@ -77,7 +77,7 @@ public class JinyToolTip: JinyTipView {
            
         configureOverlayView()
                    
-        inView?.addSubview(toolTipView)
+        self.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }

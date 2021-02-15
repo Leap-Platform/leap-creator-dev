@@ -96,7 +96,7 @@ public class JinySpot: JinyTipView {
         
         self.addSubview(circleView)
                    
-        inView?.addSubview(toolTipView)
+        self.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }
