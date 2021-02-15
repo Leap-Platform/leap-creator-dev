@@ -58,26 +58,26 @@ extension JinyMainButton: JinyDraggableDelegate {
         if isDismissible {
             
             if self.frame.contains(self.closeIcon.center) {
-                
+                                
                 closeIconWidthConstraint?.constant = 65
                 closeIconHeightConstraint?.constant = 65
+                
+                closeIcon.updateConstraints()
                 
                 self.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
                 
                 self.layoutIfNeeded()
                 
-                closeIcon.layoutIfNeeded()
-                
             } else {
-                
+                                
                 closeIconWidthConstraint?.constant = 50
                 closeIconHeightConstraint?.constant = 50
+                
+                closeIcon.updateConstraints()
                     
                 self.transform = .identity
                 
                 self.layoutIfNeeded()
-                
-                closeIcon.layoutIfNeeded()
             }
             
             guard let keyWindow = UIApplication.shared.keyWindow, closeTransparentView == nil else { return }
