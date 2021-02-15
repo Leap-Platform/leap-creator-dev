@@ -8,35 +8,35 @@
 import UIKit
 
 
-protocol JinyIconOptionsDelegate:NSObjectProtocol {
+protocol JinyIconOptionsDelegate: NSObjectProtocol {
     func stopClicked()
     func languageClicked()
     func iconOptionsDismissed()
 }
 
-class JinyIconOptions:UIView {
+class JinyIconOptions: UIView {
     
-    let stop:String
-    let language:String
-    let isLeftAligned:Bool
-    weak var button:UIView?
-    lazy var optionsView:UIView = {
+    let stop: String
+    let language: String
+    let isLeftAligned: Bool
+    weak var button: UIView?
+    lazy var optionsView: UIView = {
         let view = UIView(frame: .zero)
         return view
     }()
-    lazy var closeButton:UIButton = {
+    lazy var closeButton: UIButton = {
       return getCloseButton()
     }()
-    let eachStageDuration:TimeInterval = 0.1
-    let themeColor:UIColor
-    var closeButtonHeightConstraint:NSLayoutConstraint?
-    var imageHeightConstraint:NSLayoutConstraint?
-    var panelWidthConstraint:NSLayoutConstraint?
-    var optionsViewAnimateConstraint:NSLayoutConstraint?
+    let eachStageDuration: TimeInterval = 0.1
+    let themeColor: UIColor
+    var closeButtonHeightConstraint: NSLayoutConstraint?
+    var imageHeightConstraint: NSLayoutConstraint?
+    var panelWidthConstraint: NSLayoutConstraint?
+    var optionsViewAnimateConstraint: NSLayoutConstraint?
 
-    weak var delegate:JinyIconOptionsDelegate?
+    weak var delegate: JinyIconOptionsDelegate?
     
-    init(withDelegate:JinyIconOptionsDelegate, stopText:String, languageText:String, jinyButton:UIView) {
+    init(withDelegate: JinyIconOptionsDelegate, stopText: String, languageText: String, jinyButton: UIView) {
         stop = stopText
         language = languageText
         button = jinyButton
@@ -72,8 +72,7 @@ extension JinyIconOptions {
         self.layer.masksToBounds = true
         self.layer.cornerRadius = (jinyButton.frame.height/2)
         self.frame = jinyButton.frame
-        
-
+    
         self.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -84,8 +83,7 @@ extension JinyIconOptions {
             closeButton.centerXAnchor.constraint(equalTo: self.trailingAnchor, constant: -27).isActive = true
         }
         closeButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-
-
+        
         setupOptionsView()
         optionsView.backgroundColor = .clear
         optionsView.alpha = 0.0
@@ -101,8 +99,6 @@ extension JinyIconOptions {
             optionsViewAnimateConstraint = NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: optionsView, attribute: .trailing, multiplier: 1, constant: 50)
         }
         NSLayoutConstraint.activate([optionsViewAnimateConstraint!])
-        
-        
     }
     
     private func getCloseButton() -> UIButton {
@@ -226,8 +222,8 @@ extension JinyIconOptions {
     
     func show() {
         
-        let buttonHeightConstraint = self.button?.constraints.first { $0.firstAttribute == .height && $0.constant == self.button?.frame.height && $0.secondItem == nil}
-        let buttonWidthConstraint = self.button?.constraints.first { $0.firstAttribute == .width && $0.constant == self.button?.frame.height && $0.secondItem == nil}
+        let buttonHeightConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
+        let buttonWidthConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
         if let htConst = buttonHeightConstraint { htConst.constant = 0 }
         if let widthConst = buttonWidthConstraint { widthConst.constant = 0 }
         UIView.animate(withDuration: eachStageDuration) {
@@ -273,7 +269,6 @@ extension JinyIconOptions {
     
     func dismiss() {
         
-        
         self.closeButtonHeightConstraint?.constant = 0
         self.imageHeightConstraint?.constant = 0
         self.optionsViewAnimateConstraint?.constant = 50
@@ -285,8 +280,8 @@ extension JinyIconOptions {
             self.layoutIfNeeded()
         } completion: { (_) in
             self.button?.isHidden = false
-            let buttonHeightConstraint = self.button?.constraints.first { $0.firstAttribute == .height && $0.constant == 0 && $0.secondItem == nil }
-            let buttonWidthConstraint = self.button?.constraints.first { $0.firstAttribute == .width && $0.constant == 0 && $0.secondItem == nil}
+            let buttonHeightConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
+            let buttonWidthConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
             if let htConst = buttonHeightConstraint { htConst.constant = self.frame.height}
             if let widthConst = buttonWidthConstraint { widthConst.constant = self.frame.height }
             UIView.animate(withDuration: self.eachStageDuration) {
@@ -302,9 +297,6 @@ extension JinyIconOptions {
             } completion: { (_) in
                 self.removeFromSuperview()
             }
-            
         }
-        
     }
-    
 }

@@ -307,7 +307,7 @@ extension JinyAUIManager:JinyAUIHandler {
         jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
         jinyButton!.tapGestureRecognizer.delegate = self
         jinyButton!.stateDelegate = self
-        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .centerY, multiplier: 1, constant: mainIconConstraintConstant + (mainIconSize/2))
+        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: mainIconConstraintConstant)
         jinyButton?.bottomConstraint = jinyButtonBottomConstraint!
         jinyButton?.disableDialog.delegate = self
         var distance = mainIconConstraintConstant
@@ -316,7 +316,7 @@ extension JinyAUIManager:JinyAUIHandler {
             cornerAttribute = .leading
             distance = -mainIconConstraintConstant
         }
-        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: jinyButton, attribute: .centerX, multiplier: 1, constant: distance - (mainIconSize/2))
+        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: jinyButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
         NSLayoutConstraint.activate([jinyButtonBottomConstraint!, cornerConstraint])
         jinyButton!.htmlUrl = iconSetting.htmlUrl
         jinyButton!.iconSize = mainIconSize
@@ -714,7 +714,6 @@ extension JinyAUIManager {
             }
         }
     }
-    
 }
 
 
@@ -858,8 +857,7 @@ extension JinyAUIManager: JinyAssistDelegate {
         currentAssist = nil
         dismissJinyButton()
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
-    }
-    
+    }    
 }
 
 // MARK: - ICON OPTIONS DELEGATE METHODS
@@ -896,5 +894,4 @@ extension JinyAUIManager:JinyIconOptionsDelegate {
     func iconOptionsDismissed() {
         auiManagerCallBack?.optionPanelClosed()
     }
-    
 }
