@@ -494,8 +494,12 @@ extension JinyAUIManager {
             self.audioPlayer = try AVAudioPlayer(contentsOf: filePath)
             self.audioPlayer?.delegate = self
             guard let player = self.audioPlayer else { return }
-            self.jinyButton?.iconState = .audioPlay
             player.play()
+            if player.isPlaying {
+               DispatchQueue.main.async {
+                  self.jinyButton?.iconState = .audioPlay
+               }
+            }
         } catch  { }
     }
     
@@ -503,9 +507,13 @@ extension JinyAUIManager {
         utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: code)
         utterance.rate = 0.5
-        self.jinyButton?.iconState = .audioPlay
         synthesizer.delegate = self
         synthesizer.speak(utterance)
+        if synthesizer.isSpeaking {
+           DispatchQueue.main.async {
+              self.jinyButton?.iconState = .audioPlay
+           }
+        }
     }
 }
 
