@@ -117,7 +117,7 @@ public class JinyHighlight: JinyTipView {
            
         configureOverlayView()
                    
-        inView?.addSubview(toolTipView)
+        self.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }
@@ -215,24 +215,42 @@ public class JinyHighlight: JinyTipView {
             
             toMidY = midY - CGFloat(connectorLength)
         }
+        
+        for layer in (self.layer.sublayers ?? []) {
+            
+            if let jLayer = layer as? JinyLayer {
+            
+                jLayer.removeFromSuperlayer()
+            }
+        }
+        
+        let jinyLayer = JinyLayer()
                 
         switch connectorType {
             
         case .solid:
             
-            self.layer.addSolidLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            jinyLayer.addSolidLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            
+            self.layer.addSublayer(jinyLayer)
             
         case .solidWithCircle:
                         
-            self.layer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
+            jinyLayer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
+            
+            self.layer.addSublayer(jinyLayer)
             
         case .dashGap:
             
-            self.layer.addDashedLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            jinyLayer.addDashedLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
+            
+            self.layer.addSublayer(jinyLayer)
             
         case .dashGapWithCircle:
             
-            self.layer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
+            jinyLayer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
+            
+            self.layer.addSublayer(jinyLayer)
             
         case .none:
             
@@ -371,6 +389,11 @@ public class JinyHighlight: JinyTipView {
             }
             
             y = y - (CGFloat(connectorLength))
+        }
+        
+        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
+            
+            x = x - 12
         }
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
@@ -610,25 +633,15 @@ public class JinyHighlight: JinyTipView {
             
             sizeWidth = Double(width)
         }
+        
+        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
+            
+            sizeWidth = sizeWidth ?? Double(width) - 24
+        }
                             
         self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
             
         self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
-    }
-    
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
-            if let height = value as? CGFloat {
-                                
-                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
-                
-                DispatchQueue.main.async {
-                    
-                    self?.placePointer()
-                }
-            }
-        })
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -641,6 +654,9 @@ public class JinyHighlight: JinyTipView {
         guard let width = rect[constant_width] else { return }
         guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
+        DispatchQueue.main.async {
+           self.placePointer()
+        }
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     

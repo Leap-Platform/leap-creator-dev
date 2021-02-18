@@ -106,7 +106,7 @@ public class JinySpot: JinyTipView {
         
         self.addSubview(circleView)
                    
-        inView?.addSubview(toolTipView)
+        self.addSubview(toolTipView)
     
         toolTipView.addSubview(webView)
     }
@@ -150,71 +150,6 @@ public class JinySpot: JinyTipView {
         if let connectorColor = assistInfo?.extraProps?.props[constant_highlightConnectorColor] as? String {
             
             self.connectorColor = UIColor.init(hex: connectorColor) ?? .black
-        }
-                    
-        self.connectorType = .none
-        
-        let arrowDirection = getArrowDirection()
-             
-        guard let direction = arrowDirection else {
-                 
-          return
-        }
-        
-        let globalToView = getGlobalToViewFrame()
-        
-        let midX: CGFloat = globalToView.midX
-        
-        var midY: CGFloat = 0.0
-        
-        var toMidY: CGFloat = 0.0
-        
-        switch direction {
-            
-        case .top:
-            
-            midY = (globalToView.origin.y) + (globalToView.size.height)
-            
-            if assistInfo?.highlightAnchor ?? true {
-                
-                midY = midY + CGFloat(manipulatedHighlightSpacing)
-            }
-            
-            toMidY = midY + CGFloat(connectorLength)
-            
-        case .bottom:
-            
-            midY = (globalToView.origin.y)
-            
-            if assistInfo?.highlightAnchor ?? true {
-                
-                midY = midY - CGFloat(manipulatedHighlightSpacing)
-            }
-            
-            toMidY = midY - CGFloat(connectorLength)
-        }
-                
-        switch connectorType {
-            
-        case .solid:
-            
-            self.layer.addSolidLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
-            
-        case .solidWithCircle:
-            
-            self.layer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
-            
-        case .dashGap:
-            
-            self.layer.addDashedLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
-            
-        case .dashGapWithCircle:
-            
-            self.layer.addDashedLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
-            
-        case .none:
-            
-            print("JinySpot")
         }
     }
     
@@ -439,6 +374,11 @@ public class JinySpot: JinyTipView {
             }
             
             y = y - (CGFloat(connectorLength))
+        }
+        
+        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
+            
+            x = x - 12
         }
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
@@ -672,25 +612,15 @@ public class JinySpot: JinyTipView {
             
             sizeWidth = Double(width)
         }
+        
+        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
+            
+            sizeWidth = sizeWidth ?? Double(width) - 24
+        }
             
         self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
             
         self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
-    }
-    
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        
-        webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] (value, error) in
-            if let height = value as? CGFloat {
-                                
-                self?.setToolTipDimensions(width: Float(self?.webView.frame.size.width ?? 0.0), height: Float(height))
-                
-                DispatchQueue.main.async {
-                    
-                    self?.placePointer()
-                }
-            }
-        })
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -703,6 +633,9 @@ public class JinySpot: JinyTipView {
         guard let width = rect[constant_width] else { return }
         guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
+        DispatchQueue.main.async {
+           self.placePointer()
+        }
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
