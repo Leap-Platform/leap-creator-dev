@@ -251,14 +251,14 @@ extension JinyAUIManager: JinyAUIHandler {
             tooltip.updatePointer(toRect: rect, inView: inWebView)
         }
         
-        if let tooltip = currentAssist as? JinyHighlight {
+        if let highlight = currentAssist as? JinyHighlight {
             
-            tooltip.updateHighlight(toRect: rect, inView: inWebView)
+            highlight.updateHighlight(toRect: rect, inView: inWebView)
         }
         
-        if let tooltip = currentAssist as? JinySpot {
+        if let spot = currentAssist as? JinySpot {
             
-            tooltip.updateSpot(toRect: rect, inView: inWebView)
+            spot.updateSpot(toRect: rect, inView: inWebView)
         }
         
         if let beacon = currentAssist as? JinyBeacon {
