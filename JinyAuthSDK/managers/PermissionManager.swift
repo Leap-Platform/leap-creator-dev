@@ -138,6 +138,8 @@ class PermissionManager: AppStateProtocol{
         guard self.permissionTimer != nil else { return }
         
         self.decisionTaken = true
+        let notification = Notification(name: .init(rawValue: "jiny_auth_live"))
+        NotificationCenter.default.post(notification)
         // update the Alfred server that permission has been granted
         self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
     }

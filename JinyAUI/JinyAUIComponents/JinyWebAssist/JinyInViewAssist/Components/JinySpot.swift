@@ -71,6 +71,16 @@ public class JinySpot: JinyTipView {
         presentSpot()
     }
     
+    func updateSpot() {
+        
+        if assistInfo?.highlightAnchor ?? true {
+            
+           highlightAnchor()
+        }
+        
+        placePointer()
+    }
+    
     func updateSpot(toRect: CGRect, inView: UIView?) {
         
         webRect = toRect
