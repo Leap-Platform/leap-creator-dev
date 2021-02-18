@@ -234,36 +234,6 @@ extension JinyAUIManager: JinyAUIHandler {
     
     func updateRect(rect: CGRect, inWebView: UIView?) {
         
-        if let swipePointer = currentAssist as? JinySwipePointer {
-            
-            swipePointer.updateRect(newRect: rect, inView: inWebView)
-        }
-        
-        if let fingerPointer = currentAssist as? JinyFingerRipplePointer {
-            
-            fingerPointer.updateRect(newRect: rect, inView: inWebView)
-        }
-        
-        if let label = currentAssist as? JinyLabel {
-            
-            label.updateRect(newRect: rect, inView: inWebView)
-        }
-        
-        if let tooltip = currentAssist as? JinyToolTip {
-            
-            tooltip.updatePointer(toRect: rect, inView: inWebView)
-        }
-        
-        if let highlight = currentAssist as? JinyHighlight {
-            
-            highlight.updateHighlight(toRect: rect, inView: inWebView)
-        }
-        
-        if let spot = currentAssist as? JinySpot {
-            
-            spot.updateSpot(toRect: rect, inView: inWebView)
-        }
-        
         if let swipePointer = currentAssist as? JinySwipePointer { swipePointer.updateRect(newRect: rect, inView: inWebView) }
         else if let fingerPointer = currentAssist as? JinyFingerRipplePointer { fingerPointer.updateRect(newRect: rect, inView: inWebView) }
         else if let label = currentAssist as? JinyLabel { label.updateRect(newRect: rect, inView: inWebView) }
