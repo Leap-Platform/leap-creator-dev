@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// enum type for connector
-public enum ConnectorType: String {
+enum ConnectorType: String {
     
     case solid = "solid"
     case solidWithCircle = "solid_with_circle"
@@ -21,7 +21,7 @@ public enum ConnectorType: String {
 }
 
 /// enum type for Highlight
-public enum HighlightType: String {
+enum HighlightType: String {
     
     case circle = "circle"
     case rect = "rect"
@@ -29,7 +29,7 @@ public enum HighlightType: String {
 }
 
 /// JinyHighlight - A Web InViewAssist AUI Component class to show a tip with a connector on the screen and highlights the source view.
-public class JinyHighlight: JinyTipView {
+class JinyHighlight: JinyTipView {
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -44,25 +44,25 @@ public class JinyHighlight: JinyTipView {
     private let halfWidthForArrow: CGFloat = 10
     
     /// spacing of the highlight area.
-    public var highlightSpacing = 10.0
+    var highlightSpacing = 10.0
     
     /// spacing of the highlight area after manipulation
     private var manipulatedHighlightSpacing = 10.0
     
     /// corner radius for the highlight area/frame.
-    public var highlightCornerRadius = 5.0
+    var highlightCornerRadius = 5.0
     
     /// the bridge line between highlight and tooltip which is of the type ConnectorType.
-    public var connectorType: ConnectorType = .solidWithCircle
+    var connectorType: ConnectorType = .solidWithCircle
     
     /// A view frame to highlight the source view to which tooltip is pointed to.
-    public var highlightType: HighlightType = .circle
+    var highlightType: HighlightType = .circle
     
     /// the length of the connector that connects from highlighted view to the tooltip.
-    public var connectorLength = 40.0
+    var connectorLength = 40.0
     
     /// the color of the connector.
-    public var connectorColor: UIColor = .red
+    var connectorColor: UIColor = .red
     
     /// radius of the circle at the connector end.
     var connectorCircleRadius: CGFloat = 5.0
@@ -285,7 +285,7 @@ public class JinyHighlight: JinyTipView {
     }
     
     /// Observes the toolTipView's Origin, gets called when there is a change in position.
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
             
         if keyPath == "position" {
                 
@@ -660,7 +660,7 @@ public class JinyHighlight: JinyTipView {
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
         
         let alpha = self.alpha
         
@@ -687,7 +687,7 @@ public class JinyHighlight: JinyTipView {
         }
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             

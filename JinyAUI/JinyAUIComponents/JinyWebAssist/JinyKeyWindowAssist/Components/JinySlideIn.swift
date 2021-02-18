@@ -11,12 +11,12 @@ import UIKit
 import WebKit
 
 /// JinySlideIn - A Web KeyWindowAssist AUI Component class to show a webview SlideIn over a window.
-public class JinySlideIn: JinyKeyWindowAssist {
+class JinySlideIn: JinyKeyWindowAssist {
     
     /// alignment property for SlideIn - left and right
-    public var alignment: JinyAlignmentType = .left
+    var alignment: JinyAlignmentType = .left
         
-    public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
         super.init(withDict: assistDict, iconDict: iconDict)
                                 
         if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
@@ -39,12 +39,12 @@ public class JinySlideIn: JinyKeyWindowAssist {
         inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
     }
     
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showSlideIn() {
+    func showSlideIn() {
         
         configureWebView()
         
@@ -159,7 +159,7 @@ public class JinySlideIn: JinyKeyWindowAssist {
         configureSlideInDimensionConstraint(width: width, height: height)
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
         
         let xPosition = self.frame.origin.x
         

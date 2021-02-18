@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import JinySDK
+import LeapCore
 import AVFoundation
 import AdSupport
 import WebKit
@@ -22,7 +22,7 @@ protocol JinyAUIManagerDelegate: NSObjectProtocol {
 
 class JinyAUIManager: NSObject {
     
-    weak var auiManagerCallBack: JinyAUICallback?
+    weak var auiManagerCallBack: LeapAUICallback?
     weak var delegate: JinyAUIManagerDelegate?
     
     var currentAssist: JinyAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
@@ -105,7 +105,7 @@ extension JinyAUIManager {
 
 
 // MARK: - AUIHANDLER METHODS
-extension JinyAUIManager: JinyAUIHandler {
+extension JinyAUIManager: LeapAUIHandler {
     
     func startMediaFetch() {
         
@@ -136,7 +136,7 @@ extension JinyAUIManager: JinyAUIHandler {
                 }
             }
             
-            if let iconSettingDict = initialSounds[constant_iconSetting] as? Dictionary<String, IconSetting> {
+            if let iconSettingDict = initialSounds[constant_iconSetting] as? Dictionary<String, LeapIconSetting> {
                 if let baseUrl = htmlBaseUrl {
                     self?.baseUrl = baseUrl
                     for (_, value) in iconSettingDict {
@@ -192,7 +192,7 @@ extension JinyAUIManager: JinyAUIHandler {
                 self.performInViewNativeInstruction(instruction: instruction, inView: anchorView, type: type)
                 self.dismissJinyButton()
             }
-            else { self.presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true) }
+            else { self.presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true) }
         }
     }
     
@@ -207,7 +207,7 @@ extension JinyAUIManager: JinyAUIHandler {
                 self.dismissJinyButton()
                 self.performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
             }
-            else { self.presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true) }
+            else { self.presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true) }
         }
     }
     
@@ -220,7 +220,7 @@ extension JinyAUIManager: JinyAUIHandler {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
               let type = assistInfo[constant_type] as? String else { return }
         performInViewNativeInstruction(instruction: instruction, inView: view, type: type)
-        presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
+        presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true)
     }
     
     func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>) {
@@ -229,7 +229,7 @@ extension JinyAUIManager: JinyAUIHandler {
               let type = assistInfo[constant_type] as? String else { return }
         guard let anchorWebview = webview else { return }
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
-        presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
+        presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true)
     }
     
     func updateRect(rect: CGRect, inWebView: UIView?) {
@@ -284,7 +284,7 @@ extension JinyAUIManager: JinyAUIHandler {
         dismissJinyButton()
     }
     
-    func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool) {
+    func presentLeapButton(for iconSetting: LeapIconSetting, iconEnabled: Bool) {
         guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
             JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
             JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
@@ -325,7 +325,7 @@ extension JinyAUIManager: UIGestureRecognizerDelegate {
     @objc func jinyButtonTap() {
         
         guard let _ = currentAssist else {
-            auiManagerCallBack?.jinyTapped()
+            auiManagerCallBack?.leapTapped()
             return
         }
         autoDismissTimer?.invalidate()
@@ -340,7 +340,7 @@ extension JinyAUIManager: UIGestureRecognizerDelegate {
         jinyIconOptions.show()
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }
@@ -392,7 +392,7 @@ extension JinyAUIManager {
     private func processSingleConfig(config: Dictionary<String,Any>) -> Dictionary<String, Array<JinySound>> {
         var processedSounds: Dictionary<String,Array<JinySound>> = [:]
         guard let baseUrl = config[constant_baseUrl] as? String,
-              let jinySounds = config[constant_jinySounds] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
+              let jinySounds = config[constant_leapSounds] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
         jinySounds.forEach { (code, soundDictsArray) in
             let processedSoundsArray = self.processJinySounds(soundDictsArray, code: code, baseUrl: baseUrl)
             let currentCodeSounds =  (processedSounds[code] ?? []) + processedSoundsArray
@@ -418,7 +418,7 @@ extension JinyAUIManager {
     func fetchSoundConfig() {
         let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/sounds")
         var req = URLRequest(url: url!)
-        guard let token = JinyPreferences.shared.apiKey else { fatalError("No API Key") }
+        guard let token = LeapPreferences.shared.apiKey else { fatalError("No API Key") }
         req.addValue(token, forHTTPHeaderField: "x-jiny-client-id")
         req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, forHTTPHeaderField: "x-app-version-name")
         req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String, forHTTPHeaderField: "x-app-version-code")
@@ -442,7 +442,7 @@ extension JinyAUIManager {
     
     func playAudio() {
         DispatchQueue.global().async {
-            guard let code = JinyPreferences.shared.currentLanguage,
+            guard let code = LeapPreferences.shared.currentLanguage,
                   let mediaName = self.currentInstruction?[constant_soundName]  as? String else {
                 self.startAutoDismissTimer()
                 return
@@ -475,7 +475,7 @@ extension JinyAUIManager {
                     guard let instruction = self?.currentInstruction,
                           let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
                           let currentMediaName = assistInfo[constant_soundName] as? String, mediaName == currentMediaName,
-                          let newCode = JinyPreferences.shared.currentLanguage, newCode == code, success else { return }
+                          let newCode = LeapPreferences.shared.currentLanguage, newCode == code, success else { return }
                     self?.playAudioFile(filePath: soundPath)
                 }
             case .downloaded:
@@ -523,8 +523,8 @@ extension JinyAUIManager {
             if auiContent.url != nil { self.mediaManager.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 DispatchQueue.main.async {
                     let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { success, languageCode in
-                        if success, let code = languageCode { JinyPreferences.shared.setUserLanguage(code) }
-                        JinyPreferences.shared.currentLanguage = languageCode
+                        if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
+                        LeapPreferences.shared.currentLanguage = languageCode
                         self.startDiscoverySoundDownload()
                         self.startStageSoundDownload()
                         handler?(success)
@@ -535,13 +535,13 @@ extension JinyAUIManager {
         }
         
         if localeCodes.count == 1 {
-            JinyPreferences.shared.currentLanguage = localeCodes.first?[constant_localeId]
+            LeapPreferences.shared.currentLanguage = localeCodes.first?[constant_localeId]
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
             handler?(true)
             return
         }
-        guard let userLanguage = JinyPreferences.shared.getUserLanguage() else {
+        guard let userLanguage = LeapPreferences.shared.getUserLanguage() else {
             showLanguageOptions()
             return
         }
@@ -550,7 +550,7 @@ extension JinyAUIManager {
             showLanguageOptions()
             return
         }
-        JinyPreferences.shared.currentLanguage = langCode
+        LeapPreferences.shared.currentLanguage = langCode
         self.startDiscoverySoundDownload()
         self.startStageSoundDownload()
         handler?(true)
@@ -562,7 +562,7 @@ extension JinyAUIManager {
     
     private func setupDefaultValues(instruction: Dictionary<String,Any>, langCode: String?, view: UIView?, rect: CGRect?, webview: UIView?) {
         if let code = langCode {
-            JinyPreferences.shared.currentLanguage = code
+            LeapPreferences.shared.currentLanguage = code
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
         }
@@ -900,8 +900,8 @@ extension JinyAUIManager:JinyIconOptionsDelegate {
             return
         }
         let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl) { success, languageCode in
-            if success, let code = languageCode { JinyPreferences.shared.setUserLanguage(code) }
-            JinyPreferences.shared.currentLanguage = languageCode
+            if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
+            LeapPreferences.shared.currentLanguage = languageCode
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
             self.auiManagerCallBack?.optionPanelClosed()

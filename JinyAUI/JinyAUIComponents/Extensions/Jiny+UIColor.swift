@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public extension UIColor {
+extension UIColor {
 
     /// returns string from UIColor.
     /// - Parameters:

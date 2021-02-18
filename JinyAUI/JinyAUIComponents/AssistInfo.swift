@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AssistInfo {
+class AssistInfo {
     
     /// A boolean value to set highlight clickable
     var highlightClickable: Bool?
@@ -25,14 +25,14 @@ public class AssistInfo {
     let autoDismissDelay:Double?
     
     /// A layoutInfo property for the type LayoutInfo
-    public var layoutInfo: LayoutInfo?
+    var layoutInfo: LayoutInfo?
 
     /// A extraProps property for the type ExtraProps
-    public var extraProps: ExtraProps?
+    var extraProps: ExtraProps?
 
     /// - Parameters:
     ///   - assistDict: A dictionary for the type AssistInfo.
-    public init(withDict assistDict: Dictionary<String,Any>) {
+    init(withDict assistDict: Dictionary<String,Any>) {
         
         autoDismissDelay = assistDict[constant_autoDismissDelay] as? Double
         

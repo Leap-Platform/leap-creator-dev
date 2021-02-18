@@ -11,10 +11,10 @@ import UIKit
 import WebKit
 
 /// JinyFullScreen - A Web KeyWindowAssist AUI Component class to show a fullscreen assist on a window.
-public class JinyFullScreen: JinyKeyWindowAssist {
+class JinyFullScreen: JinyKeyWindowAssist {
     
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showFullScreen() {
+    func showFullScreen() {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
@@ -90,7 +90,7 @@ public class JinyFullScreen: JinyKeyWindowAssist {
         configureJinyIconView(superView: webView, toItemView: webView, alignmentType: .top)
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
                 
         self.alpha = 0
         

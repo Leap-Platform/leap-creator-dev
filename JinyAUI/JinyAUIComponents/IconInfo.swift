@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class IconInfo {
+class IconInfo {
     
     /// property which depicts whether the icon is left aligned or not.
-    public var isLeftAligned: Bool?
+    var isLeftAligned: Bool?
     
     /// property which depicts whether the icon is enabled or not.
-    public var isEnabled: Bool?
+    var isEnabled: Bool?
     
     /// background color of icon of type string.
-    public var backgroundColor: String?
+    var backgroundColor: String?
     
     /// html string to load webView
-    public var htmlUrl: String?
+    var htmlUrl: String?
     
     /// initialises IconInfo.
     /// - Parameters:

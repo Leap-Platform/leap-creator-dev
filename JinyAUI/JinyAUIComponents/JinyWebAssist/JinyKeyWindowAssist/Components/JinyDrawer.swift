@@ -11,10 +11,10 @@ import UIKit
 import WebKit
 
 /// JinyDrawer - A Web KeyWindowAssist AUI Component class to show a drawe over a window.
-public class JinyDrawer: JinyKeyWindowAssist {
+class JinyDrawer: JinyKeyWindowAssist {
     
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showDrawer() {
+    func showDrawer() {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         

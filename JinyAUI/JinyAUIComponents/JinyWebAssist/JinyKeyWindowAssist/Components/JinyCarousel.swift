@@ -10,18 +10,18 @@ import Foundation
 import UIKit
 import WebKit
 
-public enum JinyCarouselType: String {
+enum JinyCarouselType: String {
     case fullScreen = "FULLSCREEN"
     case overlay = "OVERLAY"
 }
 
 /// JinyCarousel - A Web KeyWindowAssist AUI Component class to show a fullscreen or overlay assist on a window.
-public class JinyCarousel: JinyKeyWindowAssist {
+class JinyCarousel: JinyKeyWindowAssist {
     
     var type: JinyCarouselType = .fullScreen // default
         
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showCarousel() {
+    func showCarousel() {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
@@ -170,7 +170,7 @@ public class JinyCarousel: JinyKeyWindowAssist {
         }
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
                 
         self.alpha = 0
         

@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// A super class for the JinyWebAssist AUI Components.
-public class JinyWebAssist: UIView, JinyAssist {
+class JinyWebAssist: UIView, JinyAssist {
     
     /// webView to load html content.
     var webView = WKWebView()
@@ -25,9 +25,9 @@ public class JinyWebAssist: UIView, JinyAssist {
     let configuration = WKWebViewConfiguration()
     
     /// property to load content from local storage.
-    public var appLocale = String()
+    var appLocale = String()
     
-    public var iconInfo: IconInfo?
+    var iconInfo: IconInfo?
     
     /// javascript to adjust width according to native view.
     private let jscript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
@@ -58,17 +58,17 @@ public class JinyWebAssist: UIView, JinyAssist {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public weak var delegate: JinyAssistDelegate?
+    weak var delegate: JinyAssistDelegate?
     
-    public var style: Style?
+    var style: Style?
     
-    public var assistInfo: AssistInfo?
+    var assistInfo: AssistInfo?
     
-    public func applyStyle(style: Style) {
+    func applyStyle(style: Style) {
         
     }
     
-    public func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
+    func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
         
         // Loading the html source file from the main project bundle
         guard let _ = URL(string: htmlUrl) else {
@@ -89,18 +89,18 @@ public class JinyWebAssist: UIView, JinyAssist {
         webView.loadHTML(withUrl: filePath)
     }
     
-    public func updateLayout(alignment: String, anchorBounds: CGRect?) {
+    func updateLayout(alignment: String, anchorBounds: CGRect?) {
         
     }
     
-    public func show() {
+    func show() {
         setContent(htmlUrl: self.assistInfo?.htmlUrl ?? "", appLocale: self.appLocale, contentFileUriMap: nil)
     }
     
     /// method to perform enter animation.
     /// - Parameters:
     ///   - animation: string to describe the type of animation.
-    public func performEnterAnimation(animation: String) {
+    func performEnterAnimation(animation: String) {
        
         if !animation.isEmpty {
             
@@ -242,14 +242,14 @@ public class JinyWebAssist: UIView, JinyAssist {
         }
     }
     
-    public func hide(withAnim: Bool) {
+    func hide(withAnim: Bool) {
         
     }
     
     /// method to perform exit animation.
     /// - Parameters:
     ///   - animation: string to describe the type of animation.
-    public func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
+    func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
         if !animation.isEmpty {
             
@@ -345,7 +345,7 @@ public class JinyWebAssist: UIView, JinyAssist {
         }
     }
     
-    public func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
+    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         self.removeFromSuperview()
         self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
@@ -430,11 +430,11 @@ public class JinyWebAssist: UIView, JinyAssist {
 
 extension JinyWebAssist: WKNavigationDelegate {
     
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.isHidden = false
         
-        if let language = JinyPreferences.shared.currentLanguage {
+        if let language = LeapPreferences.shared.currentLanguage {
             
            changeLanguage(locale: language)
         }
@@ -444,7 +444,7 @@ extension JinyWebAssist: WKNavigationDelegate {
         performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
     }
     
-    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         
         delegate?.failedToPresentAssist()
     }
@@ -452,7 +452,7 @@ extension JinyWebAssist: WKNavigationDelegate {
 
 extension JinyWebAssist: WKScriptMessageHandler {
     
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         didReceive(userContentController, didReceive: message)
         
@@ -482,7 +482,7 @@ extension JinyWebAssist: UIGestureRecognizerDelegate {
         
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }

@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// JinyPing - A Web KeyWindowAssist AUI Component class to show ping on tap of Jiny Discovery Icon.
-public class JinyPing: JinyKeyWindowAssist {
+class JinyPing: JinyKeyWindowAssist {
     
     private var closeButton = UIButton(type: .custom)
     
@@ -23,7 +23,7 @@ public class JinyPing: JinyKeyWindowAssist {
     var widthConstraint: NSLayoutConstraint?
         
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showPing() {
+    func showPing() {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
@@ -174,7 +174,7 @@ public class JinyPing: JinyKeyWindowAssist {
         widthConstraint?.constant = sizeWidth ?? width
     }
     
-    public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
                 
         self.configurePingClose(superView: self, toItemView: self.webView)
     }
@@ -192,7 +192,7 @@ public class JinyPing: JinyKeyWindowAssist {
         self.configureHeightConstraint(height: CGFloat(height))
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
                                 
             let closeButtonAlpha = self.closeButton.alpha
             
@@ -214,7 +214,7 @@ public class JinyPing: JinyKeyWindowAssist {
            }
     }
     
-    public override func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?){
+    override func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?){
         
         self.layoutIfNeeded()
         

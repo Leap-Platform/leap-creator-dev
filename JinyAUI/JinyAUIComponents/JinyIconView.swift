@@ -22,7 +22,7 @@ protocol JinyIconStateDelegate: class {
 }
 
 /// JinyIconView which holds a webview with Jiny Icon image.
-public class JinyIconView: UIView {
+class JinyIconView: UIView {
     
     /// Delegation when there is a change in icon state.
     weak var stateDelegate: JinyIconStateDelegate?
@@ -311,7 +311,7 @@ public class JinyIconView: UIView {
 
 extension JinyIconView: WKNavigationDelegate {
     
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.iconWebView?.backgroundColor = iconBackgroundColor
         self.audioWebView?.backgroundColor = iconBackgroundColor
@@ -320,7 +320,7 @@ extension JinyIconView: WKNavigationDelegate {
 
 extension JinyIconView: WKScriptMessageHandler {
     
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
     }
 }
@@ -368,7 +368,7 @@ private class RotationAnimation: CABasicAnimation {
         super.init()
     }
     
-    public init(
+    init(
         direction: Direction,
         fromValue: CGFloat,
         toValue: CGFloat,

@@ -11,10 +11,10 @@ import UIKit
 import WebKit
 
 /// JinyPopup - A Web KeyWindowAssist AUI Component class to show a popup on a window.
-public class JinyPopup: JinyKeyWindowAssist {
+class JinyPopup: JinyKeyWindowAssist {
         
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showPopup() {
+    func showPopup() {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
@@ -59,7 +59,7 @@ public class JinyPopup: JinyKeyWindowAssist {
         heightConstraint?.constant = height
     }
     
-    public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.configureJinyIconView(superView: self, toItemView: self.webView, alignmentType: .bottom)
     }

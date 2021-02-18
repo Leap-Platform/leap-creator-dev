@@ -8,25 +8,25 @@
 
 import Foundation
 
-public class LayoutInfo {
+class LayoutInfo {
     
     /// layout Alignment for the content
-    public var layoutAlignment: String?
+    var layoutAlignment: String?
     
     /// enter animation for the content
-    public var enterAnimation: String?
+    var enterAnimation: String?
     
     /// exit animation for the content
-    public var exitAnimation: String?
+    var exitAnimation: String?
     
     /// property of the type Style
-    public var style: Style
+    var style: Style
     
     /// property of the type DismissAction
-    public var dismissAction: DismissAction
+    var dismissAction: DismissAction
     
     /// An integer value to set time delay in ms
-    public var autoDismissDelay: Float
+    var autoDismissDelay: Float
     
     /// - Parameters:
     ///   - layoutDict: A dictionary for the type LayoutInfo.
@@ -69,11 +69,11 @@ public class LayoutInfo {
     }
 }
 
-public class DismissAction {
+class DismissAction {
     
-    public var outsideDismiss: Bool?
+    var outsideDismiss: Bool?
     
-    public var dismissOnAnchorClick: Bool?
+    var dismissOnAnchorClick: Bool?
     
     /// - Parameters:
     ///   - dismissDict: A dictionary for the type DismissAction.
@@ -92,7 +92,7 @@ public class DismissAction {
 }
 
 /// Types of Alignments for the AUIComponent
-public enum JinyAlignmentType: String, CaseIterable {
+enum JinyAlignmentType: String, CaseIterable {
     case topLeft = "top_left"
     case topCenter = "top_center"
     case topRight = "top_right"
@@ -109,7 +109,7 @@ public enum JinyAlignmentType: String, CaseIterable {
 }
 
 /// Types of animations that can be used for the AUIComponent
-public enum JinyLayoutAnimationType: String, CaseIterable {
+enum JinyLayoutAnimationType: String, CaseIterable {
     case slideLeft = "slide_left"
     case slideTop = "slide_up"
     case slideRight = "slide_right"

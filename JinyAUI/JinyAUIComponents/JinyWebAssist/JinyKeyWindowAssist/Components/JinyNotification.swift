@@ -11,12 +11,12 @@ import UIKit
 import WebKit
 
 /// JinyNotification - A Web KeyWindowAssist AUI Component class to show a webview Notification over a window.
-public class JinyNotification: JinyKeyWindowAssist {
+class JinyNotification: JinyKeyWindowAssist {
     
     /// alignment property for Notification - top and bottom
-    public var alignment: JinyAlignmentType = .top
+    var alignment: JinyAlignmentType = .top
         
-    public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
         super.init(withDict: assistDict, iconDict: iconDict)
                                 
         if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
@@ -43,12 +43,12 @@ public class JinyNotification: JinyKeyWindowAssist {
         inView = UIApplication.shared.keyWindow
     }
     
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showNotification() {
+    func showNotification() {
         
         configureWebView()
         
@@ -143,7 +143,7 @@ public class JinyNotification: JinyKeyWindowAssist {
         heightConstraint?.constant = height
     }
     
-    public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
                 
             guard self.alignment == .top || self.alignment == .bottom else {
                     

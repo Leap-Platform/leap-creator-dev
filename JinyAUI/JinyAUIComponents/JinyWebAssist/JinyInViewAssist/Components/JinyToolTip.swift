@@ -11,13 +11,13 @@ import UIKit
 import WebKit
 
 /// JinyTooltip's Arrow Direction
-public enum JinyTooltipArrowDirection {
+enum JinyTooltipArrowDirection {
     case top
     case bottom
 }
 
 /// JinyToolTip - A Web InViewAssist AUI Component class to show a tip on a view.
-public class JinyToolTip: JinyTipView {
+class JinyToolTip: JinyTipView {
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -32,10 +32,10 @@ public class JinyToolTip: JinyTipView {
     private let halfWidthForArrow: CGFloat = 10
     
     /// spacing of the highlight area.
-    public var highlightSpacing = 10.0
+    var highlightSpacing = 10.0
     
     /// corner radius for the highlight area/frame.
-    public var highlightCornerRadius = 5.0
+    var highlightCornerRadius = 5.0
     
     /// presents pointer after setup, configure and show() webview content method is called and when the delegate is called for the webView.
     func presentPointer() {
@@ -144,7 +144,7 @@ public class JinyToolTip: JinyTipView {
     }
     
     /// Observes the toolTipView's Origin, gets called when there is a change in position.
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
             
         if keyPath == "position" {
                 
@@ -478,7 +478,7 @@ public class JinyToolTip: JinyTipView {
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
         
         let arrowDirection = getArrowDirection()
              
@@ -525,7 +525,7 @@ public class JinyToolTip: JinyTipView {
         }
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             

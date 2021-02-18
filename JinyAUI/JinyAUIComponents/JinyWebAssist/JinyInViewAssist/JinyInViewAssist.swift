@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class JinyInViewAssist: JinyWebAssist {
+class JinyInViewAssist: JinyWebAssist {
     
     /// target view to which the aui component is pointed to.
     weak var toView: UIView?    // should always be weak otherwise causes memory leak due to retain cycle.
@@ -23,7 +23,7 @@ public class JinyInViewAssist: JinyWebAssist {
     ///   - assistDict: A dictionary value for the type AssistInfo.
     ///   - toView: target view to which the tooltip is attached.
     ///   - insideView: an optional view on which overlay is diaplayed or else takes entire window.
-    public init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
+    init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
         super.init(frame: CGRect.zero)
                 
         self.assistInfo = AssistInfo(withDict: assistDict)

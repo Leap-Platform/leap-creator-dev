@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// JinyBeacon - A native AUI Component class to point out a view.
-public class JinyBeacon: JinyNativeAssist {
+class JinyBeacon: JinyNativeAssist {
     
     /// source view to which the component to pointed to.
     weak var toView: UIView?
@@ -26,7 +26,7 @@ public class JinyBeacon: JinyNativeAssist {
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type AssistInfo.
     ///   - toView: source view to which the tooltip is attached.
-    public init(withDict assistDict: Dictionary<String,Any>, toView: UIView) {
+    init(withDict assistDict: Dictionary<String,Any>, toView: UIView) {
         super.init(frame: CGRect.zero)
                 
         self.assistInfo = AssistInfo(withDict: assistDict)
@@ -34,7 +34,7 @@ public class JinyBeacon: JinyNativeAssist {
         self.toView = toView
     }
     
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -63,14 +63,14 @@ public class JinyBeacon: JinyNativeAssist {
         setAlignment()
     }
     
-    public override func show() {
+    override func show() {
         
         pulsator.pulsatorDelegate = self
         
         pulsator.start()
     }
     
-    public override func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
+    override func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
         pulsator.stop()
         

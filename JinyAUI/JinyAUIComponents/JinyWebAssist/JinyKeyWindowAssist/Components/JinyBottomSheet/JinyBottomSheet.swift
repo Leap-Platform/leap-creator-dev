@@ -11,9 +11,9 @@ import UIKit
 import WebKit
 
 /// JinyBottomSheet - A Web KeyWindowAssist AUI Component class to show a bottomSheet over a window.
-public class JinyBottomSheet: JinyKeyWindowAssist {
+class JinyBottomSheet: JinyKeyWindowAssist {
         
-    public override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
         super.init(withDict: assistDict, iconDict: iconDict)
                         
         var layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> ?? [:]
@@ -37,12 +37,12 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
         assistInfo?.layoutInfo?.exitAnimation = "slide_down"
     }
     
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// call the method to configure constraints for the component and to load the content to display.
-    public func showBottomSheet() {
+    func showBottomSheet() {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
@@ -94,7 +94,7 @@ public class JinyBottomSheet: JinyKeyWindowAssist {
         heightConstraint?.constant = sizeHeight
     }
     
-    public override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.configureJinyIconView(superView: self, toItemView: self.webView, alignmentType: .top)
     }

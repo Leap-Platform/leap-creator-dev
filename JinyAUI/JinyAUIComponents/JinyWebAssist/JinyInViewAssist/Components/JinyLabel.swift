@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// JinyLabel - A Web InViewAssist AUI Component class to show label on a view.
-public class JinyLabel: JinyInViewAssist {
+class JinyLabel: JinyInViewAssist {
     
     /// presents label after setting up view, when show() webview content is called and the delegate is called back.
     func presentLabel() {
@@ -157,7 +157,7 @@ public class JinyLabel: JinyInViewAssist {
         self.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
     }
     
-    public override func performEnterAnimation(animation: String) {
+    override func performEnterAnimation(animation: String) {
         
         self.webView.transform = CGAffineTransform(scaleX: 0, y: 0)
         

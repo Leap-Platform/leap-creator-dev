@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 /// A super class for the JinyKeyWindowAssist AUI Components.
-public class JinyKeyWindowAssist: JinyWebAssist {
+class JinyKeyWindowAssist: JinyWebAssist {
     
     /// height constraint to increase the constant when html resizes
     var heightConstraint: NSLayoutConstraint?
@@ -21,7 +21,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
     
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type AssistInfo.
-    public init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
+    init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
         super.init(frame: CGRect.zero)
         
         self.assistInfo = AssistInfo(withDict: assistDict)
@@ -34,7 +34,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
         self.iconInfo = IconInfo(withDict: iconDict)
     }
     
-    required public init?(coder: NSCoder) {        
+    required init?(coder: NSCoder) {        
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -125,7 +125,7 @@ public class JinyKeyWindowAssist: JinyWebAssist {
         webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: nil)

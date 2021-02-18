@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Type which controls JinyToolTip, JinyHighlight and JinySpot.
-public class JinyTipView: JinyInViewAssist {
+class JinyTipView: JinyInViewAssist {
     
     /// toolTipView which carries webView.
     var toolTipView = UIView(frame: .zero)
@@ -70,7 +70,7 @@ public class JinyTipView: JinyInViewAssist {
         }
     }
     
-    public override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         toolTipView.removeFromSuperview()
         
         if let userInteraction = toViewOriginalInteraction {
@@ -80,7 +80,7 @@ public class JinyTipView: JinyInViewAssist {
         super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         
         let hitTestView = super.hitTest(point, with: event)
         

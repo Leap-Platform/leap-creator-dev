@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import JinySDK
+import LeapCore
 
 
 @objc public protocol JinyAUIClientCallback:NSObjectProtocol {
@@ -35,9 +35,9 @@ import JinySDK
     
     @objc public func initialize(withToken apiKey:String) {
         token = apiKey
-        JinyPreferences.shared.apiKey = token
+        LeapPreferences.shared.apiKey = token
         guard token != nil, token != "" else { fatalError("Empty token. Token cannot be empty") }
-        auiManager.auiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
+        auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
     
     @objc public func addIdentifier(identifier:String, value:Any) {

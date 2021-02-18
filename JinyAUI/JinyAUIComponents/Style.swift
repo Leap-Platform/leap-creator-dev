@@ -8,34 +8,34 @@
 
 import Foundation
 
-public class Style {
+class Style {
     
     /// background color of the overlay
-    public var bgColor: String?
+    var bgColor: String?
     
     /// elevation of the content
-    public var elevation: Double?
+    var elevation: Double?
     
     /// cornerRadius of the content
-    public var cornerRadius: Double?
+    var cornerRadius: Double?
     
     /// maxWidth of the content
-    public var maxWidth: Double?
+    var maxWidth: Double?
     
     /// maxHeight of the content
-    public var maxHeight: Double?
+    var maxHeight: Double?
     
     /// margin of the content
-    public var contentMargin: Int?
+    var contentMargin: Int?
     
     /// stroke width of the margin
-    public var strokeWidth: Double?
+    var strokeWidth: Double?
     
     /// stroke color of the margin
-    public var strokeColor: String?
+    var strokeColor: String?
     
     /// A boolean value for the content to set to transparent
-    public var isContentTransparent: Bool?
+    var isContentTransparent: Bool?
     
     /// - Parameters:
     ///   - styleDict: A dictionary value for the type Style.
@@ -83,7 +83,7 @@ public class Style {
     }
 }
 
-public class ExtraProps {
+class ExtraProps {
     
     /// A dictionary value to specify extra properties
     var props: Dictionary<String, Any>

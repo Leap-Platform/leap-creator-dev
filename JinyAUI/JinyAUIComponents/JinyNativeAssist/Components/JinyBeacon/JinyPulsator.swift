@@ -44,7 +44,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     weak var pulsatorDelegate: JinyPulsatorDelegate?
     
     /// background color for the layer.
-    override open var backgroundColor: CGColor? {
+    override var backgroundColor: CGColor? {
         didSet {
             pulse.backgroundColor = backgroundColor
             guard let backgroundColor = backgroundColor else {return}
@@ -57,7 +57,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     }
     
     /// repeat count of the pulses.
-    override open var repeatCount: Float {
+    override var repeatCount: Float {
         didSet {
             if let animationGroup = animationGroup {
                 animationGroup.repeatCount = repeatCount
@@ -66,10 +66,10 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     }
     
     // MARK: - Public Properties
-    @objc open var animationCompletionBlock:(()->Void)?
+    var animationCompletionBlock:(()->Void)?
     
     /// The number of pulse.
-    @objc open var numPulse: Int = 1 {
+    var numPulse: Int = 1 {
         didSet {
             if numPulse < 1 {
                 numPulse = 1
@@ -80,14 +80,14 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     }
     
     ///    The radius of pulse.
-    @objc open var radius: CGFloat = 10 {
+    var radius: CGFloat = 10 {
         didSet {
             updatePulse()
         }
     }
     
     /// The animation duration in seconds.
-   @objc  open var animationDuration: TimeInterval = 3 {
+   var animationDuration: TimeInterval = 3 {
         didSet {
             updateInstanceDelay()
         }
@@ -95,11 +95,11 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     
     /// If this property is `true`, the instanse will be automatically removed
     /// from the superview, when it finishes the animation.
-    @objc open var autoRemove = false
+    var autoRemove = false
     
     /// fromValue for radius
     /// It must be smaller than 1.0
-    @objc open var fromValueForRadius: Float = 0.0 {
+    var fromValueForRadius: Float = 0.0 {
         didSet {
             if fromValueForRadius >= 1.0 {
                 fromValueForRadius = 0.0
@@ -109,17 +109,17 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     }
     
     /// The value of this property should be ranging from @c 0 to @c 1 (exclusive).
-    @objc open var keyTimeForHalfOpacity: Float = 0.2 {
+    var keyTimeForHalfOpacity: Float = 0.2 {
         didSet {
             recreate()
         }
     }
     
     /// The animation interval in seconds.
-    @objc open var pulseInterval: TimeInterval = 0
+    var pulseInterval: TimeInterval = 0
     
     /// A function describing a timing curve of the animation.
-    @objc open var timingFunction: CAMediaTimingFunction? = CAMediaTimingFunction(name: .default) {
+    var timingFunction: CAMediaTimingFunction? = CAMediaTimingFunction(name: .default) {
         didSet {
             if let animationGroup = animationGroup {
                 animationGroup.timingFunction = timingFunction
@@ -128,7 +128,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     }
     
     /// The value of this property showed a pulse is started
-    @objc open var isPulsating: Bool {
+    var isPulsating: Bool {
         guard let keys = pulse.animationKeys() else {return false}
         return keys.count > 0
     }
@@ -138,7 +138,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     fileprivate var prevLayerIndex: Int?
     
     // MARK: - Initializer
-    override public init() {
+    override init() {
         super.init()
         
         setupPulse()
@@ -160,15 +160,15 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
                                                object: nil)
     }
     
-    override public init(layer: Any) {
+    override init(layer: Any) {
         super.init(layer: layer)
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open override func removeFromSuperlayer() {
+    override func removeFromSuperlayer() {
         super.removeFromSuperlayer()
         stop()
         NotificationCenter.default.removeObserver(self)
@@ -259,14 +259,14 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     // MARK: - Public Methods
     
     /// Start the animation.
-    @objc open func start() {
+    func start() {
         setupPulse()
         setupAnimationGroup()
         pulse.add(animationGroup, forKey: kPulseAnimationKey)
     }
     
     /// Stop the animation.
-    @objc open func stop() {
+    func stop() {
         pulse.removeAllAnimations()
         animationGroup = nil
     }
@@ -274,7 +274,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
     
     // MARK: - Delegate methods for CAAnimation
     
-    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if let keys = pulse.animationKeys(), keys.count > 0 {
             pulse.removeAllAnimations()
         }
@@ -290,7 +290,7 @@ class JinyPulsator: CAReplicatorLayer, CAAnimationDelegate {
         animationCompletionBlock?()
     }
     
-    public func animationDidStart(_ anim: CAAnimation) {
+    func animationDidStart(_ anim: CAAnimation) {
         
         pulsatorDelegate?.didStartAnimation()
     }

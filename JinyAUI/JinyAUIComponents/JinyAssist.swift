@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // The type that has methods which is used by the developer when certain action gets called.
-public protocol JinyAssistDelegate: class {
+protocol JinyAssistDelegate: class {
     
     /// AUIComponent is successfully presented.
     func didPresentAssist()
@@ -23,7 +23,7 @@ public protocol JinyAssistDelegate: class {
 }
 
 // The type that has properties and methods which is used by each AUIComponent when necessary
-public protocol JinyAssist {
+protocol JinyAssist {
     
     var delegate: JinyAssistDelegate? { get set }
     
