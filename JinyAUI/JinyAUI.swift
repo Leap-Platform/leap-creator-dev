@@ -29,7 +29,7 @@ import JinySDK
     
     private override init() {
         auiManager = JinyAUIManager()
-        auiManager.addKeyboardObservers()
+        auiManager.addObservers()
         super.init()
     }
     

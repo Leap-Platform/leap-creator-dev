@@ -6,6 +6,20 @@
 	objectVersion = 53;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		D0F4688325DBC40700FEF37A /* JinyAUIUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "JinyAUIUniversal" */;
+			buildPhases = (
+				D0F4688F25DBC41200FEF37A /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = JinyAUIUniversal;
+			productName = JinyAUIUniversal;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		2D08591825A31FE9002D7993 /* JinyAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08591725A31FE9002D7993 /* JinyAuthManager.swift */; };
 		2D08593F25A3391C002D7993 /* JinyAuthConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* JinyAuthConfig.swift */; };
@@ -82,7 +96,6 @@
 		D03E45112420DE1500A43FEA /* JinyInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* JinyInternal.swift */; };
 		D040D47C25DA5F5E00CE09EB /* JinyAuthSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; };
 		D040D47D25DA5F5E00CE09EB /* JinyAuthSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D00B8F56249B2988006F4CA1 /* JinyAuthSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D040D4E925DA658500CE09EB /* JinySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D040D4F125DA65CA00CE09EB /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
 		D040D50725DA6BBA00CE09EB /* JinySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; };
 		D040D50825DA6BBA00CE09EB /* JinySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E77241FA6E3007782A8 /* JinySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -270,17 +283,6 @@
 				D040D50825DA6BBA00CE09EB /* JinySDK.framework in Embed Frameworks */,
 				D032C59724B71CE5006E8F2B /* JinyAUI.framework in Embed Frameworks */,
 				D040D47D25DA5F5E00CE09EB /* JinyAuthSDK.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D0FDAC3624B4A70600D9332B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D040D4E925DA658500CE09EB /* JinySDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1198,7 +1200,6 @@
 				D0FDAC1E24B48B3C00D9332B /* Sources */,
 				D0FDAC1F24B48B3C00D9332B /* Frameworks */,
 				D0FDAC2024B48B3C00D9332B /* Resources */,
-				D0FDAC3624B4A70600D9332B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1252,6 +1253,9 @@
 						CreatedOnToolsVersion = 11.5;
 						TestTargetID = D03E44DF2420AABA00A43FEA;
 					};
+					D0F4688325DBC40700FEF37A = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					D0FDAC2124B48B3C00D9332B = {
 						CreatedOnToolsVersion = 11.5;
 						LastSwiftMigration = 1150;
@@ -1284,6 +1288,7 @@
 				D00B8F5D249B2988006F4CA1 /* JinyAuthSDKTests */,
 				D0FDAC2124B48B3C00D9332B /* JinyAUI */,
 				D077C91024B9A68D001A04DF /* JinyAUITests */,
+				D0F4688325DBC40700FEF37A /* JinyAUIUniversal */,
 			);
 		};
 /* End PBXProject section */
@@ -1369,6 +1374,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D0F4688F25DBC41200FEF37A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\n# If we're already inside this script then die\nif [ -n \"$RW_MULTIPLATFORM_BUILD_IN_PROGRESS\" ]; then\nexit 0\nfi\nexport RW_MULTIPLATFORM_BUILD_IN_PROGRESS=1\n\nRW_FRAMEWORK_NAME=\"JinyAUI\"\nRW_INPUT_STATIC_LIB=\"libJinyAUI.a\"\nRW_FRAMEWORK_LOCATION=\"${BUILT_PRODUCTS_DIR}/static/${RW_FRAMEWORK_NAME}Sdk.framework\"\n\nfunction build_static_library {\n    echo \"1\"\n    echo \"${BUILD_DIR}\"\n    # Will rebuild the static library as specified\n    #     build_static_library sdk\n    xcrun xcodebuild -workspace \"JinySDK.xcodeproj/project.xcworkspace\" \\\n    -scheme \"${RW_FRAMEWORK_NAME}\" \\\n    -configuration \"${CONFIGURATION}\" \\\n    -sdk \"${1}\" \\\n    ONLY_ACTIVE_ARCH=NO \\\n    BUILD_DIR=\"${BUILD_DIR}\" \\\n    OBJROOT=\"${OBJROOT}/DependantBuilds\" \\\n    BUILD_ROOT=\"${BUILD_ROOT}\" \\\n    SYMROOT=\"${SYMROOT}\" $ACTION\n}\n\nfunction make_fat_library {\n    # Will smash 2 static libs together\n    #     make_fat_library in1 in2 out\n    xcrun lipo -create \"${1}\" \"${2}\" -output \"${3}\"\n}\n\n# 1 - Extract the platform (iphoneos/iphonesimulator) from the SDK name\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]; then\nRW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\necho \"Could not find platform name from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 2 - Extract the version from the SDK\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]; then\nRW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\necho \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 3 - Determine the other platform\nif [ \"$RW_SDK_PLATFORM\" == \"iphoneos\" ]; then\nRW_OTHER_PLATFORM=iphonesimulator\nelse\nRW_OTHER_PLATFORM=iphoneos\nfi\n\n# 4 - Find the build directory\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$RW_SDK_PLATFORM$ ]]; then\nRW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${RW_OTHER_PLATFORM}\"\nelse\necho \"Could not find other platform build directory.\"\nexit 1\nfi\n\n# Build the other platform.\nbuild_static_library \"${RW_OTHER_PLATFORM}${RW_SDK_VERSION}\"\n\n# If we're currently building for iphonesimulator, then need to rebuild\n#   to ensure that we get both i386 and x86_64\nif [ \"$RW_SDK_PLATFORM\" == \"iphonesimulator\" ]; then\nbuild_static_library \"${SDK_NAME}\"\nfi\n\n# Join the 2 static libs into 1 and push into the .framework\nmake_fat_library \"${BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}Sdk\"\n\n# Ensure that the framework is present in both platform's build directories\ncp -a \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}Sdk\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/static/${RW_FRAMEWORK_NAME}Sdk.framework/Versions/A/${RW_FRAMEWORK_NAME}Sdk\"\n\n# Copy the framework to the project directory\nditto \"${RW_FRAMEWORK_LOCATION}\" \"${SRCROOT}/Frameworks/static/${RW_FRAMEWORK_NAME}Sdk.framework\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D00B8F52249B2988006F4CA1 /* Sources */ = {
@@ -2138,6 +2163,22 @@
 			};
 			name = Release;
 		};
+		D0F4688425DBC40700FEF37A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D0F4688525DBC40700FEF37A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		D0FDAC2B24B48B3C00D9332B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2276,6 +2317,15 @@
 			buildConfigurations = (
 				D077C91924B9A68D001A04DF /* Debug */,
 				D077C91A24B9A68D001A04DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "JinyAUIUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0F4688425DBC40700FEF37A /* Debug */,
+				D0F4688525DBC40700FEF37A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -22,5 +22,5 @@ class JinyAuthShared {
     let ALFRED_DEV_BASE_URL: String = "https://alfred-dev-gke.leap.is"
     
     /// End Point
-    let AUTH_CONFIG_ENDPOINT: String = "/alfred/api/v1/apps/snap"
+    let AUTH_CONFIG_ENDPOINT: String = "/alfred/api/v1/apps/creator"
 }
