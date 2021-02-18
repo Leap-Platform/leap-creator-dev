@@ -499,6 +499,7 @@ extension JinyContextManager:JinyAUICallback {
     }
     
     func disableAssistance() {
+        contextDetector?.stop()
     }
     
 }
