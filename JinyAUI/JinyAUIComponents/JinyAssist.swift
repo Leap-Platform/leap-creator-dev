@@ -12,26 +12,14 @@ import UIKit
 // The type that has methods which is used by the developer when certain action gets called.
 public protocol JinyAssistDelegate: class {
     
-    /// going to present the AUIComponent.
-    func willPresentAssist()
-    
     /// AUIComponent is successfully presented.
     func didPresentAssist()
     
     /// failed to present AUIComponent
     func failedToPresentAssist()
     
-    /// AUIComponent is successfully dismissed.
-    func didDismissAssist()
-    
-    /// A webview action when user interacts and the callback dictionary is passed as a param.
-    func didSendAction(dict: Dictionary<String, Any>)
-    
-    /// This method is called when the first set of animation exits, usually after 180ms.
-    func didExitAnimation()
-    
-    /// This method is called when the jinyIcon is tapped.
-    func didTapAssociatedJinyIcon()
+    /// AUIComponent dismissed, with complete info
+    func didDismissAssist(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
 }
 
 // The type that has properties and methods which is used by each AUIComponent when necessary
@@ -51,8 +39,8 @@ public protocol JinyAssist {
     func applyStyle(style: Style)
     
     /// - Parameters:
-    ///   - htmlUrl: A url string to load html content.
-    ///   - appLocale: Another value.
+    ///   - htmlUrl: A url string to load html content from web.
+    ///   - appLocale: A url string to load html content from app's main bundle.
     ///   - contentFileUriMap: Another value.
     func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?)
     
@@ -78,8 +66,8 @@ public protocol JinyAssist {
     /// performs exit animation after the enter animation
     /// - Parameters:
     ///   - animation: Exit Animation Type.
-    func performExitAnimation(animation: String)
+    func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     
     /// removes the AUIComponent
-    func remove()
+    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
 }

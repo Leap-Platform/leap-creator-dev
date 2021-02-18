@@ -9,110 +9,107 @@
 import Foundation
 import UIKit
 
-protocol JinyAssistManagerDelegate {
-    
-    func performAssist(_ assist:JinyAssist, view:UIView?, rect:CGRect?, inWebview:UIView?)
+protocol JinyAssistManagerDelegate:NSObjectProtocol {
+
+    func getAllAssists() -> Array<JinyAssist>
+    func newAssistIdentified(_ assist:JinyAssist, view:UIView?, rect:CGRect?, inWebview:UIView?)
     func sameAssistIdentified(view:UIView?, rect:CGRect?, inWebview:UIView?)
     func dismissAssist()
     
 }
 
+
 class JinyAssistManager {
     
-    var delegate:JinyAssistManagerDelegate
-    var assistsToCheck:Array<JinyAssist> = []
-    var assistToBeTriggered:JinyAssist?
-    var assistTimer:Timer?
-    var anchorView:UIView?
-    var anchorRect:CGRect?
-    var anchorWebview:UIView?
-    var currentAssist:JinyAssist?
+    private weak var delegate:JinyAssistManagerDelegate?
+    private weak var currentAssist:JinyAssist?
+    private var assistTimer:Timer?
+    private var assistsCompletedInSession:Array<Int> = []
     
-    init(_ assistDelegate:JinyAssistManagerDelegate) {
-        delegate = assistDelegate
-    }
-    
-    func setAssistsToCheck(assists:Array<JinyAssist>) {
-        assistsToCheck = assists
-    }
+    init(_ assistDelegate:JinyAssistManagerDelegate) { delegate = assistDelegate }
     
     func getAssistsToCheck() -> Array<JinyAssist> {
+        let assistSessionCount = JinySharedInformation.shared.getAssistsPresentedInfo()
+        let assistsDismissedByUser = JinySharedInformation.shared.getDismissedAssistInfo()
+        guard let allAssists = delegate?.getAllAssists() else { return [] }
+        let assistsToCheck = allAssists.filter { (tempAssist) -> Bool in
+            /// Eliminate assists already presented in current session
+            if assistsCompletedInSession.contains(tempAssist.id) { return false }
+            
+            /// Elimination using termination frequency
+            if let terminationFreq = tempAssist.terminationFrequency {
+                ///Eliminate nDismissByUser
+                if let dismissByUser = terminationFreq.nDismissByUser, dismissByUser > -1 {
+                    if assistsDismissedByUser.contains(tempAssist.id) { return false }
+                }
+                /// Eliminate nSessions
+                if let nSessions = terminationFreq.nSession, nSessions > -1 {
+                    let currentAssistSessionCount = assistSessionCount[String(tempAssist.id)] ?? 0
+                    if currentAssistSessionCount >= nSessions { return false }
+                }
+            }
+            return true
+        }
         return assistsToCheck
     }
     
-    func assistIdentified(assist:JinyAssist, view:UIView?, rect:CGRect?, webview:UIView?) {
-        anchorView = view
-        anchorRect = rect
-        anchorWebview = webview
-        if assistToBeTriggered == assist { return }
-        if currentAssist == assist {
-            self.delegate.sameAssistIdentified(view: view, rect: rect, inWebview: webview)
+    func getCurrentAssist() -> JinyAssist? { return currentAssist }
+    
+    func triggerAssist(_ assist:JinyAssist,_ view:UIView?,_ rect:CGRect?,_ webview:UIView?) {
+        
+        if assist == currentAssist {
+            if assistTimer == nil  { self.delegate?.sameAssistIdentified(view: view, rect: rect, inWebview: webview) }
             return
         }
-        JinyEventDetector.shared.delegate = self
-        cancelTimer()
-        assistToBeTriggered = assist
-        if let delay = assistToBeTriggered?.eventIdentifiers?.delay {
-            assistTimer = Timer.init(timeInterval: TimeInterval(delay/1000), target: self, selector: #selector(triggerAssist), userInfo: nil, repeats: false)
-            RunLoop.current.add(assistTimer!, forMode: .default)
-        } else if let waitForAnchorClick = assistToBeTriggered?.eventIdentifiers?.triggerOnAnchorClick {
-            if waitForAnchorClick {return}
-        } else {
-            self.delegate.performAssist(assist, view: anchorView, rect: anchorRect, inWebview: anchorWebview)
+        
+        if currentAssist != nil {
+            if assistTimer != nil {
+                assistTimer?.invalidate()
+                assistTimer = nil
+            } else {
+                self.delegate?.dismissAssist()
+                markCurrentAssistComplete()
+            }
+        }
+        
+        currentAssist = assist
+        let type =  currentAssist?.trigger?.type ?? .instant
+        if type == .delay {
+            let delay = currentAssist?.trigger?.delay ?? 0
+            assistTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
+                self.assistTimer?.invalidate()
+                self.assistTimer = nil
+                self.delegate?.newAssistIdentified(assist, view: view, rect: rect, inWebview: webview)
+            })
+            RunLoop.main.add(assistTimer!, forMode: .default)
+        } else  {
+            delegate?.newAssistIdentified(assist, view: view, rect: rect, inWebview: webview)
         }
     }
     
-    @objc func triggerAssist() {
-        assistTimer?.invalidate()
-        assistTimer = nil
-        self.delegate.performAssist(assistToBeTriggered!, view: anchorView, rect: anchorRect, inWebview: anchorWebview)
-    }
-    
-    func noAssistFound() {
-        if assistToBeTriggered != nil { cancelTimer() }
-        assistToBeTriggered = nil
-        JinyEventDetector.shared.delegate = nil
-    }
-    
-    func assistCompleted(assist:JinyAssist) {
-        assistsToCheck = assistsToCheck.filter { $0 != assist}
-        assistToBeTriggered = nil
-    }
-    
-    func cancelTimer() {
-        assistTimer?.invalidate()
-        assistTimer = nil
-    }
-    
-    func setCurrentAssist() {
-        currentAssist = assistToBeTriggered
-        assistToBeTriggered = nil
-    }
-    
-    func currentAssistPresented() {
-        
-    }
-    
-}
-
-
-extension JinyAssistManager:JinyEventDetectorDelegate {
-    
-    func clickDetected(view: UIView?, point: CGPoint) {
-        guard let onClickTrigger = assistToBeTriggered?.eventIdentifiers?.triggerOnAnchorClick else { return }
-        guard onClickTrigger else { return }
-        if assistToBeTriggered!.isWeb {
-            guard let rectToCheck = anchorRect else { return }
-            if rectToCheck.contains(point) { self.delegate.performAssist(assistToBeTriggered!, view: anchorView!, rect: anchorRect!, inWebview: anchorWebview) }
+    func resetAssistManager() {
+        guard let _ = currentAssist else { return }
+        if assistTimer != nil {
+            assistTimer?.invalidate()
+            assistTimer = nil
         } else {
-            guard let viewToCheck = anchorView, let viewTouched = view else { return }
-            if  viewToCheck == viewTouched { self.delegate.performAssist(assistToBeTriggered!, view: anchorView, rect: anchorRect, inWebview: anchorWebview) }
+            self.delegate?.dismissAssist()
+            markCurrentAssistComplete()
         }
+        currentAssist = nil
     }
     
-    func newTaggedEvent(taggedEvents:Dictionary<String,Any>) {
-        
+    func assistDismissed(byUser:Bool, autoDismissed:Bool) {
+        guard let assist = currentAssist, byUser || autoDismissed  else { return }
+        if byUser { JinySharedInformation.shared.assistDismissedByUser(assistId: assist.id) }
+        markCurrentAssistComplete()
     }
     
+    func markCurrentAssistComplete() {
+        guard let assist = currentAssist else { return }
+        if !(assistsCompletedInSession.contains(assist.id)) { assistsCompletedInSession.append(assist.id) }
+        JinySharedInformation.shared.assistPresented(assistId: assist.id)
+        currentAssist = nil
+    }
     
 }

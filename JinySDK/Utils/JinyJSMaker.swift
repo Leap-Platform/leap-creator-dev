@@ -11,70 +11,9 @@ import UIKit
 import WebKit
 
 class JinyJSMaker {
-    
-    class func createJSScript(for identifier:JinyWebIdentifier) -> String {
-        
-        let baseJs = getElementScript(identifier)
-        var finalCheck = "(" + baseJs + " != null" + ")"
-        
-        if let innerHTML = identifier.innerHtml {
-            if let localeInnerHTML = innerHTML["ang"] {
-                let innerHTMLCheck = "(" + baseJs + ".innerHTML === " + "\"\(localeInnerHTML)\"" + ")"
-                finalCheck += " && \(innerHTMLCheck)"
-            }
-        }
-        
-        if let innerText = identifier.innerText {
-            if let localeInnerText = innerText["ang"] {
-                let innerTextCheck = "(" + baseJs + ".innerText === " + "\"\(localeInnerText)\"" + ")"
-                finalCheck += " && \(innerTextCheck)"
-            }
-        }
-        
-        if let value = identifier.value {
-            if let localeValue = value["ang"] {
-                let valueCheck = "(" + baseJs + ".value === " + "\"\(localeValue)\"" + ")"
-                finalCheck += " && \(valueCheck)"
-            }
-        }
-        
-        
-        return "("+finalCheck+").toString()"
-    }
-    
-    class func createAttributeCheckScript(for identifier:JinyWebIdentifier) -> String? {
-        
-        var attributeScript = ""
-        let querySelector = getElementScript(identifier)
-        if let innerHTML = identifier.innerHtml {
-            if let localeInnerHTML = innerHTML["ang"] {
-                let innerHTMLCheck = "(" + querySelector + ".innerHTML === " + "\"\(localeInnerHTML)\"" + ") && "
-                attributeScript += innerHTMLCheck
-            }
-        }
-        
-        if let innerText = identifier.innerText {
-            if let localeInnerText = innerText["ang"] {
-                let innerTextCheck = "(" + querySelector + ".innerText === " + "\"\(localeInnerText)\"" + ") && "
-                attributeScript += innerTextCheck
-            }
-        }
-        
-        if let value = identifier.value {
-            if let localeValue = value["ang"] {
-                let valueCheck = "(" + querySelector + ".value === " + "\"\(localeValue)\"" + ") && "
-                attributeScript += valueCheck
-            }
-        }
-        attributeScript = String(attributeScript.dropLast(4))
-        if attributeScript == "" { return nil }
-        attributeScript = "(" + attributeScript + ")"
-        return attributeScript
-        
-    }
-    
+   
     class func calculateBoundsScript(_ id:JinyWebIdentifier) -> String {
-        let baseJs = getElementScript(id)
+        let baseJs = generateBasicElementScript(id:id)
         let rect = baseJs + ".getBoundingClientRect()"
         let x = rect + ".x"
         let y = rect + ".y"
@@ -84,7 +23,31 @@ class JinyJSMaker {
         return finalQuery
     }
     
-    class func getElementScript(_ id:JinyWebIdentifier) -> String {
+    class func generateNullCheckScript(identifier:JinyWebIdentifier) -> String {
+        let elementScript = generateBasicElementScript(id: identifier)
+        return "(" + elementScript + " != null).toString()"
+    }
+
+    class func generateAttributeCheckScript(webIdentifier:JinyWebIdentifier) -> String? {
+        let elementScript = generateBasicElementScript(id: webIdentifier)
+        var overallScript = "("
+        if let innerTextValue = webIdentifier.innerText?["ang"] {
+            overallScript += elementScript + ".innerText === \"\(innerTextValue)\" && "
+        }
+        if let innerHTMLValue = webIdentifier.innerHtml?["ang"] {
+            overallScript += elementScript + ".innerHTML === \"\(innerHTMLValue)\" && "
+        }
+        if let valueValue = webIdentifier.value?["ang"] {
+            overallScript += elementScript + ".value === \"\(valueValue)\" && "
+        }
+        if overallScript.suffix(4) == " && " { overallScript.removeLast(4) }
+        else { return nil }
+        
+        overallScript += ").toString()"
+        return overallScript
+    }
+
+    class func generateBasicElementScript(id:JinyWebIdentifier) -> String {
         var baseJs = "document.querySelectorAll('"
         baseJs += id.tagName
         
@@ -93,7 +56,6 @@ class JinyJSMaker {
                 baseJs += "[\(attr)=\"\(value)\"]"
             }
         }
-        
         baseJs += "')[\(id.index)]"
         return baseJs
     }

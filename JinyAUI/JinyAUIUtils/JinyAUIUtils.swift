@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import WebKit
 
 extension UIImage {
     class func getImageFromBundle(_ name:String) -> UIImage? {
@@ -47,5 +48,25 @@ extension UIApplication {
             }
         }
         return parentVC
+    }
+}
+
+extension WKWebView {
+    
+    /// Do not depend on this method unless you are using Unicode or UTF-8 (Apple Documentation)
+    /// - Parameters:
+    ///   - url: A url of type URL to load html content.
+    func loadHTML(withUrl url : URL) {
+        
+       DispatchQueue.global().async {
+          do {
+             let htmlString = try String(contentsOf: url)  // Method description refers to this
+             DispatchQueue.main.async {
+               self.loadHTMLString(htmlString, baseURL: url)
+             }
+          } catch let error {
+             print(error)
+          }
+       }
     }
 }

@@ -9,19 +9,17 @@
 import Foundation
 import UIKit
 
-@objc public class JinyAuth:NSObject {
-    @objc public static let shared = JinyAuth()
-    private var authInternal:JinyAuthInternal
+public class JinyAuth {
+    public static let instance: JinyAuth = JinyAuth()
+    private var authInternal:JinyAuthInternal?
     private var token:String?
-    
-    private override init() {
-        authInternal = JinyAuthInternal()
-        super.init()
-    }
-    
-    @objc public func initialize(withToken apiKey:String) {
+  
+    public func initialize(withToken apiKey:String) -> Void {
+        ReachabilityManager.shared.initialize()
         token = apiKey
-        authInternal.apiKey = token
-        return authInternal.start()
+        authInternal = JinyAuthInternal(apiKey: apiKey)
+        authInternal?.apiKey = token
+        JinyAuthShared.shared.apiKey = token
+        authInternal?.start()
     }
 }

@@ -22,6 +22,10 @@ public class JinySlideIn: JinyKeyWindowAssist {
         if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
             
             self.alignment = JinyAlignmentType(rawValue: alignment) ?? .left
+        
+        } else {
+            
+            assistInfo?.layoutInfo?.layoutAlignment = "left"
         }
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
@@ -53,9 +57,7 @@ public class JinySlideIn: JinyKeyWindowAssist {
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
         
         self.webView.isUserInteractionEnabled = true
-        
-        self.webView.scrollView.isScrollEnabled = false
-        
+                
         self.assistInfo?.layoutInfo?.enterAnimation = self.alignment == .left ? "slide_right" : "slide_left"
                 
         if self.alignment == .left || self.alignment == .right {
@@ -71,7 +73,7 @@ public class JinySlideIn: JinyKeyWindowAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
                     
-            self.webView.layer.borderColor = UIColor.colorFromString(string: colorString).cgColor
+            self.webView.layer.borderColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -122,19 +124,21 @@ public class JinySlideIn: JinyKeyWindowAssist {
     ///   - width: Width of the content of the webview.
     private func configureSlideInDimensionConstraint(width: Float, height: Float) {
         
-        guard let inViewWidth = inView?.frame.width else {
+        guard let inViewWidth = inView?.frame.width, self.alignment == .left || self.alignment == .right else {
             
             return
         }
         
         let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(inViewWidth)) / 100)
         
+        var sizeWidth = self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0
+        
         if width > 0 && width < Float(proportionalWidth) {
             
-            self.assistInfo?.layoutInfo?.style.maxWidth = (Double(width) / Double(inViewWidth)) * 100
+            sizeWidth = (Double(width) / Double(inViewWidth)) * 100
         }
         
-        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: inView, attribute: .width, multiplier: CGFloat((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0)/100), constant: 0))
+        inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: inView, attribute: .width, multiplier: CGFloat(sizeWidth/100), constant: 0))
         
         self.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: CGFloat(height)))
         
@@ -148,10 +152,10 @@ public class JinySlideIn: JinyKeyWindowAssist {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         configureSlideInDimensionConstraint(width: width, height: height)
     }
     
@@ -198,13 +202,12 @@ public class JinySlideIn: JinyKeyWindowAssist {
                     
                   self.webView.frame.origin.x = UIScreen.main.bounds.width
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
                     self.webView.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             case (.left, .left):
@@ -213,13 +216,12 @@ public class JinySlideIn: JinyKeyWindowAssist {
                     
                   self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
                     
-                  self.delegate?.didExitAnimation()
                     
                 }) { (success) in
                     
                     self.webView.removeFromSuperview()
                     
-                    self.delegate?.didDismissAssist()
+                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             default:

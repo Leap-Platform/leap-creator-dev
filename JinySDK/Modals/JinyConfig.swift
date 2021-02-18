@@ -7,101 +7,92 @@
 //
 
 import Foundation
+import Gzip
 
 class JinyConfig {
     
     var webIdentifiers:Dictionary<String,JinyWebIdentifier> = [:]
     var nativeIdentifiers:Dictionary<String,JinyNativeIdentifier> = [:]
     var assists:Array<JinyAssist> = []
-    var flows:Array<JinyFlow> = []
-    var analytics:Dictionary<String,Any> = [:]
-    var params:Dictionary<String,Any> = [:]
-    var languages:Array<JinyLanguage> = []
-    var defaultSounds:Array<JinySound> = []
-    var discoverySounds:Array<JinySound> = []
     var discoveries:Array<JinyDiscovery> = []
-    var feature:JinyFeature?
+    var flows:Array<JinyFlow> = []
+    var languages:Array<JinyLanguage> = []
     var supportedAppLocales:Array<String> = []
+    var discoverySounds:Array<Dictionary<String,Any>> = []
+    var auiContent:Array<Dictionary<String,Any>> = []
+    var iconSetting: Dictionary<String, IconSetting> = [:]
     var webViewList:Array<Dictionary<String,Any>> = []
-    var sounds:Array<JinySound> = []
-    var discSounds:Dictionary<String,Any> = [:]
-    var defSounds:Dictionary<String,Any> = [:]
-    var auiContent:Dictionary<String,Any> = [:]
     
     init(withDict dataDict:Dictionary<String,Any>) {
         
-        guard let configDict = dataDict["data"] as? Dictionary<String,Any> else { return }
-        
-        if let webIdentifiersDict = configDict["web_identifiers"] as? Dictionary<String,Dictionary<String,Any>>  {
-            webIdentifiersDict.forEach { (webId, idObject) in
-                webIdentifiers[webId] = JinyWebIdentifier(withDict: idObject)
+        var configsArray:Array<Dictionary<String,Any>> = []
+        if let base64ConfigStrings  = dataDict[constant_data] as? Array<String> {
+            for base64ConfigString in base64ConfigStrings {
+                let base64DecodedData = Data(base64Encoded: base64ConfigString)
+                if let decompressedData = try? base64DecodedData?.gunzipped(), let jsonDict = try? JSONSerialization.jsonObject(with: decompressedData, options: .allowFragments) as? Dictionary<String,Any> {
+                    configsArray.append(jsonDict)
+                }
             }
-        }
-        
-        if let nativeIdentifiersDict = configDict["native_identifiers"] as? Dictionary<String,Dictionary<String,Any>> {
-            nativeIdentifiersDict.forEach { (nativeId, idObject) in
-                nativeIdentifiers[nativeId] = JinyNativeIdentifier(withDict: idObject)
-            }
-        }
-        
-        if let flowDictsArray = configDict["flows"] as? Array<Dictionary<String,Any>> {
-            for flowDicts in flowDictsArray {
-                flows.append(JinyFlow(withDict: flowDicts))
-            }
-        }
-        
-        if let languageDictsArray = configDict["languages"] as? Array<Dictionary<String,String>> {
-            for languageDict in languageDictsArray {
-                languages.append(JinyLanguage(withLanguageDict: languageDict))
-            }
-        }
-        
-        if let discoverySoundsDict = configDict["discovery_sounds"] as? Dictionary<String,Any> {
-            discSounds = discoverySoundsDict
-            discoverySounds = processSoundDict(dict: discoverySoundsDict)
-        }
-        
-        if let defaultSoundsDict = configDict["default_sounds"] as? Dictionary<String,Any> {
-            defSounds = defaultSoundsDict
-            defaultSounds = processSoundDict(dict: defaultSoundsDict)
             
+        } else {
+            guard let data = dataDict[constant_data] as? Array<Dictionary<String,Any>> else { return }
+            configsArray = data
         }
-        
-        if let discoveryDictsArray = configDict["discovery_list"] as? Array<Dictionary<String,Any>> {
-            for discoveryDict in discoveryDictsArray {
-                discoveries.append(JinyDiscovery(withDict: discoveryDict))
+        guard configsArray.count > 0  else { return }
+        for configDict in configsArray {
+            if let webIdentifiersDict = configDict[constant_webIdentifiers] as? Dictionary<String,Dictionary<String,Any>>  {
+                webIdentifiersDict.forEach { (webId, idObject) in
+                    webIdentifiers[webId] = JinyWebIdentifier(withDict: idObject)
+                }
+            }
+            if let nativeIdentifiersDict = configDict[constant_nativeIdentifiers] as? Dictionary<String,Dictionary<String,Any>> {
+                nativeIdentifiersDict.forEach { (nativeId, idObject) in
+                    nativeIdentifiers[nativeId] = JinyNativeIdentifier(withDict: idObject)
+                }
+            }
+            if let flowDictsArray = configDict[constant_flows] as? Array<Dictionary<String,Any>> {
+                flows += flowDictsArray.map({ (flowDict) -> JinyFlow? in
+                    let flow = JinyFlow(withDict: flowDict)
+                    if flows.contains(flow) { return nil }
+                    return flow
+                }).compactMap { return $0}
+            }
+            if let languageDictsArray = configDict[constant_languages] as? Array<Dictionary<String,Any>> {
+                languages += languageDictsArray.map { (langDict) -> JinyLanguage? in
+                    let lang = JinyLanguage(withLanguageDict: langDict)
+                    if languages.contains(lang) { return nil }
+                    return lang
+                }.compactMap{ return $0 }
+            }
+            if let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>> {
+                discoveries += discoveryDictsArray.map({ (discoveryDict) -> JinyDiscovery? in
+                    let discovery = JinyDiscovery(withDict: discoveryDict)
+                    if discoveries.contains(discovery) { return nil }
+                    if let discoveryId = discoveryDict[constant_id] as? Int, let iconSetting = configDict[constant_iconSetting] as? Dictionary<String, Any> {
+                        if let discoveryIconSetting = iconSetting[String(discoveryId)] as? Dictionary<String, Any> {
+                           self.iconSetting[String(discoveryId)] = IconSetting(with: discoveryIconSetting)
+                        }
+                    }
+                    return discovery
+                }).compactMap{ return $0 }
+            }
+            if let assistsDictsArray = configDict[constant_assists] as? Array<Dictionary<String,Any>> {
+                assists += assistsDictsArray.map({ (assistDict) -> JinyAssist? in
+                    let assist = JinyAssist(withDict: assistDict)
+                    if assists.contains(assist) { return nil }
+                    return assist
+                }).compactMap{ return $0 }
+            }
+            if let discoverySoundsDict = configDict[constant_discoverySounds] as? Dictionary<String,Any> {
+                discoverySounds.append(discoverySoundsDict)
+            }
+            if let auiContentsDict = configDict[constant_auiContent] as? Dictionary<String,Any> {
+                auiContent.append(auiContentsDict)
+            }
+            if let newSupportedAppLocale = configDict[constant_supportedAppLocales] as? Array<String> {
+                supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
             }
         }
-        
-        if let assistsDictsArray = configDict["assists"] as? Array<Dictionary<String,Any>> {
-            for assistDict in assistsDictsArray {
-                assists.append(JinyAssist(withDict: assistDict))
-            }
-        }
-        
-        if let featureDict = configDict["feature"] as? Dictionary<String,Any> {
-            feature = JinyFeature(withDict: featureDict)
-        }
-        
-        if let auiContentDict = configDict["aui_content"] as? Dictionary<String,Any> {
-            auiContent = auiContentDict
-        }
-        
-        supportedAppLocales = configDict["supported_app_locales"] as? Array<String> ?? []
-        
     }
-    
-    private func processSoundDict(dict:Dictionary<String,Any>) -> Array<JinySound> {
-        let baseUrl = dict["base_url"] as? String
-        guard let jinySoundsDict = dict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return [] }
-        var soundsArray:Array<JinySound> = []
-        jinySoundsDict.forEach { (langCode,soundDictsArray) in
-            for soundDict in soundDictsArray {
-                soundsArray.append(JinySound(withSoundDict: soundDict, langCode: langCode, baseUrl: baseUrl))
-            }
-        }
-        return soundsArray
-    }
-    
     
 }

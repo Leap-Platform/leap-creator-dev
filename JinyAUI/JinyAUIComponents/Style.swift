@@ -11,7 +11,7 @@ import Foundation
 public class Style {
     
     /// background color of the overlay
-    public var bgColor: String
+    public var bgColor: String?
     
     /// elevation of the content
     public var elevation: Double?
@@ -41,46 +41,42 @@ public class Style {
     ///   - styleDict: A dictionary value for the type Style.
     init(withDict styleDict: Dictionary<String,Any>) {
         
-        if let bgColor = styleDict["bgColor"] as? String {
+        if let bgColor = styleDict[constant_bgColor] as? String {
             
             self.bgColor = bgColor
-            
-        } else {
-            
-            self.bgColor = "default"
         }
         
-        if let elevation = styleDict["elevation"] as? Double {
+        if let elevation = styleDict[constant_elevation] as? Double {
             
             self.elevation = elevation
         }
         
-        if let cornerRadius = styleDict["cornerRadius"] as? Double {
+        if let cornerRadius = styleDict[constant_cornerRadius] as? Double {
             
             self.cornerRadius = cornerRadius
         }
         
-        if let maxWidth = styleDict["maxWidth"] as? Double {
+        if let maxWidth = styleDict[constant_maxWidth] as? Double {
             
             self.maxWidth = maxWidth
         }
         
-        if let maxHeight = styleDict["maxHeight"] as? Double {
+        if let maxHeight = styleDict[constant_maxHeight] as? Double {
             
             self.maxHeight = maxHeight
         }
         
-        if let strokeColor = styleDict["strokeColor"] as? String {
+        if let strokeColor = styleDict[constant_strokeColor] as? String {
             
             self.strokeColor = strokeColor
         }
         
-        if let strokeWidth = styleDict["strokeWidth"] as? Double {
+        if let strokeWidth = styleDict[constant_strokeWidth] as? Double {
             
             self.strokeWidth = strokeWidth
         }
         
-        if let contentTransparent = styleDict["contentTransparent"] as? Bool {
+        if let contentTransparent = styleDict[constant_contentTransparent] as? Bool {
             
             self.isContentTransparent = contentTransparent
         }

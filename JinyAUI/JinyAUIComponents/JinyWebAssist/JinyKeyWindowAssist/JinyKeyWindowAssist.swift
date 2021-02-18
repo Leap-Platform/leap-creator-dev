@@ -13,6 +13,9 @@ import WebKit
 /// A super class for the JinyKeyWindowAssist AUI Components.
 public class JinyKeyWindowAssist: JinyWebAssist {
     
+    /// height constraint to increase the constant when html resizes
+    var heightConstraint: NSLayoutConstraint?
+    
     /// source view of the AUIComponent that is relatively positioned.
     weak var inView: UIView?
     
@@ -59,11 +62,16 @@ public class JinyKeyWindowAssist: JinyWebAssist {
 
         if let colorString = self.assistInfo?.layoutInfo?.style.bgColor {
         
-          self.backgroundColor = UIColor.colorFromString(string: colorString)
+          self.backgroundColor = UIColor.init(hex: colorString) ?? UIColor.black.withAlphaComponent(0.65)
         
         } else {
             
           self.backgroundColor = UIColor.black.withAlphaComponent(0.65)
+        }
+        
+        if let highlightAnchor = self.assistInfo?.highlightAnchor, !highlightAnchor {
+            
+            self.backgroundColor = .clear
         }
         
         self.isHidden = true
@@ -119,9 +127,8 @@ public class JinyKeyWindowAssist: JinyWebAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
-        
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
+            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: nil)
         }
     }
 }

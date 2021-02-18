@@ -19,24 +19,29 @@ public class IconInfo {
     /// background color of icon of type string.
     public var backgroundColor: String?
     
+    /// html string to load webView
+    public var htmlUrl: String?
+    
     /// initialises IconInfo.
     /// - Parameters:
     ///   - iconDict: A dictionary value for the type IconInfo.
     init(withDict iconDict: Dictionary<String, Any>) {
         
-        if let isLeftAligned = iconDict["isLeftAligned"] as? Bool {
+        if let isLeftAligned = iconDict[constant_leftAlign] as? Bool {
             
             self.isLeftAligned = isLeftAligned
         }
         
-        if let isEnabled = iconDict["isEnabled"] as? Bool {
-            
-            self.isEnabled = isEnabled
-        }
+        self.isEnabled = true
         
-        if let backgroundColor = iconDict["backgroundColor"] as? String {
+        if let backgroundColor = iconDict[constant_bgColor] as? String {
             
             self.backgroundColor = backgroundColor
+        }
+        
+        if let htmlUrl = iconDict[constant_htmlUrl] as? String {
+            
+            self.htmlUrl = htmlUrl
         }
     }
 }

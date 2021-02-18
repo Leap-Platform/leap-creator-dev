@@ -10,14 +10,12 @@ import Foundation
 
 class JinyLanguageInfo:Codable {
     
-    var current_language:String
-    var is_language_set_by_client:Bool
-    var app_locale:String?
+    var jiny_lang:String
+    var app_lang:String?
     
-    init(setByUser:Bool) {
-        current_language = "hin"
-        is_language_set_by_client = setByUser
-        app_locale = Locale.current.languageCode
+    init() {
+        jiny_lang = JinyPreferences.shared.getUserLanguage() ?? ""
+        app_lang = Locale.current.languageCode
     }
     
 }

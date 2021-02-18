@@ -17,10 +17,7 @@ public enum JinyTooltipArrowDirection {
 }
 
 /// JinyToolTip - A Web InViewAssist AUI Component class to show a tip on a view.
-public class JinyToolTip: JinyInViewAssist {
-    
-    /// toolTipView which carries webView.
-    private var toolTipView = UIView(frame: .zero)
+public class JinyToolTip: JinyTipView {
       
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
@@ -33,9 +30,6 @@ public class JinyToolTip: JinyInViewAssist {
     
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
-    
-    /// original isUserInteractionEnabled boolean value of the toView.
-    private var toViewOriginalInteraction: Bool?
     
     /// spacing of the highlight area.
     public var highlightSpacing = 10.0
@@ -50,20 +44,34 @@ public class JinyToolTip: JinyInViewAssist {
         
         configureTooltipView()
         
+        setupAutoFocus()
+        
         show()
+    }
+    
+    func presentPointer(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+                
+        presentPointer()
+    }
+    
+    func updatePointer(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+        
+        if assistInfo?.highlightAnchor ?? true {
+            
+           highlightAnchor()
+        }
+        
+        placePointer()
     }
         
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
-       guard toView != nil else { fatalError("no element to point to") }
-               
-        if inView == nil {
-           
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
-           
-            inView = UIApplication.shared.keyWindow
-        }
+        inView = toView?.window
         
         inView?.addSubview(self)
            
@@ -77,15 +85,19 @@ public class JinyToolTip: JinyInViewAssist {
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
         
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
+        
+       // comment this if you want value from config
+       assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
+        
        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
-        
-       self.webView.scrollView.isScrollEnabled = false
-        
+                
        toViewOriginalInteraction = self.toView?.isUserInteractionEnabled
                 
        maskLayer.bounds = self.webView.bounds
     
-       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 6.0)
+       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
 
        webView.layer.cornerRadius = cornerRadius
     
@@ -94,10 +106,6 @@ public class JinyToolTip: JinyInViewAssist {
        if assistInfo?.highlightAnchor ?? false {
            
           highlightAnchor()
-           
-       } else {
-           
-          self.backgroundColor = .clear
        }
     }
       
@@ -113,11 +121,11 @@ public class JinyToolTip: JinyInViewAssist {
         
         if direction == .top {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .bottom)
         
         } else {
             
-            configureJinyIconView(superView: self, toItemView: toolTipView, alignmentType: .top)
+            configureJinyIconView(superView: inView!, toItemView: toolTipView, alignmentType: .top)
         }
             
        setOriginForDirection(direction: direction)
@@ -137,12 +145,12 @@ public class JinyToolTip: JinyInViewAssist {
     /// gets the arrow direction - top or bottom.
     func getArrowDirection() -> JinyTooltipArrowDirection? {
         
-        guard let toViewSuperView = toView?.superview else {
+        guard toView?.superview != nil || webRect != nil else {
             
             return .none
         }
     
-        let globalToViewFrame = toViewSuperView.convert(toView!.frame, to: inView)
+        let globalToViewFrame = getGlobalToViewFrame()
 
         let toViewTop = globalToViewFrame.origin.y
         
@@ -172,7 +180,7 @@ public class JinyToolTip: JinyInViewAssist {
     ///   - direction: ToolTip arrow direction.
     func setOriginForDirection(direction: JinyTooltipArrowDirection) {
             
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to:inView)
+        let globalToViewFrame = getGlobalToViewFrame()
         
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
         
@@ -223,6 +231,11 @@ public class JinyToolTip: JinyInViewAssist {
             }
         }
         
+        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
+            
+            x = x - 12
+        }
+        
         toolTipView.frame.origin = CGPoint(x: x, y: y)
     }
         
@@ -266,7 +279,7 @@ public class JinyToolTip: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
         
-            borderLayer.strokeColor = UIColor.colorFromString(string: colorString).cgColor
+            borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
@@ -290,9 +303,9 @@ public class JinyToolTip: JinyInViewAssist {
         
         path.addArc(withCenter: CGPoint(x: cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
             
-        let globalToView = toView?.superview?.convert(toView!.frame, to: inView)
+        let globalToView = getGlobalToViewFrame()
         
-        let arrowMidX: CGFloat = globalToView!.midX - toolTipView.frame.origin.x
+        let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
                     
         path.addLine(to: CGPoint(x: arrowMidX-halfWidthForArrow, y: minimalSpacing))
         
@@ -328,9 +341,9 @@ public class JinyToolTip: JinyInViewAssist {
         
         path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
             
-        let globalToView = toView?.superview?.convert(toView!.frame, to: inView)
+        let globalToView = getGlobalToViewFrame()
         
-        let arrowMidX: CGFloat = globalToView!.midX - toolTipView.frame.origin.x
+        let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
                 
         path.addLine(to: CGPoint(x: arrowMidX+halfWidthForArrow, y: contentSize.height-minimalSpacing))
         
@@ -381,11 +394,11 @@ public class JinyToolTip: JinyInViewAssist {
     /// Highlights the toView to which the tooltipView is pointed to.
     private func highlightAnchor() {
         
-        let globalToView = toView?.superview?.convert(toView!.frame, to: nil)
+        let globalToView = getGlobalToViewFrame()
 
-        let origin = globalToView!.origin
+        let origin = globalToView.origin
         
-        let size = globalToView!.size
+        let size = globalToView.size
         
         let path = UIBezierPath(rect: inView!.bounds)
                 
@@ -400,7 +413,7 @@ public class JinyToolTip: JinyInViewAssist {
         fillLayer.opacity = 1.0
         self.layer.mask = fillLayer
         
-        if assistInfo?.anchorClickable ?? false {
+        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
             
             toView?.isUserInteractionEnabled = true
         
@@ -416,20 +429,27 @@ public class JinyToolTip: JinyInViewAssist {
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-       let proportionalWidth = (((self.assistInfo?.layoutInfo?.style.maxWidth ?? 80.0) * Double(self.frame.width)) / 100)
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
         
-        if width > 0 && width > Float(proportionalWidth) {
-            
-           self.assistInfo?.layoutInfo?.style.maxWidth = proportionalWidth
+        var sizeWidth: Double?
         
-        } else {
+        if width <= 0 || width > Float(proportionalWidth) {
             
-           self.assistInfo?.layoutInfo?.style.maxWidth = Double(width)
+            sizeWidth = proportionalWidth
+        
+        } else if width < Float(proportionalWidth) {
+            
+            sizeWidth = Double(width)
         }
         
-        self.webView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
-        
-        toolTipView.frame.size = CGSize(width: CGFloat(self.assistInfo?.layoutInfo?.style.maxWidth ?? Double(width)), height: CGFloat(height))
+        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
+            
+            sizeWidth = sizeWidth ?? Double(width) - 24
+        }
+                            
+        self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+            
+        self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -437,33 +457,15 @@ public class JinyToolTip: JinyInViewAssist {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
-        placePointer()
-        //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
-    }
-    
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        
-        if let viewToCheck = toView {
-            
-            guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-                
-                return self
-            }
-            
-            if frameForKw.contains(point) { return nil } else { return self }
+        DispatchQueue.main.async {
+           self.placePointer()
         }
-        
-        return self
-    }
-    
-    func simulateTap(atPoint:CGPoint, onWebview:UIView, withEvent:UIEvent) {
-                
-         onWebview.hitTest(atPoint, with: withEvent)
+        //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
     public override func performEnterAnimation(animation: String) {
@@ -515,16 +517,9 @@ public class JinyToolTip: JinyInViewAssist {
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.outsideDismiss ?? false {
+        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             
-            performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
-            
-            guard let userInteraction = toViewOriginalInteraction else {
-                
-               return
-            }
-            
-            toView?.isUserInteractionEnabled = userInteraction
+            remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
         }
     }
 }

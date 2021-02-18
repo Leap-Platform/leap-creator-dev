@@ -9,11 +9,9 @@
 import Foundation
 
 enum JinyStageType:String {
-    case Normal = "Normal"
-    case Sequence = "Sequence"
-    case ManualSequence = "Manual Sequence"
-    case Branch = "Branch"
-    case Link = "Link"
+    case Normal = "NORMAL"
+    case Sequence = "SEQUENCE"
+    case ManualSequence = "MANUAL_SEQUENCE"
 }
 
 enum JinyPointerType {
@@ -30,58 +28,44 @@ enum JinySearchType {
 }
 
 
-class JinyStage {
-    
-    let id:Int?
-    let name:String?
-    let isWeb:Bool
+class JinyStage:JinyContext {
+
     let type:JinyStageType
-    let frequencyPerFlow:Int
-    let weight:Int
     let isSuccess:Bool
-    let nativeIdentifiers:Array<String>
-    let webIdentifiers:Array<String>
     let branchInfo:JinyBranchInfo?
-    let instruction:JinyInstruction?
-    let instructionInfoDict:Dictionary<String,Any>?
+    var terminationFrequency:JinyFlowTerminationFrequency?
     
     init(withDict stageDict:Dictionary<String,Any>) {
         
-        id = stageDict["id"] as? Int
-        name = stageDict["name"] as? String
-        isWeb = stageDict["is_web"] as? Bool ?? false
-        if let typeString = stageDict["type"] as? String { type = JinyStageType(rawValue: typeString) ?? .Normal }
-        else { type = .Normal }
-        frequencyPerFlow = stageDict["frequency_per_flow"] as? Int ?? -1
-        weight = stageDict["weight"] as? Int ?? 1
-        isSuccess = stageDict["is_success"] as? Bool ?? false
-        nativeIdentifiers = stageDict["native_identifiers"] as? Array<String> ?? []
-        webIdentifiers = stageDict["web_identifiers"] as? Array<String> ?? []
-        
-        if type == .Branch {
-            if let branchDict = stageDict["branch_info"] as? Dictionary<String,Any> { branchInfo = JinyBranchInfo(withDict: branchDict) }
-            else { branchInfo = nil }
+        let typeString = (stageDict[constant_type] as? String)?.uppercased() ?? "NORMAL"
+        type = JinyStageType(rawValue: typeString) ?? .Normal
+        isSuccess = stageDict[constant_isSuccess] as? Bool ?? false
+        if let branchDict = stageDict[constant_branchInfo] as? Dictionary<String,Any> {
+            branchInfo = JinyBranchInfo(withDict: branchDict)
+        } else { branchInfo = nil }
+        if let frequencyDict = stageDict[constant_frequency] as? Dictionary<String,Int> {
+            terminationFrequency = JinyFlowTerminationFrequency(with: frequencyDict)
         }
-        else { branchInfo = nil }
-        if let instructionDict = stageDict["instruction"] as? Dictionary<String,Any> {
-            instruction = JinyInstruction(withDict: instructionDict)
-            instructionInfoDict = instructionDict
-        } else {
-            instruction = nil
-            instructionInfoDict = nil
-        }
+        super.init(with: stageDict)
     }
     
-}
-
-extension JinyStage:Equatable {
-    
-    static func == (lhs:JinyStage, rhs:JinyStage) -> Bool {
-        return lhs.id == rhs.id && lhs.name == rhs.name
+    func copy(with zone: NSZone? = nil) -> JinyStage {
+        let copy = JinyStage(withDict: [constant_type:self.type.rawValue, constant_isSuccess:self.isSuccess, constant_branchInfo:self.branchInfo ?? [:], constant_instruction:self.instructionInfoDict ?? [:]])
+        copy.id = self.id
+        copy.name = self.name
+        copy.nativeIdentifiers = self.nativeIdentifiers
+        copy.webIdentifiers = self.webIdentifiers
+        copy.weight = self.weight
+        copy.isWeb = self.isWeb
+        copy.taggedEvents = self.taggedEvents
+        copy.checkpoint = self.checkpoint
+        copy.instruction = self.instruction
+        copy.instructionInfoDict = self.instructionInfoDict
+        copy.trigger = self.trigger
+        copy.terminationFrequency = self.terminationFrequency
+        return copy
     }
-    
 }
-
 
 class JinyBranchInfo {
     
@@ -89,8 +73,8 @@ class JinyBranchInfo {
     let branchFlows:Array<Int>
     
     init(withDict branchInfoDict:Dictionary<String,Any>) {
-        branchTitle = branchInfoDict["branch_title"] as? Dictionary<String,String> ?? [:]
-        branchFlows = branchInfoDict["branch_flows"] as? Array<Int> ?? []
+        branchTitle = branchInfoDict[constant_branchTitle] as? Dictionary<String,String> ?? [:]
+        branchFlows = branchInfoDict[constant_branchFlows] as? Array<Int> ?? []
     }
     
 }

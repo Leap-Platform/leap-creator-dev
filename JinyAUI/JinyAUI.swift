@@ -9,21 +9,33 @@
 import Foundation
 import JinySDK
 
+
+@objc public protocol JinyAUIClientCallback:NSObjectProtocol {
+    
+    @objc func eventNotification(eventInfo:Dictionary<String,Any>)
+}
+
 @objc public class JinyAUI:NSObject {
     
     @objc public static let shared = JinyAUI()
     private var token:String?
     private var auiManager:JinyAUIManager
-    
+    @objc public weak var clientCallback:JinyAUIClientCallback? {
+        didSet{
+            if clientCallback != nil { auiManager.delegate = self }
+            else { auiManager.delegate = nil }
+        }
+    }
     
     private override init() {
         auiManager = JinyAUIManager()
-        auiManager.addKeyboardObservers()
+        auiManager.addObservers()
         super.init()
     }
     
     @objc public func initialize(withToken apiKey:String) {
         token = apiKey
+        JinyPreferences.shared.apiKey = token
         guard token != nil, token != "" else { fatalError("Empty token. Token cannot be empty") }
         auiManager.auiManagerCallBack = Jiny.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
@@ -32,4 +44,17 @@ import JinySDK
         auiManager.addIdentifier(identifier: identifier, value: value)
     }
     
+}
+
+extension JinyAUI:JinyAUIManagerDelegate {
+    func eventGenerated(event: Dictionary<String, Any>) {
+        guard let callback = clientCallback else { return }
+        callback.eventNotification(eventInfo: event)
+    }
+    
+    
+    func isClientCallbackRequired() -> Bool {
+        guard let _ = clientCallback else { return false }
+        return true
+    }
 }

@@ -29,25 +29,26 @@ public class JinyWebAssist: UIView, JinyAssist {
     
     public var iconInfo: IconInfo?
     
+    /// javascript to adjust width according to native view.
+    private let jscript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        preferences.javaScriptEnabled = true
+        let userScript = WKUserScript(source: jscript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(userScript)
         
         let jsCallBack = "iosListener"
         configuration.userContentController.add(self, name: jsCallBack)
-        configuration.preferences = preferences
         configuration.allowsInlineMediaPlayback = true
-        configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
-        configuration.preferences.javaScriptEnabled = true
-        if #available(iOS 10.0, *) {
-            configuration.dataDetectorTypes = [.all]
-        } else {
-            // Fallback on earlier versions
-        }
+        preferences.javaScriptEnabled = true
+        preferences.javaScriptCanOpenWindowsAutomatically = true
+        configuration.preferences = preferences
+        configuration.dataDetectorTypes = [.all]
+
         
         self.webView = WKWebView(frame: .zero, configuration: configuration)
-        self.webView.scrollView.isScrollEnabled = true
+        self.webView.scrollView.isScrollEnabled = false
         self.webView.navigationDelegate = self
     }
     
@@ -69,22 +70,23 @@ public class JinyWebAssist: UIView, JinyAssist {
     
     public func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
         
-        // Loading the html source file from the project bundle
-        
+        // Loading the html source file from the main project bundle
         guard let _ = URL(string: htmlUrl) else {
             
-            if let url = Bundle.main.url(forResource: appLocale, withExtension: "html") {
+            let bundle = Bundle(for: type(of: self))
+            
+            if let url = bundle.url(forResource: appLocale, withExtension: "html") {
                 webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
             }
             
             return
         }
         
+        // Loading the html from documents directory
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Jiny").appendingPathComponent("aui_component")
         let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = documentPath.appendingPathComponent(fileName)
-        let req = URLRequest(url: filePath)
-        webView.load(req)        
+        webView.loadHTML(withUrl: filePath)
     }
     
     public func updateLayout(alignment: String, anchorBounds: CGRect?) {
@@ -92,10 +94,7 @@ public class JinyWebAssist: UIView, JinyAssist {
     }
     
     public func show() {
-            
         setContent(htmlUrl: self.assistInfo?.htmlUrl ?? "", appLocale: self.appLocale, contentFileUriMap: nil)
-        
-        delegate?.willPresentAssist()
     }
     
     /// method to perform enter animation.
@@ -250,7 +249,7 @@ public class JinyWebAssist: UIView, JinyAssist {
     /// method to perform exit animation.
     /// - Parameters:
     ///   - animation: string to describe the type of animation.
-    public func performExitAnimation(animation: String) {
+    public func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
         if !animation.isEmpty {
             
@@ -264,15 +263,13 @@ public class JinyWebAssist: UIView, JinyAssist {
                                         
                     self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
                     
-                    self.delegate?.didExitAnimation()
-                    
                 }) { (_) in
                     
                     UIView.animate(withDuration: 0.04) {
                         
                         self.alpha = 0
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -286,15 +283,13 @@ public class JinyWebAssist: UIView, JinyAssist {
                                         
                     self.webView.frame.origin.x = (UIScreen.main.bounds.width)
                     
-                    self.delegate?.didExitAnimation()
-                    
                 }) { (_) in
                     
                     UIView.animate(withDuration: 0.04) {
                         
                         self.alpha = 0
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -308,15 +303,13 @@ public class JinyWebAssist: UIView, JinyAssist {
                     
                     self.webView.frame.origin.y = (UIScreen.main.bounds.height)
                     
-                    self.delegate?.didExitAnimation()
-                    
                 }) { (_) in
                     
                     UIView.animate(withDuration: 0.08) {
                         
                         self.alpha = 0
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
@@ -332,39 +325,31 @@ public class JinyWebAssist: UIView, JinyAssist {
                     
                     self.alpha = 0
                     
-                    self.delegate?.didExitAnimation()
-                    
                 }) { (success) in
                     
                     if success {
                         
-                        self.remove()
+                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                         
                         self.jinyIconView.removeFromSuperview()
                     }
                 }
                 
-            default: self.remove()
+            default: self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
                 
             }
         
         } else {
             
-            remove()
+            self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
         }
     }
     
-    public func remove() {
-      
+    public func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         self.removeFromSuperview()
-        
-        delegate?.didDismissAssist()
+        self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
-    @objc func jinyIconButtonTapped(button: UIButton) {
-        
-        self.delegate?.didTapAssociatedJinyIcon()
-    }
     
     /// method to configure JinyIconView constraints.
     /// - Parameters:
@@ -380,10 +365,14 @@ public class JinyWebAssist: UIView, JinyAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.iconButton.addTarget(self, action: #selector(jinyIconButtonTapped(button:)), for: .touchUpInside)
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl
         
-        jinyIconView.iconBackgroundColor = UIColor.colorFromString(string: iconInfo?.backgroundColor ?? UIColor.stringFromUIColor(color: .blue))
-                
+        jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
+        
+        jinyIconView.tapGestureRecognizer.delegate = self
+        
+        jinyIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
+        
         self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
         
         var attributeType1: NSLayoutConstraint.Attribute = .leading
@@ -411,6 +400,15 @@ public class JinyWebAssist: UIView, JinyAssist {
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: 0))
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
+        
+        jinyIconView.configureIconButton()
+    }
+    
+    /// call the method when you want the webView content to be in the desired user's language.
+    /// - Parameters:
+    ///   - locale: User's desired language selected in the Jiny panel.
+    func changeLanguage(locale: String) {
+        webView.evaluateJavaScript("changeLocale('\(locale)')", completionHandler: nil)
     }
 
     /// call the method internally when webView didFinish navigation called
@@ -435,7 +433,12 @@ extension JinyWebAssist: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         
         self.isHidden = false
-                
+        
+        if let language = JinyPreferences.shared.currentLanguage {
+            
+           changeLanguage(locale: language)
+        }
+        
         didFinish(webView, didFinish: navigation)
                 
         performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
@@ -456,42 +459,30 @@ extension JinyWebAssist: WKScriptMessageHandler {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
-        guard let dictBody = dict["body"] as? Dictionary<String, Any> else {return}
-        guard let close = dictBody["close"] as? Bool else {return}
+        guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
+        guard let close = dictBody[constant_close] as? Bool else {return}
         
-        print(dict)
-        
-        delegate?.didSendAction(dict: dict)
-        
-        if let urlString = dictBody["external_url"] as? String, let url = URL(string: urlString) {
+        if let urlString = dictBody[constant_external_url] as? String, let url = URL(string: urlString) {
 
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url)
-            } else {
-                // Fallback on earlier versions
-            }
-                
+           UIApplication.shared.open(url)
+
            return
         }
         
         if close {
             
-           self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out")
+            self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: dict)
         }
     }
 }
 
-extension WKWebView {
+extension JinyWebAssist: UIGestureRecognizerDelegate {
     
-    /// call the method internally to load content from web.
-    /// - Parameters:
-    ///   - urlString: A url to load content from.
-    func load(url urlString: String) {
+    @objc func jinyIconButtonTapped() {
         
-        if let url = URL(string: urlString) {
-            
-            let request = URLRequest(url: url)
-            load(request)
-        }
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

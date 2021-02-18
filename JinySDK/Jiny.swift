@@ -17,69 +17,49 @@ import UIKit
 @objc public protocol JinyAUIHandler:NSObjectProtocol {
     
     func startMediaFetch()
-    func performInstruction(instruction:Dictionary<String,Any>, inView:UIView)
-    func performInstrcution(instruction:Dictionary<String,Any>, rect:CGRect, inWebview:UIView?)
-    func performInstruction(instruction:Dictionary<String,Any>)
+    func hasClientCallBack() -> Bool
+    func sendEvent(event:Dictionary<String,Any>)
+    
+    func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String)
+    func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String)
+    
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?)
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?)
+    
+    func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, Any>)
+    func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>)
+    
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
     
-    func playAudio()
-    func playTTS(withLangCode:String)
-    func presentJinyButton()
-    func presentBottomDiscovery(header:String, optInText:String, optOutText:String, languages:Array<String>)
-    func presentPingDiscovery()
-    func presentFlowSelector(branchTitle:String, flowTitles:Array<String>)
-    func presentPointer(toView:UIView, ofType:JinyPointerStyle)
-    func presentPointer(toRect:CGRect, inView:UIView?, ofType:JinyPointerStyle)
-    func updatePointerRect(newRect:CGRect, inView:UIView?)
-    func presentLanguagePanel(languages:Array<String>)
-    func presentOptionPanel(mute:String, repeatText:String, language:String?)
-    func dismissJinyButton()
-    func keepOnlyJinyButtonIfPresent()
+    func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool)
     func removeAllViews()
 }
 
 @objc public protocol JinyAUICallback:NSObjectProtocol {
     
-    func getDefaultMedia() -> Dictionary<String,Dictionary<String,Any>>
-    
+    func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
+    func getWebScript(_ identifier:String) -> String?
     
-    func tryTTS() -> String?
-    func getAudioFilePath() -> String?
-    func getTTSText() -> String?
-    func getLanguages() -> Array<String>
+    func getCurrentLanguageOptionsTexts() -> Dictionary<String,String>
+    func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>>
+    func getIconInfoForCurrentInstruction() -> Dictionary<String,Any>?
+    func getLanguageHtmlUrl() -> String?
     func getLanguageCode() -> String
+    func getTTSCodeFor(code:String) -> String?
     
-    func willPresentView()
     func didPresentView()
-    func willPlayAudio()
-    func didPlayAudio()
     func failedToPerform()
-    func didDismissView()
-    
-    func stagePerformed()
+    func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     
     func jinyTapped()
     
-    func discoveryPresented()
-    func discoveryMuted()
-    func discoveryOptedInFlow(atIndex:Int)
-    func discoveryReset()
-    
-    func languagePanelOpened()
-    func languagePanelClosed()
-    func languagePanelLanguageSelected(atIndex:Int)
-    
     func optionPanelOpened()
+    func optionPanelStopClicked()
     func optionPanelClosed()
-    func optionPanelRepeatClicked()
-    func optionPanelMuteClicked()
-    
-    func flowSelectorPresented()
-    func flowSelectorFlowSelected(atIndex:Int)
-    func flowSelectorDismissed()
-    
+
+    func disableAssistance()
 }
 
 
@@ -96,7 +76,7 @@ import UIKit
         super.init()
     }
     
-    @objc public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:JinyAUIHandler?) -> JinyAUICallback? {
+    public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:JinyAUIHandler?) -> JinyAUICallback? {
         assert(token != "", "Incorrect token")
         self.apiKey = token
         self.isTest = isTest

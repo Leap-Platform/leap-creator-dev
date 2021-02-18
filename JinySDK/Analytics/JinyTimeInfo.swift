@@ -10,11 +10,12 @@ import Foundation
 
 class JinyTimeInfo:Codable {
     
-    var timezone:String = "Asia/Kolkata"
+    var timezone:String
     var timestamp:String
     
-    init(ts:String) {
-        timestamp = ts
+    init() {
+        timestamp = Date.getTimeStamp()
+        timezone = TimeZone.current.identifier
     }
     
 }

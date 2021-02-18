@@ -21,17 +21,17 @@ public class JinyLabel: JinyInViewAssist {
         show()
     }
     
+    func presentLabel(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+                
+        presentLabel()
+    }
+    
     /// sets up toView, inView and webView.
     func setupView() {
         
-      guard toView != nil else { fatalError("no element to point to") }
-        
-        if inView == nil {
-            
-            guard let _ = toView?.superview else { fatalError("View not in valid hierarchy or is window view") }
-            
-            inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
-        }
+        inView = toView?.window
         
         self.frame = CGRect.zero
         
@@ -40,17 +40,24 @@ public class JinyLabel: JinyInViewAssist {
         configureWebView()
     }
     
+    func updateRect(newRect: CGRect, inView: UIView?) {
+        
+        webRect = newRect
+        
+        setAlignment()
+    }
+    
     /// sets alignment of the JinyLabel.
     func setAlignment() {
         
-        guard let toViewSuperView = toView?.superview else {
+        guard toView?.superview != nil || webRect != nil else {
             
             return
         }
         
-        let globalToViewFrame = toViewSuperView.convert(toView!.frame, to: inView)
+        let globalToViewFrame = getGlobalToViewFrame()
                 
-        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topCenter {
+        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topLeft {
             
         case .topLeft:
             
@@ -115,19 +122,26 @@ public class JinyLabel: JinyInViewAssist {
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
                     
-            self.layer.borderColor = UIColor.colorFromString(string: colorString).cgColor
+            self.webView.layer.borderColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
                         
-            self.layer.borderWidth = CGFloat(strokeWidth)
+            self.webView.layer.borderWidth = CGFloat(strokeWidth)
         
         } else {
             
-            self.layer.borderWidth = 0.0
+            self.webView.layer.borderWidth = 0.0
         }
         
+        self.webView.layer.masksToBounds = true
+        
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
+    }
+    
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        configureLabel()
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -135,13 +149,12 @@ public class JinyLabel: JinyInViewAssist {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
-        guard let metaData = dict["pageMetaData"] as? Dictionary<String,Any> else {return}
-        guard let rect = metaData["rect"] as? Dictionary<String,Float> else {return}
-        guard let width = rect["width"] else { return }
-        guard let height = rect["height"] else { return }
+        guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
+        guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
+        guard let width = rect[constant_width] else { return }
+        guard let height = rect[constant_height] else { return }
         webView.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
         self.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
-        configureLabel()
     }
     
     public override func performEnterAnimation(animation: String) {

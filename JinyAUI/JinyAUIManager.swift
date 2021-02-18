@@ -13,56 +13,65 @@ import AVFoundation
 import AdSupport
 import WebKit
 
-class JinyAUIManager:NSObject {
+
+protocol JinyAUIManagerDelegate: NSObjectProtocol {
     
-    weak var auiManagerCallBack:JinyAUICallback?
+    func isClientCallbackRequired() -> Bool
+    func eventGenerated(event: Dictionary<String,Any>)
+}
+
+class JinyAUIManager: NSObject {
     
-    var keyboardHeight:Float = 0
-    var audioPlayer:AVAudioPlayer?
-    var pointer:JinyPointer?
-    var bottomDiscovery:JinyBottomDiscovery?
-    var optionPanel:JinyOptionPanel?
-    var languagePanel:JinyLanguagePanel?
-    var jinyButton:JinyMainButton?
-    var jinyFlowSelector:JinyFlowSelector?
-    var synthesizer:AVSpeechSynthesizer?
-    var utterance:AVSpeechUtterance?
-    let audioSession = AVAudioSession.sharedInstance()
-    var currentAssist:JinyAssist?
-    var mediaManager:JinyMediaManager?
-    var soundsJson:Dictionary<String,Any>?
-    var scrollArrow:UIButton?
-    var currentInstruction:Dictionary<String,Any>?
-    weak var currentTargetView:UIView?
-    var currentTargetRect:CGRect?
-    weak var currentWebView:UIView?
-    var jinyButtonBottomConstraint:NSLayoutConstraint?
-    var scrollArrowBottomConstraint:NSLayoutConstraint?
+    weak var auiManagerCallBack: JinyAUICallback?
+    weak var delegate: JinyAUIManagerDelegate?
     
-    func addIdentifier(identifier:String, value:Any) {
+    var currentAssist: JinyAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
+    
+    var keyboardHeight: Float = 0
+    var jinyButtonBottomConstraint: NSLayoutConstraint?
+    var scrollArrowBottomConstraint: NSLayoutConstraint?
+    
+    var audioPlayer: AVAudioPlayer?
+    var utterance = AVSpeechUtterance()
+    let synthesizer = AVSpeechSynthesizer()
+    
+    var jinyButton: JinyMainButton?
+    var mediaManager = JinyMediaManager()
+    
+    var discoverySoundsJson: Dictionary<String,Array<JinySound>> = [:]
+    var stageSoundsJson: Dictionary<String,Array<JinySound>> = [:]
+    var scrollArrow: UIButton?
+    
+    var currentInstruction: Dictionary<String,Any>?
+    weak var currentTargetView: UIView?
+    var currentTargetRect: CGRect?
+    weak var currentWebView: UIView?
+    
+    var autoDismissTimer: Timer?
+    private var baseUrl = String()
+    
+    func addIdentifier(identifier: String, value: Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
     }
-    
 }
 
 extension JinyAUIManager {
     
-    func addKeyboardObservers() {
+    func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("jiny_auth_live"), object: nil)
     }
     
-    @objc func keyboardDidShow(_ notification:NSNotification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+    @objc func keyboardDidShow(_ notification: NSNotification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+           let targetView = currentTargetView, isViewHiddenByKeyboard(targetView)
+        {
             let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight = Float(keyboardRectangle.height)
-            if let targetView = currentTargetView {
-                if isViewHiddenByKeyboard(targetView) {
-                    showArrow()
-                    scrollArrowBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
-                    scrollArrow?.updateConstraints()
-                }
-            }
+            showArrow()
+            scrollArrowBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
+            scrollArrow?.updateConstraints()
         }
         if jinyButton != nil {
             jinyButtonBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
@@ -70,9 +79,9 @@ extension JinyAUIManager {
         }
     }
     
-    @objc func keyboardDidHide(_ notification:NSNotification) {
+    @objc func keyboardDidHide(_ notification: NSNotification) {
         keyboardHeight = 0
-        guard let assistInfo = currentInstruction?["assist_info"] as? Dictionary<String,Any>, let autoScroll = assistInfo["auto_scroll"] as? Bool else {
+        guard let assistInfo = currentInstruction?[constant_assistInfo] as? Dictionary<String,Any>, let autoScroll = assistInfo[constant_autoScroll] as? Bool else {
             return
         }
         if autoScroll {
@@ -90,199 +99,168 @@ extension JinyAUIManager {
             jinyButton?.updateConstraints()
         }
     }
+    
+    @objc func authLiveNotification(_ notification:Notification) { shouldDisableAssistance() }
 }
 
-extension JinyAUIManager:JinyAUIHandler {
+
+// MARK: - AUIHANDLER METHODS
+extension JinyAUIManager: JinyAUIHandler {
     
     func startMediaFetch() {
-        mediaManager = JinyMediaManager(withDelegate: self)
-        guard let callback = auiManagerCallBack else { return }
-        let initialSounds = callback.getDefaultMedia()
         
-        if let defaultSoundsDict = initialSounds["default_sounds"] {
-            startDefaultSoundDownload(defaultSoundsDict)
-        }
-        if let discoverySoundsDict = initialSounds["discovery_sounds"] {
-            startDefaultSoundDownload(discoverySoundsDict)
-        }
-        if let auiContentDict = initialSounds["aui_content"] {
-            if let baseUrl = auiContentDict["base_url"] as? String, let contents = auiContentDict["content"] as? Array<String> {
-                for content in contents {
-                    let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
-                    mediaManager?.startDownload(forMedia: auiContent, atPriority: .low)
-                }
+        DispatchQueue.main.async { self.jinyButton?.iconState = .loading }
+        
+        DispatchQueue.global().async {[weak self] in
+            
+            guard let callback = self?.auiManagerCallBack else { return }
+            let initialSounds = callback.getDefaultMedia()
+            
+            if let discoverySoundsDicts = initialSounds[constant_discoverySounds] as? Array<Dictionary<String,Any>> {
+                self?.discoverySoundsJson = self?.processSoundConfigs(configs:discoverySoundsDicts) ?? [:]
+                self?.startDiscoverySoundDownload()
             }
-        }
-        fetchSoundConfig()
-    }
-    
-    func performInstruction(instruction: Dictionary<String, Any>, inView: UIView) {
-        
-        currentInstruction = instruction
-        currentTargetView = inView
-        currentWebView = nil
-        currentTargetRect = nil
-        
-        
-//        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
-            return
-        }
-        if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
-            switch type {
-                
-            case "FINGER_POINTER":
-                if !isViewInVisibleArea(view: inView) {
-                    if let autoscroll = assistInfo["auto_scroll"] as? Bool {
-                        let scrollViews = getScrollViews(inView)
-                        if scrollViews.count > 0 {
-                            if autoscroll { makeViewVisible(scrollViews, false) }
-                            else { showArrow() }
+            
+            var htmlBaseUrl:String?
+            if let auiContentDicts = initialSounds[constant_auiContent]  as? Array<Dictionary<String,Any>> {
+                for auiContentDict in auiContentDicts {
+                    if let baseUrl = auiContentDict[constant_baseUrl] as? String,
+                       let contents = auiContentDict[constant_content] as? Array<String> {
+                        self?.baseUrl = baseUrl
+                        htmlBaseUrl = baseUrl
+                        for content in contents {
+                            let auiContent = JinyAUIContent(baseUrl: baseUrl, location: content)
+                            if let _ = auiContent.url { self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal) }
                         }
-                    } else {
-                        showArrow()
                     }
                 }
-                
-                pointer = JinyFingerRipplePointer()
-                pointer?.presentPointer(view: inView)
-            case "POPUP":
-                let jinyPopup = JinyPopup(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
-                jinyPopup.showPopup()
-            case "DRAWER":
-                let jinyDrawer = JinyDrawer(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
-                jinyDrawer.showDrawer()
-            case "FULLSCREEN":
-                let jinyFullScreen = JinyFullScreen(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
-                jinyFullScreen.showFullScreen()
-            case "BOTTOM_SHEET":
-                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo)
-                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
-                jinyBottomSheet.showBottomSheet()
-            default:
-                break
             }
-            auiManagerCallBack?.didPresentView()
-        }
-        
-    }
-    
-    func performInstrcution(instruction: Dictionary<String, Any>, rect: CGRect, inWebview: UIView?) {
-        currentInstruction = instruction
-        currentTargetView = nil
-        currentWebView = inWebview
-        currentTargetRect = rect
-        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
-            return
-        }
-        if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
-            switch type {
-                
-            case "FINGER_POINTER":
-                if !isRectInVisbleArea(rect: rect, inView: inWebview!) {
-                    if let autoscroll = assistInfo["auto_scroll"] as? Bool {
-                        if autoscroll {
-                            if let _ = inWebview as? UIWebView {
-                                
-                            } else if let wkweb = inWebview as? WKWebView {
-                                wkweb.scrollView.scrollRectToVisible(rect, animated: false)
-                            }
-                        }
-                        else {
-                            
-                        }
-                    } else {
-                        
+            
+            if let iconSettingDict = initialSounds[constant_iconSetting] as? Dictionary<String, IconSetting> {
+                if let baseUrl = htmlBaseUrl {
+                    self?.baseUrl = baseUrl
+                    for (_, value) in iconSettingDict {
+                        let auiContent = JinyAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
+                        if let _ = auiContent.url { self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal) }
                     }
                 }
-                
-                pointer = JinyFingerRipplePointer()
-                pointer?.presentPointer(toRect: rect, inView: inWebview)
-            default:
-                performKeyWindowInstruction(instruction: instruction)
             }
-            auiManagerCallBack?.didPresentView()
+            
+            self?.fetchSoundConfig()
         }
     }
     
-    func performInstruction(instruction:Dictionary<String,Any>) {
-        currentInstruction = instruction
-        currentTargetView = nil
-        currentWebView = nil
-        currentTargetRect = nil
-        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
+    func hasClientCallBack() -> Bool {
+        guard let managerDelegate = delegate else { return false }
+        return managerDelegate.isClientCallbackRequired()
+    }
+    
+    func sendEvent(event: Dictionary<String, Any>) {
+        delegate?.eventGenerated(event: event)
+    }
+    
+    func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String) {
+        setupDefaultValues(instruction:instruction, langCode: localeCode, view: view, rect: nil, webview: nil)
+        guard let view = currentTargetView else {
+            performKeyWindowInstruction(instruction: instruction, iconInfo: [:])
             return
         }
-        if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
-            switch type {
-                
-            case "FINGER_POINTER":
-                auiManagerCallBack?.failedToPerform()
-                break
-            default:
-                performKeyWindowInstruction(instruction: instruction)
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        performInViewNativeInstruction(instruction: instruction, inView: view, type: type)
+    }
+    
+    func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String) {
+        setupDefaultValues(instruction:instruction, langCode: localeCode, view: nil, rect: rect, webview: webview)
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String,
+              let anchorWebview = webview else { return }
+        performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
+    }
+    
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
+        setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
+            self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+            if languageChose {
+                guard let anchorView = view else {
+                    self.performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+                    return
+                }
+                guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+                      let type = assistInfo[constant_type] as? String else { return }
+                self.performInViewNativeInstruction(instruction: instruction, inView: anchorView, type: type)
+                self.dismissJinyButton()
             }
-            auiManagerCallBack?.didPresentView()
+            else { self.presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true) }
         }
     }
     
-    func performKeyWindowInstruction(instruction:Dictionary<String,Any>) {
-        guard let _ = instruction["sound_name"] as? String else { return }
-        guard let assistInfo = instruction["assist_info"] as? Dictionary<String,Any> else {
-            auiManagerCallBack?.failedToPerform()
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
+        setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+        showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
+            if languageChose {
+                self.setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+                guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+                      let type = assistInfo[constant_type] as? String,
+                      let anchorWebview = webview else { return }
+                self.dismissJinyButton()
+                self.performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
+            }
+            else { self.presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true) }
+        }
+    }
+    
+    func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, Any>) {
+        setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        guard let view = currentTargetView else {
+            performKeyWindowInstruction(instruction: instruction, iconInfo: nil)
             return
         }
-        let iconInfo = ["isLeftAligned":true, "isEnabled":true, "backgroundColor":["0.0","0.0","1.0","1.0"]] as [String : Any]
-        if let type = assistInfo["type"] as? String {
-            auiManagerCallBack?.willPresentView()
-            switch type {
-            case "POPUP":
-                let jinyPopup = JinyPopup(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyPopup
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyPopup)
-                jinyPopup.showPopup()
-            case "DRAWER":
-                let jinyDrawer = JinyDrawer(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyDrawer
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyDrawer)
-                jinyDrawer.showDrawer()
-            case "FULLSCREEN":
-                let jinyFullScreen = JinyFullScreen(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyFullScreen
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyFullScreen)
-                jinyFullScreen.showFullScreen()
-            case "BOTTOM_SHEET":
-                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo, iconDict: iconInfo)
-                currentAssist = jinyBottomSheet
-                currentAssist?.delegate = self
-                UIApplication.shared.keyWindow?.addSubview(jinyBottomSheet)
-                jinyBottomSheet.showBottomSheet()
-            default:
-                break
-            }
-            currentAssist?.delegate = self
-        }
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        performInViewNativeInstruction(instruction: instruction, inView: view, type: type)
+        presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
     }
     
-    func updateRect(rect:CGRect, inWebView:UIView?) {
+    func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>) {
+        setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview)
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        guard let anchorWebview = webview else { return }
+        performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
+        presentJinyButton(for: IconSetting(with: iconInfo), iconEnabled: true)
+    }
+    
+    func updateRect(rect: CGRect, inWebView: UIView?) {
         
+        if let swipePointer = currentAssist as? JinySwipePointer { swipePointer.updateRect(newRect: rect, inView: inWebView) }
+        else if let fingerPointer = currentAssist as? JinyFingerRipplePointer { fingerPointer.updateRect(newRect: rect, inView: inWebView) }
+        else if let label = currentAssist as? JinyLabel { label.updateRect(newRect: rect, inView: inWebView) }
+        else if let tooltip = currentAssist as? JinyToolTip { tooltip.updatePointer(toRect: rect, inView: inWebView) }
+        else if let highlight = currentAssist as? JinyHighlight { highlight.updateHighlight(toRect: rect, inView: inWebView) }
+        else if let spot = currentAssist as? JinySpot { spot.updateSpot(toRect: rect, inView: inWebView) }
+        else if let beacon = currentAssist as? JinyBeacon { beacon.updateRect(newRect: rect, inView: inWebView) }
+        guard let webview = inWebView else { return }
+        if isRectInVisbleArea(rect: rect, inView: webview) {
+            if isRectHiddenByKeyboard(rect: rect, webview: webview){ if scrollArrow ==  nil { showArrow() } }
+            else {
+                scrollArrow?.removeFromSuperview()
+                scrollArrow = nil
+            }
+        } else { if scrollArrow ==  nil { showArrow() } }
     }
     
-    func updateView(inView view:UIView) {
+    func updateView(inView view: UIView) {
+        
+        if let swipePointer = currentAssist as? JinySwipePointer { swipePointer.setPosition() }
+        else if let fingerPointer = currentAssist as? JinyFingerRipplePointer { fingerPointer.setPosition() }
+        else if let label = currentAssist as? JinyLabel { label.setAlignment() }
+        else if let tooltip = currentAssist as? JinyToolTip { tooltip.presentPointer() }
+        else if let highlight = currentAssist as? JinyHighlight { highlight.updateHighlight() }
+        else if let spot = currentAssist as? JinySpot { spot.updateSpot() }
+        else if let beacon = currentAssist as? JinyBeacon { beacon.setAlignment() }
+        
         if isViewInVisibleArea(view: view) {
             if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
             else {
@@ -292,378 +270,518 @@ extension JinyAUIManager:JinyAUIHandler {
         } else { if scrollArrow ==  nil { showArrow() } }
     }
     
-    func playAudio() {
-        self.auiManagerCallBack?.willPlayAudio()
-        if let tts = auiManagerCallBack?.tryTTS() {
-            synthesizer = AVSpeechSynthesizer()
-            synthesizer?.delegate = self
-            utterance = AVSpeechUtterance(string: tts)
-            utterance!.voice = AVSpeechSynthesisVoice(language: "hi-IN")
-            utterance!.rate = 0.4
-            do {
-                try audioSession.setCategory(.playback, options: [.duckOthers])
-                try audioSession.setActive(true)
-            } catch {
-                
-            }
-            synthesizer!.speak(utterance!)
-        } else {
-            guard let file = auiManagerCallBack?.getAudioFilePath() else { return }
-            let fm = FileManager.default
-            guard fm.fileExists(atPath: file) else { return }
-            let audioURL = URL.init(fileURLWithPath: file)
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: audioURL, fileTypeHint: AVFileType.mp3.rawValue)
-                audioPlayer?.delegate = self
-                audioPlayer?.volume = 1.0
-                do {
-                    try audioSession.setCategory(.playback, options: [.duckOthers])
-                    try audioSession.setActive(true)
-                } catch {
-                    
-                }
-                audioPlayer?.play()
-                
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        
-        
-    }
-    
-    
-    func playTTS(withLangCode:String) {
-        
-    }
-    
-    func presentJinyButton() {
-        guard jinyButton == nil, jinyButton?.window == nil else { return }
-//        jinyButton = JinyMainButton(withThemeColor: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        jinyButton = JinyMainButton(withThemeColor: .blue)
-        guard let keyWindow = UIApplication.shared.keyWindow else { return }
-        keyWindow.addSubview(jinyButton!)
-        jinyButton!.addTarget(self, action: #selector(jinyButtonTap), for: .touchUpInside)
-        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: 45)
-        let trailingConst = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: jinyButton, attribute: .trailing, multiplier: 1, constant: 45)
-        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, trailingConst])
-    }
-    
-    @objc func jinyButtonTap() { auiManagerCallBack?.jinyTapped() }
-    
-    func presentBottomDiscovery(header: String, optInText: String, optOutText: String, languages:Array<String>) {
-        bottomDiscovery = JinyBottomDiscovery(withDelegate: self, header: header, jinyLanguages: languages, optIn: optInText, optOut: optOutText, color: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        bottomDiscovery?.presentBottomDiscovery()
-        
-    }
-    
-    func presentPingDiscovery() {
-        
-    }
-    
-    func presentFlowSelector(branchTitle: String, flowTitles: Array<String>) {
-        if jinyFlowSelector != nil {
-            jinyFlowSelector?.dismissView()
-            jinyFlowSelector = nil
-        }
-        self.auiManagerCallBack?.willPresentView()
-        jinyFlowSelector = JinyFlowSelector(withDelegate: self, listOfFlows: flowTitles, branchTitle: branchTitle)
-        jinyFlowSelector?.setupView()
-    }
-    
-    func presentPointer(toView: UIView, ofType: JinyPointerStyle) {
-        pointer?.removePointer()
-        pointer = nil
-        switch ofType {
-        case .FingerRipple:
-            pointer = JinyFingerRipplePointer()
-            break
-        case .NegativeUI:
-            pointer = JinyHighlightManualSequencePointer()
-            break
-        }
-        pointer?.pointerDelegate = self
-        self.auiManagerCallBack?.willPresentView()
-        pointer?.presentPointer(view: toView)
-    }
-    
-    func presentPointer(toRect: CGRect, inView: UIView?, ofType: JinyPointerStyle) {
-        pointer?.removePointer()
-        pointer = nil
-        switch ofType {
-        case .FingerRipple:
-            pointer = JinyFingerRipplePointer()
-            break
-        case .NegativeUI:
-            pointer = JinyHighlightManualSequencePointer()
-            break
-        }
-        pointer?.pointerDelegate = self
-        self.auiManagerCallBack?.willPresentView()
-        pointer?.presentPointer(toRect: toRect, inView: inView)
-    }
-    
-    func updatePointerRect(newRect: CGRect, inView: UIView?) {
-        guard pointer != nil else { return }
-        pointer!.updateRect(newRect: newRect, inView: inView)
-    }
-    
-    func presentLanguagePanel(languages: Array<String>) {
-        removeAllViews()
-        languagePanel = JinyLanguagePanel(withDelegate: self, frame: .zero, languageTexts: languages, theme: UIColor(red: 0.05, green: 0.56, blue: 0.27, alpha: 1.00))
-        languagePanel?.presentPanel()
-    }
-    
-    func presentOptionPanel(mute: String, repeatText: String, language: String?) {
-        removeAllViews()
-        optionPanel = JinyOptionPanel(withDelegate: self, repeatText: repeatText, muteText: mute, languageText: language)
-        optionPanel?.presentPanel()
-    }
-    
     func dismissJinyButton() {
-        guard let mainButton = jinyButton, mainButton.superview != nil else { return }
-        mainButton.removeFromSuperview()
-        jinyButton = nil
-    }
-    
-    func keepOnlyJinyButtonIfPresent() {
-        
-        pointer?.removePointer()
-        pointer = nil
-        
-        bottomDiscovery?.dismissView { self.bottomDiscovery = nil }
-        
-        optionPanel?.dismissOptionPanel { self.optionPanel = nil }
-        
-        languagePanel?.dismissLanguagePanel { self.languagePanel = nil }
-        
-        jinyFlowSelector?.dismissView()
-        jinyFlowSelector = nil
-        
+        jinyButton?.isHidden = true
     }
     
     func removeAllViews() {
-        pointer?.removePointer()
-        pointer = nil
-        currentAssist?.remove()
+        currentAssist?.remove(byContext: true, byUser: false, autoDismissed: false, panelOpen: false, action: nil)
         currentAssist = nil
+        currentInstruction = nil
+        currentTargetView = nil
+        currentTargetRect = nil
+        currentWebView = nil
         dismissJinyButton()
     }
     
+    func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool) {
+        guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
+            JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
+            JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+            jinyButton?.isHidden = false
+            let kw = UIApplication.shared.windows.first{ $0.isKeyWindow}
+            if let keyWindow = kw { keyWindow.bringSubviewToFront(jinyButton!) }
+            return
+        }
+        JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
+        JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+        jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
+        guard let keyWindow = UIApplication.shared.keyWindow else { return }
+        keyWindow.addSubview(jinyButton!)
+        jinyButton!.tapGestureRecognizer.addTarget(self, action: #selector(jinyButtonTap))
+        jinyButton!.tapGestureRecognizer.delegate = self
+        jinyButton!.stateDelegate = self
+        jinyButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: jinyButton, attribute: .bottom, multiplier: 1, constant: mainIconConstraintConstant)
+        jinyButton?.bottomConstraint = jinyButtonBottomConstraint!
+        jinyButton?.disableDialog.delegate = self
+        var distance = mainIconConstraintConstant
+        var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
+        if iconSetting.leftAlign ?? false {
+            cornerAttribute = .leading
+            distance = -mainIconConstraintConstant
+        }
+        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: jinyButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
+        NSLayoutConstraint.activate([jinyButtonBottomConstraint!, cornerConstraint])
+        jinyButton!.htmlUrl = iconSetting.htmlUrl
+        jinyButton!.iconSize = mainIconSize
+        jinyButton?.configureIconButton()
+    }
 }
 
 
-// MARK: - Media Fetch And Handling
-extension JinyAUIManager {
+// MARK: - ICON TAP AND GESTURE HANDLING
+extension JinyAUIManager: UIGestureRecognizerDelegate {
     
-    func startDefaultSoundDownload(_ dict:Dictionary<String,Any>) {
-        let langCode = auiManagerCallBack?.getLanguageCode()
-        if let baseUrl = dict["base_url"] as? String, let code = langCode {
-            if let allLangSoundsDict = dict["jiny_sounds"] as? Dictionary<String,Any>,
-                let soundsDictArray = allLangSoundsDict[code] as? Array<Dictionary<String,Any>> {
-                for soundDict in soundsDictArray {
-                    if let url = soundDict["url"] as? String{
-                        let sound = JinySound(baseUrl: baseUrl, location: url, code: code, info: soundDict)
-                        mediaManager?.startDownload(forMedia: sound, atPriority: .normal)
-                    }
-                    
-                }
+    @objc func jinyButtonTap() {
+        
+        guard let _ = currentAssist else {
+            auiManagerCallBack?.jinyTapped()
+            return
+        }
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
+        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
+        auiManagerCallBack?.optionPanelOpened()
+        guard let button = jinyButton else { return }
+        guard let optionsText = auiManagerCallBack?.getCurrentLanguageOptionsTexts() else { return }
+        let stopText = optionsText[constant_stop] ?? "Stop"
+        let languageText = optionsText[constant_language] ?? "Language"
+        let jinyIconOptions = JinyIconOptions(withDelegate: self, stopText: stopText, languageText: languageText, jinyButton: button)
+        jinyIconOptions.show()
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}
+
+
+// MARK: - JINY MAIN BUTTON STATE HANDLING
+extension JinyAUIManager: JinyIconStateDelegate {
+    func iconDidChange(state: JinyIconState) {
+        switch state {
+        case .rest:
+            DispatchQueue.main.async {
+                self.jinyButton?.changeToRest()
+            }
+        case .loading:
+            DispatchQueue.main.async {
+                self.jinyButton?.changeToLoading()
+            }
+        case .audioPlay:
+            DispatchQueue.main.async {
+                self.jinyButton?.changeToAudioPlay()
             }
         }
     }
+}
+
+// MARK: - DISABLE ASSISTANCE DELEGATE METHODS
+extension JinyAUIManager: JinyDisableAssistanceDelegate {
+    func shouldDisableAssistance() {
+        auiManagerCallBack?.disableAssistance()
+        removeAllViews()
+    }
+}
+
+// MARK: - MEDIA FETCH AND HANDLING
+extension JinyAUIManager {
+    
+    func processSoundConfigs(configs: Array<Dictionary<String,Any>>) -> Dictionary<String, Array<JinySound>> {
+        var processedSoundsDict: Dictionary<String,Array<JinySound>> = [:]
+        for config in configs {
+            let singleConfigProcessed = processSingleConfig(config: config)
+            singleConfigProcessed.forEach { (code, jinySoundsArray) in
+                let soundsForEachCode = (processedSoundsDict[code] ?? []) + jinySoundsArray
+                processedSoundsDict[code] = soundsForEachCode
+            }
+        }
+        return processedSoundsDict
+    }
+    
+    private func processSingleConfig(config: Dictionary<String,Any>) -> Dictionary<String, Array<JinySound>> {
+        var processedSounds: Dictionary<String,Array<JinySound>> = [:]
+        guard let baseUrl = config[constant_baseUrl] as? String,
+              let jinySounds = config[constant_jinySounds] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
+        jinySounds.forEach { (code, soundDictsArray) in
+            let processedSoundsArray = self.processJinySounds(soundDictsArray, code: code, baseUrl: baseUrl)
+            let currentCodeSounds =  (processedSounds[code] ?? []) + processedSoundsArray
+            processedSounds[code] = currentCodeSounds
+        }
+        return processedSounds
+        
+    }
+    
+    private func processJinySounds(_ sounds: Array<Dictionary<String,Any>>, code: String, baseUrl: String) -> Array<JinySound> {
+        return sounds.map { (singleSoundDict) -> JinySound? in
+            let url = singleSoundDict[constant_url] as? String
+            return JinySound(baseUrl: baseUrl, location: url, code: code, info: singleSoundDict)
+        }.compactMap { return $0 }
+    }
+    
+    func startDiscoverySoundDownload() {
+        let code = auiManagerCallBack!.getLanguageCode()
+        let discoverySoundsForCode = discoverySoundsJson[code] ?? []
+        for sound in discoverySoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .normal) } }
+    }
     
     func fetchSoundConfig() {
-        let url = URL(string: "http://dashboard.jiny.mockable.io/sounds")
+        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/sounds")
         var req = URLRequest(url: url!)
-        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
+        guard let token = JinyPreferences.shared.apiKey else { fatalError("No API Key") }
+        req.addValue(token, forHTTPHeaderField: "x-jiny-client-id")
+        req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, forHTTPHeaderField: "x-app-version-name")
+        req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String, forHTTPHeaderField: "x-app-version-code")
         let session = URLSession.shared
-        let configTask = session.dataTask(with: req) { (data, response, error) in
-            guard let resultData = data else {
-                self.fetchSoundConfig()
-                return
-            }
-            do {
-                let audioDict = try JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as! Dictionary<String,Any>
-                guard let dataDict = audioDict["data"] as? Dictionary<String,Any> else { return }
-                let _ = dataDict["base_url"] as? String
-                guard let jinySoundsJson = dataDict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return }
-                self.soundsJson = jinySoundsJson
-                self.startStageSoundDownload()
-            } catch {
-                print("Error")
-                return
-            }
+        let configTask = session.dataTask(with: req) {[weak self] (data, response, error) in
+            guard let resultData = data else { return }
+            guard let audioDict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any>
+            else { return }
+            guard let soundConfigs = audioDict[constant_data] as? Array<Dictionary<String,Any>> else { return }
+            self?.stageSoundsJson = self?.processSoundConfigs(configs: soundConfigs) ?? [:]
+            self?.startStageSoundDownload()
         }
         configTask.resume()
     }
     
     func startStageSoundDownload() {
-        guard let code = auiManagerCallBack?.getLanguageCode() else { return }
-        guard let soundDictsArray = self.soundsJson?[code] as? Array<Dictionary<String,Any>> else { return }
-        for soundDict in soundDictsArray {
-            let sound = JinySound(baseUrl: soundDict["url"] as! String, location: "", code: code, info: soundDict)
-            mediaManager?.startDownload(forMedia: sound, atPriority: .low)
+        let code = auiManagerCallBack!.getLanguageCode()
+        let stageSoundsForCode = stageSoundsJson[code] ?? []
+        for sound in stageSoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .low) } }
+    }
+    
+    func playAudio() {
+        DispatchQueue.global().async {
+            guard let code = JinyPreferences.shared.currentLanguage,
+                  let mediaName = self.currentInstruction?[constant_soundName]  as? String else {
+                self.startAutoDismissTimer()
+                return
+            }
+            let soundsArrayForLanguage = self.discoverySoundsJson[code]  ?? []
+            var audio = soundsArrayForLanguage.first { $0.name == mediaName }
+            if audio ==  nil {
+                let stageSounds = self.stageSoundsJson[code] ?? []
+                audio = stageSounds.first { $0.name == mediaName }
+            }
+            guard let currentAudio = audio else {
+                self.startAutoDismissTimer()
+                return
+            }
+            if currentAudio.isTTS {
+                if let text = currentAudio.text,
+                   let ttsCode = self.auiManagerCallBack?.getTTSCodeFor(code: code) {
+                    self.tryTTS(text: text, code: ttsCode)
+                    return
+                }
+            }
+            let soundPath = JinySharedAUI.shared.getSoundFilePath(name: mediaName, code: code, format: currentAudio.format)
+            let dlStatus = self.mediaManager.getCurrentMediaStatus(currentAudio)
+            switch dlStatus {
+            case .notDownloaded:
+                self.mediaManager.updatePriority(mediaName: mediaName, langCode: code, toPriority: .veryHigh)
+                fallthrough
+            case .isDownloading:
+                self.mediaManager.overrideMediaDownloadCompletion(mediaName, code: code) { [weak self] (success) in
+                    guard let instruction = self?.currentInstruction,
+                          let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+                          let currentMediaName = assistInfo[constant_soundName] as? String, mediaName == currentMediaName,
+                          let newCode = JinyPreferences.shared.currentLanguage, newCode == code, success else { return }
+                    self?.playAudioFile(filePath: soundPath)
+                }
+            case .downloaded:
+                self.playAudioFile(filePath: soundPath)
+            }
         }
     }
     
-    
-}
-
-
-extension JinyAUIManager:JinyPointerDelegate {
-    
-    func pointerPresented() {
-        self.auiManagerCallBack?.didPresentView()
-        playAudio()
+    func playAudioFile(filePath: URL) {
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+            self.audioPlayer = try AVAudioPlayer(contentsOf: filePath)
+            self.audioPlayer?.delegate = self
+            guard let player = self.audioPlayer else { return }
+            player.play()
+            if player.isPlaying {
+               DispatchQueue.main.async {
+                  self.jinyButton?.iconState = .audioPlay
+               }
+            }
+        } catch  { }
     }
     
-    func nextClicked() { auiManagerCallBack?.stagePerformed() }
+    func tryTTS(text: String, code: String) {
+        utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: code)
+        utterance.rate = 0.5
+        synthesizer.delegate = self
+        synthesizer.speak(utterance)
+        if synthesizer.isSpeaking {
+           DispatchQueue.main.async {
+              self.jinyButton?.iconState = .audioPlay
+           }
+        }
+    }
+}
+
+// MARK: - DISCOVERY LANGUAGE OPTIONS
+extension JinyAUIManager {
     
-    func pointerRemoved() {
+    func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
         
-    }
-}
-
-extension JinyAUIManager:JinyBottomDiscoveryDelegate {
-    
-    func discoveryPresentedWithOptInButton(_ button: UIButton) {
-        presentPointer(toView: button, ofType: .FingerRipple)
-        auiManagerCallBack?.discoveryPresented()
-        auiManagerCallBack?.didPresentView()
-    }
-    
-    func discoverySheetDismissed() {
-        auiManagerCallBack?.discoveryMuted()
-        auiManagerCallBack?.didDismissView()
-    }
-    
-    func optOutButtonClicked() {
-        auiManagerCallBack?.discoveryMuted()
-        auiManagerCallBack?.didDismissView()
-    }
-    
-    func optInButtonClicked() {
-        auiManagerCallBack?.didDismissView()
-        auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0)
-    }
-    
-    func discoveryLanguageButtonClicked() {
-        auiManagerCallBack?.didDismissView()
-        guard let langs = auiManagerCallBack?.getLanguages() else {
-            auiManagerCallBack?.discoveryReset()
+        func showLanguageOptions() {
+            let auiContent = JinyAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
+            if auiContent.url != nil { self.mediaManager.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
+                DispatchQueue.main.async {
+                    let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { success, languageCode in
+                        if success, let code = languageCode { JinyPreferences.shared.setUserLanguage(code) }
+                        JinyPreferences.shared.currentLanguage = languageCode
+                        self.startDiscoverySoundDownload()
+                        self.startStageSoundDownload()
+                        handler?(success)
+                    }
+                    jinyLanguageOptions.showBottomSheet()
+                }
+            }) }
+        }
+        
+        if localeCodes.count == 1 {
+            JinyPreferences.shared.currentLanguage = localeCodes.first?[constant_localeId]
+            self.startDiscoverySoundDownload()
+            self.startStageSoundDownload()
+            handler?(true)
             return
         }
-        presentLanguagePanel(languages: langs)
-    }
-    
-}
-
-extension JinyAUIManager:JinyLanguagePanelDelegate {
-    
-    func languagePanelPresented() {
-        auiManagerCallBack?.languagePanelOpened()
-    }
-    
-    func failedToPresentLanguagePanel() {}
-    
-    func indexOfLanguageSelected(_ languageIndex: Int) { auiManagerCallBack?.languagePanelLanguageSelected(atIndex: languageIndex) }
-    
-    func languagePanelCloseClicked() { auiManagerCallBack?.languagePanelClosed() }
-    
-    func languagePanelSwipeDismissed() { auiManagerCallBack?.languagePanelClosed() }
-    
-    func languagePanelTappedOutside() { auiManagerCallBack?.languagePanelClosed() }
-    
-}
-
-extension JinyAUIManager:JinyOptionPanelDelegate {
-    
-    func failedToShowOptionPanel() { auiManagerCallBack?.optionPanelClosed() }
-    
-    func optionPanelPresented() { auiManagerCallBack?.optionPanelOpened() }
-    
-    func muteButtonClicked() { auiManagerCallBack?.optionPanelMuteClicked() }
-    
-    func repeatButtonClicked() { auiManagerCallBack?.optionPanelRepeatClicked() }
-    
-    func chooseLanguageButtonClicked() {
-        guard let langs = auiManagerCallBack?.getLanguages() else {
-            auiManagerCallBack?.optionPanelClosed()
+        guard let userLanguage = JinyPreferences.shared.getUserLanguage() else {
+            showLanguageOptions()
             return
         }
-        presentLanguagePanel(languages: langs)
+        let localeDict = localeCodes.first { $0[constant_localeId] == userLanguage }
+        guard let alreadySelectedLanguageDict = localeDict, let langCode = alreadySelectedLanguageDict[constant_localeId] else {
+            showLanguageOptions()
+            return
+        }
+        JinyPreferences.shared.currentLanguage = langCode
+        self.startDiscoverySoundDownload()
+        self.startStageSoundDownload()
+        handler?(true)
     }
-    
-    func optionPanelDismissed() { auiManagerCallBack?.optionPanelClosed() }
-    
-    func optionPanelCloseClicked() { auiManagerCallBack?.optionPanelClosed() }
-    
 }
 
-extension JinyAUIManager:JinyFlowSelectorDelegate {
+// MARK: - PRESENT AUI COMPONENTS
+extension JinyAUIManager {
     
-    func failedToSetupFlowSelector() { auiManagerCallBack?.flowSelectorDismissed() }
-    
-    func flowSelectorPresented() {
-        auiManagerCallBack?.flowSelectorPresented()
-        playAudio()
+    private func setupDefaultValues(instruction: Dictionary<String,Any>, langCode: String?, view: UIView?, rect: CGRect?, webview: UIView?) {
+        if let code = langCode {
+            JinyPreferences.shared.currentLanguage = code
+            self.startDiscoverySoundDownload()
+            self.startStageSoundDownload()
+        }
+        currentInstruction = instruction
+        currentTargetView = view
+        currentTargetRect = rect
+        currentWebView = webview
     }
     
-    func flowSelected(_ flowSelectedAtIndex: Int) { auiManagerCallBack?.flowSelectorFlowSelected(atIndex:flowSelectedAtIndex) }
+    private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        
+        // Autoscroll
+        arrowClicked()
+        
+        //Set autofocus
+        inView.becomeFirstResponder()
+        
+        // Present Assist
+        switch type {
+        case FINGER_RIPPLE:
+            let fingerPointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = fingerPointer
+            fingerPointer.presentPointer(view: inView)
+            
+        case TOOLTIP:
+            let tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = tooltip
+            tooltip.presentPointer()
+            
+        case HIGHLIGHT_WITH_DESC:
+            let highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = highlight
+            highlight.presentHighlight()
+            
+        case SPOT:
+            let spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = spot
+            spot.presentSpot()
+            
+        case LABEL:
+            let label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            currentAssist = label
+            label.presentLabel()
+            
+        case BEACON:
+            let beacon = JinyBeacon(withDict: assistInfo, toView: inView)
+            currentAssist = beacon
+            beacon.presentBeacon()
+            
+        case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
+            let swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            swipePointer.type = JinySwipePointerType(rawValue: type)!
+            currentAssist = swipePointer
+            swipePointer.presentPointer(view: inView)
+        default:
+            performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+        }
+    }
     
-    func selectorViewRemoved() { auiManagerCallBack?.flowSelectorDismissed() }
+    private func performInViewWebInstruction(instruction: Dictionary<String,Any>, rect: CGRect, inWebview: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
+        
+        guard  let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        
+        arrowClicked()
+        
+        if let webIdentfier = assistInfo[constant_identifier] as? String, let focusScript = auiManagerCallBack?.getWebScript(webIdentfier) {
+            //Do auto focus for web element
+            if let wkweb = inWebview as? WKWebView { wkweb.evaluateJavaScript(focusScript,completionHandler: nil) }
+        }
+        
+        switch type {
+        case FINGER_RIPPLE:
+            let pointer = JinyFingerRipplePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = pointer
+            pointer.presentPointer(toRect: rect, inView: inWebview)
+            
+        case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
+            let swipePointer = JinySwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            swipePointer.type = JinySwipePointerType(rawValue: type)!
+            currentAssist = swipePointer
+            swipePointer.presentPointer(toRect: rect, inView: inWebview)
+            
+        case TOOLTIP:
+            let tooltip = JinyToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = tooltip
+            tooltip.presentPointer(toRect: rect, inView: inWebview)
+            
+        case HIGHLIGHT_WITH_DESC:
+            let highlight = JinyHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = highlight
+            highlight.presentHighlight(toRect: rect, inView: inWebview)
+            
+        case SPOT:
+            let spot = JinySpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = spot
+            spot.presentSpot(toRect: rect, inView: inWebview)
+            
+        case LABEL:
+            let label = JinyLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            currentAssist = label
+            label.presentLabel(toRect: rect, inView: inWebview)
+            
+        case BEACON:
+            let beacon = JinyBeacon(withDict: assistInfo, toView: inWebview)
+            currentAssist = beacon
+            beacon.presentBeacon(toRect: rect, inView: inWebview)
+            
+        default:
+            performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
+        }
+    }
     
-    func closeButtonClicked() { auiManagerCallBack?.flowSelectorDismissed() }
-    
+    private func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
+        
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        
+        if let type = assistInfo[constant_type] as? String {
+            switch type {
+            case POPUP:
+                let jinyPopup = JinyPopup(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyPopup
+                jinyPopup.showPopup()
+            case DRAWER:
+                let jinyDrawer = JinyDrawer(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyDrawer
+                jinyDrawer.showDrawer()
+            case FULLSCREEN:
+                let jinyFullScreen = JinyFullScreen(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyFullScreen
+                jinyFullScreen.showFullScreen()
+            case BOTTOMUP:
+                let jinyBottomSheet = JinyBottomSheet(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyBottomSheet
+                jinyBottomSheet.showBottomSheet()
+            case NOTIFICATION:
+                let jinyNotification = JinyNotification(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyNotification
+                jinyNotification.showNotification()
+            case SLIDEIN:
+                let jinySlideIn = JinySlideIn(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinySlideIn
+                jinySlideIn.showSlideIn()
+            case CAROUSEL:
+                let jinyCarousel = JinyCarousel(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyCarousel
+                jinyCarousel.showCarousel()
+                
+            case PING:
+                self.jinyButton?.layoutIfNeeded()
+                UIView.animate(withDuration: 0.2) {
+                    self.jinyButtonBottomConstraint?.constant = mainIconConstraintConstant
+                    self.jinyButton?.layoutIfNeeded()
+                }
+                dismissJinyButton()
+                let jinyPing = JinyPing(withDict: assistInfo, iconDict: iconInfo)
+                currentAssist = jinyPing
+                jinyPing.showPing()
+                
+            default:
+                break
+            }
+        }
+    }
 }
 
-extension JinyAUIManager:AVAudioPlayerDelegate {
+// MARK: - AUDIO PLAYER DELEGATES
+extension JinyAUIManager: AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        self.auiManagerCallBack?.didPlayAudio()
-        if pointer != nil {
-            if pointer!.isMember(of: JinyHighlightPointer.self) { auiManagerCallBack?.stagePerformed() }
-        }
+        jinyButton?.iconState = .rest
+        startAutoDismissTimer()
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        self.auiManagerCallBack?.didPlayAudio()
+        jinyButton?.iconState = .rest
+        startAutoDismissTimer()
     }
-    
 }
 
-extension JinyAUIManager:AVSpeechSynthesizerDelegate {
+// MARK: - TTS HANDLING
+extension JinyAUIManager: AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        auiManagerCallBack?.didPlayAudio()
+        jinyButton?.iconState = .rest
+        startAutoDismissTimer()
     }
-    
 }
 
-extension JinyAUIManager:JinyMediaManagerDelegate {
-    
-}
-
+// MARK: - ARROW AND KEYBOARD HANDLING
 extension JinyAUIManager {
     
-    func isViewInVisibleArea(view:UIView) -> Bool {
+    func isViewInVisibleArea(view: UIView) -> Bool {
         let viewFrame = view.frame
         let windowFrame = UIApplication.shared.keyWindow?.frame
         let viewFrameWRTToWindowFrame = view.superview!.convert(viewFrame, to: nil)
         return windowFrame!.contains(viewFrameWRTToWindowFrame)
     }
     
-    func isRectInVisbleArea(rect:CGRect, inView:UIView) -> Bool {
-        return true
+    func isRectInVisbleArea(rect: CGRect, inView: UIView) -> Bool {
+        return inView.frame.contains(rect)
     }
     
-    func isViewHiddenByKeyboard(_ view:UIView) -> Bool {
+    func isViewHiddenByKeyboard(_ view: UIView) -> Bool {
         guard keyboardHeight > 0 else { return false }
         let viewWRTWindow = view.superview!.convert(view.frame, to: nil)
         return viewWRTWindow.origin.y > (UIApplication.shared.keyWindow!.frame.height - CGFloat(keyboardHeight))
     }
     
-    func getScrollViews(_ forView:UIView) -> Array<UIView> {
+    func isRectHiddenByKeyboard(rect:CGRect, webview:UIView) -> Bool {
+        guard keyboardHeight > 0 else { return false }
+        let viewWRTWindow = webview.superview!.convert(rect, to: nil)
+        return viewWRTWindow.origin.y > (UIApplication.shared.keyWindow!.frame.height - CGFloat(keyboardHeight))
+    }
+    
+    func getScrollViews(_ forView: UIView) -> Array<UIView> {
         var scrollViews:Array<UIView> = [forView]
         guard var tempView = forView.superview else { return scrollViews }
         while !tempView.isKind(of: UIWindow.self) {
@@ -673,7 +791,7 @@ extension JinyAUIManager {
         return scrollViews
     }
     
-    func makeViewVisible(_ nestedScrolls:Array<UIView>,_ animated:Bool) {
+    func makeViewVisible(_ nestedScrolls: Array<UIView>,_ animated: Bool) {
         for i in 0..<nestedScrolls.count-1 {
             let parentView = nestedScrolls[nestedScrolls.count - 1 - i]
             let childView = nestedScrolls[nestedScrolls.count - 1 - i - 1]
@@ -705,56 +823,95 @@ extension JinyAUIManager {
         let heightConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
         let widthConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
         NSLayoutConstraint.activate([leadingConstraint, scrollArrowBottomConstraint!, heightConstraint, widthConstraint])
-        
-        
     }
     
     @objc func arrowClicked() {
-        let nestedScrolls = getScrollViews(currentTargetView!)
-        makeViewVisible(nestedScrolls, true)
-        let currentVc = UIApplication.getCurrentVC()
-        let view = currentVc!.view!
-        view.endEditing(true)
+        guard let assistInfo = currentInstruction?[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        let isWeb = assistInfo[constant_isWeb] as? Bool ?? false
+        if isWeb {
+            guard let webview = currentWebView, let rect = currentTargetRect else { return }
+            if let wkweb = webview as? WKWebView {
+                wkweb.scrollView.scrollRectToVisible(rect, animated: true)
+            }
+        } else {
+            let nestedScrolls = getScrollViews(currentTargetView!)
+            makeViewVisible(nestedScrolls, true)
+            let currentVc = UIApplication.getCurrentVC()
+            let view = currentVc!.view!
+            view.endEditing(true)
+        }
         scrollArrow?.removeFromSuperview()
         scrollArrow = nil
     }
+    
+    func startAutoDismissTimer() {
+        guard let instruction = currentAssist, let dismissTimer = instruction.assistInfo?.autoDismissDelay, dismissTimer > 0 else { return }
+        if autoDismissTimer != nil {
+            autoDismissTimer?.invalidate()
+            autoDismissTimer = nil
+        }
+        autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
+            self.currentAssist?.remove(byContext: false, byUser: false, autoDismissed: true, panelOpen: false, action: nil)
+            self.currentAssist = nil
+            self.dismissJinyButton()
+            self.autoDismissTimer?.invalidate()
+            self.autoDismissTimer = nil
+        })
+        RunLoop.main.add(autoDismissTimer!, forMode: .default)
+    }
 }
 
-
-extension JinyAUIManager:JinyAssistDelegate {
-    func willPresentAssist() {
-        
-    }
+// MARK: - CURRENT ASSIST DELEGATE METHODS
+extension JinyAUIManager: JinyAssistDelegate {
     
     func didPresentAssist() {
-        
+        playAudio()
+        auiManagerCallBack?.didPresentView()
     }
     
-    func failedToPresentAssist() {
-        
+    func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
+    
+    func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
+        currentAssist = nil
+        dismissJinyButton()
+        auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+    }    
+}
+
+// MARK: - ICON OPTIONS DELEGATE METHODS
+extension JinyAUIManager:JinyIconOptionsDelegate {
+    
+    func stopClicked() {
+        removeAllViews()
+        currentInstruction = nil
+        currentTargetView = nil
+        currentTargetRect = nil
+        currentWebView = nil
+        auiManagerCallBack?.optionPanelStopClicked()
     }
     
-    func didDismissAssist() {
-        
-    }
-    
-    func didSendAction(dict: Dictionary<String, Any>) {
-        if let body = dict["body"] as? Dictionary<String,Any> {
-            if let opt_in = body["opt_in"] as? Bool {
-                if opt_in{
-                    auiManagerCallBack?.discoveryOptedInFlow(atIndex: 0)
-                }
-            }
+    func languageClicked() {
+        guard let localeCodes = auiManagerCallBack?.getLanguagesForCurrentInstruction(),
+              let iconInfo = auiManagerCallBack?.getIconInfoForCurrentInstruction(),
+              let htmlUrl = auiManagerCallBack?.getLanguageHtmlUrl() else {
+            auiManagerCallBack?.optionPanelOpened()
+            return
         }
-    }
-    
-    func didExitAnimation() {
+        let jinyLanguageOptions = JinyLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl) { success, languageCode in
+            if success, let code = languageCode { JinyPreferences.shared.setUserLanguage(code) }
+            JinyPreferences.shared.currentLanguage = languageCode
+            self.startDiscoverySoundDownload()
+            self.startStageSoundDownload()
+            self.auiManagerCallBack?.optionPanelClosed()
+            
+        }
+        jinyLanguageOptions.showBottomSheet()
         
     }
     
-    func didTapAssociatedJinyIcon() {
-        auiManagerCallBack?.jinyTapped()
+    func iconOptionsDismissed() {
+        auiManagerCallBack?.optionPanelClosed()
     }
-    
-    
 }

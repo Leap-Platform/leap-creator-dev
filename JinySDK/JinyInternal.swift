@@ -11,20 +11,13 @@ import UIKit
 import AdSupport
 
 class JinyInternal:NSObject {
-    private var apikey:String
-    var jinyConfiguration:JinyConfig?
     var contextManager:JinyContextManager
-    var audioManager:JinyAudioManager
     
     init(_ token : String, uiManager:JinyAUIHandler?) {
-        self.apikey = token
-        audioManager = JinyAudioManager()
         self.contextManager = JinyContextManager(withUIHandler: uiManager)
         super.init()
-        audioManager.delegate = self
-        JinySharedInformation.shared.setAPIKey(apikey)
+        JinySharedInformation.shared.setAPIKey(token)
         JinySharedInformation.shared.setSessionId()
-        addObservers()
         fetchConfig()
     }
     
@@ -34,138 +27,87 @@ class JinyInternal:NSObject {
     
 }
 
-
-// MARK: - OBSERVER AND LISTENER METHODS
-
-extension JinyInternal {
-    
-    private func addObservers() {
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(appLaunched), name: UIApplication.didFinishLaunchingNotification, object: nil)
-        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        nc.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
-    }
-    
-    @objc private func appLaunched() {
-        
-    }
-    
-    @objc private func appWillEnterForeground() {
-        
-    }
-    
-    @objc private func appDidEnterBackground() {
-        
-    }
-    
-    @objc private func appWillTerminate() {
-        
-    }
-}
-
-
-// MARK: - FETCH CONFIGURATION AND AUDIO DOWNLOAD
+// MARK: - CONFIGURATION DOWNLOAD AND HANDLING
 
 extension JinyInternal {
     
-    func fetchConfig() {
-        let url = URL(string: "http://dashboard.jiny.mockable.io/newIosData")
+    private func fetchConfig() {
+        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch")
         var req = URLRequest(url: url!)
-        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
-        let session = URLSession.shared
-        let configTask = session.dataTask(with: req) { (data, response, error) in
-            guard let resultData = data else { return }
-            guard let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
-            self.jinyConfiguration = JinyConfig(withDict: configDict)
-            self.setupDefaultLanguage()
-            self.startContextDetection()
-//            self.soundDownload()
-//            self.fetchAudio()
+        req.httpMethod = "PUT"
+        let dict:Dictionary<String,String> = [:]
+        let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+        req.httpBody = jsonData
+        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode != 304,
+                  let resultData = data,
+                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
+            }
+            self.saveHeaders(headers: httpResponse.allHeaderFields)
+            self.saveConfig(config: configDict)
+            self.startContextDetection(config: configDict)
         }
         configTask.resume()
     }
     
-    func setupDefaultLanguage() {
-        guard let config = self.jinyConfiguration else { return }
-        if let lang = JinySharedInformation.shared.getLanguage() {
-            for language in config.languages { if lang == language.localeId { return } }
-        }
-        var newDefault:String?
-        for lang in config.languages {
-            if lang.localeId == "" { continue }
-            newDefault = lang.localeId
-            break
-        }
-        guard let defaultLang = newDefault else { return }
-        JinySharedInformation.shared.setLanguage(defaultLang)
-        
+    private func getHeaders() -> Dictionary<String,String> {
+        var headers = [
+            "x-jiny-client-id"      : JinySharedInformation.shared.getAPIKey(),
+            "x-app-version-code"    : JinySharedInformation.shared.getVersionCode(),
+            "x-app-version-name"    : JinySharedInformation.shared.getVersionName(),
+            "Content-Type"          : "application/json"
+        ]
+        getSavedHeaders().forEach { headers[$0.key] = $0.value }
+        return headers
     }
     
-    func fetchAudio() {
-        let url = URL(string: "http://dashboard.jiny.mockable.io/sounds")
-        var req = URLRequest(url: url!)
-        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "identifier")
-        let session = URLSession.shared
-        let configTask = session.dataTask(with: req) { (data, response, error) in
-            guard let resultData = data else {
-                self.fetchAudio()
-                return
-            }
-            do {
-                let audioDict = try JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as! Dictionary<String,Any>
-                guard let dataDict = audioDict["data"] as? Dictionary<String,Any> else { return }
-                let baseUrl = dataDict["base_url"] as? String
-                guard let jinySoundsJson = dataDict["jiny_sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return }
-                // FIXME: Process sounds API
-                var stageSounds:Array<JinySound> = []
-                jinySoundsJson.forEach { (langCode, soundDictsArray) in
-                    for soundDict in soundDictsArray {
-                        let sound = JinySound(withSoundDict: soundDict, langCode: langCode, baseUrl: baseUrl)
-                        stageSounds.append(sound)
-                    }
-                }
-                self.jinyConfiguration?.sounds = stageSounds
-                self.soundDownload()
-            } catch {
-                print("Error")
-                return
+    private func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
+        var toSaveHeaders:Dictionary<String,String> = [:]
+        headers.forEach { (key,value) in
+            if let headerField = key as? String, let valueField = value as? String {
+                if headerField.starts(with: "x-jiny-") { toSaveHeaders[headerField] = valueField }
             }
         }
-        configTask.resume()
+        let prefs = UserDefaults.standard
+        prefs.set(toSaveHeaders, forKey: "jiny_saved_headers")
+        prefs.synchronize()
     }
     
-    func soundDownload(){
-        audioManager.registerForDownload()
+    private func getSavedHeaders() -> Dictionary<String,String> {
+        let prefs = UserDefaults.standard
+        let headers = prefs.object(forKey: "jiny_saved_headers") as? Dictionary<String,String> ?? [:]
+        return headers
+    }
+    
+    private func saveConfig(config:Dictionary<String,AnyHashable>) {
+        guard let configData = try? JSONSerialization.data(withJSONObject: config, options: .prettyPrinted),
+              let configString = String(data: configData, encoding: .utf8) else { return }
+        let prefs = UserDefaults.standard
+        prefs.setValue(configString, forKey: "jiny_config")
+        prefs.synchronize()
+    }
+    
+    private func getSavedConfig() -> Dictionary<String,AnyHashable> {
+        let prefs = UserDefaults.standard
+        guard let configString = prefs.value(forKey: "jiny_config") as? String,
+              let configData = configString.data(using: .utf8),
+              let config = try? JSONSerialization.jsonObject(with: configData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
+        return config
     }
 }
 
 // MARK: - CONTEXT DETECTION METHODS
 extension JinyInternal {
-    
-    func startContextDetection() {
-        guard let configuration = self.jinyConfiguration else { return }
+    private func startContextDetection(config:Dictionary<String,AnyHashable>) {
         DispatchQueue.main.async {
-            
-            self.contextManager.audioManagerDelegate = self.audioManager
+            let configuration = JinyConfig(withDict: config)
             self.contextManager.initialize(withConfig: configuration)
         }
     }
-}
-
-
-extension JinyInternal:JinyAudioManagerDelegate {
-    
-    func getDefaultSounds() -> Array<JinySound> {
-        return jinyConfiguration?.defaultSounds ?? []
-    }
-    
-    func getDiscoverySounds() -> Array<JinySound> {
-        return jinyConfiguration?.discoverySounds ?? []
-    }
-    
-    func getStageSounds() -> Array<JinySound> {
-        return jinyConfiguration?.sounds ?? []
-    }
-    
 }

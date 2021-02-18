@@ -18,7 +18,18 @@ public class JinyDrawer: JinyKeyWindowAssist {
         
         UIApplication.shared.keyWindow?.addSubview(self)
         
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.elevation = 8 // hardcoded value
+        
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.cornerRadius = 14 // hardcoded value
+        
         configureOverlayView()
+        
+        if assistInfo?.layoutInfo?.layoutAlignment == nil {
+            
+           assistInfo?.layoutInfo?.layoutAlignment = JinyAlignmentType.left.rawValue
+        }
         
         configureWebView()
         
@@ -113,7 +124,11 @@ public class JinyDrawer: JinyKeyWindowAssist {
                         
         superView.addSubview(jinyIconView)
         
-        jinyIconView.iconBackgroundColor = UIColor.colorFromString(string: iconInfo?.backgroundColor ?? UIColor.stringFromUIColor(color: .blue))
+        jinyIconView.htmlUrl = iconInfo?.htmlUrl
+        
+        jinyIconView.tapGestureRecognizer.addTarget(self, action: #selector(jinyIconButtonTapped))
+        
+        jinyIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
                 
         self.jinyIconView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -150,6 +165,8 @@ public class JinyDrawer: JinyKeyWindowAssist {
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType2, multiplier: 1, constant: horizontalDistance))
         
         superView.addConstraint(NSLayoutConstraint(item: jinyIconView, attribute: attributeType3, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: verticalDistance))
+        
+        jinyIconView.configureIconButton()
     }
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

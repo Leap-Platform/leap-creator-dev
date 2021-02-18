@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1170"
+   LastUpgradeVersion = "1240"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -35,6 +35,16 @@
                BlueprintIdentifier = "D00B8F5D249B2988006F4CA1"
                BuildableName = "JinyAuthSDKTests.xctest"
                BlueprintName = "JinyAuthSDKTests"
+               ReferencedContainer = "container:JinySDK.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D077C91024B9A68D001A04DF"
+               BuildableName = "JinyAUITests.xctest"
+               BlueprintName = "JinyAUITests"
                ReferencedContainer = "container:JinySDK.xcodeproj">
             </BuildableReference>
          </TestableReference>

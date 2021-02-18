@@ -17,9 +17,8 @@ public class JinyBeacon: JinyNativeAssist {
     
     /// source view of the toView for which the component is relatively positioned.
     private weak var inView: UIView?
-     
-    /// Radius of the beacon's pulse, range of pulsating.
-    public var radius: Double = 10
+    
+    private var webRect: CGRect?
     
     /// JinyBeacon's custom layer (CAReplicatorLayer) class.
     let pulsator = JinyPulsator()
@@ -42,13 +41,26 @@ public class JinyBeacon: JinyNativeAssist {
     /// presents beacon after setting up view, setting up alignment and when start() method called.
     func presentBeacon() {
         
-        delegate?.willPresentAssist()
         
         setupView()
                 
         setAlignment()
         
         show()
+    }
+    
+    func presentBeacon(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+        
+        presentBeacon()
+    }
+    
+    func updateRect(newRect: CGRect, inView: UIView?) {
+        
+        webRect = newRect
+        
+        setAlignment()
     }
     
     public override func show() {
@@ -58,40 +70,31 @@ public class JinyBeacon: JinyNativeAssist {
         pulsator.start()
     }
     
-    public override func remove() {
+    public override func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
         pulsator.stop()
         
-        inView?.layer.sublayers?.removeAll()
-        
-        super.remove()
+        for layer in inView?.layer.sublayers ?? [] {
+            
+            if let subLayer = layer as? JinyPulsator {
+                
+                subLayer.removeFromSuperlayer()
+            }
+        }
+                
+        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     /// sets up customised JinyBeacon's class, toView and inView.
     func setupView() {
         
-       pulsator.backgroundColor = UIColor.colorFromString(string: assistInfo?.layoutInfo?.style.bgColor ?? "black").cgColor
-        pulsator.radius = CGFloat(radius)
+        pulsator.backgroundColor = UIColor.init(hex: assistInfo?.layoutInfo?.style.bgColor ?? "#FF000000")?.cgColor
+        if let radius = assistInfo?.extraProps?.props[constant_beaconRippleRadius] as? String {
+           pulsator.radius = CGFloat(Int(radius) ?? 10)
+        }
         pulsator.numPulse = 3
-        
-        guard toView != nil else {
-            
-            delegate?.failedToPresentAssist()
-            
-            fatalError("no element to point to")
-        }
-        
-        if inView == nil {
-            
-            guard let _ = toView?.superview else {
-                
-                delegate?.failedToPresentAssist()
-                
-                fatalError("View not in valid hierarchy or is window view")
-            }
-            
-            inView = UIApplication.shared.keyWindow?.rootViewController?.children.last?.view
-        }
+                    
+        inView = toView?.window
         
         inView?.layer.addSublayer(pulsator)
     }
@@ -99,9 +102,9 @@ public class JinyBeacon: JinyNativeAssist {
     /// Sets alignment of the component (JinyBeacon).
     func setAlignment() {
         
-        let globalToViewFrame = toView!.superview!.convert(toView!.frame, to: inView)
+        let globalToViewFrame = webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
                 
-        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topCenter {
+        switch JinyAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topLeft {
             
         case .topLeft:
             
@@ -166,7 +169,6 @@ extension JinyBeacon: JinyPulsatorDelegate {
     }
     
     func didStopAnimation() {
-        
-        super.performExitAnimation(animation: "")
+        super.performExitAnimation(animation: "", byUser: false, autoDismissed: false, byContext: true, panelOpen: false, action: nil)
     }
 }
