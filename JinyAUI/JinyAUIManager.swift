@@ -256,7 +256,7 @@ extension JinyAUIManager: JinyAUIHandler {
         if let swipePointer = currentAssist as? JinySwipePointer { swipePointer.setPosition() }
         else if let fingerPointer = currentAssist as? JinyFingerRipplePointer { fingerPointer.setPosition() }
         else if let label = currentAssist as? JinyLabel { label.setAlignment() }
-        else if let tooltip = currentAssist as? JinyToolTip { tooltip.presentPointer() }
+        else if let tooltip = currentAssist as? JinyToolTip { tooltip.updatePointer() }
         else if let highlight = currentAssist as? JinyHighlight { highlight.updateHighlight() }
         else if let spot = currentAssist as? JinySpot { spot.updateSpot() }
         else if let beacon = currentAssist as? JinyBeacon { beacon.setAlignment() }
