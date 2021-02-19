@@ -1,9 +1,9 @@
 //
-//  TopViewController.swift
-//  JinyAuthSDK
+//  LeapTopViewController.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 21/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
@@ -54,11 +54,13 @@ extension UIViewController {
 
 extension UIApplication {
     func topMostViewController() -> UIViewController? {
-        return self.keyWindow?.rootViewController?.topMostViewController()
+        let keyWindow = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        return keyWindow?.rootViewController?.topMostViewController()
     }
     
     class func getCurrentTopVC () -> UIViewController? {
-        guard let rootVC = shared.keyWindow?.rootViewController else {
+        let keyWindow = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        guard let rootVC = keyWindow?.rootViewController else {
                return nil
            }
         return UIApplication.findBestViewController(rootVC)

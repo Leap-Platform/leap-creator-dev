@@ -12,9 +12,10 @@ import UIKit
 extension UIApplication {
     
     class func getCurrentVC () -> UIViewController? {
-        guard let rootVC = shared.keyWindow?.rootViewController else {
+        let keyWindow = shared.windows.first{ $0.isKeyWindow }
+        guard let rootVC = keyWindow?.rootViewController else {
                return nil
-           }
+        }
         return UIApplication.findBestViewController(rootVC)
     }
     

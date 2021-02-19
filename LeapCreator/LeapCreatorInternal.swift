@@ -1,25 +1,25 @@
 //
-//  JinyAuthInternal.swift
-//  JinyAuthSDK
+//  LeapCreatorInternal.swift
+//  LeapCreator
 //
 //  Created by Aravind GS on 19/06/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit
 
-class JinyAuthInternal : NSObject{
+class LeapCreatorInternal : NSObject{
     
     var apiKey:String?
-    var masterManager: MasterManager?
-    var authManager: JinyAuthManager?
+    var masterManager: LeapMasterManager?
+    var creatorManager: LeapCreatorManager?
     var applicationContext: UIApplication
     var appDelegate: UIApplicationDelegate
     
     init(apiKey : String) {
         self.applicationContext = UIApplication.shared
         self.apiKey = apiKey
-        self.masterManager = MasterManager(key: apiKey)
+        self.masterManager = LeapMasterManager(key: apiKey)
         self.appDelegate = UIApplication.shared.delegate!
     }
     
@@ -31,8 +31,8 @@ class JinyAuthInternal : NSObject{
     
     func start() {
         NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
-        self.authManager = JinyAuthManager(key: self.apiKey!, delegate: self)
-        self.authManager?.fetchAuthConfig()
+        self.creatorManager = LeapCreatorManager(key: self.apiKey!, delegate: self)
+        self.creatorManager?.fetchCreatorConfig()
     }
     
     private func startSendingBeacons() {
@@ -43,7 +43,7 @@ class JinyAuthInternal : NSObject{
     }
 }
 
-extension JinyAuthInternal: AuthManagerDelegate {
+extension LeapCreatorInternal: LeapCreatorManagerDelegate {
     func fetchConfigSuccess() {
         
         startSendingBeacons()
@@ -53,12 +53,12 @@ extension JinyAuthInternal: AuthManagerDelegate {
     
     func fetchConfigFailure() {
         
-        print("Fetch Auth Config Failed")
+        print("Fetch Creator Config Failed")
     }
     
     @objc func internetConnected() {
        
-        if JinyAuthShared.shared.authConfig == nil {
+        if LeapCreatorShared.shared.creatorConfig == nil {
             
             NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
             

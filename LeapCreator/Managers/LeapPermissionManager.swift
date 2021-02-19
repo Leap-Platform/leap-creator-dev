@@ -1,16 +1,16 @@
 //
-//  PermissionManager.swift
-//  JinyAuthSDK
+//  LeapPermissionManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 20/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
 
-class PermissionManager: AppStateProtocol{
+class LeapPermissionManager: LeapAppStateProtocol{
     func onApplicationInForeground() {
         
     }
@@ -26,23 +26,23 @@ class PermissionManager: AppStateProtocol{
     
     let ALFRED_URL_LOCAL: String = "http://192.168.1.3:8080";
     let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is";
-    var permissionListener: PermissionListener
+    var permissionListener: LeapPermissionListener
     var application: UIApplication
     let permissionGranted: String = "PERMISSION_GRANTED"
     let permissionRejected: String = "PERMISSION_REJECTED"
     private var permissionTimer: Timer?
-    let timeout: TimeInterval = (JinyAuthShared.shared.authConfig?.permission?.timeOutDuration ?? 15000)/1000
+    let timeout: TimeInterval = (LeapCreatorShared.shared.creatorConfig?.permission?.timeOutDuration ?? 15000)/1000
     private var permissionAlert: UIAlertController?
     
     private var decisionTaken: Bool?
     
-    init(permissionListener: PermissionListener){
+    init(permissionListener: LeapPermissionListener){
         self.permissionListener = permissionListener
         self.application = UIApplication.shared
         addObservers()
     }
     
-    //call start in MasterManager
+    //call start in LeapMasterManager
     func start()->Void {
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
@@ -54,7 +54,7 @@ class PermissionManager: AppStateProtocol{
                         
             self.permissionTimer = Timer.scheduledTimer(timeInterval: self.timeout, target: self, selector: #selector(self.timedout), userInfo: nil, repeats: false)
             
-            self.permissionAlert = UIAlertController(title: JinyAuthShared.shared.authConfig?.permission?.dialogTitle ?? "Streaming Permission ", message: JinyAuthShared.shared.authConfig?.permission?.dialogDescription ?? "Do you permit Jiny Dashboard to stream your screen ?", preferredStyle: .alert)
+            self.permissionAlert = UIAlertController(title: LeapCreatorShared.shared.creatorConfig?.permission?.dialogTitle ?? "Streaming Permission ", message: LeapCreatorShared.shared.creatorConfig?.permission?.dialogDescription ?? "Do you permit Leap Dashboard to stream your screen ?", preferredStyle: .alert)
 
             self.permissionAlert?.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
             
@@ -84,10 +84,10 @@ class PermissionManager: AppStateProtocol{
     //Update the permission action to Alfred Server by POST
     func updatePermissionToServer(permission: String, status:Bool, appId: String){
         
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(JinyAuthShared.shared.apiKey!)/device/\(appId)")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(LeapCreatorShared.shared.apiKey!)/device/\(appId)")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(JinyAuthShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(LeapCreatorShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
   
@@ -138,7 +138,7 @@ class PermissionManager: AppStateProtocol{
         guard self.permissionTimer != nil else { return }
         
         self.decisionTaken = true
-        let notification = Notification(name: .init(rawValue: "jiny_auth_live"))
+        let notification = Notification(name: .init(rawValue: "leap_creator_live"))
         NotificationCenter.default.post(notification)
         // update the Alfred server that permission has been granted
         self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
@@ -206,7 +206,7 @@ class PermissionManager: AppStateProtocol{
     }
 }
 
-protocol PermissionListener{
+protocol LeapPermissionListener{
     func onPermissionGranted(permission: String, status: Bool)->Void
     func onPermissionRejected(permnission: String)->Void
     func onPermissionStatusUpdation(permission: String)->Void

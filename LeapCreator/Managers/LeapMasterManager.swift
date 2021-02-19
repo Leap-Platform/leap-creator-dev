@@ -1,17 +1,17 @@
 //
-//  MasterManager.swift
-//  JinyAuthSDK
+//  LeapMasterManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 20/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit
 
-class MasterManager: ProtocolListener,
-                     PermissionListener,
-                     BeaconListener,
-                     AppIdListener {
+class LeapMasterManager: LeapProtocolListener,
+                     LeapPermissionListener,
+                     LeapBeaconListener,
+                     LeapAppIdListener {
    
     //Protocol Listener
     func onSessionClosed() {
@@ -62,10 +62,10 @@ class MasterManager: ProtocolListener,
    //local variables
     var apiKey: String?
     var application: UIApplication
-    var beaconManager: BeaconManager?
-    var appIdManager: AppIdManager?
-    var permissionManager: PermissionManager?
-    var protocolManager: ProtocolManager?
+    var beaconManager: LeapBeaconManager?
+    var appIdManager: LeapAppIdManager?
+    var permissionManager: LeapPermissionManager?
+    var protocolManager: LeapProtocolManager?
     let PERMISSION_NEEDED: String = "PERMISSION_NEEDED"
     let PERMISSION_REJECTED: String = "REJECTED"
     let PERMISSION_GRANTED: String = "GRANTED"
@@ -78,22 +78,22 @@ class MasterManager: ProtocolListener,
     }
     
     func initialiseComponents(){
-        appIdManager = AppIdManager(appIdListener: self)
-        beaconManager = BeaconManager(beaconListener: self)
-        permissionManager = PermissionManager(permissionListener: self)
-        protocolManager = ProtocolManager(protocolListener: self)
+        appIdManager = LeapAppIdManager(appIdListener: self)
+        beaconManager = LeapBeaconManager(beaconListener: self)
+        permissionManager = LeapPermissionManager(permissionListener: self)
+        protocolManager = LeapProtocolManager(protocolListener: self)
         protocolManager?.setup()
     }
     
     func start(){
-        self.appId = JinyAuthShared.shared.apiKey
+        self.appId = LeapCreatorShared.shared.apiKey
         beaconManager?.start(appId: self.appId!)
     }
     
     
 }
 
-extension MasterManager{
+extension LeapMasterManager{
     
     private func addObservers() {
         let nc = NotificationCenter.default
@@ -107,7 +107,7 @@ extension MasterManager{
     }
     
     @objc private func appWillEnterForeground(){
-        self.permissionManager = PermissionManager(permissionListener: self)
+        self.permissionManager = LeapPermissionManager(permissionListener: self)
         self.protocolManager?.onApplicationInForeground()
     }
     

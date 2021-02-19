@@ -1,18 +1,18 @@
 //
-//  ReachabilityManager.swift
-//  JinyAuthSDK
+//  LeapReachabilityManager.swift
+//  LeapCreator
 //
 //  Created by Ajay S on 19/01/21.
-//  Copyright © 2021 Jiny Inc. All rights reserved.
+//  Copyright © 2021 Leap Inc. All rights reserved.
 //
 
 import UIKit
 
-class ReachabilityManager {
+class LeapReachabilityManager {
     
-    static let shared = ReachabilityManager()
+    static let shared = LeapReachabilityManager()
     
-    var reachability: Reachability?
+    var reachability: LeapReachability?
     
     private var defaultConnection = false
         
@@ -28,11 +28,11 @@ class ReachabilityManager {
     }
     
     func setupReachability(_ hostName: String?, useClosures: Bool) {
-        let reachability: Reachability?
+        let reachability: LeapReachability?
         if let hostName = hostName {
-            reachability = try? Reachability(hostname: hostName)
+            reachability = try? LeapReachability(hostname: hostName)
         } else {
-            reachability = try? Reachability()
+            reachability = try? LeapReachability()
         }
         self.reachability = reachability
 
@@ -75,18 +75,20 @@ class ReachabilityManager {
         reachability = nil
     }
     
-    func updateLabelColourWhenReachable(_ reachability: Reachability) {
+    func updateLabelColourWhenReachable(_ reachability: LeapReachability) {
         print("\(reachability.description) - \(reachability.connection)")
-        UIApplication.shared.keyWindow?.rootViewController?.showToast(message: "Connected to the Internet", color: .systemGreen)
+        let keyWindow = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        keyWindow?.rootViewController?.showToast(message: "Connected to the Internet", color: .systemGreen)
     }
     
-    func updateLabelColourWhenNotReachable(_ reachability: Reachability) {
+    func updateLabelColourWhenNotReachable(_ reachability: LeapReachability) {
         print("\(reachability.description) - \(reachability.connection)")
-        UIApplication.shared.keyWindow?.rootViewController?.showToast(message: "Please check your internet connection", color: .systemRed)
+        let keyWindow = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        keyWindow?.rootViewController?.showToast(message: "Please check your internet connection", color: .systemRed)
     }
 
     @objc func reachabilityChanged(_ note: Notification) {
-        let reachability = note.object as! Reachability
+        let reachability = note.object as! LeapReachability
         
         if reachability.connection != .unavailable {
             updateLabelColourWhenReachable(reachability)

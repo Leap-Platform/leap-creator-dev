@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-//! Project version number for JinyAUI.
+//! Project version number for LeapAUI.
 FOUNDATION_EXPORT double LeapAUIVersionNumber;
 
-//! Project version string for JinyAUI.
+//! Project version string for LeapAUI.
 FOUNDATION_EXPORT const unsigned char LeapAUIVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <JinyAUI/PublicHeader.h>
+// In this header, you should import all the public headers of your framework using statements like #import <LeapAUI/PublicHeader.h>
 
 

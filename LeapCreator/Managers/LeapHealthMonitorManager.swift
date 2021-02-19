@@ -1,18 +1,18 @@
 //
-//  HealthMonitorManager.swift
-//  JinyAuthSDK
+//  LeapHealthMonitorManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 31/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import Starscream
 
-class HealthMonitorManager {
+class LeapHealthMonitorManager {
     
-    var healthListener: HealthCheckListener
+    var healthListener: LeapHealthCheckListener
     var roomId: String?
     var webSocket: WebSocket?
     var lastPongTime: Double?
@@ -20,7 +20,7 @@ class HealthMonitorManager {
     let MAX_FAILED_ATTEMPTS = 2.0
     let PING_INTERVAL =  5.0
     
-    init(healthCheckListener: HealthCheckListener){
+    init(healthCheckListener: LeapHealthCheckListener){
         self.healthListener = healthCheckListener
     }
     
@@ -70,7 +70,7 @@ class HealthMonitorManager {
     }
 }
 
-protocol HealthCheckListener {
+protocol LeapHealthCheckListener {
     func onSessionClosed()->Void
     
 }

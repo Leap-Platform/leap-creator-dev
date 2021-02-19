@@ -1,16 +1,16 @@
 //
-//  ScreenCaptureManager.swift
-//  JinyAuthSDK
+//  LeapScreenCaptureManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 22/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import Starscream
 
-class ScreenCaptureManager: AppStateProtocol{
+class LeapScreenCaptureManager: LeapAppStateProtocol{
     
     func onApplicationInForeground() {
         
@@ -29,9 +29,9 @@ class ScreenCaptureManager: AppStateProtocol{
     var roomId: String?
     var socket: WebSocket?
     var task: DispatchWorkItem?
-    var completeListener: FinishListener
+    var completeListener: LeapFinishListener
     
-    init(completeHierarchyFinishListener: FinishListener){
+    init(completeHierarchyFinishListener: LeapFinishListener){
         self.applicationInstance = UIApplication.shared
         self.completeListener = completeHierarchyFinishListener
     }
@@ -110,13 +110,13 @@ class ScreenCaptureManager: AppStateProtocol{
     }
     
     func getScreenCapture()->String?{
-        let image: UIImage = ScreenHelper.captureScreenshot()!
+        let image: UIImage = LeapScreenHelper.captureScreenshot()!
         let encodedImageBase64: String? = image.jpegData(compressionQuality: 0.3)?.base64EncodedString()
         return encodedImageBase64
     }
     
-    func getHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
-        ScreenHelper.captureHierarchy(finishListener: finishListener) { (dict) in
+    func getHierarchy(finishListener: LeapFinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
+        LeapScreenHelper.captureHierarchy(finishListener: finishListener) { (dict) in
             completion(dict)
         }
     }
@@ -126,6 +126,6 @@ class ScreenCaptureManager: AppStateProtocol{
     }
 }
 
-protocol FinishListener{
+protocol LeapFinishListener{
     func onCompleteHierarchyFetch()->Void
 }

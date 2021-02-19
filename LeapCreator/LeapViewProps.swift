@@ -1,9 +1,9 @@
 //
-//  JinyViewProps.swift
-//  JinyAuthSDK
+//  LeapViewProps.swift
+//  LeapCreator
 //
 //  Created by Aravind GS on 20/06/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
@@ -13,7 +13,7 @@ import WebKit
 /// global variable 'group' to keep track of recursion completion.
 fileprivate let group = DispatchGroup()
 
-class JinyViewBounds:Codable {
+class LeapViewBounds:Codable {
     
     var left:Float
     var top:Float
@@ -29,7 +29,7 @@ class JinyViewBounds:Codable {
     }
 }
 
-class JinyViewProps:Codable {
+class LeapViewProps:Codable {
     
     var controller:String?
     var acc_id:String
@@ -38,7 +38,7 @@ class JinyViewProps:Codable {
     var tag:Int
     var class_name:String
     var node_index:Int
-    var bounds:JinyViewBounds
+    var bounds:LeapViewBounds
     var placeholder:String?
     var text:String?
     var is_focusable: Bool
@@ -56,12 +56,12 @@ class JinyViewProps:Codable {
     var bgColor:Dictionary<String,Int>
     var tintColor:Dictionary<String, Int>?
     var uuid:String?
-    var children:Array<JinyViewProps> = []
+    var children:Array<LeapViewProps> = []
     var web_children: String?
     var is_ui_webview: Bool = false
     var is_wk_webview: Bool = false
     
-    init(view:UIView, finishListener: FinishListener, completion: ((_ success: Bool, _ viewProps: JinyViewProps?) -> Void
+    init(view:UIView, finishListener: LeapFinishListener, completion: ((_ success: Bool, _ viewProps: LeapViewProps?) -> Void
     )? = nil) {
         
         group.enter()
@@ -72,7 +72,7 @@ class JinyViewProps:Codable {
         tag = view.tag
         class_name = String(describing: type(of: view))
         node_index = view.superview?.subviews.firstIndex(of: view) ?? -1
-        bounds = JinyViewBounds(view: view)
+        bounds = LeapViewBounds(view: view)
         is_focusable = view.canBecomeFocused
         is_focused = view.isFocused
         is_selected = (view as? UIControl)?.isSelected ?? false
@@ -82,7 +82,7 @@ class JinyViewProps:Codable {
         is_exclusive_touch = view.isExclusiveTouch
         is_scroll_container = view.isKind(of: UIScrollView.self)
         is_webview = view.isKind(of: WKWebView.self)
-        uuid = String.generateJinyAuthUUIDString()
+        uuid = String.generateLeapCreatorUUIDString()
         if let control = view as? UIControl {
             let targetActions = control.allTargets.filter{
                 control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
@@ -112,27 +112,26 @@ class JinyViewProps:Codable {
         }
         if !is_webview {
             var childViews = view.subviews
-          
-            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Jiny") }
+            let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
+            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Leap") }
             childViews = childViews.filter{
-                guard let superview = $0.superview else { return true }
-                let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.keyWindow)
-                guard let keyWindow = UIApplication.shared.keyWindow else { return true }
+                guard let superview = $0.superview, let keyWindow = kw else { return true }
+                let frameToWindow = superview.convert($0.frame, to: keyWindow)
                 if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
                 return true
             }
-            if view.window == UIApplication.shared.keyWindow {
+            if view.window == kw {
                 let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
-                for child in childrenToCheck { children.append(JinyViewProps(view: child, finishListener: finishListener))}
+                for child in childrenToCheck { children.append(LeapViewProps(view: child, finishListener: finishListener))}
             } else {
-                for child in childViews  { children.append(JinyViewProps(view: child, finishListener: finishListener)) }
+                for child in childViews  { children.append(LeapViewProps(view: child, finishListener: finishListener)) }
             }
         } else { children = [] }
         
 
         var webChildren: String?
         if is_webview {
-            var injectionScript = ScreenHelper.layoutInjectionJSScript
+            var injectionScript = LeapScreenHelper.layoutInjectionJSScript
             injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.nativeBounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.nativeBounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
             if let wk_web = view as? WKWebView {
                 wk_web.evaluateJavaScript(injectionScript, completionHandler: { (res, error) in
@@ -175,11 +174,11 @@ class JinyViewProps:Codable {
 }
 
 extension String {
-    static func generateJinyAuthUUIDString() -> String {
+    static func generateLeapCreatorUUIDString() -> String {
         return "JinyAuthHierarchy\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))-\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
     }
     
-    static func authRandomString(_ length: Int) -> String {
+    static func creatorRandomString(_ length: Int) -> String {
         let letters = "abcdefghijklmnopqrstuvwxyz0123456789"
         let randomString = String((0..<length).map{_ in letters.randomElement()!})
         return randomString
@@ -202,7 +201,7 @@ extension UIColor {
     }
     
     
-    func getLayoutHierarchy(wkWebView: WKWebView, finishListener: FinishListener){
+    func getLayoutHierarchy(wkWebView: WKWebView, finishListener: LeapFinishListener){
         
     }
 }

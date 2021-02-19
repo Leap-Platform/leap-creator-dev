@@ -1,29 +1,29 @@
 //
-//  JinySocketListener.swift
-//  JinyAuthSDK
+//  LeapSocketListener.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 22/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import Starscream
 
-class JinySocketMessageDelegate: WebSocketDelegate{
+class LeapSocketMessageDelegate: WebSocketDelegate{
     
     let NORMAL_CLOSURE_STATUS: Int = 1000;
-    var jinySocketListener: JinySocketListener
+    var leapSocketListener: LeapSocketListener
     
-    init(jinySocketListener: JinySocketListener) {
-        self.jinySocketListener = jinySocketListener
+    init(leapSocketListener: LeapSocketListener) {
+        self.leapSocketListener = leapSocketListener
     }
 
     func didReceive(event: WebSocketEvent, client: WebSocket) {
         switch event {
            case .connected(let headers):
              print("connected \(headers)")
-            self.jinySocketListener.onConnectionEstablished()  // called to enable socket to begin writing 
+            self.leapSocketListener.onConnectionEstablished()  // called to enable socket to begin writing 
             
            case .disconnected(let reason, let closeCode):
              print("disconnected \(reason) \(closeCode)")
@@ -38,7 +38,7 @@ class JinySocketMessageDelegate: WebSocketDelegate{
             let id = (jsonData?[constant_id]) as! String
             let typeOfPacket = (jsonData?[constant_type]) as! String
             
-            self.jinySocketListener.onReceivePacket(id: id, type: typeOfPacket)
+            self.leapSocketListener.onReceivePacket(id: id, type: typeOfPacket)
             
            case .binary(let data):
              print("received data: \(data)")
@@ -65,7 +65,7 @@ class JinySocketMessageDelegate: WebSocketDelegate{
     
 }
 
-protocol JinySocketListener{
+protocol LeapSocketListener{
     func onReceivePacket(id: String, type: String)
     func onConnectionEstablished()->Void
     

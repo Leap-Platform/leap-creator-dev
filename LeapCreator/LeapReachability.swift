@@ -1,15 +1,15 @@
 //
-//  Reachability.swift
-//  JinyAuthSDK
+//  LeapReachability.swift
+//  LeapCreator
 //
 //  Created by Ajay S on 19/01/21.
-//  Copyright © 2021 Jiny Inc. All rights reserved.
+//  Copyright © 2021 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import SystemConfiguration
 
-public enum ReachabilityError: Error {
+enum LeapReachabilityError: Error {
     case failedToCreateWithAddress(sockaddr, Int32)
     case failedToCreateWithHostname(String, Int32)
     case unableToSetCallback(Int32)
@@ -18,21 +18,21 @@ public enum ReachabilityError: Error {
 }
 
 @available(*, unavailable, renamed: "Notification.Name.reachabilityChanged")
-public let ReachabilityChangedNotification = NSNotification.Name("ReachabilityChangedNotification")
+let ReachabilityChangedNotification = NSNotification.Name("ReachabilityChangedNotification")
 
-public extension Notification.Name {
+extension Notification.Name {
     static let reachabilityChanged = Notification.Name("reachabilityChanged")
 }
 
-public class Reachability {
+class LeapReachability {
 
-    public typealias NetworkReachable = (Reachability) -> ()
-    public typealias NetworkUnreachable = (Reachability) -> ()
+    typealias NetworkReachable = (LeapReachability) -> ()
+    typealias NetworkUnreachable = (LeapReachability) -> ()
 
     @available(*, unavailable, renamed: "Connection")
-    public enum NetworkStatus: CustomStringConvertible {
+    enum NetworkStatus: CustomStringConvertible {
         case notReachable, reachableViaWiFi, reachableViaWWAN
-        public var description: String {
+        var description: String {
             switch self {
             case .reachableViaWWAN: return "Cellular"
             case .reachableViaWiFi: return "WiFi"
@@ -41,9 +41,9 @@ public class Reachability {
         }
     }
 
-    public enum Connection: CustomStringConvertible {
+    enum Connection: CustomStringConvertible {
         case unavailable, wifi, cellular
-        public var description: String {
+        var description: String {
             switch self {
             case .cellular: return "Cellular"
             case .wifi: return "WiFi"
@@ -52,32 +52,32 @@ public class Reachability {
         }
         
         @available(*, deprecated, renamed: "unavailable")
-        public static let none: Connection = .unavailable
+        static let none: Connection = .unavailable
     }
 
-    public var whenReachable: NetworkReachable?
-    public var whenUnreachable: NetworkUnreachable?
+    var whenReachable: NetworkReachable?
+    var whenUnreachable: NetworkUnreachable?
 
     @available(*, deprecated, renamed: "allowsCellularConnection")
-    public let reachableOnWWAN: Bool = true
+    let reachableOnWWAN: Bool = true
 
     /// Set to `false` to force Reachability.connection to .none when on cellular connection (default value `true`)
-    public var allowsCellularConnection: Bool
+    var allowsCellularConnection: Bool
 
     // The notification center on which "reachability changed" events are being posted
-    public var notificationCenter: NotificationCenter = NotificationCenter.default
+    var notificationCenter: NotificationCenter = NotificationCenter.default
 
     @available(*, deprecated, renamed: "connection.description")
-    public var currentReachabilityString: String {
+    var currentReachabilityString: String {
         return "\(connection)"
     }
 
     @available(*, unavailable, renamed: "connection")
-    public var currentReachabilityStatus: Connection {
+    var currentReachabilityStatus: Connection {
         return connection
     }
 
-    public var connection: Connection {
+    var connection: Connection {
         if flags == nil {
             try? setReachabilityFlags()
         }
@@ -108,7 +108,7 @@ public class Reachability {
         }
     }
 
-    required public init(reachabilityRef: SCNetworkReachability,
+    required init(reachabilityRef: SCNetworkReachability,
                          queueQoS: DispatchQoS = .default,
                          targetQueue: DispatchQueue? = nil,
                          notificationQueue: DispatchQueue? = .main) {
@@ -118,17 +118,17 @@ public class Reachability {
         self.notificationQueue = notificationQueue
     }
 
-    public convenience init(hostname: String,
+    convenience init(hostname: String,
                             queueQoS: DispatchQoS = .default,
                             targetQueue: DispatchQueue? = nil,
                             notificationQueue: DispatchQueue? = .main) throws {
         guard let ref = SCNetworkReachabilityCreateWithName(nil, hostname) else {
-            throw ReachabilityError.failedToCreateWithHostname(hostname, SCError())
+            throw LeapReachabilityError.failedToCreateWithHostname(hostname, SCError())
         }
         self.init(reachabilityRef: ref, queueQoS: queueQoS, targetQueue: targetQueue, notificationQueue: notificationQueue)
     }
 
-    public convenience init(queueQoS: DispatchQoS = .default,
+    convenience init(queueQoS: DispatchQoS = .default,
                             targetQueue: DispatchQueue? = nil,
                             notificationQueue: DispatchQueue? = .main) throws {
         var zeroAddress = sockaddr()
@@ -136,7 +136,7 @@ public class Reachability {
         zeroAddress.sa_family = sa_family_t(AF_INET)
 
         guard let ref = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-            throw ReachabilityError.failedToCreateWithAddress(zeroAddress, SCError())
+            throw LeapReachabilityError.failedToCreateWithAddress(zeroAddress, SCError())
         }
 
         self.init(reachabilityRef: ref, queueQoS: queueQoS, targetQueue: targetQueue, notificationQueue: notificationQueue)
@@ -147,7 +147,7 @@ public class Reachability {
     }
 }
 
-public extension Reachability {
+extension LeapReachability {
 
     // MARK: - *** Notifier methods ***
     func startNotifier() throws {
@@ -158,30 +158,30 @@ public extension Reachability {
 
             // `weakifiedReachability` is guaranteed to exist by virtue of our
             // retain/release callbacks which we provided to the `SCNetworkReachabilityContext`.
-            let weakifiedReachability = Unmanaged<ReachabilityWeakifier>.fromOpaque(info).takeUnretainedValue()
+            let weakifiedReachability = Unmanaged<LeapReachabilityWeakifier>.fromOpaque(info).takeUnretainedValue()
 
-            // The weak `reachability` _may_ no longer exist if the `Reachability`
+            // The weak `reachability` _may_ no longer exist if the `LeapReachability`
             // object has since been deallocated but a callback was already in flight.
             weakifiedReachability.reachability?.flags = flags
         }
 
-        let weakifiedReachability = ReachabilityWeakifier(reachability: self)
-        let opaqueWeakifiedReachability = Unmanaged<ReachabilityWeakifier>.passUnretained(weakifiedReachability).toOpaque()
+        let weakifiedReachability = LeapReachabilityWeakifier(reachability: self)
+        let opaqueWeakifiedReachability = Unmanaged<LeapReachabilityWeakifier>.passUnretained(weakifiedReachability).toOpaque()
 
         var context = SCNetworkReachabilityContext(
             version: 0,
             info: UnsafeMutableRawPointer(opaqueWeakifiedReachability),
             retain: { (info: UnsafeRawPointer) -> UnsafeRawPointer in
-                let unmanagedWeakifiedReachability = Unmanaged<ReachabilityWeakifier>.fromOpaque(info)
+                let unmanagedWeakifiedReachability = Unmanaged<LeapReachabilityWeakifier>.fromOpaque(info)
                 _ = unmanagedWeakifiedReachability.retain()
                 return UnsafeRawPointer(unmanagedWeakifiedReachability.toOpaque())
             },
             release: { (info: UnsafeRawPointer) -> Void in
-                let unmanagedWeakifiedReachability = Unmanaged<ReachabilityWeakifier>.fromOpaque(info)
+                let unmanagedWeakifiedReachability = Unmanaged<LeapReachabilityWeakifier>.fromOpaque(info)
                 unmanagedWeakifiedReachability.release()
             },
             copyDescription: { (info: UnsafeRawPointer) -> Unmanaged<CFString> in
-                let unmanagedWeakifiedReachability = Unmanaged<ReachabilityWeakifier>.fromOpaque(info)
+                let unmanagedWeakifiedReachability = Unmanaged<LeapReachabilityWeakifier>.fromOpaque(info)
                 let weakifiedReachability = unmanagedWeakifiedReachability.takeUnretainedValue()
                 let description = weakifiedReachability.reachability?.description ?? "nil"
                 return Unmanaged.passRetained(description as CFString)
@@ -190,12 +190,12 @@ public extension Reachability {
 
         if !SCNetworkReachabilitySetCallback(reachabilityRef, callback, &context) {
             stopNotifier()
-            throw ReachabilityError.unableToSetCallback(SCError())
+            throw LeapReachabilityError.unableToSetCallback(SCError())
         }
 
         if !SCNetworkReachabilitySetDispatchQueue(reachabilityRef, reachabilitySerialQueue) {
             stopNotifier()
-            throw ReachabilityError.unableToSetDispatchQueue(SCError())
+            throw LeapReachabilityError.unableToSetDispatchQueue(SCError())
         }
 
         // Perform an initial check
@@ -233,14 +233,14 @@ public extension Reachability {
     }
 }
 
-fileprivate extension Reachability {
+fileprivate extension LeapReachability {
 
     func setReachabilityFlags() throws {
         try reachabilitySerialQueue.sync { [unowned self] in
             var flags = SCNetworkReachabilityFlags()
             if !SCNetworkReachabilityGetFlags(self.reachabilityRef, &flags) {
                 self.stopNotifier()
-                throw ReachabilityError.unableToGetFlags(SCError())
+                throw LeapReachabilityError.unableToGetFlags(SCError())
             }
             
             self.flags = flags
@@ -262,7 +262,7 @@ fileprivate extension Reachability {
 
 extension SCNetworkReachabilityFlags {
 
-    typealias Connection = Reachability.Connection
+    typealias Connection = LeapReachability.Connection
 
     var connection: Connection {
         guard isReachableFlagSet else { return .unavailable }
@@ -345,35 +345,35 @@ extension SCNetworkReachabilityFlags {
 }
 
 /**
- `ReachabilityWeakifier` weakly wraps the `Reachability` class
+ `ReachabilityWeakifier` weakly wraps the `LeapReachability` class
  in order to break retain cycles when interacting with CoreFoundation.
  CoreFoundation callbacks expect a pair of retain/release whenever an
  opaque `info` parameter is provided. These callbacks exist to guard
  against memory management race conditions when invoking the callbacks.
  #### Race Condition
  If we passed `SCNetworkReachabilitySetCallback` a direct reference to our
- `Reachability` class without also providing corresponding retain/release
+ `LeapReachability` class without also providing corresponding retain/release
  callbacks, then a race condition can lead to crashes when:
  - `Reachability` is deallocated on thread X
  - A `SCNetworkReachability` callback(s) is already in flight on thread Y
  #### Retain Cycle
- If we pass `Reachability` to CoreFoundtion while also providing retain/
+ If we pass `LeapReachability` to CoreFoundtion while also providing retain/
  release callbacks, we would create a retain cycle once CoreFoundation
- retains our `Reachability` class. This fixes the crashes and his how
+ retains our `LeapReachability` class. This fixes the crashes and his how
  CoreFoundation expects the API to be used, but doesn't play nicely with
  Swift/ARC. This cycle would only be broken after manually calling
  `stopNotifier()` — `deinit` would never be called.
  #### ReachabilityWeakifier
- By providing both retain/release callbacks and wrapping `Reachability` in
+ By providing both retain/release callbacks and wrapping `LeapReachability` in
  a weak wrapper, we:
  - interact correctly with CoreFoundation, thereby avoiding a crash.
  See "Memory Management Programming Guide for Core Foundation".
- - don't alter the public API of `Reachability.swift` in any way
+ - don't alter the API of `LeapReachability.swift` in any way
  - still allow for automatic stopping of the notifier on `deinit`.
  */
-private class ReachabilityWeakifier {
-    weak var reachability: Reachability?
-    init(reachability: Reachability) {
+private class LeapReachabilityWeakifier {
+    weak var reachability: LeapReachability?
+    init(reachability: LeapReachability) {
         self.reachability = reachability
     }
 }

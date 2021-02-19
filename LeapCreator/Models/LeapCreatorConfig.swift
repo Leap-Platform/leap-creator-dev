@@ -1,19 +1,19 @@
 //
-//  JinyAuthConfig.swift
-//  JinyAuthSDK
+//  LeapCreatorConfig.swift
+//  LeapCreator
 //
 //  Created by Ajay S on 04/01/21.
-//  Copyright © 2021 Jiny Inc. All rights reserved.
+//  Copyright © 2021 Leap Inc. All rights reserved.
 //
 
 import Foundation
 
-class JinyAuthData: Codable {
+class LeapCreatorData: Codable {
     
-    var authConfig: JinyAuthConfig?
+    var creatorConfig: LeapCreatorConfig?
     
     enum CodingKeys: String, CodingKey {
-        case authConfig = "data"
+        case creatorConfig = "data"
     }
     
     init() {
@@ -21,20 +21,20 @@ class JinyAuthData: Codable {
     }
     
     // MARK: - Decodable
-    required convenience public init(from decoder: Decoder) throws {
+    required convenience init(from decoder: Decoder) throws {
         self.init()
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
                 
-        self.authConfig = try? container.decodeIfPresent(JinyAuthConfig.self, forKey: .authConfig)
+        self.creatorConfig = try? container.decodeIfPresent(LeapCreatorConfig.self, forKey: .creatorConfig)
     }
     
     // MARK: - Encodable
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
     }
 }
 
-class JinyAuthConfig: Codable {
+class LeapCreatorConfig: Codable {
     
     var beacon: Beacon?
     
@@ -56,7 +56,7 @@ class JinyAuthConfig: Codable {
     }
     
     // MARK: - Decodable
-    required convenience public init(from decoder: Decoder) throws {
+    required convenience init(from decoder: Decoder) throws {
         self.init()
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -88,7 +88,7 @@ class Beacon: Codable {
     }
     
     // MARK: - Decodable
-    required convenience public init(from decoder: Decoder) throws {
+    required convenience init(from decoder: Decoder) throws {
         self.init()
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -98,7 +98,7 @@ class Beacon: Codable {
     }
     
     // MARK: - Encodable
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
     }
 }
 
@@ -124,7 +124,7 @@ class Permission: Codable {
     }
     
     // MARK: - Decodable
-    required convenience public init(from decoder: Decoder) throws {
+    required convenience init(from decoder: Decoder) throws {
         self.init()
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -139,7 +139,7 @@ class Permission: Codable {
     }
     
     // MARK: - Encodable
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
     }
 }
 
@@ -156,7 +156,7 @@ class Message: Codable {
     }
     
     // MARK: - Decodable
-    required convenience public init(from decoder: Decoder) throws {
+    required convenience init(from decoder: Decoder) throws {
         self.init()
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -165,7 +165,7 @@ class Message: Codable {
     }
     
     // MARK: - Encodable
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
     }
 }
 
@@ -188,7 +188,7 @@ class Streaming: Codable {
     }
     
     // MARK: - Decodable
-    required convenience public init(from decoder: Decoder) throws {
+    required convenience init(from decoder: Decoder) throws {
         self.init()
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -201,6 +201,6 @@ class Streaming: Codable {
     }
     
     // MARK: - Encodable
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
     }
 }

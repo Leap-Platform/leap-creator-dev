@@ -1,16 +1,16 @@
 //
-//  StreamingManager.swift
-//  JinyAuthSDK
+//  LeapStreamingManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 22/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import Starscream
 
-class StreamingManager: AppStateProtocol {
+class LeapStreamingManager: LeapAppStateProtocol {
     
     // Application state managers
     func onApplicationInForeground() {
@@ -27,7 +27,7 @@ class StreamingManager: AppStateProtocol {
     
     
     let ONE_SECOND: Double = 1.0
-    let FRAME_RATE: Double = JinyAuthShared.shared.authConfig?.streaming?.frameRate ?? 24
+    let FRAME_RATE: Double = LeapCreatorShared.shared.creatorConfig?.streaming?.frameRate ?? 24
     
     var context: UIApplication
     var roomId: String?
@@ -59,7 +59,7 @@ class StreamingManager: AppStateProtocol {
         var encodedImage: String = ""
         
         if self.isAppInForeground {
-            self.image = self.resizeImage(image: (ScreenHelper.captureScreenshot()!))
+            self.image = self.resizeImage(image: (LeapScreenHelper.captureScreenshot()!))
             if self.image != self.previousImage {
             encodedImage = self.getBase64EncodedImage(image: self.image!, compression: 0.8)
             }
@@ -113,7 +113,7 @@ class StreamingManager: AppStateProtocol {
         let maxWidth: Float = 360.0
         var imgRatio: Float = actualWidth / actualHeight
         let maxRatio: Float = maxWidth / maxHeight
-        let compressionQuality: Float = Float((JinyAuthShared.shared.authConfig?.streaming?.quality ?? 40)/100)
+        let compressionQuality: Float = Float((LeapCreatorShared.shared.creatorConfig?.streaming?.quality ?? 40)/100)
         //50 percent compression
 
         if actualHeight > maxHeight || actualWidth > maxWidth {

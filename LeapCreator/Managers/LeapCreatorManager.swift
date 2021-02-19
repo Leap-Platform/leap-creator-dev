@@ -1,31 +1,31 @@
 //
-//  JinyAuthManager.swift
-//  JinyAuthSDK
+//  LeapCreatorManager.swift
+//  LeapCreator
 //
 //  Created by Ajay S on 04/01/21.
-//  Copyright © 2021 Jiny Inc. All rights reserved.
+//  Copyright © 2021 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import AdSupport
 
-protocol AuthManagerDelegate: class {
+protocol LeapCreatorManagerDelegate: class {
     func fetchConfigSuccess()
     func fetchConfigFailure()
 }
 
-class JinyAuthManager {
+class LeapCreatorManager {
     
-    weak var delegate: AuthManagerDelegate?
+    weak var delegate: LeapCreatorManagerDelegate?
     let apiKey: String?
     
-    init(key: String, delegate: AuthManagerDelegate) {
+    init(key: String, delegate: LeapCreatorManagerDelegate) {
         self.apiKey = key
         self.delegate = delegate
     }
 
-    func fetchAuthConfig() {
-        let url = URL(string: JinyAuthShared.shared.ALFRED_DEV_BASE_URL+JinyAuthShared.shared.AUTH_CONFIG_ENDPOINT)
+    func fetchCreatorConfig() {
+        let url = URL(string: LeapCreatorShared.shared.ALFRED_DEV_BASE_URL+LeapCreatorShared.shared.CREATOR_CONFIG_ENDPOINT)
         var req = URLRequest(url: url!)
         req.httpMethod = "GET"
         req.addValue(apiKey!, forHTTPHeaderField: "x-auth-id")
@@ -43,16 +43,16 @@ class JinyAuthManager {
                     
                     do {
                         let decoder = JSONDecoder()
-                        let authData = try decoder.decode(JinyAuthData.self, from: resultData)
+                        let creatorData = try decoder.decode(LeapCreatorData.self, from: resultData)
                         
-                        guard let authConfig = authData.authConfig else {
+                        guard let creatorConfig = creatorData.creatorConfig else {
                             
-                            print("WARNING: Auth Config is Empty")
+                            print("WARNING: Creator Config is Empty")
                             
                             return
                         }
                         
-                        JinyAuthShared.shared.authConfig = authConfig
+                        LeapCreatorShared.shared.creatorConfig = creatorConfig
                         self.delegate?.fetchConfigSuccess()
                         
                     } catch let error {

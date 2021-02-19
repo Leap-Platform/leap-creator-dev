@@ -1,15 +1,15 @@
 //
-//  ScreenHelper.swift
-//  JinyAuthSDK
+//  LeapScreenHelper.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 23/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class ScreenHelper {
+class LeapScreenHelper {
     
     static let layoutInjectionJSScript = "(function (totalScreenHeight, totalScreenWidth, topMargin=0, leftMargin=0) {\n" +
         "    var jinyFetchClientHierarchy = function(root){\n" +
@@ -74,7 +74,7 @@ class ScreenHelper {
         return smallImage
     }
 
-    static func captureHierarchy(finishListener: FinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
+    static func captureHierarchy(finishListener: LeapFinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
         var hierarchy:Dictionary<String,Any> = [:]
         if let controller = UIApplication.getCurrentTopVC() {
             hierarchy[constant_controller] = String(describing: type(of: controller.self))
@@ -86,7 +86,8 @@ class ScreenHelper {
         hierarchy[constant_screen_height] = UIScreen.main.nativeBounds.height
         hierarchy[constant_client_package_name] = Bundle.main.bundleIdentifier
         hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
-        _ = JinyViewProps(view: UIApplication.shared.keyWindow!, finishListener: finishListener) { (_, props) in
+        let keyWindow = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        _ = LeapViewProps(view: keyWindow!, finishListener: finishListener) { (_, props) in
             do {
                 let jsonEncoder = JSONEncoder()
                 jsonEncoder.outputFormatting = .prettyPrinted

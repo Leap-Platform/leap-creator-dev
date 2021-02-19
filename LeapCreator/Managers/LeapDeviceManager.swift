@@ -1,15 +1,15 @@
 //
-//  DeviceManager.swift
-//  JinyAuthSDK
+//  LeapDeviceManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 16/12/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import Starscream
 
-class DeviceManager {
+class LeapDeviceManager {
     
     var roomId: String?
     var webSocket: WebSocket?

@@ -1,19 +1,19 @@
 //
-//  AppIdManager.swift
-//  JinyAuthSDK
+//  LeapAppIdManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 20/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit
 
-class AppIdManager{
+class LeapAppIdManager{
     
     var appStoreId: String?
-    var appIdFetchListener: AppIdListener
+    var appIdFetchListener: LeapAppIdListener
     
-    init(appIdListener: AppIdListener){
+    init(appIdListener: LeapAppIdListener){
         self.appIdFetchListener = appIdListener
     }
     
@@ -23,6 +23,6 @@ class AppIdManager{
     }
 }
 
-protocol AppIdListener{
+protocol LeapAppIdListener{
     func onIdFound()->String 
 }

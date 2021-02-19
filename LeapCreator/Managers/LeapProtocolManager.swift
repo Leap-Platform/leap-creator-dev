@@ -1,16 +1,16 @@
 //
-//  ProtocolManager.swift
-//  JinyAuthSDK
+//  LeapProtocolManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 20/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import Starscream
 
-class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener, FinishListener {
+class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthCheckListener, LeapFinishListener {
     
     func onSessionClosed() {
         self.streamingManager?.stop()
@@ -70,7 +70,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
         case CASE_DEVICE_INFO:
             //self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
             break
-        case CASE_KILL_AUTH:
+        case CASE_KILL_CREATOR:
             onSessionClosed()
             break
         default:
@@ -87,32 +87,32 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     let CASE_PONG: String? = "PONG"
     let CASE_STOP_OPERATIONS = "STOP_OPERATIONS"
     let CASE_DEVICE_INFO = "DEVICE_INFO"
-    let CASE_KILL_AUTH = "KILL_AUTH"
+    let CASE_KILL_CREATOR = "KILL_AUTH"
 
 //    let SOCKET_URL: String? = "ws://15.206.167.18:4000/ws"
     let SOCKET_URL: String? = "wss://raven-dev-gke.leap.is/ws"
     
-    var protocolListener: ProtocolListener
+    var protocolListener: LeapProtocolListener
     var applicationInstance: UIApplication
     var roomId: String?
-    var captureManager: ScreenCaptureManager?
-    var streamingManager: StreamingManager?
+    var captureManager: LeapScreenCaptureManager?
+    var streamingManager: LeapStreamingManager?
     var webSocketTask: WebSocket?
-    var jinySocketMessageDelegate: JinySocketMessageDelegate?
-    var healthMonitor: HealthMonitorManager?
-    var deviceManager: DeviceManager?
+    var socketMessageDelegate: LeapSocketMessageDelegate?
+    var healthMonitor: LeapHealthMonitorManager?
+    var deviceManager: LeapDeviceManager?
     
-    init(protocolListener: ProtocolListener) {
+    init(protocolListener: LeapProtocolListener) {
         self.protocolListener = protocolListener
         self.applicationInstance = UIApplication.shared
     }
     
     func setup(){
-        self.deviceManager = DeviceManager()
-        self.captureManager = ScreenCaptureManager(completeHierarchyFinishListener: self)
-        self.streamingManager = StreamingManager()
-        self.healthMonitor = HealthMonitorManager(healthCheckListener: self)
-        self.jinySocketMessageDelegate = JinySocketMessageDelegate(jinySocketListener: self)
+        self.deviceManager = LeapDeviceManager()
+        self.captureManager = LeapScreenCaptureManager(completeHierarchyFinishListener: self)
+        self.streamingManager = LeapStreamingManager()
+        self.healthMonitor = LeapHealthMonitorManager(healthCheckListener: self)
+        self.socketMessageDelegate = LeapSocketMessageDelegate(leapSocketListener: self)
     }
     
     func start(roomId: String){
@@ -125,7 +125,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
         let url: URL = URL(string: self.SOCKET_URL!)!
         let urlRequest = URLRequest(url: url)
         webSocketTask = WebSocket(request: urlRequest)
-        webSocketTask?.delegate = self.jinySocketMessageDelegate
+        webSocketTask?.delegate = self.socketMessageDelegate
         webSocketTask?.connect()
     }
     
@@ -137,7 +137,7 @@ class ProtocolManager: JinySocketListener, AppStateProtocol, HealthCheckListener
     }
 }
 
-protocol ProtocolListener{
+protocol LeapProtocolListener{
     func onSessionClosed()->Void
 }
 

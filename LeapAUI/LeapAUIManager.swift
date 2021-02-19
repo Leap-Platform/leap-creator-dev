@@ -60,7 +60,7 @@ extension LeapAUIManager {
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("jiny_auth_live"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("leap_creator_live"), object: nil)
     }
     
     @objc func keyboardDidShow(_ notification: NSNotification) {

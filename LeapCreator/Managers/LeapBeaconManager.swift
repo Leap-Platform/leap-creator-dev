@@ -1,26 +1,26 @@
 //
-//  BeaconManager.swift
-//  JinyAuthSDK
+//  LeapBeaconManager.swift
+//  LeapCreator
 //
 //  Created by Shreyansh Sharma on 20/10/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import Foundation
 
-class BeaconManager {
+class LeapBeaconManager {
     private static let TAG: String = " Jiny - BeaconManager "
     private let ALFRED_URL_LOCAL: String  = "http://192.168.1.3:8080"
     private let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is"
     
-    let json = "{\"id\":\"\(JinyAuthShared.shared.apiKey!)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(JinyAuthShared.shared.apiKey!)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
+    let json = "{\"id\":\"\(LeapCreatorShared.shared.apiKey!)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(LeapCreatorShared.shared.apiKey!)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
     
-    var beaconListener: BeaconListener
+    var beaconListener: LeapBeaconListener
     var appId: String?
     var roomId: String
     var status: String?
     var task: DispatchWorkItem?
-    let interval: TimeInterval = (JinyAuthShared.shared.authConfig?.beacon?.interval ?? 3000)/1000
+    let interval: TimeInterval = (LeapCreatorShared.shared.creatorConfig?.beacon?.interval ?? 3000)/1000
     
     private var sendFirstBeacon: Bool?
         
@@ -30,7 +30,7 @@ class BeaconManager {
         }
     }
     
-    init(beaconListener: BeaconListener) {
+    init(beaconListener: LeapBeaconListener) {
         self.beaconListener = beaconListener
         self.roomId = ""
         NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
@@ -41,7 +41,7 @@ class BeaconManager {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
-    public func start(appId: String){
+    func start(appId: String){
         self.appId = appId
         self.task = DispatchWorkItem{self.sendSubsequentBeacons()}
         startBeacons()
@@ -58,7 +58,7 @@ class BeaconManager {
         let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(JinyAuthShared.shared.apiKey!, forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(LeapCreatorShared.shared.apiKey!, forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "POST"
         
@@ -79,7 +79,7 @@ class BeaconManager {
         let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(JinyAuthShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(LeapCreatorShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
         
@@ -126,7 +126,7 @@ class BeaconManager {
     }
 }
 
-protocol BeaconListener{
+protocol LeapBeaconListener{
     func onBeaconSuccess(roomId: String, status: Any)->Void
     func onBeaconFailure()->Void
 }
