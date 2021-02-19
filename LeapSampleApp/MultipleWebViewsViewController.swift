@@ -1,14 +1,13 @@
 //
 //  MultipleWebViewsViewController.swift
-//  JinySampleApp
+//  LeapSampleApp
 //
 //  Created by Aravind GS on 02/07/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit
 import WebKit
-import JinyAUI
 
 class MultipleWebViewsViewController: UIViewController {
     
@@ -16,7 +15,7 @@ class MultipleWebViewsViewController: UIViewController {
     @IBOutlet weak var webview2:WKWebView!
     
     override func viewWillAppear(_ animated: Bool) {
-        JinyAUI.shared.addIdentifier(identifier: "clicks", value: 1)
+//        LeapAUI.shared.addIdentifier(identifier: "clicks", value: 1)
     }
 
     override func viewDidLoad() {

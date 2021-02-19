@@ -1,13 +1,13 @@
 //
 //  ViewController.swift
-//  JinySampleApp
+//  LeapSampleApp
 //
 //  Created by Aravind GS on 17/03/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit
-import JinyAUI
+
 
 class HomeViewController: UIViewController {
     
@@ -84,7 +84,7 @@ extension HomeViewController:PlacesDelegate {
     func placeSelected(_ place: String, _ isSource: Bool) {
         if isSource {
             source.setTitle(place, for: .normal)
-            JinyAUI.shared.addIdentifier(identifier: "source", value: place)
+//            LeapAUI.shared.addIdentifier(identifier: "source", value: place)
         }
         else {destination.setTitle(place, for: .normal)}
     }

@@ -1,23 +1,26 @@
 //
-//  AutomaticViewController.swift
-//  JinySampleApp
+//  ManualScrollViewController.swift
+//  LeapSampleApp
 //
-//  Created by Aravind GS on 20/06/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Created by Ajay S on 09/02/21.
+//  Copyright © 2021 Leap Inc. All rights reserved.
 //
 
 import UIKit
 
-class AutomaticViewController: UIViewController {
+class ManualScrollViewController: UIViewController {
 
-    @IBOutlet weak var imageView: UIImageView!
-    public var image:UIImage? = nil
+    @IBOutlet weak var manualScrollView: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let screenshot = image else { return }
-        imageView.image = screenshot
+
         // Do any additional setup after loading the view.
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            
+            self.manualScrollView.scrollRectToVisible(CGRect(x: 0, y: 800, width: self.view.frame.width, height: self.view.frame.height), animated: true)
+        }
     }
     
 

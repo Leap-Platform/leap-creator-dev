@@ -1,9 +1,9 @@
 //
 //  SceneDelegate.swift
-//  JinySampleApp
+//  LeapSampleApp
 //
 //  Created by Aravind GS on 17/03/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit

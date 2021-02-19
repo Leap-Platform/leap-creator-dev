@@ -1,15 +1,14 @@
 //
 //  AppDelegate.swift
-//  JinySampleApp
+//  LeapSampleApp
 //
 //  Created by Aravind GS on 17/03/20.
-//  Copyright © 2020 Aravind GS. All rights reserved.
+//  Copyright © 2020 Leap Inc. All rights reserved.
 //
 
 import UIKit
-//import JinySDK
-//import JinyAuthSDK
-import JinyAUI
+//import LeapCreator
+import LeapAUI
 
 @available(iOS 13.0, *)
 @UIApplicationMain
@@ -17,11 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        JinyAUI.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
-        JinyAUI.shared.clientCallback = self
-//        let _ = Jiny.shared.initialize(withToken: "pBWmiQ8HCKllVJd2xQ5Cd7d5defd9e1e4f7a8882c34ff75f0d36", isTesting: false, uiManager: nil)
-        
-//        JinyAuth.instance.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        LeapAUI.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+//        LeapCreator.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         return true
     }
 
@@ -40,14 +36,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
-}
-
-
-@available(iOS 13.0, *)
-extension AppDelegate:JinyAUIClientCallback {
-    
-    func eventNotification(eventInfo: Dictionary<String, Any>) {
-        print(eventInfo)
-    }
-    
 }
