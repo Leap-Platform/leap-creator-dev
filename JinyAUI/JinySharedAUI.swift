@@ -8,14 +8,13 @@
 
 import Foundation
 import UIKit
+import JinySDK
 
 class JinySharedAUI {
     
     static let shared = JinySharedAUI()
     let fm = FileManager.default
-    var iconHtml: String?
-    var iconColor = "#000000"
-    
+    var iconSetting: IconSetting?
     
     func checkIfFolderExists(folder:URL) -> Bool {
         var isDirectory = ObjCBool(true)

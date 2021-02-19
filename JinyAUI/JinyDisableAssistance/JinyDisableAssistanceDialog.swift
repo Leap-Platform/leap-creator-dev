@@ -22,8 +22,8 @@ class JinyDisableAssistanceDialog: UIView {
     
     private lazy var jinyIcon: JinyIconView = {
         let jinyIconView = JinyIconView()
-        jinyIconView.htmlUrl = JinySharedAUI.shared.iconHtml
-        jinyIconView.iconBackgroundColor = UIColor(hex: JinySharedAUI.shared.iconColor) ?? .black
+        jinyIconView.htmlUrl = JinySharedAUI.shared.iconSetting?.htmlUrl
+        jinyIconView.iconBackgroundColor = UIColor(hex: JinySharedAUI.shared.iconSetting?.bgColor ?? "#00000000") ?? .black
         return jinyIconView
     }()
     

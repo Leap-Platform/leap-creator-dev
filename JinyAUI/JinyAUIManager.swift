@@ -286,15 +286,18 @@ extension JinyAUIManager: JinyAUIHandler {
     
     func presentJinyButton(for iconSetting: IconSetting, iconEnabled: Bool) {
         guard jinyButton == nil, jinyButton?.window == nil, iconEnabled else {
-            JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
-            JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+            if !iconSetting.isEqual(JinySharedAUI.shared.iconSetting) {
+                self.jinyButton?.removeFromSuperview()
+                self.jinyButton = nil
+                presentJinyButton(for: iconSetting, iconEnabled: iconEnabled)
+                return
+            }
             jinyButton?.isHidden = false
             let kw = UIApplication.shared.windows.first{ $0.isKeyWindow}
             if let keyWindow = kw { keyWindow.bringSubviewToFront(jinyButton!) }
             return
         }
-        JinySharedAUI.shared.iconHtml = iconSetting.htmlUrl
-        JinySharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+        JinySharedAUI.shared.iconSetting = iconSetting
         jinyButton = JinyMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(jinyButton!)
