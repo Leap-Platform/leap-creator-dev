@@ -3,7 +3,7 @@
 //  LeapCore
 //
 //  Created by Ajay S on 04/02/21.
-//  Copyright © 2021 Aravind GS. All rights reserved.
+//  Copyright © 2021 Leap Inc. All rights reserved.
 //
 
 import Foundation
