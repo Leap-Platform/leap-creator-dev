@@ -9,7 +9,6 @@
 import Foundation
 
 class LeapBeaconManager {
-    private static let TAG: String = " Jiny - BeaconManager "
     private let ALFRED_URL_LOCAL: String  = "http://192.168.1.3:8080"
     private let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is"
     
