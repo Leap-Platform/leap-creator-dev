@@ -7,8 +7,8 @@
 //
 
 import UIKit
-//import LeapCreator
-import LeapAUI
+import LeapCreatorSDK
+import LeapAUISDK
 
 @available(iOS 13.0, *)
 @UIApplicationMain
@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         LeapAUI.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
-//        LeapCreator.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        LeapCreator.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         return true
     }
 

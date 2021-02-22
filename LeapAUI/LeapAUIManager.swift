@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import LeapCore
+import LeapCoreSDK
 import AVFoundation
 import AdSupport
 import WebKit
@@ -178,7 +178,7 @@ extension LeapAUIManager: LeapAUIHandler {
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
     }
     
-    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
         showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
@@ -192,11 +192,11 @@ extension LeapAUIManager: LeapAUIHandler {
                 self.performInViewNativeInstruction(instruction: instruction, inView: anchorView, type: type)
                 self.dismissLeapButton()
             }
-            else { self.presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true) }
+            else { self.presentLeapButton(for: iconInfo, iconEnabled: true) }
         }
     }
     
-    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?) {
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
         showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             if languageChose {
@@ -207,11 +207,11 @@ extension LeapAUIManager: LeapAUIHandler {
                 self.dismissLeapButton()
                 self.performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
             }
-            else { self.presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true) }
+            else { self.presentLeapButton(for: iconInfo, iconEnabled: true) }
         }
     }
     
-    func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, Any>) {
+    func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, AnyHashable>) {
         setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
         guard let view = currentTargetView else {
             performKeyWindowInstruction(instruction: instruction, iconInfo: nil)
@@ -220,16 +220,16 @@ extension LeapAUIManager: LeapAUIHandler {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
               let type = assistInfo[constant_type] as? String else { return }
         performInViewNativeInstruction(instruction: instruction, inView: view, type: type)
-        presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true)
+        presentLeapButton(for: iconInfo, iconEnabled: true)
     }
     
-    func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, Any>) {
+    func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, AnyHashable>) {
         setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview)
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
               let type = assistInfo[constant_type] as? String else { return }
         guard let anchorWebview = webview else { return }
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
-        presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: true)
+        presentLeapButton(for: iconInfo, iconEnabled: true)
     }
     
     func updateRect(rect: CGRect, inWebView: UIView?) {
@@ -284,12 +284,15 @@ extension LeapAUIManager: LeapAUIHandler {
         dismissLeapButton()
     }
     
-    func presentLeapButton(for iconSetting: LeapIconSetting, iconEnabled: Bool) {
+    func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool) {
+        let jsonDecoder = JSONDecoder()
+        guard let iconData = try? JSONSerialization.data(withJSONObject: iconInfo, options: .prettyPrinted) else { return }
+        guard let iconSetting = try? jsonDecoder.decode(LeapIconSetting.self, from: iconData) else { return }
         guard leapButton == nil, leapButton?.window == nil, iconEnabled else {
             if !iconSetting.isEqual(LeapSharedAUI.shared.iconSetting) {
                 self.leapButton?.removeFromSuperview()
                 self.leapButton = nil
-                presentLeapButton(for: iconSetting, iconEnabled: iconEnabled)
+                presentLeapButton(for: iconInfo, iconEnabled: iconEnabled)
                 return
             }
             leapButton?.isHidden = false

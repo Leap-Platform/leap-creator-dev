@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import LeapCore
+import LeapCoreSDK
 
 
 @objc public protocol LeapAUIClientCallback:NSObjectProtocol {

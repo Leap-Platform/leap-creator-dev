@@ -177,12 +177,12 @@ extension LeapContextManager:LeapDiscoveryManagerDelegate {
         guard  let aui = auiHandler, let dm = discoveryManager else { return }
         guard !dm.isManualTrigger()  else {
             //present leap button
-            let iconInfo:Dictionary<String,Any> = getIconSettings(discovery.id)
-            aui.presentLeapButton(for: LeapIconSetting(with: iconInfo), iconEnabled: discovery.enableIcon)
+            let iconInfo:Dictionary<String,AnyHashable> = getIconSettings(discovery.id)
+            aui.presentLeapButton(for: iconInfo, iconEnabled: discovery.enableIcon)
             return
         }
         let instruction = discovery.instructionInfoDict!
-        let iconInfo:Dictionary<String,Any> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
+        let iconInfo:Dictionary<String,AnyHashable> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
         let localeCode = generateLangDicts(localeCodes: discovery.localeCodes)
         let htmlUrl = discovery.languageOption?[constant_htmlUrl]
         if let anchorRect = rect {
@@ -227,7 +227,7 @@ extension LeapContextManager:LeapStageManagerDelegate {
     }
     
     func newStageFound(_ stage: LeapStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
-        let iconInfo:Dictionary<String,Any> = {
+        let iconInfo:Dictionary<String,AnyHashable> = {
             guard let fm = flowManager, let discId = fm.getDiscoveryId() else { return [:] }
             let currentDiscovery = configuration?.discoveries.first { $0.id == discId }
             guard let discovery = currentDiscovery, discovery.enableIcon else {return [:] }
@@ -513,7 +513,7 @@ extension LeapContextManager {
               let liveDiscovery = dm.getCurrentDiscovery(),
               let cd = contextDetector else { return }
         LeapSharedInformation.shared.unmuteDiscovery(liveDiscovery.id)
-        let iconInfo:Dictionary<String,Any> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
+        let iconInfo:Dictionary<String,AnyHashable> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
             auiHandler?.performNativeDiscovery(instruction: liveDiscovery.instructionInfoDict!, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
@@ -549,12 +549,12 @@ extension LeapContextManager {
         discoveryManager?.discoveryDismissed(byUser: true, optIn: true)
     }
     
-    func getIconSettings(_ discoveryId:Int) -> Dictionary<String,Any> {
+    func getIconSettings(_ discoveryId:Int) -> Dictionary<String,AnyHashable> {
         let jsonEncoder = JSONEncoder()
         jsonEncoder.outputFormatting = .prettyPrinted
         guard let iconInfo = configuration?.iconSetting[String(discoveryId)],
               let iconInfoData = try? jsonEncoder.encode(iconInfo),
-              let iconInfoDict = try? JSONSerialization.jsonObject(with: iconInfoData, options: .allowFragments) as? Dictionary<String,Any> else { return [:] }
+              let iconInfoDict = try? JSONSerialization.jsonObject(with: iconInfoData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
         return iconInfoDict
     }
     

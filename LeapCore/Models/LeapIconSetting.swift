@@ -8,15 +8,15 @@
 
 import Foundation
 
-@objc public class LeapIconSetting: NSObject, Codable {
+class LeapIconSetting: NSObject, Codable {
     
-    public var dismissible: Bool?
-    public var leftAlign: Bool?
-    private var isCustomised: Bool?
-    public var bgColor: String?
-    public var htmlUrl: String? //can also be base64
+    var dismissible: Bool?
+    var leftAlign: Bool?
+    var isCustomised: Bool?
+    var bgColor: String?
+    var htmlUrl: String? //can also be base64
     
-    public init(with dict: Dictionary<String, Any>) {
+    init(with dict: Dictionary<String, Any>) {
         
         if let dismissible = dict[constant_dismissible] as? Bool {
             self.dismissible = dismissible
@@ -49,7 +49,7 @@ import Foundation
         }
     }
     
-    public override func isEqual(_ object: Any?) -> Bool {
+    override func isEqual(_ object: Any?) -> Bool {
         if let object = object as? LeapIconSetting {
             return self.leftAlign == object.leftAlign && self.dismissible == object.dismissible && self.isCustomised == object.isCustomised && self.bgColor == object.bgColor && self.htmlUrl == object.htmlUrl
         }
