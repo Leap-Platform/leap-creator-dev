@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		D051F20625E3D77A00A2D81B /* LeapCreatorUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D051F20725E3D77A00A2D81B /* Build configuration list for PBXAggregateTarget "LeapCreatorUniversal" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = LeapCreatorUniversal;
+			productName = LeapCreatorUniversal;
+		};
 		D0F4688325DBC40700FEF37A /* LeapAUIUniversal */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "LeapAUIUniversal" */;
@@ -47,7 +57,8 @@
 		D02C130F25DFC6B000C80E28 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92024B9B328001A04DF /* WebKit.framework */; };
 		D02C131025DFC6B000C80E28 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; };
 		D02C131125DFC6B000C80E28 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = D02C12F325DFC6B000C80E28 /* Starscream */; };
-		D08DA63625DEA2E800EB0EFC /* LeapSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* LeapSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D051F1F825E3D29500A2D81B /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
+		D08DA63625DEA2E800EB0EFC /* LeapCoreSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* LeapCoreSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D08DA63825DEA2E800EB0EFC /* LeapSupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */; };
 		D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* LeapDiscoveryManager.swift */; };
 		D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662E24629D5D001937EE /* LeapContextManager.swift */; };
@@ -141,7 +152,7 @@
 		D0B603E925DFB6BA0092F735 /* LeapInViewAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931E2543186D00DB94DD /* LeapInViewAssist.swift */; };
 		D0B603EA25DFB6BA0092F735 /* LeapPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45162423AAAA00A43FEA /* LeapPointer.swift */; };
 		D0B603EC25DFB6BA0092F735 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C91E24B9B2BF001A04DF /* AdSupport.framework */; };
-		D0B603ED25DFB6BA0092F735 /* LeapCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCore.framework */; };
+		D0B603ED25DFB6BA0092F735 /* LeapCoreSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; };
 		D0B603EF25DFB6BA0092F735 /* jiny_option_language.png in Resources */ = {isa = PBXBuildFile; fileRef = D01BD32825D529AD0078324B /* jiny_option_language.png */; };
 		D0B603F025DFB6BA0092F735 /* jiny_option_cross.png in Resources */ = {isa = PBXBuildFile; fileRef = D01BD33125D529C50078324B /* jiny_option_cross.png */; };
 		D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702102591D13700F33729 /* jiny_default_icon.html */; };
@@ -159,15 +170,15 @@
 		D0F2C4A225DFCD81006BFF3D /* LoginOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04BBA362472832000DF9716 /* LoginOptionViewController.swift */; };
 		D0F2C4A325DFCD81006BFF3D /* FlightSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */; };
 		D0F2C4A425DFCD81006BFF3D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44E42420AABA00A43FEA /* SceneDelegate.swift */; };
-		D0F2C4A625DFCD81006BFF3D /* LeapAUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapAUI.framework */; };
-		D0F2C4A725DFCD81006BFF3D /* LeapCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCore.framework */; };
-		D0F2C4A825DFCD81006BFF3D /* LeapCreator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreator.framework */; };
+		D0F2C4A625DFCD81006BFF3D /* LeapAUISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */; };
+		D0F2C4A725DFCD81006BFF3D /* LeapCoreSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; };
+		D0F2C4A825DFCD81006BFF3D /* LeapCreatorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */; };
 		D0F2C4AA25DFCD81006BFF3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D03E44ED2420AABC00A43FEA /* LaunchScreen.storyboard */; };
 		D0F2C4AB25DFCD81006BFF3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D03E44EB2420AABC00A43FEA /* Assets.xcassets */; };
 		D0F2C4AC25DFCD81006BFF3D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D03E44E82420AABA00A43FEA /* Main.storyboard */; };
-		D0F2C4AE25DFCD81006BFF3D /* LeapAUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapAUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D0F2C4AF25DFCD81006BFF3D /* LeapCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D0F2C4B025DFCD81006BFF3D /* LeapCreator.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreator.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D0F2C4AE25DFCD81006BFF3D /* LeapAUISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D0F2C4AF25DFCD81006BFF3D /* LeapCoreSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D0F2C4B025DFCD81006BFF3D /* LeapCreatorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,9 +219,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D0F2C4AE25DFCD81006BFF3D /* LeapAUI.framework in Embed Frameworks */,
-				D0F2C4AF25DFCD81006BFF3D /* LeapCore.framework in Embed Frameworks */,
-				D0F2C4B025DFCD81006BFF3D /* LeapCreator.framework in Embed Frameworks */,
+				D0F2C4AE25DFCD81006BFF3D /* LeapAUISDK.framework in Embed Frameworks */,
+				D0F2C4AF25DFCD81006BFF3D /* LeapCoreSDK.framework in Embed Frameworks */,
+				D0F2C4B025DFCD81006BFF3D /* LeapCreatorSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,7 +273,7 @@
 		D01BD32825D529AD0078324B /* jiny_option_language.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_option_language.png; sourceTree = "<group>"; };
 		D01BD33125D529C50078324B /* jiny_option_cross.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_option_cross.png; sourceTree = "<group>"; };
 		D022817125C3E1490036D8C6 /* LeapPageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapPageManager.swift; sourceTree = "<group>"; };
-		D02C131625DFC6B000C80E28 /* LeapCreator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapCreator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapCreatorSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D02E8A6F24A8DF1E00374DE8 /* LeapIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapIdentifier.swift; sourceTree = "<group>"; };
 		D032BC37258CC96300BEA8D8 /* Gzip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Gzip.framework; sourceTree = "<group>"; };
 		D032C59B24B74C72006E8F2B /* LeapAUIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAUIUtils.swift; sourceTree = "<group>"; };
@@ -281,7 +292,7 @@
 		D04BBA362472832000DF9716 /* LoginOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOptionViewController.swift; sourceTree = "<group>"; };
 		D0521CA024F6401F00EEE719 /* LeapAssistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAssistManager.swift; sourceTree = "<group>"; };
 		D0521CA424F8ECF900EEE719 /* LeapFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapFeature.swift; sourceTree = "<group>"; };
-		D0592E7A241FA6E3007782A8 /* LeapSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeapSDK.h; sourceTree = "<group>"; };
+		D0592E7A241FA6E3007782A8 /* LeapCoreSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeapCoreSDK.h; sourceTree = "<group>"; };
 		D0592E7B241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0592E91241FAA3D007782A8 /* LeapCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCore.swift; sourceTree = "<group>"; };
 		D0592E94241FAD99007782A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -297,7 +308,7 @@
 		D0850078242CC081007889B1 /* LeapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapUtils.swift; sourceTree = "<group>"; };
 		D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsManager.swift; sourceTree = "<group>"; };
 		D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContentActionInfo.swift; sourceTree = "<group>"; };
-		D08DA66C25DEA2E800EB0EFC /* LeapCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapCoreSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0938E0D251DD67000FD462E /* LeapMediaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaManager.swift; sourceTree = "<group>"; };
 		D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapNetworking.swift; sourceTree = "<group>"; };
 		D0938E11251DD8E900FD462E /* LeapMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMedia.swift; sourceTree = "<group>"; };
@@ -314,7 +325,7 @@
 		D0ABD033248126820069FA67 /* LeapSDKInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSDKInfo.swift; sourceTree = "<group>"; };
 		D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSharedInformation.swift; sourceTree = "<group>"; };
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
-		D0B603F725DFB6BA0092F735 /* LeapAUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapAUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapAUISDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0B792C82542F86300DB94DD /* LeapCustomEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCustomEvent.swift; sourceTree = "<group>"; };
 		D0B792CA2542F8F600DB94DD /* LeapStandardEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStandardEvent.swift; sourceTree = "<group>"; };
 		D0B793092543186D00DB94DD /* LeapAssistInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapAssistInfo.swift; sourceTree = "<group>"; };
@@ -388,7 +399,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0B603EC25DFB6BA0092F735 /* AdSupport.framework in Frameworks */,
-				D0B603ED25DFB6BA0092F735 /* LeapCore.framework in Frameworks */,
+				D0B603ED25DFB6BA0092F735 /* LeapCoreSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,9 +407,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0F2C4A625DFCD81006BFF3D /* LeapAUI.framework in Frameworks */,
-				D0F2C4A725DFCD81006BFF3D /* LeapCore.framework in Frameworks */,
-				D0F2C4A825DFCD81006BFF3D /* LeapCreator.framework in Frameworks */,
+				D0F2C4A625DFCD81006BFF3D /* LeapAUISDK.framework in Frameworks */,
+				D0F2C4A725DFCD81006BFF3D /* LeapCoreSDK.framework in Frameworks */,
+				D0F2C4A825DFCD81006BFF3D /* LeapCreatorSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -569,9 +580,9 @@
 		D0592E78241FA6E3007782A8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D08DA66C25DEA2E800EB0EFC /* LeapCore.framework */,
-				D0B603F725DFB6BA0092F735 /* LeapAUI.framework */,
-				D02C131625DFC6B000C80E28 /* LeapCreator.framework */,
+				D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */,
+				D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */,
+				D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */,
 				D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */,
 			);
 			name = Products;
@@ -586,7 +597,7 @@
 				D071662924629C69001937EE /* Context */,
 				D03E45102420DE1500A43FEA /* LeapInternal.swift */,
 				D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */,
-				D0592E7A241FA6E3007782A8 /* LeapSDK.h */,
+				D0592E7A241FA6E3007782A8 /* LeapCoreSDK.h */,
 				D0592E7B241FA6E3007782A8 /* Info.plist */,
 				D0592E91241FAA3D007782A8 /* LeapCore.swift */,
 				2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */,
@@ -813,7 +824,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D08DA63625DEA2E800EB0EFC /* LeapSDK.h in Headers */,
+				D08DA63625DEA2E800EB0EFC /* LeapCoreSDK.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -828,9 +839,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D02C12F225DFC6B000C80E28 /* LeapCreator */ = {
+		D02C12F225DFC6B000C80E28 /* LeapCreatorSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D02C131325DFC6B000C80E28 /* Build configuration list for PBXNativeTarget "LeapCreator" */;
+			buildConfigurationList = D02C131325DFC6B000C80E28 /* Build configuration list for PBXNativeTarget "LeapCreatorSDK" */;
 			buildPhases = (
 				D02C12F525DFC6B000C80E28 /* Headers */,
 				D02C12F625DFC6B000C80E28 /* Sources */,
@@ -841,17 +852,17 @@
 			);
 			dependencies = (
 			);
-			name = LeapCreator;
+			name = LeapCreatorSDK;
 			packageProductDependencies = (
 				D02C12F325DFC6B000C80E28 /* Starscream */,
 			);
 			productName = JinyAuthSDK;
-			productReference = D02C131625DFC6B000C80E28 /* LeapCreator.framework */;
+			productReference = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D08DA63225DEA2E800EB0EFC /* LeapCore */ = {
+		D08DA63225DEA2E800EB0EFC /* LeapCoreSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D08DA66925DEA2E800EB0EFC /* Build configuration list for PBXNativeTarget "LeapCore" */;
+			buildConfigurationList = D08DA66925DEA2E800EB0EFC /* Build configuration list for PBXNativeTarget "LeapCoreSDK" */;
 			buildPhases = (
 				D08DA63525DEA2E800EB0EFC /* Headers */,
 				D08DA63725DEA2E800EB0EFC /* Sources */,
@@ -862,17 +873,17 @@
 			);
 			dependencies = (
 			);
-			name = LeapCore;
+			name = LeapCoreSDK;
 			packageProductDependencies = (
 				D08DA63325DEA2E800EB0EFC /* Gzip */,
 			);
 			productName = JinySDK;
-			productReference = D08DA66C25DEA2E800EB0EFC /* LeapCore.framework */;
+			productReference = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D0B603B925DFB6BA0092F735 /* LeapAUI */ = {
+		D0B603B925DFB6BA0092F735 /* LeapAUISDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUI" */;
+			buildConfigurationList = D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUISDK" */;
 			buildPhases = (
 				D0B603BC25DFB6BA0092F735 /* Headers */,
 				D0B603BE25DFB6BA0092F735 /* Sources */,
@@ -884,9 +895,9 @@
 			dependencies = (
 				D0B603BA25DFB6BA0092F735 /* PBXTargetDependency */,
 			);
-			name = LeapAUI;
+			name = LeapAUISDK;
 			productName = JinyAUI;
-			productReference = D0B603F725DFB6BA0092F735 /* LeapAUI.framework */;
+			productReference = D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D0F2C49125DFCD81006BFF3D /* LeapSampleApp */ = {
@@ -921,12 +932,15 @@
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Aravind GS";
 				TargetAttributes = {
+					D051F20625E3D77A00A2D81B = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					D0F4688325DBC40700FEF37A = {
 						CreatedOnToolsVersion = 12.4;
 					};
 				};
 			};
-			buildConfigurationList = D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "JinySDK" */;
+			buildConfigurationList = D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "LeapSDK" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -944,10 +958,11 @@
 			projectRoot = "";
 			targets = (
 				D0F4688325DBC40700FEF37A /* LeapAUIUniversal */,
-				D08DA63225DEA2E800EB0EFC /* LeapCore */,
-				D0B603B925DFB6BA0092F735 /* LeapAUI */,
-				D02C12F225DFC6B000C80E28 /* LeapCreator */,
+				D08DA63225DEA2E800EB0EFC /* LeapCoreSDK */,
+				D0B603B925DFB6BA0092F735 /* LeapAUISDK */,
+				D02C12F225DFC6B000C80E28 /* LeapCreatorSDK */,
 				D0F2C49125DFCD81006BFF3D /* LeapSampleApp */,
+				D051F20625E3D77A00A2D81B /* LeapCreatorUniversal */,
 			);
 		};
 /* End PBXProject section */
@@ -1007,7 +1022,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\n# If we're already inside this script then die\nif [ -n \"$RW_MULTIPLATFORM_BUILD_IN_PROGRESS\" ]; then\nexit 0\nfi\nexport RW_MULTIPLATFORM_BUILD_IN_PROGRESS=1\n\nRW_FRAMEWORK_NAME=\"JinyAUI\"\nRW_INPUT_STATIC_LIB=\"libJinyAUI.a\"\nRW_FRAMEWORK_LOCATION=\"${BUILT_PRODUCTS_DIR}/static/${RW_FRAMEWORK_NAME}Sdk.framework\"\n\nfunction build_static_library {\n    echo \"1\"\n    echo \"${BUILD_DIR}\"\n    # Will rebuild the static library as specified\n    #     build_static_library sdk\n    xcrun xcodebuild -workspace \"JinySDK.xcodeproj/project.xcworkspace\" \\\n    -scheme \"${RW_FRAMEWORK_NAME}\" \\\n    -configuration \"${CONFIGURATION}\" \\\n    -sdk \"${1}\" \\\n    ONLY_ACTIVE_ARCH=NO \\\n    BUILD_DIR=\"${BUILD_DIR}\" \\\n    OBJROOT=\"${OBJROOT}/DependantBuilds\" \\\n    BUILD_ROOT=\"${BUILD_ROOT}\" \\\n    SYMROOT=\"${SYMROOT}\" $ACTION\n}\n\nfunction make_fat_library {\n    # Will smash 2 static libs together\n    #     make_fat_library in1 in2 out\n    xcrun lipo -create \"${1}\" \"${2}\" -output \"${3}\"\n}\n\n# 1 - Extract the platform (iphoneos/iphonesimulator) from the SDK name\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]; then\nRW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\necho \"Could not find platform name from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 2 - Extract the version from the SDK\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]; then\nRW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\necho \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 3 - Determine the other platform\nif [ \"$RW_SDK_PLATFORM\" == \"iphoneos\" ]; then\nRW_OTHER_PLATFORM=iphonesimulator\nelse\nRW_OTHER_PLATFORM=iphoneos\nfi\n\n# 4 - Find the build directory\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$RW_SDK_PLATFORM$ ]]; then\nRW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${RW_OTHER_PLATFORM}\"\nelse\necho \"Could not find other platform build directory.\"\nexit 1\nfi\n\n# Build the other platform.\nbuild_static_library \"${RW_OTHER_PLATFORM}${RW_SDK_VERSION}\"\n\n# If we're currently building for iphonesimulator, then need to rebuild\n#   to ensure that we get both i386 and x86_64\nif [ \"$RW_SDK_PLATFORM\" == \"iphonesimulator\" ]; then\nbuild_static_library \"${SDK_NAME}\"\nfi\n\n# Join the 2 static libs into 1 and push into the .framework\nmake_fat_library \"${BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}Sdk\"\n\n# Ensure that the framework is present in both platform's build directories\ncp -a \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}Sdk\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/static/${RW_FRAMEWORK_NAME}Sdk.framework/Versions/A/${RW_FRAMEWORK_NAME}Sdk\"\n\n# Copy the framework to the project directory\nditto \"${RW_FRAMEWORK_LOCATION}\" \"${SRCROOT}/Frameworks/static/${RW_FRAMEWORK_NAME}Sdk.framework\"\n";
+			shellScript = "SCHEME_NAME=\"LeapAUISDK\"\nFRAMEWORK_NAME=\"LeapAUISDK\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./xcframework/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1126,6 +1141,7 @@
 				D0B603DB25DFB6BA0092F735 /* LeapKeyWindowAssist.swift in Sources */,
 				D0B603DC25DFB6BA0092F735 /* LeapSpot.swift in Sources */,
 				D0B603DD25DFB6BA0092F735 /* LeapAUIManager.swift in Sources */,
+				D051F1F825E3D29500A2D81B /* LeapIconSetting.swift in Sources */,
 				D0B603DE25DFB6BA0092F735 /* LeapLanguageOptions.swift in Sources */,
 				D0B603DF25DFB6BA0092F735 /* LeapStyle.swift in Sources */,
 				D0B603E025DFB6BA0092F735 /* LeapSharedAUI.swift in Sources */,
@@ -1166,22 +1182,22 @@
 /* Begin PBXTargetDependency section */
 		D0B603BA25DFB6BA0092F735 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D08DA63225DEA2E800EB0EFC /* LeapCore */;
+			target = D08DA63225DEA2E800EB0EFC /* LeapCoreSDK */;
 			targetProxy = D0B603BB25DFB6BA0092F735 /* PBXContainerItemProxy */;
 		};
 		D0F2C49225DFCD81006BFF3D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D02C12F225DFC6B000C80E28 /* LeapCreator */;
+			target = D02C12F225DFC6B000C80E28 /* LeapCreatorSDK */;
 			targetProxy = D0F2C49325DFCD81006BFF3D /* PBXContainerItemProxy */;
 		};
 		D0F2C49425DFCD81006BFF3D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D0B603B925DFB6BA0092F735 /* LeapAUI */;
+			target = D0B603B925DFB6BA0092F735 /* LeapAUISDK */;
 			targetProxy = D0F2C49525DFCD81006BFF3D /* PBXContainerItemProxy */;
 		};
 		D0F2C49625DFCD81006BFF3D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D08DA63225DEA2E800EB0EFC /* LeapCore */;
+			target = D08DA63225DEA2E800EB0EFC /* LeapCoreSDK */;
 			targetProxy = D0F2C49725DFCD81006BFF3D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1260,6 +1276,22 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D051F20825E3D77A00A2D81B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D051F20925E3D77A00A2D81B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1577,7 +1609,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D02C131325DFC6B000C80E28 /* Build configuration list for PBXNativeTarget "LeapCreator" */ = {
+		D02C131325DFC6B000C80E28 /* Build configuration list for PBXNativeTarget "LeapCreatorSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D02C131425DFC6B000C80E28 /* Debug */,
@@ -1586,7 +1618,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "JinySDK" */ = {
+		D051F20725E3D77A00A2D81B /* Build configuration list for PBXAggregateTarget "LeapCreatorUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D051F20825E3D77A00A2D81B /* Debug */,
+				D051F20925E3D77A00A2D81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "LeapSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0592E89241FA6E3007782A8 /* Debug */,
@@ -1595,7 +1636,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D08DA66925DEA2E800EB0EFC /* Build configuration list for PBXNativeTarget "LeapCore" */ = {
+		D08DA66925DEA2E800EB0EFC /* Build configuration list for PBXNativeTarget "LeapCoreSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D08DA66A25DEA2E800EB0EFC /* Debug */,
@@ -1604,7 +1645,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUI" */ = {
+		D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUISDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0B603F525DFB6BA0092F735 /* Debug */,
