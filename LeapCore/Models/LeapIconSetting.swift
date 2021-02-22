@@ -8,23 +8,15 @@
 
 import Foundation
 
-@objc public class LeapIconSetting:NSObject,Codable {
+@objc public class LeapIconSetting: NSObject, Codable {
     
-    public var dragEnabled: Bool?
     public var dismissible: Bool?
     public var leftAlign: Bool?
     private var isCustomised: Bool?
     public var bgColor: String?
     public var htmlUrl: String? //can also be base64
-    public var contentUrls: [String]?
     
     public init(with dict: Dictionary<String, Any>) {
-        
-        if let dragEnabled = dict[constant_dragEnabled] as? Bool {
-            self.dragEnabled = dragEnabled
-        } else {
-            self.dragEnabled = false
-        }
         
         if let dismissible = dict[constant_dismissible] as? Bool {
             self.dismissible = dismissible
@@ -55,9 +47,12 @@ import Foundation
                self.htmlUrl = htmlUrl
             }
         }
-        
-        if let contentUrls = dict[constant_content] as? [String] {
-            self.contentUrls = contentUrls
+    }
+    
+    public override func isEqual(_ object: Any?) -> Bool {
+        if let object = object as? LeapIconSetting {
+            return self.leftAlign == object.leftAlign && self.dismissible == object.dismissible && self.isCustomised == object.isCustomised && self.bgColor == object.bgColor && self.htmlUrl == object.htmlUrl
         }
+        return false
     }
 }

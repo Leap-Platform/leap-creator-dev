@@ -8,14 +8,13 @@
 
 import Foundation
 import UIKit
+import LeapCore
 
 class LeapSharedAUI {
     
     static let shared = LeapSharedAUI()
     let fm = FileManager.default
-    var iconHtml: String?
-    var iconColor = "#000000"
-    
+    var iconSetting: LeapIconSetting?
     
     func checkIfFolderExists(folder:URL) -> Bool {
         var isDirectory = ObjCBool(true)

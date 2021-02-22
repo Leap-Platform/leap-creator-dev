@@ -286,15 +286,18 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func presentLeapButton(for iconSetting: LeapIconSetting, iconEnabled: Bool) {
         guard leapButton == nil, leapButton?.window == nil, iconEnabled else {
-            LeapSharedAUI.shared.iconHtml = iconSetting.htmlUrl
-            LeapSharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+            if !iconSetting.isEqual(LeapSharedAUI.shared.iconSetting) {
+                self.leapButton?.removeFromSuperview()
+                self.leapButton = nil
+                presentLeapButton(for: iconSetting, iconEnabled: iconEnabled)
+                return
+            }
             leapButton?.isHidden = false
             let kw = UIApplication.shared.windows.first{ $0.isKeyWindow}
             if let keyWindow = kw { keyWindow.bringSubviewToFront(leapButton!) }
             return
         }
-        LeapSharedAUI.shared.iconHtml = iconSetting.htmlUrl
-        LeapSharedAUI.shared.iconColor = iconSetting.bgColor ?? "#000000"
+        LeapSharedAUI.shared.iconSetting = iconSetting
         leapButton = LeapMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(leapButton!)
