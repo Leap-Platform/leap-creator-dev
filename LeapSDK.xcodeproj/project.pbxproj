@@ -58,7 +58,7 @@
 		D02C131025DFC6B000C80E28 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; };
 		D02C131125DFC6B000C80E28 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = D02C12F325DFC6B000C80E28 /* Starscream */; };
 		D051F1F825E3D29500A2D81B /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
-		D08DA63625DEA2E800EB0EFC /* LeapCoreSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* LeapCoreSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D08DA63625DEA2E800EB0EFC /* LeapCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* LeapCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D08DA63825DEA2E800EB0EFC /* LeapSupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */; };
 		D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* LeapDiscoveryManager.swift */; };
 		D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662E24629D5D001937EE /* LeapContextManager.swift */; };
@@ -292,7 +292,7 @@
 		D04BBA362472832000DF9716 /* LoginOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOptionViewController.swift; sourceTree = "<group>"; };
 		D0521CA024F6401F00EEE719 /* LeapAssistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAssistManager.swift; sourceTree = "<group>"; };
 		D0521CA424F8ECF900EEE719 /* LeapFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapFeature.swift; sourceTree = "<group>"; };
-		D0592E7A241FA6E3007782A8 /* LeapCoreSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeapCoreSDK.h; sourceTree = "<group>"; };
+		D0592E7A241FA6E3007782A8 /* LeapCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeapCore.h; sourceTree = "<group>"; };
 		D0592E7B241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0592E91241FAA3D007782A8 /* LeapCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCore.swift; sourceTree = "<group>"; };
 		D0592E94241FAD99007782A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -597,7 +597,7 @@
 				D071662924629C69001937EE /* Context */,
 				D03E45102420DE1500A43FEA /* LeapInternal.swift */,
 				D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */,
-				D0592E7A241FA6E3007782A8 /* LeapCoreSDK.h */,
+				D0592E7A241FA6E3007782A8 /* LeapCore.h */,
 				D0592E7B241FA6E3007782A8 /* Info.plist */,
 				D0592E91241FAA3D007782A8 /* LeapCore.swift */,
 				2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */,
@@ -824,7 +824,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D08DA63625DEA2E800EB0EFC /* LeapCoreSDK.h in Headers */,
+				D08DA63625DEA2E800EB0EFC /* LeapCore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1022,7 +1022,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SCHEME_NAME=\"LeapAUISDK\"\nFRAMEWORK_NAME=\"LeapAUISDK\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./xcframework/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n";
+			shellScript = "SCHEME_NAME=\"LeapAUISDK\"\nFRAMEWORK_NAME=\"LeapAUISDK\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
