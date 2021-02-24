@@ -308,65 +308,115 @@ class LeapToolTip: LeapTipView {
     func drawPathForTopTooltip() -> UIBezierPath {
     
         let path = UIBezierPath()
-
-        path.move(to: CGPoint(x: 0, y: cornerRadius+minimalSpacing))
+        let contentSize = self.webView.frame.size
         
-        path.addArc(withCenter: CGPoint(x: cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
-            
+        // Start path from top left corner of html and travel to top point of arrow
+        path.move(to: CGPoint(x: 0, y: 0))
         let globalToView = getGlobalToViewFrame()
-        
         let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
-                    
-        path.addLine(to: CGPoint(x: arrowMidX-halfWidthForArrow, y: minimalSpacing))
         
-        path.addLine(to: CGPoint(x: arrowMidX, y: 1))
+        // Arrow points
+        let arrowTopPoint = CGPoint(x: arrowMidX, y: 1)
+        let arrowLeftPoint = CGPoint(x: arrowMidX-halfWidthForArrow, y: minimalSpacing)
+        let arrowRightPoint = CGPoint(x: arrowMidX+halfWidthForArrow, y: minimalSpacing)
         
-        path.addLine(to: CGPoint(x: arrowMidX+halfWidthForArrow, y: minimalSpacing))
+        // Top Left Corner points
+        let tlCornerTopPoint = CGPoint(x: minimalSpacing + cornerRadius, y: minimalSpacing)
+        let tlCornerBottomPoint = CGPoint(x: minimalSpacing, y: minimalSpacing+cornerRadius)
+        let tlCornerControlPoint = CGPoint(x: minimalSpacing, y: minimalSpacing)
         
-        path.addLine(to: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: minimalSpacing))
+        // Bottom Left Corner Points
+        let blCornerTopPoint = CGPoint(x: minimalSpacing, y: contentSize.height - (minimalSpacing+cornerRadius))
+        let blCornerBottomPoint = CGPoint(x: (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let blCornerControlPoint = CGPoint(x: minimalSpacing, y: contentSize.height - minimalSpacing)
         
-        path.addArc(withCenter: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: cornerRadius+minimalSpacing), radius: cornerRadius, startAngle: 3 * .pi/2, endAngle: 0, clockwise: true)
-            
-        path.addLine(to: CGPoint(x: self.webView.frame.size.width, y: 0))
+        // Bottom Right Corner Points
+        let brCornerBottomPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let brCornerTopPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - (minimalSpacing + cornerRadius))
+        let brCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - minimalSpacing)
         
-        path.addLine(to: CGPoint(x: 0, y: 0))
+        // Top Right Corner Points
+        let trCornerBottomPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing + cornerRadius )
+        let trCornerTopPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: minimalSpacing )
+        let trCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing)
         
+        // Draw path to clip
+        path.addLine(to: CGPoint(x: arrowMidX, y: 0))
+        path.addLine(to: arrowTopPoint)
+        path.addLine(to: arrowLeftPoint)
+        path.addLine(to: tlCornerTopPoint)
+        path.addQuadCurve(to: tlCornerBottomPoint, controlPoint: tlCornerControlPoint)
+        path.addLine(to: blCornerTopPoint)
+        path.addQuadCurve(to: blCornerBottomPoint, controlPoint: blCornerControlPoint)
+        path.addLine(to: brCornerBottomPoint)
+        path.addQuadCurve(to: brCornerTopPoint, controlPoint: brCornerControlPoint)
+        path.addLine(to: trCornerBottomPoint)
+        path.addQuadCurve(to: trCornerTopPoint, controlPoint: trCornerControlPoint)
+        path.addLine(to: arrowRightPoint)
+        path.addLine(to: arrowTopPoint)
+        path.addLine(to: CGPoint(x: arrowMidX, y: 0))
+        path.addLine(to: CGPoint(x: contentSize.width, y: 0))
+        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height))
+        path.addLine(to: CGPoint(x: 0, y: contentSize.height))
         path.close()
-        
         return path
     }
     
     /// draws mask layer path for bottom arrow direction.
     func drawPathForBottomTooltip() -> UIBezierPath {
     
-        let contentSize = self.webView.frame.size
-
         let path = UIBezierPath()
+        let contentSize = self.webView.frame.size
         
+        // Start path from top left corner of html and travel to top point of arrow
         path.move(to: CGPoint(x: 0, y: contentSize.height))
-        
-        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height))
-        
-        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height-minimalSpacing-cornerRadius))
-        
-        path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
-            
         let globalToView = getGlobalToViewFrame()
-        
         let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
-                
-        path.addLine(to: CGPoint(x: arrowMidX+halfWidthForArrow, y: contentSize.height-minimalSpacing))
         
-        path.addLine(to: CGPoint(x: arrowMidX, y: contentSize.height-1))
+        // Arrow points
+        let arrowBottomPoint = CGPoint(x: arrowMidX, y: contentSize.height - 1)
+        let arrowLeftPoint = CGPoint(x: arrowMidX-halfWidthForArrow, y: contentSize.height - minimalSpacing)
+        let arrowRightPoint = CGPoint(x: arrowMidX+halfWidthForArrow, y: contentSize.height - minimalSpacing)
         
-        path.addLine(to: CGPoint(x: arrowMidX-halfWidthForArrow, y: contentSize.height-minimalSpacing))
+        // Top Left Corner points
+        let tlCornerTopPoint = CGPoint(x: minimalSpacing + cornerRadius, y: minimalSpacing)
+        let tlCornerBottomPoint = CGPoint(x: minimalSpacing, y: minimalSpacing+cornerRadius)
+        let tlCornerControlPoint = CGPoint(x: minimalSpacing, y: minimalSpacing)
         
-        path.addLine(to: CGPoint(x: cornerRadius, y: contentSize.height-minimalSpacing))
+        // Bottom Left Corner Points
+        let blCornerTopPoint = CGPoint(x: minimalSpacing, y: contentSize.height - (minimalSpacing+cornerRadius))
+        let blCornerBottomPoint = CGPoint(x: (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let blCornerControlPoint = CGPoint(x: minimalSpacing, y: contentSize.height - minimalSpacing)
         
-        path.addArc(withCenter: CGPoint(x: cornerRadius, y: contentSize.height-minimalSpacing-cornerRadius), radius: cornerRadius, startAngle: .pi/2, endAngle: .pi, clockwise: true)
+        // Bottom Right Corner Points
+        let brCornerBottomPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let brCornerTopPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - (minimalSpacing + cornerRadius))
+        let brCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - minimalSpacing)
         
+        // Top Right Corner Points
+        let trCornerBottomPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing + cornerRadius )
+        let trCornerTopPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: minimalSpacing )
+        let trCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing)
+        
+        // Draw path to clip
+        path.addLine(to: CGPoint(x: arrowMidX, y: contentSize.height))
+        path.addLine(to: arrowBottomPoint)
+        path.addLine(to: arrowLeftPoint)
+        path.addLine(to: blCornerBottomPoint)
+        path.addQuadCurve(to: blCornerTopPoint, controlPoint: blCornerControlPoint)
+        path.addLine(to: tlCornerBottomPoint)
+        path.addQuadCurve(to: tlCornerTopPoint, controlPoint: tlCornerControlPoint)
+        path.addLine(to: trCornerTopPoint)
+        path.addQuadCurve(to: trCornerBottomPoint, controlPoint: trCornerControlPoint)
+        path.addLine(to: brCornerTopPoint)
+        path.addQuadCurve(to: brCornerBottomPoint, controlPoint: brCornerControlPoint)
+        path.addLine(to: arrowRightPoint)
+        path.addLine(to: arrowBottomPoint)
+        path.addLine(to: CGPoint(x: arrowMidX, y: contentSize.height))
+        path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height))
+        path.addLine(to: CGPoint(x: contentSize.width, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 0))
         path.close()
-            
         return path
     }
         
@@ -475,7 +525,6 @@ class LeapToolTip: LeapTipView {
         DispatchQueue.main.async {
            self.placePointer()
         }
-        //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
     
     override func performEnterAnimation(animation: String) {
