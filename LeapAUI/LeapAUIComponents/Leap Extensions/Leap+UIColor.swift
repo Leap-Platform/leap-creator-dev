@@ -66,7 +66,19 @@ extension UIColor {
 
             if hex.hasPrefix("#") {
                 let start = hex.index(hex.startIndex, offsetBy: 1)
-                let hexColor = String(hex[start...])
+                var hexColor = String(hex[start...])
+                
+                var hexString = hex
+                
+                if hexColor.count == 6 {
+                    
+                    for _ in 1...2 {
+                    
+                        hexString.insert("F", at: hexString.index(hexString.startIndex, offsetBy: 1))
+                    }
+                    
+                    hexColor = String(hexString[start...])
+                }
 
                 if hexColor.count == 8 {
                     let scanner = Scanner(string: hexColor)

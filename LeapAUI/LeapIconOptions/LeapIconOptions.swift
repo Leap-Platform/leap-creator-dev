@@ -41,7 +41,7 @@ class LeapIconOptions: UIView {
         language = languageText
         button = leapButton
         isLeftAligned = leapButton.frame.origin.x < (UIScreen.main.bounds.width/2)
-        themeColor = leapButton.backgroundColor ?? UIColor(red: 0.23, green: 0.27, blue: 0.71, alpha: 1.00)
+        themeColor = UIColor.init(hex: LeapSharedAUI.shared.iconSetting?.bgColor ?? "#000000") ?? UIColor(red: 0.23, green: 0.27, blue: 0.71, alpha: 1.00)
         delegate = withDelegate
         super.init(frame: .zero)
         setupPanel()
@@ -51,7 +51,7 @@ class LeapIconOptions: UIView {
     private override init(frame: CGRect) {
         stop = "Stop"
         language = "Language"
-        themeColor = UIColor(red: 0.23, green: 0.27, blue: 0.71, alpha: 1.00)
+        themeColor = UIColor.init(hex: LeapSharedAUI.shared.iconSetting?.bgColor ?? "#000000") ?? UIColor(red: 0.23, green: 0.27, blue: 0.71, alpha: 1.00)
         isLeftAligned = true
         super.init(frame: frame)
         optionsView.alpha = 0.0
