@@ -490,13 +490,10 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func optionPanelOpened() {
-        stageManager?.resetCurrentStage()
-        contextDetector?.stop()
     }
     
     func optionPanelClosed() {
         sendContextInfoEvent(eventTag: "crossClickedFromPanelEvent")
-        contextDetector?.start()
     }
     
     func disableAssistance() {
