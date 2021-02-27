@@ -32,7 +32,14 @@ class LeapIconInfo {
             self.isLeftAligned = isLeftAligned
         }
         
-        self.isEnabled = true
+        if iconDict.isEmpty {
+            
+            self.isEnabled = false
+        
+        } else {
+            
+            self.isEnabled = true
+        }
         
         if let backgroundColor = iconDict[constant_bgColor] as? String {
             
