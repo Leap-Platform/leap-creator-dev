@@ -285,10 +285,11 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool) {
+        guard iconEnabled else { return }
         let jsonDecoder = JSONDecoder()
         guard let iconData = try? JSONSerialization.data(withJSONObject: iconInfo, options: .prettyPrinted) else { return }
         guard let iconSetting = try? jsonDecoder.decode(LeapIconSetting.self, from: iconData) else { return }
-        guard leapButton == nil, leapButton?.window == nil, iconEnabled else {
+        guard leapButton == nil, leapButton?.window == nil else {
             if !iconSetting.isEqual(LeapSharedAUI.shared.iconSetting) {
                 self.leapButton?.removeFromSuperview()
                 self.leapButton = nil
@@ -301,20 +302,20 @@ extension LeapAUIManager: LeapAUIHandler {
             return
         }
         LeapSharedAUI.shared.iconSetting = iconSetting
-        leapButton = LeapMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
+        leapButton = LeapMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#00000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(leapButton!)
         leapButton!.tapGestureRecognizer.addTarget(self, action: #selector(leapButtonTap))
         leapButton!.tapGestureRecognizer.delegate = self
         leapButton!.stateDelegate = self
-        leapButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconConstraintConstant)
+        leapButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
         leapButton?.bottomConstraint = leapButtonBottomConstraint!
         leapButton?.disableDialog.delegate = self
-        var distance = mainIconConstraintConstant
+        var distance = mainIconCornerConstant
         var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
         if iconSetting.leftAlign ?? false {
             cornerAttribute = .leading
-            distance = -mainIconConstraintConstant
+            distance = -mainIconCornerConstant
         }
         let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: leapButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
         NSLayoutConstraint.activate([leapButtonBottomConstraint!, cornerConstraint])
@@ -723,7 +724,7 @@ extension LeapAUIManager {
             case PING:
                 self.leapButton?.layoutIfNeeded()
                 UIView.animate(withDuration: 0.2) {
-                    self.leapButtonBottomConstraint?.constant = mainIconConstraintConstant
+                    self.leapButtonBottomConstraint?.constant = mainIconBottomConstant
                     self.leapButton?.layoutIfNeeded()
                 }
                 dismissLeapButton()

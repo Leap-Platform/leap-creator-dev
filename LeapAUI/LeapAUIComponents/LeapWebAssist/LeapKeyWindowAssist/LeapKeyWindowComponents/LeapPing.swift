@@ -17,7 +17,7 @@ class LeapPing: LeapKeyWindowAssist {
     
     private var bottomConstraint: NSLayoutConstraint?
         
-    private let animateConstraintConstant: CGFloat = 71
+    private let animateConstraintConstant: CGFloat = 90
     
     /// width constraint to increase the constant when html resizes
     var widthConstraint: NSLayoutConstraint?
@@ -42,6 +42,13 @@ class LeapPing: LeapKeyWindowAssist {
         configureWebViewForPing()
                     
         show()
+    }
+    
+    /// Method to configure WebView
+    override func configureWebView() {
+        
+        webView.clipsToBounds = true
+        webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
     }
     
     /// This is a custom configuration of constraints for the ping component.
@@ -101,7 +108,7 @@ class LeapPing: LeapKeyWindowAssist {
                 
         superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: 0))
         
-        bottomConstraint = NSLayoutConstraint(item: leapIconView, attribute: .bottom, relatedBy: .equal, toItem: superView, attribute: .bottom, multiplier: 1, constant: -mainIconConstraintConstant)
+        bottomConstraint = NSLayoutConstraint(item: leapIconView, attribute: .bottom, relatedBy: .equal, toItem: superView, attribute: .bottom, multiplier: 1, constant: -mainIconBottomConstant)
         
         NSLayoutConstraint.activate([bottomConstraint!])
         
@@ -218,14 +225,22 @@ class LeapPing: LeapKeyWindowAssist {
         
         self.layoutIfNeeded()
         
-        UIView.animate(withDuration: 0.16, delay: 0, options: .curveEaseInOut) {
-                            
-            self.bottomConstraint?.constant = -mainIconConstraintConstant
+        UIView.animate(withDuration: 0.16, delay: 0.08, options: .curveEaseInOut) {
+            
+            UIView.animate(withDuration: 0.08) {
+                
+                self.webView.frame.origin.y = self.webView.frame.origin.y + 15
+                
+                self.webView.alpha = 0
+                
+                self.closeButton.alpha = 0
+            }
+            
+            self.bottomConstraint?.constant = -mainIconBottomConstant
                                         
             self.layoutIfNeeded()
             
         } completion: { (_) in
-            
             
             self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
         }
