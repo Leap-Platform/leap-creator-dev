@@ -511,11 +511,15 @@ extension LeapAUIManager {
         utterance.rate = 0.5
         synthesizer.delegate = self
         synthesizer.speak(utterance)
-        if synthesizer.isSpeaking {
-           DispatchQueue.main.async {
-              self.leapButton?.iconState = .audioPlay
-           }
+        DispatchQueue.main.async {
+           self.leapButton?.iconState = .audioPlay
         }
+    }
+    
+    func stopAudio() {
+        
+        self.audioPlayer?.stop()
+        self.synthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
     }
 }
 
@@ -881,6 +885,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
         currentAssist = nil
+        stopAudio()
         dismissLeapButton()
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }    
