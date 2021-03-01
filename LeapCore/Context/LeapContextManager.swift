@@ -390,10 +390,17 @@ extension LeapContextManager:LeapAUICallback {
     func getCurrentLanguageOptionsTexts() -> Dictionary<String,String> {
         let langCode = getLanguageCode()
         let lang = configuration?.languages.first{ $0.localeId == langCode }
-        guard let language = lang else { return [constant_stop:"Stop", constant_language:"Language"] }
+        let languages = getLanguagesForCurrentInstruction()
+        guard let language = lang else {
+            var dict:Dictionary<String, String> = [constant_stop:"Stop"]
+            if languages.count > 1 { dict[constant_language] = "Language" }
+            return dict
+        }
         let stopText = language.muteText
         let languageText = language.changeLanguageText
-        return [constant_stop:stopText, constant_language:languageText]
+        var dict:Dictionary<String, String> = [constant_stop:stopText]
+        if languages.count > 1 { dict[constant_language] = languageText }
+        return dict
     }
     
     func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>> {
