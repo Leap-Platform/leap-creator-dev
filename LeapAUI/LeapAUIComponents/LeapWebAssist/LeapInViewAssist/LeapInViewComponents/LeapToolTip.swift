@@ -241,11 +241,6 @@ class LeapToolTip: LeapTipView {
             }
         }
         
-        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
-            
-            x = x - 12
-        }
-        
         toolTipView.frame.origin = CGPoint(x: x, y: y)
     }
         
@@ -500,11 +495,6 @@ class LeapToolTip: LeapTipView {
         } else if width < Float(proportionalWidth) {
             
             sizeWidth = Double(width)
-        }
-        
-        if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
-            
-            sizeWidth = sizeWidth ?? Double(width) - 24
         }
                             
         self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
