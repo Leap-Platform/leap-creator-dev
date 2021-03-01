@@ -40,7 +40,7 @@ class LeapDraggable: UIPanGestureRecognizer {
             
             if let viewToDrag = sender.view {
                 
-                if (viewToDrag.frame.origin.y + translation.y) > mainIconConstraintConstant && (viewToDrag.frame.origin.y + translation.y) <= (viewToDrag.superview!.frame.maxY - mainIconConstraintConstant - viewToDrag.frame.height)  {
+                if (viewToDrag.frame.origin.y + translation.y) > mainIconBottomConstant && (viewToDrag.frame.origin.y + translation.y) <= (viewToDrag.superview!.frame.maxY - mainIconBottomConstant - viewToDrag.frame.height)  {
                 
                 viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
                     y: viewToDrag.center.y + translation.y)

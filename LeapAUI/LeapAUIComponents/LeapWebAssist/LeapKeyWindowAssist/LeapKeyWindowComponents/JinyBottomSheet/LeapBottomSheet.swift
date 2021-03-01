@@ -56,7 +56,7 @@ class LeapBottomSheet: LeapKeyWindowAssist {
     }
     
     /// This is a custom configuration of constraints for the BottomSheet component.
-    private func configureWebViewForBottomSheet() {
+    func configureWebViewForBottomSheet() {
       
         // Setting Constraints to WebView
         

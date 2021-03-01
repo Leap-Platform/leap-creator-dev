@@ -23,7 +23,7 @@ class LeapDisableAssistanceDialog: UIView {
     private lazy var leapIcon: LeapIconView = {
         let leapIconView = LeapIconView()
         leapIconView.htmlUrl = LeapSharedAUI.shared.iconSetting?.htmlUrl
-        leapIconView.iconBackgroundColor = UIColor(hex: LeapSharedAUI.shared.iconSetting?.bgColor ?? "#000000") ?? .black
+        leapIconView.iconBackgroundColor = UIColor(hex: LeapSharedAUI.shared.iconSetting?.bgColor ?? "#00000000") ?? .black
         return leapIconView
     }()
     

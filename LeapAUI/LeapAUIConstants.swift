@@ -31,4 +31,5 @@ let PING = "PING"
 
 // Value Constants
 let mainIconSize: CGFloat = 56
-let mainIconConstraintConstant: CGFloat = 45
+let mainIconCornerConstant: CGFloat = 24
+let mainIconBottomConstant: CGFloat = 45

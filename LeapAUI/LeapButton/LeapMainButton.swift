@@ -106,7 +106,7 @@ extension LeapMainButton: LeapDraggableDelegate {
             
             closeTransparentView?.addConstraint(NSLayoutConstraint(item: closeIcon, attribute: .centerX, relatedBy: .equal, toItem: closeTransparentView, attribute: .centerX, multiplier: 1.0, constant: 0))
             
-            closeTransparentView?.addConstraint(NSLayoutConstraint(item: closeIcon, attribute: .bottom, relatedBy: .equal, toItem: closeTransparentView, attribute: .bottom, multiplier: 1.0, constant: -50))
+            closeTransparentView?.addConstraint(NSLayoutConstraint(item: closeIcon, attribute: .bottom, relatedBy: .equal, toItem: closeTransparentView, attribute: .bottom, multiplier: 1.0, constant: -mainIconBottomConstant))
             
             closeIconWidthConstraint = NSLayoutConstraint(item: closeIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
             
@@ -149,9 +149,9 @@ extension LeapMainButton: LeapDraggableDelegate {
         
         let constant = (UIApplication.shared.keyWindow?.frame.size.height ?? 0.0) - self.frame.origin.y - self.frame.size.height
         
-        if constant < mainIconConstraintConstant {
+        if constant < mainIconBottomConstant {
             
-            self.bottomConstraint?.constant = mainIconConstraintConstant
+            self.bottomConstraint?.constant = mainIconBottomConstant
         
         } else {
             
