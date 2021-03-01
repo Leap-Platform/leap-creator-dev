@@ -184,6 +184,7 @@ extension LeapAUIManager: LeapAUIHandler {
             self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
             if languageChose {
                 guard let anchorView = view else {
+                    self.dismissLeapButton()
                     self.performKeyWindowInstruction(instruction: instruction, iconInfo: iconInfo)
                     return
                 }
