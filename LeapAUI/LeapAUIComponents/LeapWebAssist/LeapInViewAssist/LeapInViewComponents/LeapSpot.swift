@@ -557,22 +557,30 @@ class LeapSpot: LeapTipView {
             
             var x = Double(origin.x) - highlightSpacing
             
-            var y = Double(origin.y) - Double(radius/2) + (highlightSpacing*2)
+            var diameter = Double(radius) + (highlightSpacing*2)
             
-            manipulatedHighlightSpacing = abs(-Double(radius/2) + (highlightSpacing*2))
+            var totalRadius = diameter/2
             
+            var y = (Double(origin.y) + Double(size.height)/2) - totalRadius
+            
+            manipulatedHighlightSpacing = abs(-(totalRadius) + (Double(size.height)/2))
+                        
             if size.height > size.width {
                 
                 radius = size.height
                 
-                x = Double(origin.x) - Double(radius/2) + (highlightSpacing*2)
+                diameter = Double(radius) + (highlightSpacing*2)
+                
+                totalRadius = diameter/2
+                
+                x = (Double(origin.x) + Double(size.width)/2) - totalRadius
                 
                 y = Double(origin.y) - highlightSpacing
                 
                 manipulatedHighlightSpacing = highlightSpacing
             }
             
-            transparentPath = UIBezierPath(ovalIn: CGRect(x: x, y: y, width: Double(radius) + (highlightSpacing*2), height: Double(radius) + (highlightSpacing*2)))
+            transparentPath = UIBezierPath(ovalIn: CGRect(x: x, y: y, width: diameter, height: diameter))
         }
         
         path.append(transparentPath)

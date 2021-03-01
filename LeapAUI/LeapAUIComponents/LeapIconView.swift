@@ -43,7 +43,7 @@ class LeapIconView: UIView {
     var audioWebView: WKWebView?
     
     /// icon's background color.
-    var iconBackgroundColor: UIColor = .black
+    var iconBackgroundColor: UIColor = .clear
     
     /// the height and width of the icon.
     var iconSize: CGFloat = 36
