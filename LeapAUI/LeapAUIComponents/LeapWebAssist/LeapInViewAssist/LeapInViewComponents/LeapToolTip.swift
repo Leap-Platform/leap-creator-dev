@@ -512,53 +512,27 @@ class LeapToolTip: LeapTipView {
         guard let width = rect[constant_width] else { return }
         guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
-        DispatchQueue.main.async {
-           self.placePointer()
-        }
+        if dict["type"] as? String == "resize" { DispatchQueue.main.async { self.placePointer() } }
     }
     
     override func performEnterAnimation(animation: String) {
         
         let arrowDirection = getArrowDirection()
-             
-        guard let direction = arrowDirection else {
-                 
-          return
-        }
+        guard let direction = arrowDirection else { return }
     
-        let alpha = self.alpha
-        
-        self.alpha = 0
-        
-        self.webView.alpha = 0
-        
+        self.toolTipView.alpha = 0
         self.leapIconView.alpha = 0
-        
         let yPosition = toolTipView.frame.origin.y
         
-        if direction == .top {
-            
-            toolTipView.frame.origin.y = toolTipView.frame.origin.y + (toolTipView.frame.origin.y * 0.2)
-        
-        } else {
-            
-            toolTipView.frame.origin.y = toolTipView.frame.origin.y - (toolTipView.frame.origin.y * 0.2)
-        }
+        if direction == .top { toolTipView.frame.origin.y = toolTipView.frame.origin.y + 20 }
+        else { toolTipView.frame.origin.y = toolTipView.frame.origin.y - 20 }
     
         UIView.animate(withDuration: 0.16, animations: {
-            
-            self.alpha = alpha
-            
-            self.webView.alpha = 1
-            
+            self.toolTipView.alpha = 1
             self.toolTipView.frame.origin.y = yPosition
-            
         }) { (_) in
-            
             UIView.animate(withDuration: 0.2) {
-                
                 self.leapIconView.alpha = 1
-                
                 self.delegate?.didPresentAssist()
             }
         }
