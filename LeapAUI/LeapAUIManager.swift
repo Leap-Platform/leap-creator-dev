@@ -336,7 +336,6 @@ extension LeapAUIManager: UIGestureRecognizerDelegate {
         }
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
-        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
         auiManagerCallBack?.optionPanelOpened()
         guard let button = leapButton else { return }
         guard let optionsText = auiManagerCallBack?.getCurrentLanguageOptionsTexts() else { return }
