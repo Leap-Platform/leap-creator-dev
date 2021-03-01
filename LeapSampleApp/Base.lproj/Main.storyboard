@@ -12,7 +12,7 @@
         <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -149,7 +149,7 @@
         <!--Place View Controller-->
         <scene sceneID="mOy-WD-saw">
             <objects>
-                <viewController id="MMf-1P-3yQ" customClass="PlaceViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="MMf-1P-3yQ" customClass="PlaceViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GyH-Wx-pEa">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -203,7 +203,7 @@
         <!--Login Option View Controller-->
         <scene sceneID="bD5-Jg-VHa">
             <objects>
-                <viewController id="E3J-eQ-ih7" customClass="LoginOptionViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="E3J-eQ-ih7" customClass="LoginOptionViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hss-AI-cIS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -269,7 +269,7 @@
         <!--Search Hotel View Controller-->
         <scene sceneID="zNj-0z-kBL">
             <objects>
-                <viewController id="6Io-3k-ebA" customClass="SearchHotelViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="6Io-3k-ebA" customClass="SearchHotelViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nXo-yH-4Kk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -352,7 +352,7 @@
         <!--Login View Controller-->
         <scene sceneID="Iwa-fh-uOt">
             <objects>
-                <viewController id="RsH-sg-icc" customClass="LoginViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="RsH-sg-icc" customClass="LoginViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Qp0-Y3-iSX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -419,7 +419,7 @@
         <!--Single Webview View Controller-->
         <scene sceneID="RZw-yX-WFV">
             <objects>
-                <viewController id="taj-rf-WnA" customClass="SingleWebviewViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="taj-rf-WnA" customClass="SingleWebviewViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gv7-9M-2g1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -454,7 +454,7 @@
         <!--Multiple Web Views View Controller-->
         <scene sceneID="XQm-2U-pcL">
             <objects>
-                <viewController id="cj8-8D-b2g" customClass="MultipleWebViewsViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="cj8-8D-b2g" customClass="MultipleWebViewsViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ed2-GP-gpw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -568,7 +568,7 @@
         <!--Manual Scroll View Controller-->
         <scene sceneID="H5O-15-41A">
             <objects>
-                <viewController id="7sm-5q-Nmh" customClass="ManualScrollViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="7sm-5q-Nmh" customClass="ManualScrollViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kRO-BO-C10">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -637,7 +637,7 @@
         <!--Automatic View Controller-->
         <scene sceneID="EmM-iV-Pbf">
             <objects>
-                <viewController id="5ut-RV-Msw" customClass="AutomaticViewController" customModule="Jiny_Sample_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="5ut-RV-Msw" customClass="AutomaticViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TUm-YF-xN1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
