@@ -58,13 +58,13 @@ class LeapPing: LeapKeyWindowAssist {
                 
         var attribute1: NSLayoutConstraint.Attribute = .leading
         
-        var distance = 45
+        var distance = mainIconCornerConstant
                 
         if !(iconInfo?.isLeftAligned ?? false) {
             
             attribute1 = .trailing
             
-            distance = -45
+            distance = -mainIconCornerConstant
         }
         
         webView.translatesAutoresizingMaskIntoConstraints = false
