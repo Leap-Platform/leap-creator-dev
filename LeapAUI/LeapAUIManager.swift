@@ -869,7 +869,7 @@ extension LeapAUIManager {
     }
     
     func startAutoDismissTimer() {
-        guard let instruction = currentAssist, let dismissTimer = instruction.assistInfo?.autoDismissDelay, dismissTimer > 0 else { return }
+        guard let instruction = currentAssist, let dismissTimer = instruction.assistInfo?.autoDismissDelay else { return }
         if autoDismissTimer != nil {
             autoDismissTimer?.invalidate()
             autoDismissTimer = nil
