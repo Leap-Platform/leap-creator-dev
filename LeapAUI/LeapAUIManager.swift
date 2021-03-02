@@ -520,6 +520,13 @@ extension LeapAUIManager {
     func stopAudio() {
         
         self.audioPlayer?.stop()
+        
+        if self.audioPlayer != nil && !(self.audioPlayer?.isPlaying)! {
+            self.audioPlayer = nil
+            leapButton?.iconState = .rest
+            startAutoDismissTimer()
+        }
+        
         self.synthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
     }
 }
@@ -747,11 +754,13 @@ extension LeapAUIManager {
 extension LeapAUIManager: AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        self.audioPlayer = nil
         leapButton?.iconState = .rest
         startAutoDismissTimer()
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        self.audioPlayer = nil
         leapButton?.iconState = .rest
         startAutoDismissTimer()
     }
@@ -761,6 +770,11 @@ extension LeapAUIManager: AVAudioPlayerDelegate {
 extension LeapAUIManager: AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        leapButton?.iconState = .rest
+        startAutoDismissTimer()
+    }
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         leapButton?.iconState = .rest
         startAutoDismissTimer()
     }
