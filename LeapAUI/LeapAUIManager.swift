@@ -342,7 +342,7 @@ extension LeapAUIManager: UIGestureRecognizerDelegate {
         guard let button = leapButton else { return }
         guard let optionsText = auiManagerCallBack?.getCurrentLanguageOptionsTexts() else { return }
         let stopText = optionsText[constant_stop] ?? "Stop"
-        let languageText = optionsText[constant_language] ?? "Language"
+        let languageText = optionsText[constant_language]
         let leapIconOptions = LeapIconOptions(withDelegate: self, stopText: stopText, languageText: languageText, leapButton: button)
         leapIconOptions.show()
     }

@@ -17,7 +17,7 @@ protocol LeapIconOptionsDelegate: NSObjectProtocol {
 class LeapIconOptions: UIView {
     
     let stop: String
-    let language: String
+    let language: String?
     let isLeftAligned: Bool
     weak var button: UIView?
     lazy var optionsView: UIView = {
@@ -36,7 +36,7 @@ class LeapIconOptions: UIView {
 
     weak var delegate: LeapIconOptionsDelegate?
     
-    init(withDelegate: LeapIconOptionsDelegate, stopText: String, languageText: String, leapButton: UIView) {
+    init(withDelegate: LeapIconOptionsDelegate, stopText: String, languageText: String?, leapButton: UIView) {
         stop = stopText
         language = languageText
         button = leapButton
@@ -89,8 +89,8 @@ extension LeapIconOptions {
         optionsView.alpha = 0.0
         self.addSubview(optionsView)
         optionsView.translatesAutoresizingMaskIntoConstraints = false
-
-        optionsView.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        if let _ = language { optionsView.widthAnchor.constraint(equalToConstant: 150).isActive = true }
+        else { optionsView.widthAnchor.constraint(equalToConstant: 50).isActive = true }
         optionsView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         optionsView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         if isLeftAligned {
@@ -140,6 +140,11 @@ extension LeapIconOptions {
         stopButton.leadingAnchor.constraint(equalTo: optionsView.leadingAnchor).isActive = true
         stopButton.centerYAnchor.constraint(equalTo: optionsView.centerYAnchor).isActive = true
         stopButton.topAnchor.constraint(equalTo: optionsView.topAnchor).isActive = true
+        
+        guard let _ = language else {
+            optionsView.trailingAnchor.constraint(equalTo: stopButton.trailingAnchor).isActive = true
+            return
+        }
         
         let languageButton = getLanguageButton()
         optionsView.addSubview(languageButton)
@@ -226,12 +231,13 @@ extension LeapIconOptions {
         let buttonWidthConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
         if let htConst = buttonHeightConstraint { htConst.constant = 0 }
         if let widthConst = buttonWidthConstraint { widthConst.constant = 0 }
+        let width:CGFloat = language != nil ? 240.0 : 140
         UIView.animate(withDuration: eachStageDuration) {
             if self.isLeftAligned {
-                self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: 240, height: self.frame.height)
+                self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: width, height: self.frame.height)
             } else {
                 let newXPosition = self.frame.minX - (240-self.button!.frame.width)
-                self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: 240, height: self.frame.height)
+                self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: width, height: self.frame.height)
             }
             self.button?.layer.cornerRadius = 0
             self.button?.layoutIfNeeded()
