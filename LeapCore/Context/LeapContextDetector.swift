@@ -242,8 +242,12 @@ extension LeapContextDetector {
             return trigger.type == .instant || trigger.type == .delay
         }
         
+        // Check for assists first. Independent assists have higher preference
+        let instantOrDelayedAssists: Array<LeapAssist> = instantOrDelayedContexts.compactMap { return $0 as? LeapAssist }
+        let instantOrDelayedContextsToCheckForWeight: Array<LeapContext> = instantOrDelayedAssists.count > 0 ? instantOrDelayedAssists : instantOrDelayedContexts
+        
         // Get most weighted assist/discovery
-        let instantContextToTrigger = instantOrDelayedContexts.reduce(nil) { (res, newContextToCheck) -> LeapContext? in
+        let instantContextToTrigger = instantOrDelayedContextsToCheckForWeight.reduce(nil) { (res, newContextToCheck) -> LeapContext? in
             if res == nil || res?.weight ?? 0 < newContextToCheck.weight { return newContextToCheck }
             return res
         }
@@ -258,7 +262,6 @@ extension LeapContextDetector {
                     guard let stage = toTriggerContext as? LeapStage else { return }
                     self.delegate?.stageIdentified(stage, pointerView: anchorview, pointerRect: anchorRect, webviewForRect: anchorWebview)
                 }
-                
             }
         } else {
             // No instant or delay trigger found. Add click listeners.
