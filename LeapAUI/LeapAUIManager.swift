@@ -213,6 +213,7 @@ extension LeapAUIManager: LeapAUIHandler {
         setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
         guard let view = currentTargetView else {
             performKeyWindowInstruction(instruction: instruction, iconInfo: nil)
+            presentLeapButton(for: iconInfo, iconEnabled: true)
             return
         }
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
