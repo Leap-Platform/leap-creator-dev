@@ -13,7 +13,6 @@ import AVFoundation
 import AdSupport
 import WebKit
 
-
 protocol LeapAUIManagerDelegate: NSObjectProtocol {
     
     func isClientCallbackRequired() -> Bool
@@ -85,13 +84,11 @@ extension LeapAUIManager {
             return
         }
         if autoScroll {
-            scrollArrow?.removeFromSuperview()
-            scrollArrow = nil
+            dismissArrow()
         }
         else if let targetView = currentTargetView {
             if !isViewHiddenByKeyboard(targetView) {
-                scrollArrow?.removeFromSuperview()
-                scrollArrow = nil
+                dismissArrow()
             }
         }
         if leapButton != nil {
@@ -246,8 +243,7 @@ extension LeapAUIManager: LeapAUIHandler {
         if isRectInVisbleArea(rect: rect, inView: webview) {
             if isRectHiddenByKeyboard(rect: rect, webview: webview){ if scrollArrow ==  nil { showArrow() } }
             else {
-                scrollArrow?.removeFromSuperview()
-                scrollArrow = nil
+                dismissArrow()
             }
         } else { if scrollArrow ==  nil { showArrow() } }
     }
@@ -265,8 +261,7 @@ extension LeapAUIManager: LeapAUIHandler {
         if isViewInVisibleArea(view: view) {
             if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
             else {
-                scrollArrow?.removeFromSuperview()
-                scrollArrow = nil
+                dismissArrow()
             }
         } else { if scrollArrow ==  nil { showArrow() } }
     }
@@ -828,10 +823,7 @@ extension LeapAUIManager {
     }
     
     func showArrow() {
-        if scrollArrow != nil {
-            scrollArrow?.removeFromSuperview()
-            scrollArrow = nil
-        }
+        guard scrollArrow == nil else { return }
         scrollArrow = UIButton(frame: .zero)
         scrollArrow?.backgroundColor = UIColor.green
         scrollArrow?.layer.cornerRadius = 20
@@ -840,7 +832,7 @@ extension LeapAUIManager {
         scrollArrow?.addTarget(self, action: #selector(arrowClicked), for: .touchUpInside)
         let currentVC = UIApplication.getCurrentVC()
         let superView = currentVC!.view
-        superView!.addSubview(scrollArrow!)
+        UIApplication.shared.keyWindow?.addSubview(scrollArrow!)
         scrollArrow?.translatesAutoresizingMaskIntoConstraints = false
         
         let leadingConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .leading, relatedBy: .equal, toItem: superView!, attribute: .leading, multiplier: 1, constant: 20)
@@ -865,8 +857,14 @@ extension LeapAUIManager {
             let view = currentVc!.view!
             view.endEditing(true)
         }
-        scrollArrow?.removeFromSuperview()
-        scrollArrow = nil
+        dismissArrow()
+    }
+    
+    func dismissArrow() {
+        if scrollArrow != nil {
+           scrollArrow?.removeFromSuperview()
+           scrollArrow = nil
+        }
     }
     
     func startAutoDismissTimer() {
@@ -901,6 +899,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         autoDismissTimer = nil
         currentAssist = nil
         stopAudio()
+        dismissArrow()
         dismissLeapButton()
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }    
