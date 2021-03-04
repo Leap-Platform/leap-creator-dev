@@ -231,12 +231,12 @@ extension LeapIconOptions {
         let buttonWidthConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
         if let htConst = buttonHeightConstraint { htConst.constant = 0 }
         if let widthConst = buttonWidthConstraint { widthConst.constant = 0 }
-        let width:CGFloat = language != nil ? 240.0 : 140
+        let width: CGFloat = language != nil ? 240.0 : 140
         UIView.animate(withDuration: eachStageDuration) {
             if self.isLeftAligned {
                 self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: width, height: self.frame.height)
             } else {
-                let newXPosition = self.frame.minX - (240-self.button!.frame.width)
+                let newXPosition = self.frame.minX - (width-self.button!.frame.width)
                 self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: width, height: self.frame.height)
             }
             self.button?.layer.cornerRadius = 0
