@@ -21,7 +21,11 @@ class LeapBeacon: LeapNativeAssist {
     private var webRect: CGRect?
     
     /// LeapBeacon's custom layer (CAReplicatorLayer) class.
-    let pulsator = LeapPulsator()
+    lazy var pulsator: LeapPulsator = {
+        let bgColorString = assistInfo?.layoutInfo?.style.bgColor ?? "#FF000000"
+        let bgColor = UIColor(hex: bgColorString) ?? .red
+        return LeapPulsator(with: bgColor)
+    }()
     
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type LeapAssistInfo.
@@ -41,7 +45,6 @@ class LeapBeacon: LeapNativeAssist {
     /// presents beacon after setting up view, setting up alignment and when start() method called.
     func presentBeacon() {
         
-        
         setupView()
                 
         setAlignment()
@@ -52,14 +55,14 @@ class LeapBeacon: LeapNativeAssist {
     func presentBeacon(toRect: CGRect, inView: UIView?) {
         
         webRect = toRect
-        
+        pulsator.toRect = toRect
         presentBeacon()
     }
     
     func updateRect(newRect: CGRect, inView: UIView?) {
         
         webRect = newRect
-        
+        pulsator.toRect = newRect
         setAlignment()
     }
     
@@ -67,32 +70,22 @@ class LeapBeacon: LeapNativeAssist {
         
         pulsator.pulsatorDelegate = self
         
-        pulsator.start()
+        if webRect != nil  { pulsator.placeBeacon(rect: webRect!, inWebView: toView!) }
+        else {
+            pulsator.toView = toView
+            pulsator.placeBeacon()
+        }
     }
     
     override func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
         
-        pulsator.stop()
-        
-        for layer in inView?.layer.sublayers ?? [] {
-            
-            if let subLayer = layer as? LeapPulsator {
-                
-                subLayer.removeFromSuperlayer()
-            }
-        }
-                
+        pulsator.stopAnimation()
+    
         super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     /// sets up customised LeapBeacon's class, toView and inView.
     func setupView() {
-        
-        pulsator.backgroundColor = UIColor.init(hex: assistInfo?.layoutInfo?.style.bgColor ?? "#FF000000")?.cgColor
-        if let radius = assistInfo?.extraProps?.props[constant_beaconRippleRadius] as? String {
-           pulsator.radius = CGFloat(Int(radius) ?? 10)
-        }
-        pulsator.numPulse = 3
                     
         inView = toView?.window
         
@@ -101,63 +94,8 @@ class LeapBeacon: LeapNativeAssist {
     
     /// Sets alignment of the component (LeapBeacon).
     func setAlignment() {
-        
-        let globalToViewFrame = webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
-                
-        switch LeapAlignmentType(rawValue: (assistInfo?.layoutInfo?.layoutAlignment) ?? "top_left") ?? .topLeft {
-            
-        case .topLeft:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + 5, y:  globalToViewFrame.origin.y + 5)
-            
-        case .topCenter:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)/2, y:  globalToViewFrame.origin.y + 5)
-            
-        case .topRight:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)-5, y:  globalToViewFrame.origin.y + 5)
-            
-        case .bottomLeft:
-            
-            pulsator.pulse.position = CGPoint(x:  globalToViewFrame.origin.x + 5, y: globalToViewFrame.origin.y + (globalToViewFrame.height)-5)
-            
-        case .bottomCenter:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)/2, y: globalToViewFrame.origin.y + (globalToViewFrame.height)-5)
-            
-        case .bottomRight:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)-5, y: globalToViewFrame.origin.y + (globalToViewFrame.height)-5)
-            
-        case .leftCenter:
-            
-            pulsator.pulse.position = CGPoint(x:  globalToViewFrame.origin.x + 5, y: globalToViewFrame.origin.y + (globalToViewFrame.height)/2)
-            
-        case .rightCenter:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)-5, y: globalToViewFrame.origin.y + (globalToViewFrame.height)/2)
-            
-        case .left:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + 5, y: globalToViewFrame.origin.y + (globalToViewFrame.height)/2)
-            
-        case .top:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)/2, y:  globalToViewFrame.origin.y + 5)
-            
-        case .right:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)-5, y: globalToViewFrame.origin.y + (globalToViewFrame.height)/2)
-            
-        case .bottom:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)/2, y: globalToViewFrame.origin.y + (globalToViewFrame.height)-5)
-            
-        case .center:
-            
-            pulsator.pulse.position = CGPoint(x: globalToViewFrame.origin.x + (globalToViewFrame.width)/2, y: globalToViewFrame.origin.y + (globalToViewFrame.height)/2)
-        }
+        let pos = assistInfo?.layoutInfo?.layoutAlignment ?? "top_left"
+        pulsator.setPosition(pos)
     }
 }
 
