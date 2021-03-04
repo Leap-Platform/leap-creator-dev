@@ -539,6 +539,9 @@ extension LeapAUIManager {
                     let languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { success, languageCode in
                         if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
                         LeapPreferences.shared.currentLanguage = languageCode
+                        if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
+                            webAssist.changeLanguage(locale: code)
+                        }
                         self.startDiscoverySoundDownload()
                         self.startStageSoundDownload()
                         handler?(success)
@@ -928,6 +931,9 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl) { success, languageCode in
             if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
             LeapPreferences.shared.currentLanguage = languageCode
+            if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
+                webAssist.changeLanguage(locale: code)
+            }
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
             self.auiManagerCallBack?.optionPanelClosed()
