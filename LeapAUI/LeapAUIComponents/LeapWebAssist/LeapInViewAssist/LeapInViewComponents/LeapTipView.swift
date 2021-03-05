@@ -71,7 +71,6 @@ class LeapTipView: LeapInViewAssist {
     }
     
     override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        toolTipView.removeFromSuperview()
         
         if let userInteraction = toViewOriginalInteraction {
             
@@ -88,21 +87,22 @@ class LeapTipView: LeapInViewAssist {
             
             return hitTestView
         }
+                
+        let frameForToView = getGlobalToViewFrame()
         
-        guard let frameForKw = viewToCheck.superview?.convert(viewToCheck.frame, to: nil) else {
-            
-            return hitTestView
-        }
-        
-        if frameForKw.contains(point) {
+        if frameForToView.contains(point) {
             
             if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
                 
                 remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
+                
+                return hitTestView
+            
+            } else {
+                
+                return viewToCheck
             }
-            
-            return hitTestView
-            
+                        
         } else {
             
             return hitTestView
