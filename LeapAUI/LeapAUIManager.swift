@@ -40,6 +40,7 @@ class LeapAUIManager: NSObject {
     var discoverySoundsJson: Dictionary<String,Array<LeapSound>> = [:]
     var stageSoundsJson: Dictionary<String,Array<LeapSound>> = [:]
     var scrollArrow: UIButton?
+    lazy var scrollArrowButton = LeapArrowButton(arrowDelegate: self)
     
     var currentInstruction: Dictionary<String,Any>?
     weak var currentTargetView: UIView?
@@ -248,13 +249,14 @@ extension LeapAUIManager: LeapAUIHandler {
         else if let highlight = currentAssist as? LeapHighlight { highlight.updateHighlight(toRect: rect, inView: inWebView) }
         else if let spot = currentAssist as? LeapSpot { spot.updateSpot(toRect: rect, inView: inWebView) }
         else if let beacon = currentAssist as? LeapBeacon { beacon.updateRect(newRect: rect, inView: inWebView) }
-        guard let webview = inWebView else { return }
-        if isRectInVisbleArea(rect: rect, inView: webview) {
-            if isRectHiddenByKeyboard(rect: rect, webview: webview){ if scrollArrow ==  nil { showArrow() } }
-            else {
-                dismissArrow()
-            }
-        } else { if scrollArrow ==  nil { showArrow() } }
+//        guard let webview = inWebView else { return }
+        scrollArrowButton.updateRect(newRect: rect)
+//        if isRectInVisbleArea(rect: rect, inView: webview) {
+//            if isRectHiddenByKeyboard(rect: rect, webview: webview){ if scrollArrow ==  nil { showArrow() } }
+//            else {
+//                dismissArrow()
+//            }
+//        } else { if scrollArrow ==  nil { showArrow() } }
     }
     
     func updateView(inView view: UIView) {
@@ -266,13 +268,13 @@ extension LeapAUIManager: LeapAUIHandler {
         else if let highlight = currentAssist as? LeapHighlight { highlight.updateHighlight() }
         else if let spot = currentAssist as? LeapSpot { spot.updateSpot() }
         else if let beacon = currentAssist as? LeapBeacon { beacon.setAlignment() }
-        
-        if isViewInVisibleArea(view: view) {
-            if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
-            else {
-                dismissArrow()
-            }
-        } else { if scrollArrow ==  nil { showArrow() } }
+        scrollArrowButton.checkForView()
+//        if isViewInVisibleArea(view: view) {
+//            if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
+//            else {
+//                dismissArrow()
+//            }
+//        } else { if scrollArrow ==  nil { showArrow() } }
     }
     
     func dismissLeapButton() {
@@ -601,7 +603,8 @@ extension LeapAUIManager {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         
         // Autoscroll
-        arrowClicked()
+//        arrowClicked()
+        scrollArrowButton.setView(view: inView)
         
         //Set autofocus
         inView.becomeFirstResponder()
@@ -651,8 +654,12 @@ extension LeapAUIManager {
     private func performInViewWebInstruction(instruction: Dictionary<String,Any>, rect: CGRect, inWebview: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         
         guard  let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
+        if let wkweb = inWebview as? WKWebView {
+            scrollArrowButton.setRect(rect, in: wkweb)
+        }
         
-        arrowClicked()
+        if let wkweb = inWebview as? WKWebView { scrollArrowButton.setRect(rect, in: wkweb) }
+        
         
         if let webIdentfier = assistInfo[constant_identifier] as? String, let focusScript = auiManagerCallBack?.getWebScript(webIdentfier) {
             //Do auto focus for web element
@@ -911,7 +918,8 @@ extension LeapAUIManager: LeapAssistDelegate {
         autoDismissTimer = nil
         currentAssist = nil
         stopAudio()
-        dismissArrow()
+//        dismissArrow()
+        scrollArrowButton.noAssist()
         dismissLeapButton()
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }    
@@ -954,4 +962,17 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
     func iconOptionsDismissed() {
         auiManagerCallBack?.optionPanelClosed()
     }
+}
+
+
+// MARK: - ARROW BUTTON DELEGATES
+extension LeapAUIManager:LeapArrowButtonDelegate {
+    
+    func arrowShown() {
+    }
+    
+    func arrowHidden() {
+        
+    }
+    
 }

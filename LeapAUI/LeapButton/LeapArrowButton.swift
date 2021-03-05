@@ -1,0 +1,202 @@
+//
+//  LeapArrowButton.swift
+//  LeapAUISDK
+//
+//  Created by Aravind GS on 04/03/21.
+//  Copyright © 2021 Aravind GS. All rights reserved.
+//
+
+import UIKit
+import WebKit
+
+enum LeapViewPortVisibility {
+    case InViewPort
+    case AboveViewPort
+    case BelowViewPort
+}
+
+protocol LeapArrowButtonDelegate:NSObjectProtocol {
+    func arrowShown()
+    func arrowHidden()
+}
+
+class LeapArrowButton: UIButton {
+    
+    weak var toView: UIView?
+    var keyboardHeight:CGFloat = 0
+    var rect: CGRect?
+    weak var delegate:LeapArrowButtonDelegate?
+    
+    weak var inWebView: WKWebView?
+    lazy var bottomConstraint:NSLayoutConstraint = {
+        let bottomConstant:CGFloat = keyboardHeight + 24
+        return NSLayoutConstraint(item: self.superview!, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: bottomConstant)
+    }()
+    
+    init(arrowDelegate:LeapArrowButtonDelegate) {
+        delegate = arrowDelegate
+        super.init(frame: .zero)
+        layer.cornerRadius = 20
+        layer.masksToBounds = true
+        backgroundColor = .red
+        setupButton()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+        
+    }
+    
+    private override init(frame: CGRect) {
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func keyboardDidShow(_ notification:NSNotification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight = keyboardRectangle.height
+        }
+        updateArrowPosition()
+    }
+    
+    @objc func keyboardDidHide(_ notification:NSNotification) {
+        keyboardHeight = 0
+        updateArrowPosition()
+    }
+    
+    private func setupButton() {
+        let kw = UIApplication.shared.windows.first { $0.isKeyWindow}
+        guard let keywindow = kw else { return }
+        keywindow.addSubview(self)
+        self.isHidden = true
+        self.translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: 40).isActive = true
+        heightAnchor.constraint(equalTo: widthAnchor).isActive = true
+        leadingAnchor.constraint(equalTo: keywindow.leadingAnchor, constant: 24).isActive = true
+        NSLayoutConstraint.activate([bottomConstraint])
+        addTarget(self, action: #selector(clicked), for: .touchUpInside)
+    }
+    
+    private func updateArrowPosition() {
+        
+        UIView.animate(withDuration: 0.1) {
+            self.bottomConstraint.constant = self.keyboardHeight + 24
+            self.layoutIfNeeded()
+        }
+        
+    }
+    
+    func setView(view: UIView) {
+        toView = view
+        rect = nil
+        inWebView = nil
+        clicked()
+    }
+    
+    func checkForView() {
+        if isViewVisible() {
+            hideArrow()
+        }
+        else {
+            showArrow()
+        }
+    }
+    
+    func setRect(_ newRect: CGRect, in webView:WKWebView) {
+        toView = nil
+        rect = newRect
+        inWebView = webView
+        clicked()
+    }
+    
+    func updateRect(newRect: CGRect) {
+        rect = newRect
+        if isRectVisible() {
+            hideArrow()
+        }
+        else {
+            showArrow()
+        }
+        
+    }
+    
+    func noAssist() {
+        self.isHidden = true
+        toView = nil
+        rect = nil
+        inWebView = nil
+    }
+    
+    private func showArrow() {
+        guard isHidden else { return }
+        self.isHidden = false
+        delegate?.arrowShown()
+    }
+    
+    private func hideArrow() {
+        guard !isHidden else { return }
+        self.isHidden = true
+        delegate?.arrowHidden()
+    }
+    
+    private func isRectVisible() -> Bool {
+        guard let tempRect = rect, let webview = inWebView else { return true }
+        guard webview.bounds.contains(tempRect) else { return false }
+        guard keyboardHeight > 0 else { return true }
+        let rectWRTWindow = webview.convert(tempRect, to: nil)
+        return rectWRTWindow.maxY < UIScreen.main.bounds.height - keyboardHeight
+    }
+    
+    private func isViewVisible() -> Bool {
+        guard let view = toView else { return true }
+        let viewFrame = view.superview!.convert(view.frame, to: nil)
+        let kw = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        guard let keyWindow = kw else { return true }
+        guard keyWindow.frame.contains(viewFrame) else { return false }
+        guard keyboardHeight > 0 else { return true }
+        return viewFrame.maxY < UIScreen.main.bounds.height - keyboardHeight
+        
+    }
+    
+    private func getRectVisibility() -> LeapViewPortVisibility {
+        return .InViewPort
+    }
+    
+    private func getViewVisibility() -> LeapViewPortVisibility {
+        return .InViewPort
+    }
+    
+    private func getScrollViews() -> Array<UIView> {
+        guard var view = toView else { return [] }
+        var scrollViews:Array<UIView> = [view]
+        while !view.isKind(of: UIWindow.self) {
+            if let scroll = view as? UIScrollView { scrollViews.append(scroll) }
+            guard let superview = view.superview else { return scrollViews }
+            view = superview
+        }
+        return scrollViews
+    }
+    
+    @objc private func clicked() {
+        if let _ = toView {
+            let nestedScrolls = getScrollViews()
+            for i in 0..<nestedScrolls.count-1 {
+                let parentView = nestedScrolls[nestedScrolls.count - 1 - i]
+                let childView = nestedScrolls[nestedScrolls.count - 1 - i - 1]
+                if let scroller = parentView as? UIScrollView {
+                    let childViewRectWRTParent = childView.superview!.convert(childView.frame, to: scroller)
+                    scroller.scrollRectToVisible(childViewRectWRTParent, animated: true)
+                }
+            }
+        } else if let toRect = rect, let webview = inWebView {
+            webview.scrollView.scrollRectToVisible(toRect, animated: true)
+        }
+        let currentVc = UIApplication.getCurrentVC()
+        let view = currentVc!.view!
+        view.endEditing(true)
+    }
+    
+    
+}
