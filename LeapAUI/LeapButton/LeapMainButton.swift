@@ -39,6 +39,7 @@ class LeapMainButton: LeapIconView {
         super.init(frame: .zero)
         self.iconBackgroundColor = withThemeColor
         self.translatesAutoresizingMaskIntoConstraints = false
+        self.elevate(with: 20)
         
         leapDraggable.draggableDelegate = self
         self.addGestureRecognizer(leapDraggable)
