@@ -34,6 +34,7 @@ class LeapAUIManager: NSObject {
     let synthesizer = AVSpeechSynthesizer()
     
     var leapButton: LeapMainButton?
+    var leapIconOptions: LeapIconOptions?
     var mediaManager = LeapMediaManager()
     
     var discoverySoundsJson: Dictionary<String,Array<LeapSound>> = [:]
@@ -258,11 +259,19 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
+        leapIconOptions?.dismiss()
         dismissLeapButton()
     }
     
     func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool) {
-        guard iconEnabled else { return }
+        guard iconEnabled, leapIconOptions == nil else {
+            if leapIconOptions != nil, leapButton != nil {
+            let kw = UIApplication.shared.windows.first{ $0.isKeyWindow }
+            if let window = kw {
+                window.bringSubviewToFront(leapIconOptions!)
+                window.bringSubviewToFront(leapButton!) } }
+            return
+        }
         let jsonDecoder = JSONDecoder()
         guard let iconData = try? JSONSerialization.data(withJSONObject: iconInfo, options: .prettyPrinted) else { return }
         guard let iconSetting = try? jsonDecoder.decode(LeapIconSetting.self, from: iconData) else { return }
@@ -319,8 +328,8 @@ extension LeapAUIManager: UIGestureRecognizerDelegate {
         guard let optionsText = auiManagerCallBack?.getCurrentLanguageOptionsTexts() else { return }
         let stopText = optionsText[constant_stop] ?? "Stop"
         let languageText = optionsText[constant_language]
-        let leapIconOptions = LeapIconOptions(withDelegate: self, stopText: stopText, languageText: languageText, leapButton: button)
-        leapIconOptions.show()
+        leapIconOptions = LeapIconOptions(withDelegate: self, stopText: stopText, languageText: languageText, leapButton: button)
+        leapIconOptions?.show()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -830,8 +839,12 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         
     }
     
-    func iconOptionsDismissed() {
+    func iconOptionsClosed() {
         auiManagerCallBack?.optionPanelClosed()
+    }
+    
+    func iconOptionsDismissed() {
+        leapIconOptions = nil
     }
 }
 
