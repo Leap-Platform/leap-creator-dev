@@ -11,6 +11,7 @@ import UIKit
 protocol LeapIconOptionsDelegate: NSObjectProtocol {
     func stopClicked()
     func languageClicked()
+    func iconOptionsClosed()  // triggered by the user
     func iconOptionsDismissed()
 }
 
@@ -270,7 +271,7 @@ extension LeapIconOptions {
     
     @objc func remove() {
         dismiss()
-        self.delegate?.iconOptionsDismissed()
+        self.delegate?.iconOptionsClosed()
     }
     
     func dismiss() {
@@ -302,6 +303,7 @@ extension LeapIconOptions {
                 self.layoutIfNeeded()
             } completion: { (_) in
                 self.removeFromSuperview()
+                self.delegate?.iconOptionsDismissed()
             }
         }
     }

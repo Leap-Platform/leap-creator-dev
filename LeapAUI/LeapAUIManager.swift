@@ -259,8 +259,7 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
-        leapIconOptions?.remove()
-        leapIconOptions = nil
+        leapIconOptions?.dismiss()
         dismissLeapButton()
     }
     
@@ -840,8 +839,12 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         
     }
     
-    func iconOptionsDismissed() {
+    func iconOptionsClosed() {
         auiManagerCallBack?.optionPanelClosed()
+    }
+    
+    func iconOptionsDismissed() {
+        leapIconOptions = nil
     }
 }
 
