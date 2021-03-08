@@ -15,6 +15,20 @@ extension UIImage {
         let image = UIImage(named: name, in: Bundle(for: LeapAUIManager.self), compatibleWith: nil)
         return image
     }
+    
+    func getInvertedImage() -> UIImage {
+        let rect =  CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
+        //Create a bitmap based graphics context based on size
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 1)
+        let currentContext = UIGraphicsGetCurrentContext() //Get current Quartz 2d drawing environment
+        currentContext?.clip(to: rect)
+        currentContext?.draw(self.cgImage!, in: rect)
+          
+        // Inverted image
+        let drawImage = UIGraphicsGetImageFromCurrentImageContext()
+        let invertedImage = UIImage(cgImage: (drawImage?.cgImage!)!, scale: self.scale, orientation: self.imageOrientation)
+        return invertedImage
+    }
 }
 
 
