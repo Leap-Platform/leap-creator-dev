@@ -194,8 +194,8 @@ class LeapArrowButton: UIButton {
             let viewFrameForScroll = superview.convert(view.frame, to: scroll)
             if scroll.bounds.contains(viewFrameForScroll) { return .InViewPort }
             else {
-                if viewFrameForScroll.minY < scroll.bounds.minY { print ("Above"); return .AboveViewPort }
-                else { print("Below"); return .BelowViewPort}
+                if viewFrameForScroll.minY < scroll.bounds.minY { return .AboveViewPort }
+                else { return .BelowViewPort}
             }
         }
         return visibility
