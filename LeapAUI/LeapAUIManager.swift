@@ -28,7 +28,6 @@ class LeapAUIManager: NSObject {
     
     var keyboardHeight: Float = 0
     var leapButtonBottomConstraint: NSLayoutConstraint?
-    var scrollArrowBottomConstraint: NSLayoutConstraint?
     
     var audioPlayer: AVAudioPlayer?
     var utterance = AVSpeechUtterance()
@@ -39,7 +38,7 @@ class LeapAUIManager: NSObject {
     
     var discoverySoundsJson: Dictionary<String,Array<LeapSound>> = [:]
     var stageSoundsJson: Dictionary<String,Array<LeapSound>> = [:]
-    var scrollArrow: UIButton?
+    lazy var scrollArrowButton = LeapArrowButton(arrowDelegate: self)
     
     var currentInstruction: Dictionary<String,Any>?
     weak var currentTargetView: UIView?
@@ -64,15 +63,10 @@ extension LeapAUIManager {
     
     @objc func keyboardDidShow(_ notification: NSNotification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-           let targetView = currentTargetView, isViewHiddenByKeyboard(targetView)
+           leapButton != nil
         {
             let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight = Float(keyboardRectangle.height)
-            showArrow()
-            scrollArrowBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
-            scrollArrow?.updateConstraints()
-        }
-        if leapButton != nil {
             leapButtonBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
             leapButton?.updateConstraints()
         }
@@ -80,17 +74,6 @@ extension LeapAUIManager {
     
     @objc func keyboardDidHide(_ notification: NSNotification) {
         keyboardHeight = 0
-        guard let assistInfo = currentInstruction?[constant_assistInfo] as? Dictionary<String,Any>, let autoScroll = assistInfo[constant_autoScroll] as? Bool else {
-            return
-        }
-        if autoScroll {
-            dismissArrow()
-        }
-        else if let targetView = currentTargetView {
-            if !isViewHiddenByKeyboard(targetView) {
-                dismissArrow()
-            }
-        }
         if leapButton != nil {
             leapButtonBottomConstraint?.constant = 20.0
             leapButton?.updateConstraints()
@@ -248,13 +231,8 @@ extension LeapAUIManager: LeapAUIHandler {
         else if let highlight = currentAssist as? LeapHighlight { highlight.updateHighlight(toRect: rect, inView: inWebView) }
         else if let spot = currentAssist as? LeapSpot { spot.updateSpot(toRect: rect, inView: inWebView) }
         else if let beacon = currentAssist as? LeapBeacon { beacon.updateRect(newRect: rect, inView: inWebView) }
-        guard let webview = inWebView else { return }
-        if isRectInVisbleArea(rect: rect, inView: webview) {
-            if isRectHiddenByKeyboard(rect: rect, webview: webview){ if scrollArrow ==  nil { showArrow() } }
-            else {
-                dismissArrow()
-            }
-        } else { if scrollArrow ==  nil { showArrow() } }
+        scrollArrowButton.updateRect(newRect: rect)
+
     }
     
     func updateView(inView view: UIView) {
@@ -266,13 +244,7 @@ extension LeapAUIManager: LeapAUIHandler {
         else if let highlight = currentAssist as? LeapHighlight { highlight.updateHighlight() }
         else if let spot = currentAssist as? LeapSpot { spot.updateSpot() }
         else if let beacon = currentAssist as? LeapBeacon { beacon.setAlignment() }
-        
-        if isViewInVisibleArea(view: view) {
-            if isViewHiddenByKeyboard(view){ if scrollArrow ==  nil { showArrow() } }
-            else {
-                dismissArrow()
-            }
-        } else { if scrollArrow ==  nil { showArrow() } }
+        scrollArrowButton.checkForView()
     }
     
     func dismissLeapButton() {
@@ -599,10 +571,7 @@ extension LeapAUIManager {
     
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
-        
-        // Autoscroll
-        arrowClicked()
-        
+        scrollArrowButton.setView(view: inView)
         //Set autofocus
         inView.becomeFirstResponder()
         
@@ -651,8 +620,7 @@ extension LeapAUIManager {
     private func performInViewWebInstruction(instruction: Dictionary<String,Any>, rect: CGRect, inWebview: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         
         guard  let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
-        
-        arrowClicked()
+        if let wkweb = inWebview as? WKWebView { scrollArrowButton.setRect(rect, in: wkweb) }
         
         if let webIdentfier = assistInfo[constant_identifier] as? String, let focusScript = auiManagerCallBack?.getWebScript(webIdentfier) {
             //Do auto focus for web element
@@ -790,95 +758,6 @@ extension LeapAUIManager: AVSpeechSynthesizerDelegate {
 // MARK: - ARROW AND KEYBOARD HANDLING
 extension LeapAUIManager {
     
-    func isViewInVisibleArea(view: UIView) -> Bool {
-        let viewFrame = view.frame
-        let windowFrame = UIApplication.shared.keyWindow?.frame
-        let viewFrameWRTToWindowFrame = view.superview!.convert(viewFrame, to: nil)
-        return windowFrame!.contains(viewFrameWRTToWindowFrame)
-    }
-    
-    func isRectInVisbleArea(rect: CGRect, inView: UIView) -> Bool {
-        return inView.frame.contains(rect)
-    }
-    
-    func isViewHiddenByKeyboard(_ view: UIView) -> Bool {
-        guard keyboardHeight > 0 else { return false }
-        let viewWRTWindow = view.superview!.convert(view.frame, to: nil)
-        return viewWRTWindow.origin.y > (UIApplication.shared.keyWindow!.frame.height - CGFloat(keyboardHeight))
-    }
-    
-    func isRectHiddenByKeyboard(rect:CGRect, webview:UIView) -> Bool {
-        guard keyboardHeight > 0 else { return false }
-        let viewWRTWindow = webview.superview!.convert(rect, to: nil)
-        return viewWRTWindow.origin.y > (UIApplication.shared.keyWindow!.frame.height - CGFloat(keyboardHeight))
-    }
-    
-    func getScrollViews(_ forView: UIView) -> Array<UIView> {
-        var scrollViews:Array<UIView> = [forView]
-        guard var tempView = forView.superview else { return scrollViews }
-        while !tempView.isKind(of: UIWindow.self) {
-            if let scrollView = tempView as? UIScrollView { scrollViews.append(scrollView) }
-            tempView = tempView.superview!
-        }
-        return scrollViews
-    }
-    
-    func makeViewVisible(_ nestedScrolls: Array<UIView>,_ animated: Bool) {
-        for i in 0..<nestedScrolls.count-1 {
-            let parentView = nestedScrolls[nestedScrolls.count - 1 - i]
-            let childView = nestedScrolls[nestedScrolls.count - 1 - i - 1]
-            if let scroller = parentView as? UIScrollView {
-                let childViewRectWRTParent = childView.superview!.convert(childView.frame, to: scroller)
-                scroller.scrollRectToVisible(childViewRectWRTParent, animated: animated)
-            }
-        }
-    }
-    
-    func showArrow() {
-        guard scrollArrow == nil else { return }
-        scrollArrow = UIButton(frame: .zero)
-        scrollArrow?.backgroundColor = UIColor.green
-        scrollArrow?.layer.cornerRadius = 20
-        scrollArrow?.layer.masksToBounds = true
-        scrollArrow?.setTitle("↓", for: .normal)
-        scrollArrow?.addTarget(self, action: #selector(arrowClicked), for: .touchUpInside)
-        let currentVC = UIApplication.getCurrentVC()
-        let superView = currentVC!.view
-        UIApplication.shared.keyWindow?.addSubview(scrollArrow!)
-        scrollArrow?.translatesAutoresizingMaskIntoConstraints = false
-        
-        let leadingConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .leading, relatedBy: .equal, toItem: superView!, attribute: .leading, multiplier: 1, constant: 20)
-        scrollArrowBottomConstraint = NSLayoutConstraint(item: superView!, attribute: .bottom, relatedBy: .equal, toItem: scrollArrow!, attribute: .bottom, multiplier: 1, constant: 20)
-        let heightConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
-        let widthConstraint = NSLayoutConstraint(item: scrollArrow!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
-        NSLayoutConstraint.activate([leadingConstraint, scrollArrowBottomConstraint!, heightConstraint, widthConstraint])
-    }
-    
-    @objc func arrowClicked() {
-        guard let assistInfo = currentInstruction?[constant_assistInfo] as? Dictionary<String,Any> else { return }
-        let isWeb = assistInfo[constant_isWeb] as? Bool ?? false
-        if isWeb {
-            guard let webview = currentWebView, let rect = currentTargetRect else { return }
-            if let wkweb = webview as? WKWebView {
-                wkweb.scrollView.scrollRectToVisible(rect, animated: true)
-            }
-        } else {
-            let nestedScrolls = getScrollViews(currentTargetView!)
-            makeViewVisible(nestedScrolls, true)
-            let currentVc = UIApplication.getCurrentVC()
-            let view = currentVc!.view!
-            view.endEditing(true)
-        }
-        dismissArrow()
-    }
-    
-    func dismissArrow() {
-        if scrollArrow != nil {
-           scrollArrow?.removeFromSuperview()
-           scrollArrow = nil
-        }
-    }
-    
     func startAutoDismissTimer() {
         guard let instruction = currentAssist, let dismissTimer = instruction.assistInfo?.autoDismissDelay else { return }
         if autoDismissTimer != nil {
@@ -911,7 +790,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         autoDismissTimer = nil
         currentAssist = nil
         stopAudio()
-        dismissArrow()
+        scrollArrowButton.noAssist()
         dismissLeapButton()
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }    
@@ -954,4 +833,17 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
     func iconOptionsDismissed() {
         auiManagerCallBack?.optionPanelClosed()
     }
+}
+
+
+// MARK: - ARROW BUTTON DELEGATES
+extension LeapAUIManager:LeapArrowButtonDelegate {
+    
+    func arrowShown() {
+    }
+    
+    func arrowHidden() {
+        
+    }
+    
 }
