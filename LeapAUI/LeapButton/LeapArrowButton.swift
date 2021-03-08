@@ -96,11 +96,13 @@ class LeapArrowButton: UIButton {
     }
     
     func checkForView() {
-        if isViewVisible() {
+        
+        let visibilty = getViewVisibility()
+        switch visibilty {
+        case .InViewPort:
             hideArrow()
-        }
-        else {
-            showArrow()
+        default:
+            showArrow(visibilty)
         }
     }
     
@@ -113,13 +115,13 @@ class LeapArrowButton: UIButton {
     
     func updateRect(newRect: CGRect) {
         rect = newRect
-        if isRectVisible() {
+        let visibility = getRectVisibility()
+        switch visibility {
+        case .InViewPort:
             hideArrow()
+        default:
+            showArrow(visibility)
         }
-        else {
-            showArrow()
-        }
-        
     }
     
     func noAssist() {
@@ -129,7 +131,12 @@ class LeapArrowButton: UIButton {
         inWebView = nil
     }
     
-    private func showArrow() {
+    private func showArrow(_ visibility:LeapViewPortVisibility) {
+        if visibility == .AboveViewPort {
+            
+        } else if visibility == .BelowViewPort {
+            
+        }
         guard isHidden else { return }
         self.isHidden = false
         delegate?.arrowShown()
@@ -161,11 +168,37 @@ class LeapArrowButton: UIButton {
     }
     
     private func getRectVisibility() -> LeapViewPortVisibility {
-        return .InViewPort
+        guard let tempRect = rect, let webview = inWebView else { return .InViewPort }
+        if webview.bounds.contains(tempRect)  {
+            if keyboardHeight == 0 { return .InViewPort }
+            if tempRect.minY < webview.bounds.height - keyboardHeight { return .InViewPort }
+            else { return .BelowViewPort }
+        }
+        if tempRect.minY < 0 { return .AboveViewPort}
+        else { return .BelowViewPort }
     }
     
     private func getViewVisibility() -> LeapViewPortVisibility {
-        return .InViewPort
+        guard let view = toView else { return .InViewPort }
+        let kw = UIApplication.shared.windows.first{ $0.isKeyWindow }
+        guard let keywindow = kw,
+              let superview = view.superview else { return .InViewPort }
+        let globalToViewFrame = superview.convert(view.frame, to: nil)
+        let scrolls = getScrollViews()
+        guard scrolls.count > 1 else {
+            if globalToViewFrame.minY < keywindow.bounds.minY { return .AboveViewPort}
+            else  { return .BelowViewPort }
+        }
+        let visibility:LeapViewPortVisibility = scrolls.reduce(.InViewPort) { (res, scroll) -> LeapViewPortVisibility in
+            if res != .InViewPort { return res }
+            let viewFrameForScroll = superview.convert(view.frame, to: scroll)
+            if scroll.bounds.contains(viewFrameForScroll) { return .InViewPort }
+            else {
+                if viewFrameForScroll.minY < scroll.bounds.minY { print ("Above"); return .AboveViewPort }
+                else { print("Below"); return .BelowViewPort}
+            }
+        }
+        return visibility
     }
     
     private func getScrollViews() -> Array<UIView> {
