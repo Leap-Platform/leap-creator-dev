@@ -76,6 +76,15 @@ class LeapIconView: UIView {
     
     private var iconWidthConstraint: NSLayoutConstraint?
     
+    lazy var shadowLayer:CAShapeLayer = {
+       let shadowLayer = CAShapeLayer()
+        shadowLayer.shadowColor = UIColor.black.cgColor
+        shadowLayer.shadowRadius = 2.0
+        shadowLayer.shadowOpacity = 0.7
+        shadowLayer.shadowOffset = .zero
+        return shadowLayer
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -108,6 +117,7 @@ class LeapIconView: UIView {
         
         self.iconWebView?.addGestureRecognizer(tapGestureRecognizer)
         self.iconWebView?.isUserInteractionEnabled = true
+        layer.addSublayer(shadowLayer)
     }
     
     func setupAudioAnimView() {
@@ -315,6 +325,7 @@ extension LeapIconView: WKNavigationDelegate {
         
         self.iconWebView?.backgroundColor = iconBackgroundColor
         self.audioWebView?.backgroundColor = iconBackgroundColor
+        self.shadowLayer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: iconSize, height: iconSize), cornerRadius: iconSize/2).cgPath
     }
 }
 
