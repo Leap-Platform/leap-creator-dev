@@ -26,7 +26,7 @@ class LeapIconOptions: UIView {
         return view
     }()
     lazy var closeButton: UIButton = {
-      return getCloseButton()
+        return getCloseButton()
     }()
     let eachStageDuration: TimeInterval = 0.1
     let themeColor: UIColor
@@ -34,7 +34,7 @@ class LeapIconOptions: UIView {
     var imageHeightConstraint: NSLayoutConstraint?
     var panelWidthConstraint: NSLayoutConstraint?
     var optionsViewAnimateConstraint: NSLayoutConstraint?
-
+    
     weak var delegate: LeapIconOptionsDelegate?
     
     init(withDelegate: LeapIconOptionsDelegate, stopText: String, languageText: String?, leapButton: UIView) {
@@ -73,10 +73,10 @@ extension LeapIconOptions {
         self.layer.masksToBounds = true
         self.layer.cornerRadius = (leapButton.frame.height/2)
         self.frame = leapButton.frame
-    
+        
         self.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-
+        
         // Close constraints
         if isLeftAligned {
             closeButton.centerXAnchor.constraint(equalTo: self.leadingAnchor, constant: 27).isActive = true
@@ -119,7 +119,7 @@ extension LeapIconOptions {
         imageView.contentMode = .scaleAspectFit
         closeButton.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         imageView.centerXAnchor.constraint(equalTo: closeButton.centerXAnchor, constant: 0).isActive = true
         imageView.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor, constant: 0).isActive = true
         imageHeightConstraint = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil
@@ -137,7 +137,7 @@ extension LeapIconOptions {
         let stopButton = getStopButton()
         optionsView.addSubview(stopButton)
         stopButton.translatesAutoresizingMaskIntoConstraints = false
-
+        
         stopButton.leadingAnchor.constraint(equalTo: optionsView.leadingAnchor).isActive = true
         stopButton.centerYAnchor.constraint(equalTo: optionsView.centerYAnchor).isActive = true
         stopButton.topAnchor.constraint(equalTo: optionsView.topAnchor).isActive = true
@@ -261,50 +261,61 @@ extension LeapIconOptions {
     
     @objc func languageClicked() {
         self.delegate?.languageClicked()
-        dismiss()
+        dismiss(true)
     }
     
     @objc func stopClicked() {
         self.delegate?.stopClicked()
-        dismiss()
+        dismiss(true)
     }
     
     @objc func remove() {
-        dismiss()
+        dismiss(true)
         self.delegate?.iconOptionsClosed()
     }
     
-    func dismiss() {
+    func dismiss(_ animated: Bool) {
+        
+        self.delegate?.iconOptionsDismissed()
         
         self.closeButtonHeightConstraint?.constant = 0
         self.imageHeightConstraint?.constant = 0
         self.optionsViewAnimateConstraint?.constant = 50
         
-        UIView.animate(withDuration: eachStageDuration) {
-            self.optionsView.alpha = 0.0
-            self.closeButton.alpha = 0.0
-            self.closeButton.layer.cornerRadius = 0
-            self.layoutIfNeeded()
-        } completion: { (_) in
-            self.button?.isHidden = false
-            let buttonHeightConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
-            let buttonWidthConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
-            if let htConst = buttonHeightConstraint { htConst.constant = self.frame.height}
-            if let widthConst = buttonWidthConstraint { widthConst.constant = self.frame.height }
-            UIView.animate(withDuration: self.eachStageDuration) {
-                if self.isLeftAligned {
-                    self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
-                } else {
-                    let newXPosition = self.button!.center.x - (self.frame.height/2)
-                    self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
-                }
-                self.button?.layer.cornerRadius = self.frame.height/2
-                self.button?.layoutIfNeeded()
+        if animated {
+            
+            UIView.animate(withDuration: eachStageDuration) {
+                self.optionsView.alpha = 0.0
+                self.closeButton.alpha = 0.0
+                self.closeButton.layer.cornerRadius = 0
                 self.layoutIfNeeded()
             } completion: { (_) in
-                self.removeFromSuperview()
-                self.delegate?.iconOptionsDismissed()
+                self.button?.isHidden = false
+                let buttonHeightConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
+                let buttonWidthConstraint: NSLayoutConstraint? = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
+                if let htConst = buttonHeightConstraint { htConst.constant = self.frame.height}
+                if let widthConst = buttonWidthConstraint { widthConst.constant = self.frame.height }
+                UIView.animate(withDuration: self.eachStageDuration) {
+                    if self.isLeftAligned {
+                        self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
+                    } else {
+                        let newXPosition = self.button!.center.x - (self.frame.height/2)
+                        self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
+                    }
+                    self.button?.layer.cornerRadius = self.frame.height/2
+                    self.button?.layoutIfNeeded()
+                    self.layoutIfNeeded()
+                } completion: { (_) in
+                    self.removeFromSuperview()
+                }
             }
+            
+        } else {
+            self.button?.isHidden = false
+            self.button?.layer.cornerRadius = self.frame.height/2
+            self.button?.layoutIfNeeded()
+            self.layoutIfNeeded()
+            self.removeFromSuperview()
         }
     }
 }

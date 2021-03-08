@@ -259,7 +259,7 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
-        leapIconOptions?.dismiss()
+        leapIconOptions?.dismiss(false)
         dismissLeapButton()
     }
     
