@@ -38,7 +38,7 @@ class LeapArrowButton: UIButton {
         super.init(frame: .zero)
         layer.cornerRadius = 20
         layer.masksToBounds = true
-        backgroundColor = .red
+        backgroundColor = .clear
         setupButton()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
@@ -67,9 +67,10 @@ class LeapArrowButton: UIButton {
     }
     
     private func setupButton() {
-        let kw = UIApplication.shared.windows.first { $0.isKeyWindow}
+        let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
         guard let keywindow = kw else { return }
         keywindow.addSubview(self)
+        self.setImage(UIImage.getImageFromBundle("scroll_arrow.png"), for: .normal)
         self.isHidden = true
         self.translatesAutoresizingMaskIntoConstraints = false
         widthAnchor.constraint(equalToConstant: 40).isActive = true
@@ -80,12 +81,10 @@ class LeapArrowButton: UIButton {
     }
     
     private func updateArrowPosition() {
-        
         UIView.animate(withDuration: 0.1) {
             self.bottomConstraint.constant = self.keyboardHeight + 24
             self.layoutIfNeeded()
         }
-        
     }
     
     func setView(view: UIView) {
@@ -134,8 +133,11 @@ class LeapArrowButton: UIButton {
     private func showArrow(_ visibility:LeapViewPortVisibility) {
         if visibility == .AboveViewPort {
             
+            self.setImage(UIImage.getImageFromBundle("scroll_arrow.png")?.getInvertedImage(), for: .normal)
+            
         } else if visibility == .BelowViewPort {
             
+            self.setImage(UIImage.getImageFromBundle("scroll_arrow.png"), for: .normal)
         }
         guard isHidden else { return }
         self.isHidden = false
@@ -230,6 +232,4 @@ class LeapArrowButton: UIButton {
         let view = currentVc!.view!
         view.endEditing(true)
     }
-    
-    
 }
