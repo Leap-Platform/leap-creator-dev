@@ -23,6 +23,7 @@ class LeapDiscoveryManager {
     
     private weak var delegate:LeapDiscoveryManagerDelegate?
     private var completedDiscoveriesInSession:Array<Int> = []
+    private var identifiedDiscoveriesInSession:Array<Int> = []
     private weak var currentDiscovery:LeapDiscovery?
     private var discoveryTimer:Timer?
     
@@ -74,7 +75,7 @@ class LeapDiscoveryManager {
         currentDiscovery = discovery
         
         let type =  currentDiscovery?.trigger?.type ?? .instant
-        if type == .delay {
+        if type == .delay && !identifiedDiscoveriesInSession.contains(discovery.id) {
             let delay = currentDiscovery?.trigger?.delay ?? 0
             discoveryTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
                 self.discoveryTimer?.invalidate()
@@ -85,6 +86,7 @@ class LeapDiscoveryManager {
         } else  {
             delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
         }
+        if !identifiedDiscoveriesInSession.contains(discovery.id) { identifiedDiscoveriesInSession.append(discovery.id) }
         
     }
     
