@@ -31,9 +31,6 @@ class LeapToolTip: LeapTipView {
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
     
-    /// spacing of the highlight area.
-    var highlightSpacing = 10.0
-    
     /// corner radius for the highlight area/frame.
     var highlightCornerRadius = 5.0
     
@@ -175,7 +172,7 @@ class LeapToolTip: LeapTipView {
             iconSpacing = self.leapIconView.iconSize + self.leapIconView.iconGap
         }
         
-        if (toViewBottom + CGFloat(highlightSpacing) + toolTipView.frame.size.height) + iconSpacing <= inViewFrame.size.height {
+        if (toViewBottom + CGFloat(manipulatedHighlightSpacing) + toolTipView.frame.size.height) + iconSpacing <= inViewFrame.size.height {
             
             return .top
         
@@ -216,7 +213,7 @@ class LeapToolTip: LeapTipView {
             
             if assistInfo?.highlightAnchor ?? false {
                 
-                y = y + CGFloat(highlightSpacing)
+                y = y + CGFloat(manipulatedHighlightSpacing)
             }
             
         case .bottom:
@@ -237,7 +234,7 @@ class LeapToolTip: LeapTipView {
             
             if assistInfo?.highlightAnchor ?? false {
                 
-                y = y - CGFloat(highlightSpacing)
+                y = y - CGFloat(manipulatedHighlightSpacing)
             }
         }
         
@@ -449,6 +446,8 @@ class LeapToolTip: LeapTipView {
     /// Highlights the toView to which the tooltipView is pointed to.
     private func highlightAnchor() {
         
+        manipulatedHighlightSpacing = highlightSpacing
+        
         let globalToView = getGlobalToViewFrame()
 
         let origin = globalToView.origin
@@ -457,7 +456,59 @@ class LeapToolTip: LeapTipView {
         
         let path = UIBezierPath(rect: inView!.bounds)
                 
-        let transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
+        var transparentPath = UIBezierPath()
+        
+        if let highlightType = assistInfo?.extraProps?.props[constant_highlightType] as? String {
+            
+            self.highlightType = LeapHighlightType(rawValue: highlightType) ?? .rect
+        }
+        
+        switch self.highlightType {
+            
+        case .rect:
+            
+            if let highlightCornerRadius = assistInfo?.extraProps?.props[constant_highlightCornerRadius] as? String {
+                
+                self.highlightCornerRadius = Double(highlightCornerRadius) ?? self.highlightCornerRadius
+            }
+        
+            transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
+
+        case .capsule:
+            
+            transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: (Double(size.height) + (highlightSpacing*2))/2, height: (Double(size.height) + (highlightSpacing*2))/2))
+            
+        case .circle:
+            
+            var radius = size.width
+            
+            var x = Double(origin.x) - highlightSpacing
+            
+            var diameter = Double(radius) + (highlightSpacing*2)
+            
+            var totalRadius = diameter/2
+            
+            var y = (Double(origin.y) + Double(size.height)/2) - totalRadius
+            
+            manipulatedHighlightSpacing = abs(-(totalRadius) + (Double(size.height)/2))
+                        
+            if size.height > size.width {
+                
+                radius = size.height
+                
+                diameter = Double(radius) + (highlightSpacing*2)
+                
+                totalRadius = diameter/2
+                
+                x = (Double(origin.x) + Double(size.width)/2) - totalRadius
+                
+                y = Double(origin.y) - highlightSpacing
+                
+                manipulatedHighlightSpacing = highlightSpacing
+            }
+            
+            transparentPath = UIBezierPath(ovalIn: CGRect(x: x, y: y, width: diameter, height: diameter))
+        }
         
         path.append(transparentPath)
         path.usesEvenOddFillRule = true

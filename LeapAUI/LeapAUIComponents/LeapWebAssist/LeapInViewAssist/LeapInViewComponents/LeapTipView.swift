@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+/// enum type for Highlight
+enum LeapHighlightType: String {
+    
+    case circle = "circle"
+    case rect = "rect"
+    case capsule = "capsule"
+}
+
 /// Type which controls LeapToolTip, LeapHighlight and LeapSpot.
 class LeapTipView: LeapInViewAssist {
     
@@ -17,6 +25,15 @@ class LeapTipView: LeapInViewAssist {
     
     /// original isUserInteractionEnabled boolean value of the toView.
     var toViewOriginalInteraction: Bool?
+    
+    /// A view frame to highlight the source view to which tooltip is pointed to.
+    var highlightType: LeapHighlightType = .rect
+    
+    /// spacing of the highlight area.
+    var highlightSpacing = 10.0
+    
+    /// spacing of the highlight area after manipulation
+    var manipulatedHighlightSpacing = 10.0
     
     /// method called to auto focus on the target view of the aui component.
     func setupAutoFocus() {

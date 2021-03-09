@@ -28,20 +28,11 @@ class LeapSpot: LeapTipView {
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
     
-    /// spacing of the highlight area.
-    var highlightSpacing = 10.0
-    
-    /// spacing of the highlight area after manipulation
-    private var manipulatedHighlightSpacing = 10.0
-    
     /// corner radius for the highlight area/frame.
     var highlightCornerRadius = 5.0
     
     /// the bridge line between highlight and tooltip which is of the type ConnectorType
     var connectorType: LeapHighlightConnectorType = .none
-    
-    /// A view frame to highlight the source view to which tooltip is pointed to
-    var highlightType: LeapHighlightType = .circle
     
     /// the length of the connector that connects from highlighted view to the tooltip.
     var connectorLength = 40.0
@@ -529,7 +520,7 @@ class LeapSpot: LeapTipView {
         
         let path = UIBezierPath(rect: inView!.bounds)
                 
-        var transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
+        var transparentPath = UIBezierPath()
         
         if let highlightType = assistInfo?.extraProps?.props[constant_highlightType] as? String {
             
@@ -549,7 +540,7 @@ class LeapSpot: LeapTipView {
 
         case .capsule:
             
-            transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: transparentPath.bounds.width/2, height: transparentPath.bounds.width/2))
+            transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: (Double(size.height) + (highlightSpacing*2))/2, height: (Double(size.height) + (highlightSpacing*2))/2))
             
         case .circle:
             
