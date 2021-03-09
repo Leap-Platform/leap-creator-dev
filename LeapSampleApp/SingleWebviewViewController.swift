@@ -17,7 +17,7 @@ class SingleWebviewViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        let urlString = "https://www.goibibo.com/flights"
+        let urlString = "https://www.flipkart.com/"
         guard let url = URL(string: urlString) else { return }
         webview.load(URLRequest(url: url))
     }

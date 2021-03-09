@@ -20,7 +20,7 @@ protocol LeapContextDetectorDelegate:NSObjectProtocol {
     func getLiveContext() -> LeapContext?
     func contextDetected(context:LeapContext, view:UIView?, rect: CGRect?, webview:UIView?)
     func noContextDetected()
-
+    
     func getCurrentFlow() -> LeapFlow?
     func getParentFlow() -> LeapFlow?
     
@@ -453,80 +453,78 @@ extension LeapContextDetector {
     private func getViewsForIdentifer(identifierId:String, hierarchy:Array<UIView>) -> Array<UIView>? {
         guard let identifier = delegate!.getNativeIdentifier(identifierId: identifierId) else { return nil }
         guard let params = identifier.idParameters else { return nil }
-        var anchorViews = hierarchy
-        if params.accId != nil { anchorViews = anchorViews.filter{ $0.accessibilityIdentifier == params.accId } }
-        if params.accLabel != nil { anchorViews = anchorViews.filter{ $0.accessibilityLabel == params.accLabel } }
-        if params.tag != nil { anchorViews = anchorViews.filter{ $0.tag == params.tag } }
-        if params.text != nil {
-            if let localeText = params.text![constant_ang] {
-                anchorViews =  anchorViews.filter { (view) -> Bool in
-                    if let label = view as? UILabel {
-                        return label.text == localeText
-                    } else if let button = view as? UIButton {
-                        return (button.title(for: .normal) == localeText)
-                    } else if let textField = view as? UITextField {
-                        return textField.text == localeText
-                    } else if let textView = view as? UITextView {
-                        return textView.text == localeText
-                    }
-                    return false
-                }
+        var anchorViews = getViewsMatchingIdParams(hierarchy, params)
+        if let matchingProps = identifier.viewProps {
+            anchorViews = getViewsHavingMatchingProps(views: anchorViews, viewProps: matchingProps)
+        }
+        if identifier.isAnchorSameAsTarget! || anchorViews.count == 0 { return anchorViews }
+        guard let relations = identifier.relationToTarget else { return anchorViews }
+        let targetViews = getViewsFromRelation(anchorViews, relations)
+        guard let targetIdParams = identifier.target?.idParameters, targetViews.count > 0 else { return targetViews }
+        var targetViewsMatchingIdParams = getViewsMatchingIdParams(targetViews, targetIdParams)
+        if let targetMatchingProps = identifier.target?.viewProps {
+            targetViewsMatchingIdParams = getViewsHavingMatchingProps(views: targetViewsMatchingIdParams, viewProps: targetMatchingProps)
+        }
+        return targetViewsMatchingIdParams
+    }
+    
+    
+    
+    private func getViewsMatchingIdParams(_ views: Array<UIView>,_ params: LeapNativeParameters) -> Array<UIView> {
+        var resultViews = views
+        if params.accId != nil { resultViews = resultViews.filter{ $0.accessibilityIdentifier == params.accId } }
+        if params.accLabel != nil { resultViews = resultViews.filter{ $0.accessibilityLabel == params.accLabel } }
+        if params.tag != nil { resultViews = resultViews.filter{ $0.tag == params.tag } }
+        if params.text != nil, let localeText = params.text![constant_ang] {
+            resultViews =  resultViews.filter { (view) -> Bool in
+                if let label = view as? UILabel { return label.text == localeText }
+                else if let button = view as? UIButton { return (button.title(for: .normal) == localeText) }
+                else if let textField = view as? UITextField { return textField.text == localeText }
+                else if let textView = view as? UITextView { return textView.text == localeText }
+                return false
             }
         }
-        if params.placeholder != nil {
-            if let localeText = params.placeholder![constant_ang] {
-                anchorViews =  anchorViews.filter { (view) -> Bool in
-                    if let label = view as? UILabel {
-                        return label.text == localeText
-                    } else if let button = view as? UIButton {
-                        return (button.title(for: .normal) == localeText)
-                    } else if let textField = view as? UITextField {
-                        return textField.text == localeText
-                    } else if let textView = view as? UITextView {
-                        return textView.text == localeText
-                    }
-                    return false
-                }
-            }
-        }
-        if let nesting = identifier.nesting {
-            let nestArray = nesting.split(separator: "-")
-            let nestedViews = anchorViews.map({ (tempView) -> UIView? in
-                var nestedView = tempView
-                for pos in nestArray {
-                    if let intPos = Int(pos) {
-                        if tempView.subviews.count > intPos {
-                            nestedView = nestedView.subviews[intPos]
-                        } else { return nil }
-                    } else { return nil }
-                }
-                return nestedView
-            }).filter { $0 != nil } as! Array<UIView>
-            anchorViews = nestedViews
-        }
-        if identifier.isAnchorSameAsTarget! { return anchorViews }
-        
-        let targetViews = anchorViews.map { (tempView) -> UIView? in
+        return resultViews
+    }
+    
+    private func getViewsFromRelation(_ anchorViews: Array<UIView>, _ relations :Array<String>) -> Array<UIView> {
+        let targetViews = anchorViews.compactMap { (tempView) -> UIView? in
             var currentview = tempView
-            if let relations = identifier.relationToTarget {
-                for relation in relations {
-                    if relation == "P" {
-                        guard let superView = currentview.superview else { return nil }
-                        currentview = superView
-                    }
-                    else if relation.hasPrefix("C") {
-                        guard let index = Int(relation.split(separator: "C")[0]), currentview.subviews.count > index else { return nil }
-                        currentview = currentview.subviews[index]
-                    } else if relation.hasPrefix("S") {
-                        guard let index = Int(relation.split(separator: "S")[0]), let superView = currentview.superview, superView.subviews.count > index else {return nil }
-                        currentview = superView.subviews[index]
-                    }
+            for relation in relations {
+                if relation == "P" {
+                    guard let superView = currentview.superview else { return nil }
+                    currentview = superView
+                }
+                else if relation.hasPrefix("C") {
+                    guard let index = Int(relation.split(separator: "C")[0]), currentview.subviews.count > index else { return nil }
+                    currentview = currentview.subviews[index]
+                } else if relation.hasPrefix("S") {
+                    guard let index = Int(relation.split(separator: "S")[0]),
+                          let superView = currentview.superview, superView.subviews.count > index else {return nil }
+                    currentview = superView.subviews[index]
                 }
             }
             return currentview
-        }.filter { $0 != nil } as! Array<UIView>
-        
+        }
         return targetViews
+    }
+    
+    private func getViewsHavingMatchingProps(views: Array<UIView>, viewProps: LeapNativeViewProps) -> Array<UIView> {
+        let matchingViews = views.filter { (tempView) -> Bool in
+            if let isEnabled = viewProps.isEnabled { return (tempView as? UIControl)?.isEnabled ?? false == isEnabled }
+            if let isSelected = viewProps.isSelected { return (tempView as? UIControl)?.isSelected ?? false == isSelected }
+            if let isFocused = viewProps.isFocused { return tempView.isFocused == isFocused }
+            if let className = viewProps.className { return String(describing: type(of: tempView)) == className }
+            if let textDictionary = viewProps.text,  let localeText = textDictionary[constant_ang] {
+                if let label = tempView as? UILabel { return label.text == localeText }
+                else if let button = tempView as? UIButton { return (button.title(for: .normal) == localeText) }
+                else if let textField = tempView as? UITextField { return textField.text == localeText }
+                else if let textView = tempView as? UITextView { return textView.text == localeText }
+                return false
+            }
+            return true
+        }
+        return matchingViews
     }
     
 }
