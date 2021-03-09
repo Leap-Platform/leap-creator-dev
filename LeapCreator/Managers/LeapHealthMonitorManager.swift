@@ -18,38 +18,39 @@ class LeapHealthMonitorManager {
     var lastPongTime: Double?
     var pingTask: DispatchWorkItem?
     let MAX_FAILED_ATTEMPTS = 2.0
-    let PING_INTERVAL =  5.0
+    let PING_INTERVAL = 5.0
     
-    init(healthCheckListener: LeapHealthCheckListener){
+    init(healthCheckListener: LeapHealthCheckListener) {
         self.healthListener = healthCheckListener
     }
     
-    func start(webSocket: WebSocket, room: String){
+    func start(webSocket: WebSocket, room: String) {
         self.roomId = room
         self.webSocket = webSocket
         initialiseSessionVariable()
         pingTask = DispatchWorkItem{
             self.sendPing()
         }
+        sendPing()
     }
     
-    func initialiseSessionVariable(){
-        lastPongTime = NSTimeIntervalSince1970
+    func initialiseSessionVariable() {
+        lastPongTime = NSDate().timeIntervalSince1970
     }
     
-    func sendPing(){
+    func sendPing() {
         if isSessionActive() {
             let payload = "{\"room\":\"\(roomId!)\",\"message\": {\"commandType\":\"PING\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
             self.webSocket?.write(string: payload, completion: {
                 print("PING has been sent! ")
             })
-        }else{
+        } else {
             self.healthListener.onSessionClosed()
         }
-        DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: self.pingTask! )
+        DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: self.pingTask!)
     }
     
-    func sendPong(){
+    func sendPong() {
         let payload = "{\"room\":\"\(roomId!)\",\"message\": {\"commandType\":\"PONG\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
         self.webSocket?.write(string: payload, completion: {
             print(" payload : \(payload)")
@@ -57,15 +58,15 @@ class LeapHealthMonitorManager {
         })
     }
     
-    func isSessionActive()->Bool{
-        return ((NSTimeIntervalSince1970 - self.lastPongTime!) < self.MAX_FAILED_ATTEMPTS * self.PING_INTERVAL)
+    func isSessionActive() -> Bool {
+        return ((NSDate().timeIntervalSince1970 - self.lastPongTime!) < (self.MAX_FAILED_ATTEMPTS * self.PING_INTERVAL))
     }
     
-    func receivePong(){
-        lastPongTime = NSTimeIntervalSince1970
+    func receivePong() {
+        lastPongTime = NSDate().timeIntervalSince1970
     }
     
-    func stop(){
+    func stop() {
         self.pingTask?.cancel()
     }
 }
