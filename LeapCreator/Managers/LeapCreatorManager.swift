@@ -64,7 +64,6 @@ class LeapCreatorManager {
                 }
                 
             }
-           
         }
         configTask.resume()
     }
