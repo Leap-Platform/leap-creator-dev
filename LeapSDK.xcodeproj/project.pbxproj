@@ -32,6 +32,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		D017401625F75D17002C051E /* scroll_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D017401525F75D17002C051E /* scroll_arrow.png */; };
 		D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* LeapCreatorInternal.swift */; };
 		D02C12F825DFC6B000C80E28 /* LeapCreatorConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* LeapCreatorConfig.swift */; };
 		D02C12F925DFC6B000C80E28 /* LeapConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */; };
@@ -271,6 +272,7 @@
 		D0084C91248682A80082508C /* LeapDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDiscovery.swift; sourceTree = "<group>"; };
 		D00B8F59249B2988006F4CA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D00E859924F51914000D8E5B /* LeapAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapAssist.swift; sourceTree = "<group>"; };
+		D017401525F75D17002C051E /* scroll_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scroll_arrow.png; sourceTree = "<group>"; };
 		D01BD31F25D528940078324B /* LeapIconOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapIconOptions.swift; sourceTree = "<group>"; };
 		D01BD32825D529AD0078324B /* jiny_option_language.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_option_language.png; sourceTree = "<group>"; };
 		D01BD33125D529C50078324B /* jiny_option_cross.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_option_cross.png; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 		D04E8589248A886700BA5CA3 /* LeapImages */ = {
 			isa = PBXGroup;
 			children = (
+				D017401525F75D17002C051E /* scroll_arrow.png */,
 				2DD7445D25BB108200D7609A /* jiny_ping_close.png */,
 			);
 			path = LeapImages;
@@ -994,6 +997,7 @@
 				D0B603F025DFB6BA0092F735 /* jiny_option_cross.png in Resources */,
 				D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */,
 				D0B603F225DFB6BA0092F735 /* jiny_ping_close.png in Resources */,
+				D017401625F75D17002C051E /* scroll_arrow.png in Resources */,
 				D0B603F325DFB6BA0092F735 /* jiny_audio_anim.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

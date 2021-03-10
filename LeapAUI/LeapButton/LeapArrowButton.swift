@@ -188,6 +188,7 @@ class LeapArrowButton: UIButton {
         let globalToViewFrame = superview.convert(view.frame, to: nil)
         let scrolls = getScrollViews()
         guard scrolls.count > 1 else {
+            if keywindow.bounds.contains(globalToViewFrame) { return .InViewPort }
             if globalToViewFrame.minY < keywindow.bounds.minY { return .AboveViewPort}
             else  { return .BelowViewPort }
         }
