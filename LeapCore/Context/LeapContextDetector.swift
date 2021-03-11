@@ -164,7 +164,7 @@ extension LeapContextDetector {
     private func findIdentifiableAssistsAndDiscoveries(in hierarchy:Array<UIView>) {
         let contextsToCheck:Array<LeapContext> =  delegate?.getContextsToCheck() ?? []
         getPassingIdentifiers(for: contextsToCheck, in: hierarchy) { (passedNativeIds, passedWebIds) in
-            let contextsIdentified = contextsToCheck.filter { self.isContextPassing(passedWebIds, passedNativeIds, $0.webIdentifiers, $0.nativeIdentifiers) }
+            let contextsIdentified = self.getPassingContexts(contextsToCheck, passedNativeIds, passedWebIds)
             guard contextsIdentified.count > 0 else {
                 self.delegate?.noContextDetected()
                 return
@@ -193,7 +193,10 @@ extension LeapContextDetector {
             return
         }
         getPassingIdentifiers(for: flow.pages, in: hierarchy) { (passingNativeIds, passingWebIds) in
-            let passingPages = flow.pages.filter { self.isContextPassing(passingWebIds, passingNativeIds, $0.webIdentifiers, $0.nativeIdentifiers) }
+            guard let passingPages = self.getPassingContexts(flow.pages, passingNativeIds, passingWebIds) as? Array<LeapPage> else {
+                self.findIdentifiablePage(in: hierarchy, forFlow: self.delegate?.getParentFlow())
+                return
+            }
             guard passingPages.count > 0 else {
                 // No passing pages in current flow, hence checking in parent flow
                 self.findIdentifiablePage(in: hierarchy, forFlow: self.delegate?.getParentFlow())
@@ -216,7 +219,10 @@ extension LeapContextDetector {
             return
         }
         getPassingIdentifiers(for: stages, in: hierarchy) { (passedNativeIds, passedWebIds) in
-            let passingStages = stages.filter{ self.isContextPassing(passedWebIds, passedNativeIds, $0.webIdentifiers, $0.nativeIdentifiers) }
+            guard let passingStages = self.getPassingContexts(stages, passedNativeIds, passedWebIds) as? Array<LeapStage> else {
+                self.delegate?.stageNotIdentified()
+                return
+            }
             guard passingStages.count > 0 else {
                 self.delegate?.stageNotIdentified()
                 return
@@ -342,9 +348,17 @@ extension LeapContextDetector {
     ///   - passingWebIds: array of web identifier ids which are valid
     private func getPassingIdentifiers(for contexts:Array<LeapContext>, in hierarchy:Array<UIView>, checkCompletion:@escaping(_ passingNativeIds:Array<String>,_ passingWebIds:Array<String>)->Void) {
         let toCheckNativeIds:Array<String> = contexts.reduce([]) { (nativeIdsArray, context) -> Array<String> in
+            if let instructionIdentifier =  context.instruction?.assistInfo?.identifier,
+               let isWeb =  context.instruction?.assistInfo?.isWeb, !isWeb {
+                return Array(Set(nativeIdsArray+context.nativeIdentifiers+[instructionIdentifier]))
+            }
             return Array(Set(nativeIdsArray+context.nativeIdentifiers))
         }
         let toCheckWebIds:Array<String> = contexts.reduce([]) { (webIdsArray, context) -> Array<String> in
+            if let instructionIdentifier =  context.instruction?.assistInfo?.identifier,
+               let isWeb =  context.instruction?.assistInfo?.isWeb, isWeb {
+                return Array(Set(webIdsArray+context.webIdentifiers+[instructionIdentifier]))
+            }
             return Array(Set(webIdsArray+context.webIdentifiers))
         }
         let passingNativeIds = getNativeIdentifiersPassing(toCheckNativeIds, inHierarchy: hierarchy)
@@ -406,6 +420,21 @@ extension LeapContextDetector {
             }
             let views = getViewsForIdentifer(identifierId: identifier, hierarchy: allView)
             targetCheckCompleted(views?.first, nil, nil)
+        }
+    }
+    
+    
+    private func getPassingContexts(_ contexts: Array<LeapContext>,_ passedNativeIds: Array<String>,_ passedWebIds:Array<String>) -> Array<LeapContext> {
+        return contexts.filter { (context) -> Bool in
+            guard let instructionIdentifier = context.instruction?.assistInfo?.identifier,
+                  let isWeb = context.instruction?.assistInfo?.isWeb else {
+                return isContextPassing(passedWebIds, passedNativeIds, context.webIdentifiers, context.nativeIdentifiers)
+            }
+            if isWeb {
+                return isContextPassing(passedWebIds, passedNativeIds, context.webIdentifiers + [instructionIdentifier], context.nativeIdentifiers)
+            } else {
+                return isContextPassing(passedWebIds, passedNativeIds, context.webIdentifiers, context.nativeIdentifiers + [instructionIdentifier])
+            }
         }
     }
     
