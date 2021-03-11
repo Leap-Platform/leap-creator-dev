@@ -21,8 +21,8 @@ class LeapKeyWindowAssist: LeapWebAssist {
     
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type LeapAssistInfo.
-    init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
-        super.init(frame: CGRect.zero)
+    init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
+        super.init(frame: CGRect.zero, baseUrl: baseUrl)
         
         self.assistInfo = LeapAssistInfo(withDict: assistDict)
         

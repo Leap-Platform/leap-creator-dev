@@ -16,8 +16,8 @@ class LeapSlideIn: LeapKeyWindowAssist {
     /// alignment property for SlideIn - left and right
     var alignment: LeapAlignmentType = .left
         
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
-        super.init(withDict: assistDict, iconDict: iconDict)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
+        super.init(withDict: assistDict, iconDict: iconDict, baseUrl: baseUrl)
                                 
         if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
             
