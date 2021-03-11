@@ -13,8 +13,8 @@ import WebKit
 /// LeapBottomSheet - A Web KeyWindowAssist AUI Component class to show a bottomSheet over a window.
 class LeapBottomSheet: LeapKeyWindowAssist {
         
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
-        super.init(withDict: assistDict, iconDict: iconDict)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
+        super.init(withDict: assistDict, iconDict: iconDict, baseUrl: baseUrl)
                         
         var layoutInfo = assistDict[constant_layoutInfo] as? Dictionary<String, Any> ?? [:]
             

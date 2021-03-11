@@ -525,7 +525,7 @@ extension LeapAUIManager {
             let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
             if auiContent.url != nil { self.mediaManager.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 DispatchQueue.main.async {
-                    let languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl) { success, languageCode in
+                    let languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
                         if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
                         LeapPreferences.shared.currentLanguage = languageCode
                         if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
@@ -587,27 +587,27 @@ extension LeapAUIManager {
         // Present Assist
         switch type {
         case FINGER_RIPPLE:
-            let fingerPointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            let fingerPointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil,baseUrl: nil)
             currentAssist = fingerPointer
             fingerPointer.presentPointer(view: inView)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
             currentAssist = tooltip
             tooltip.presentPointer()
             
         case HIGHLIGHT_WITH_DESC:
-            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
             currentAssist = highlight
             highlight.presentHighlight()
             
         case SPOT:
-            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
             currentAssist = spot
             spot.presentSpot()
             
         case LABEL:
-            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
             currentAssist = label
             label.presentLabel()
             
@@ -617,7 +617,7 @@ extension LeapAUIManager {
             beacon.presentBeacon()
             
         case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-            let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil)
+            let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: nil)
             swipePointer.type = LeapSwipePointerType(rawValue: type)!
             currentAssist = swipePointer
             swipePointer.presentPointer(view: inView)
@@ -638,33 +638,33 @@ extension LeapAUIManager {
         
         switch type {
         case FINGER_RIPPLE:
-            let pointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            let pointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: nil)
             currentAssist = pointer
             pointer.presentPointer(toRect: rect, inView: inWebview)
             
         case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-            let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: nil)
             swipePointer.type = LeapSwipePointerType(rawValue: type)!
             currentAssist = swipePointer
             swipePointer.presentPointer(toRect: rect, inView: inWebview)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
             currentAssist = tooltip
             tooltip.presentPointer(toRect: rect, inView: inWebview)
             
         case HIGHLIGHT_WITH_DESC:
-            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
             currentAssist = highlight
             highlight.presentHighlight(toRect: rect, inView: inWebview)
             
         case SPOT:
-            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
             currentAssist = spot
             spot.presentSpot(toRect: rect, inView: inWebview)
             
         case LABEL:
-            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil)
+            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
             currentAssist = label
             label.presentLabel(toRect: rect, inView: inWebview)
             
@@ -688,31 +688,31 @@ extension LeapAUIManager {
         if let type = assistInfo[constant_type] as? String {
             switch type {
             case POPUP:
-                let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo)
+                let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = popup
                 popup.showPopup()
             case DRAWER:
-                let drawer = LeapDrawer(withDict: assistInfo, iconDict: iconInfo)
+                let drawer = LeapDrawer(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = drawer
                 drawer.showDrawer()
             case FULLSCREEN:
-                let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo)
+                let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = fullScreen
                 fullScreen.showFullScreen()
             case BOTTOMUP:
-                let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo)
+                let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = bottomSheet
                 bottomSheet.showBottomSheet()
             case NOTIFICATION:
-                let notification = LeapNotification(withDict: assistInfo, iconDict: iconInfo)
+                let notification = LeapNotification(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = notification
                 notification.showNotification()
             case SLIDEIN:
-                let slideIn = LeapSlideIn(withDict: assistInfo, iconDict: iconInfo)
+                let slideIn = LeapSlideIn(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = slideIn
                 slideIn.showSlideIn()
             case CAROUSEL:
-                let carousel = LeapCarousel(withDict: assistInfo, iconDict: iconInfo)
+                let carousel = LeapCarousel(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = carousel
                 carousel.showCarousel()
                 
@@ -723,7 +723,7 @@ extension LeapAUIManager {
                     self.leapButton?.layoutIfNeeded()
                 }
                 dismissLeapButton()
-                let ping = LeapPing(withDict: assistInfo, iconDict: iconInfo)
+                let ping = LeapPing(withDict: assistInfo, iconDict: iconInfo, baseUrl: nil)
                 currentAssist = ping
                 ping.showPing()
                 
@@ -824,7 +824,7 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             auiManagerCallBack?.optionPanelOpened()
             return
         }
-        let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl) { success, languageCode in
+        let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
             if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
             LeapPreferences.shared.currentLanguage = languageCode
             if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {

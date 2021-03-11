@@ -12,8 +12,8 @@ class LeapPointer: LeapInViewAssist {
     
     var pointerLayer = CAShapeLayer()
     
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
-        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
+        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
     }
     
     required init?(coder: NSCoder) {
@@ -128,12 +128,12 @@ class LeapFingerPointer:LeapPointer {
     let pulse = CAAnimationGroup()
     let clickAnimation = CAAnimationGroup()
     
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
         
         fingerLayer = CAShapeLayer()
         ringLayer = CAShapeLayer()
         
-        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView)
+        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
                 
         let pointerPath = getInnerPath()
         
@@ -296,12 +296,12 @@ class LeapSwipePointer: LeapPointer {
     
     private var screenWidth = UIScreen.main.bounds.width
     
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil) {
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl:String?) {
         
         fingerLayer = CAShapeLayer()
         ringLayer = CAShapeLayer()
         
-        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView)
+        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
         
         let pointerPath = getInnerPath()
         

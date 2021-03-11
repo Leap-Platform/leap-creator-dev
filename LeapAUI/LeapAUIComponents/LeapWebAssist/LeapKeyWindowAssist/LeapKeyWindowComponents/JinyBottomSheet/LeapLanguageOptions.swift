@@ -18,16 +18,16 @@ class LeapLanguageOptions: LeapBottomSheet {
     
     private var completionHandler: ((Bool, String?) -> Void)?
         
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
-        super.init(withDict: assistDict, iconDict: iconDict)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
+        super.init(withDict: assistDict, iconDict: iconDict, baseUrl: baseUrl)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(withDict assisDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, withLanguages languages: [Dictionary<String, String>], withHtmlUrl htmlUrl: String?, handler: (languageSuccessCallback)? = nil) {
-        self.init(withDict: assisDict, iconDict: iconDict)
+    convenience init(withDict assisDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, withLanguages languages: [Dictionary<String, String>], withHtmlUrl htmlUrl: String?, baseUrl: String?, handler: (languageSuccessCallback)? = nil) {
+        self.init(withDict: assisDict, iconDict: iconDict, baseUrl:baseUrl)
         
         self.completionHandler = handler
                 

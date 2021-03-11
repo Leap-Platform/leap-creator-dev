@@ -29,14 +29,22 @@ class LeapWebAssist: UIView, LeapAssist {
     
     var iconInfo: LeapIconInfo?
     
+    let baseUrl: String?
+    
     /// javascript to adjust width according to native view.
     private let jscript = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=device-width'); document.getElementsByTagName('head')[0].appendChild(meta);"
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, baseUrl: String?) {
+        self.baseUrl = baseUrl
         super.init(frame: frame)
         
         let userScript = WKUserScript(source: jscript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         configuration.userContentController.addUserScript(userScript)
+        if #available(iOS 11.0, *) {
+            configuration.setURLSchemeHandler(self, forURLScheme: "leap-scheme")
+        } else {
+            // Fallback on earlier versions
+        }
         
         let jsCallBack = "iosListener"
         configuration.userContentController.add(self, name: jsCallBack)
@@ -53,8 +61,6 @@ class LeapWebAssist: UIView, LeapAssist {
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -86,7 +92,12 @@ class LeapWebAssist: UIView, LeapAssist {
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Leap").appendingPathComponent("aui_component")
         let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = documentPath.appendingPathComponent(fileName)
-        webView.loadHTML(withUrl: filePath)
+        guard var string = try? String(contentsOf: filePath, encoding: .utf8), let baseUrl = self.baseUrl else {
+            webView.loadHTML(withUrl: filePath)
+            return
+        }
+        if #available(iOS 11.0, *) { string = string.replacingOccurrences(of: baseUrl, with: "leap-scheme://") }
+        webView.loadHTMLString(string, baseURL: nil)
     }
     
     func updateLayout(alignment: String, anchorBounds: CGRect?) {
@@ -474,6 +485,41 @@ extension LeapWebAssist: WKScriptMessageHandler {
             self.performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: dict)
         }
     }
+}
+
+extension LeapWebAssist:WKURLSchemeHandler {
+    
+    @available(iOS 11.0, *)
+    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        guard let url = urlSchemeTask.request.url?.relativeString else { return }
+        let fileUrl = url.replacingOccurrences(of: "leap-scheme://", with: "")
+        let fileName = fileUrl.replacingOccurrences(of: "/", with: "$")
+        let filePath = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask)[0].appendingPathComponent("Leap").appendingPathComponent("aui_component").appendingPathComponent(fileName)
+        if FileManager.default.fileExists(atPath: filePath.path), let fileData = try? Data(contentsOf: filePath) {
+            urlSchemeTask.didReceive(URLResponse())
+            urlSchemeTask.didReceive(fileData)
+            urlSchemeTask.didFinish()
+        } else {
+            guard let newUrl = URL(string: baseUrl!+fileName) else { return }
+            let dlTask = URLSession.shared.downloadTask(with: newUrl) { (loc, res, err) in
+                guard let location = loc else { return }
+                DispatchQueue.main.async {
+                    guard let data = try? Data(contentsOf: location) else { return }
+                    urlSchemeTask.didReceive(URLResponse())
+                    urlSchemeTask.didReceive(data)
+                    urlSchemeTask.didFinish()
+                }
+            }
+            dlTask.resume()
+        }
+    }
+    
+    @available(iOS 11.0, *)
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        
+    }
+    
+    
 }
 
 extension LeapWebAssist: UIGestureRecognizerDelegate {

@@ -16,8 +16,8 @@ class LeapNotification: LeapKeyWindowAssist {
     /// alignment property for Notification - top and bottom
     var alignment: LeapAlignmentType = .top
         
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil) {
-        super.init(withDict: assistDict, iconDict: iconDict)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
+        super.init(withDict: assistDict, iconDict: iconDict, baseUrl: baseUrl)
                                 
         if let alignment = assistInfo?.layoutInfo?.layoutAlignment {
             
