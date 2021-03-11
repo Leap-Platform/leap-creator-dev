@@ -16,6 +16,7 @@ struct LeapSharedInformationConstants {
     static let discoveryPresented = "leap_discovery_presented"
     static let discoveryDismissedByUser = "leap_discovery_dismissed"
     static let discoveryFlowCompleted = "leap_discovery_flow_completed"
+    static let terminatedDiscoveries = "leap_terminated_discoveries"
     static let mutedDiscoveries = "leap_muted_discoveries"
     static let muted = "leap_muted"
 }
@@ -147,6 +148,13 @@ extension LeapSharedInformation {
         prefs.synchronize()
     }
     
+    func terminateDiscovery(_ id:Int) {
+        var terminatedDiscoveries = prefs.array(forKey: LeapSharedInformationConstants.terminatedDiscoveries) as? Array<Int> ?? []
+        if !terminatedDiscoveries.contains(id) { terminatedDiscoveries.append(id) }
+        prefs.setValue(terminatedDiscoveries, forKey: LeapSharedInformationConstants.terminatedDiscoveries)
+        prefs.synchronize()
+    }
+    
     func getMutedDiscoveries() -> Array<Int> {
         return prefs.array(forKey: LeapSharedInformationConstants.mutedDiscoveries) as? Array <Int> ?? []
     }
@@ -162,6 +170,11 @@ extension LeapSharedInformation {
     func getDiscoveryFlowCompletedInfo() -> Dictionary<String,Int> {
         return (prefs.value(forKey: LeapSharedInformationConstants.discoveryFlowCompleted) as? Dictionary<String,Int>) ?? [:]
     }
+    
+    func getTerminatedDiscoveries() -> Array<Int> {
+        return (prefs.value(forKey: LeapSharedInformationConstants.terminatedDiscoveries) as? Array<Int>) ?? []
+    }
+    
     
 }
 

@@ -36,6 +36,8 @@ class LeapDiscoveryManager {
         let discoveryPresentedCount = LeapSharedInformation.shared.getDiscoveriesPresentedInfo()
         let discoveryDismissInfo = LeapSharedInformation.shared.getDismissedDiscoveryInfo()
         let discoveryFlowInfo = LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo()
+        let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveries()
+        discoveriesToCheck = discoveriesToCheck.filter{ !terminatedDiscoveries.contains($0.id) }
         discoveriesToCheck = discoveriesToCheck.filter({ (discovery) -> Bool in
             let presentedCount = discoveryPresentedCount[String(discovery.id)] ?? 0
             let hasBeenDismissed = discoveryDismissInfo.contains(discovery.id)
