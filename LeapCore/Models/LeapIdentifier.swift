@@ -48,7 +48,7 @@ class LeapNativeParameters {
         accId = paramsDict[constant_ACC_ID] as? String
         accLabel = paramsDict[constant_ACC_LABEL] as? String
         tag = paramsDict[constant_TAG] as? Int
-        className = paramsDict[constant_class_name] as? String
+        className = paramsDict[constant_className] as? String
         text = paramsDict[constant_text] as? Dictionary<String,String>
         placeholder = paramsDict[constant_placeholder] as? Dictionary<String,String>
         textRegex = paramsDict[constant_text_regex] as? String
@@ -74,8 +74,7 @@ class LeapNativeViewProps {
         isFocused = propsDict[constant_isFocused] as? Bool
         isChecked = propsDict[constant_isChecked] as? Bool
         textRegex = propsDict[constant_text_regex] as? String
-        
-        className = propsDict[constant_class_name] as? String
+        className = propsDict[constant_className] as? String
         text = propsDict[constant_text] as? Dictionary<String,String>
         
     }
