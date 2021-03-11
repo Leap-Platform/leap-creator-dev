@@ -504,7 +504,10 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func disableAssistance() {
-        contextDetector?.stop()
+        guard let state = contextDetector?.getState(), state == .Stage else { return }
+        contextDetector?.switchState()
+        guard let discoveryId = flowManager?.getDiscoveryId() else { return }
+        LeapSharedInformation.shared.terminateDiscovery(discoveryId)
     }
     
 }
