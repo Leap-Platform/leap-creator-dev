@@ -151,15 +151,14 @@ class LeapViewProps:Codable {
     
     func getVisibleSiblings(allSiblings:Array<UIView>) -> Array<UIView> {
         guard allSiblings.count > 1 else { return allSiblings }
-        var visibleViews = allSiblings
-        for view in allSiblings.reversed() {
-            if !visibleViews.contains(view) { continue }
-            let indexOfView =  allSiblings.firstIndex(of: view)
-            if indexOfView == nil  { break }
-            if indexOfView == 0 { break }
-            let viewsToCheck = visibleViews[0..<indexOfView!]
-            let hiddenViews = viewsToCheck.filter { view.frame.contains($0.frame) }
-            visibleViews = visibleViews.filter { !hiddenViews.contains($0) }
+        var visibleViews:Array<UIView> = allSiblings
+        for coveringView in allSiblings.reversed() {
+            if !visibleViews.contains(coveringView) { continue }
+            let index = allSiblings.firstIndex(of: coveringView)
+            if index == nil || index == 0 { continue }
+            let elderSiblings = allSiblings[0..<index!]
+            let elderSiblingsHiddenByCoveringView = elderSiblings.filter { !visibleViews.contains($0) || coveringView.frame.contains($0.frame) }
+            visibleViews = visibleViews.filter { !elderSiblingsHiddenByCoveringView.contains($0) }
         }
         return visibleViews
     }
