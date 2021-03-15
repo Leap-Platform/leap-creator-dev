@@ -119,12 +119,19 @@ class LeapPointer: LeapInViewAssist {
         super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
+    override func hide() {
+        self.pointerLayer.isHidden = true
+    }
+    
+    override func unhide() {
+        self.pointerLayer.isHidden = false
+    }
 }
 
-class LeapFingerPointer:LeapPointer {
+class LeapFingerPointer: LeapPointer {
     
-    var ringLayer:CAShapeLayer
-    var fingerLayer:CAShapeLayer
+    var ringLayer: CAShapeLayer
+    var fingerLayer: CAShapeLayer
     let pulse = CAAnimationGroup()
     let clickAnimation = CAAnimationGroup()
     

@@ -253,10 +253,6 @@ class LeapWebAssist: UIView, LeapAssist {
         }
     }
     
-    func hide(withAnim: Bool) {
-        
-    }
-    
     /// method to perform exit animation.
     /// - Parameters:
     ///   - animation: string to describe the type of animation.
@@ -361,6 +357,13 @@ class LeapWebAssist: UIView, LeapAssist {
         self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
+    func hide() {
+        self.isHidden = true
+    }
+    
+    func unhide() {
+        self.isHidden = false
+    }
     
     /// method to configure LeapIconView constraints.
     /// - Parameters:
