@@ -362,9 +362,20 @@ extension LeapAUIManager: LeapIconStateDelegate {
 
 // MARK: - DISABLE ASSISTANCE DELEGATE METHODS
 extension LeapAUIManager: LeapDisableAssistanceDelegate {
+    
+    func didPresentDisableAssistance() {
+        guard let _ = autoDismissTimer else { return }
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
+    }
+    
     func shouldDisableAssistance() {
         auiManagerCallBack?.disableAssistance()
         removeAllViews()
+    }
+    
+    func didDismissDisableAssistance() {
+        startAutoDismissTimer()
     }
 }
 
@@ -826,11 +837,15 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             auiManagerCallBack?.optionPanelOpened()
             return
         }
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
         let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
             if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
+            else { self.startAutoDismissTimer() }
             LeapPreferences.shared.currentLanguage = languageCode
             if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
                 webAssist.changeLanguage(locale: code)
+                self.startAutoDismissTimer()
             }
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
