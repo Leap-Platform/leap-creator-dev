@@ -44,6 +44,16 @@ class LeapContextManager:NSObject {
     func start() {
         startSoundDownload()
         contextDetector?.start()
+        NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("leap_creator_live"), object: nil)
+    }
+    
+    @objc func authLiveNotification(_ notification:NSNotification) {
+        contextDetector?.stop()
+        assistManager?.resetAssistManager()
+        discoveryManager?.resetDiscovery()
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
     }
     
 }

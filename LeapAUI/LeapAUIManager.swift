@@ -81,7 +81,9 @@ extension LeapAUIManager {
         }
     }
     
-    @objc func authLiveNotification(_ notification:Notification) { shouldDisableAssistance() }
+    @objc func authLiveNotification(_ notification:Notification) {
+        removeAllViews()
+    }
 }
 
 
