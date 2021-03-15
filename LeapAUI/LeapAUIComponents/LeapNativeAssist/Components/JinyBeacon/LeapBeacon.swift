@@ -97,6 +97,14 @@ class LeapBeacon: LeapNativeAssist {
         let pos = assistInfo?.layoutInfo?.layoutAlignment ?? "top_left"
         pulsator.setPosition(pos)
     }
+    
+    override func hide() {
+        self.pulsator.isHidden = true
+    }
+    
+    override func unhide() {
+        self.pulsator.isHidden = false
+    }
 }
 
 extension LeapBeacon: LeapPulsatorDelegate {
