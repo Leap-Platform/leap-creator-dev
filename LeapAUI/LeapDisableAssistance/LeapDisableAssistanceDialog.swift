@@ -11,7 +11,9 @@ import UIKit
 
 protocol LeapDisableAssistanceDelegate: class {
     
+    func didPresentDisableAssistance()
     func shouldDisableAssistance()
+    func didDismissDisableAssistance()
 }
 
 class LeapDisableAssistanceDialog: UIView {
@@ -203,6 +205,7 @@ class LeapDisableAssistanceDialog: UIView {
     @objc func didTapOnDialogButton1(sender: UIButton) {
         
         animateExitBottomDialog()
+        delegate?.didDismissDisableAssistance()
     }
     
     @objc func didTapOnDialogButton2(sender: UIButton) {
@@ -217,7 +220,9 @@ class LeapDisableAssistanceDialog: UIView {
         let yPosition = bottomDialogView.frame.origin.y
         
         bottomDialogView.frame.origin.y = (UIScreen.main.bounds.height) + (UIScreen.main.bounds.height/2)
-                
+        
+        delegate?.didPresentDisableAssistance()
+        
         UIView.animate(withDuration: 0.3, delay: 0, animations: {
             
             self.bottomDialogView.frame.origin.y = yPosition
