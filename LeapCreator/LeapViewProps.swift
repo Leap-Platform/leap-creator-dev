@@ -84,10 +84,9 @@ class LeapViewProps:Codable {
         is_webview = view.isKind(of: WKWebView.self)
         uuid = String.generateLeapCreatorUUIDString()
         if let control = view as? UIControl {
-            let targetActions = control.allTargets.filter{
-                control.actions(forTarget: $0, forControlEvent: .touchUpInside)?.count ?? 0 > 0
-            }
-            is_clickable = targetActions.count > 0
+            let actions = control.allControlEvents
+            is_clickable = actions.contains(.touchUpInside)
+            
         } else {
             let tapGesture = view.gestureRecognizers?.filter{ $0.isKind(of: UITapGestureRecognizer.self) }
             is_clickable = (tapGesture?.count ?? 0) > 0
@@ -128,7 +127,7 @@ class LeapViewProps:Codable {
             }
         } else { children = [] }
         
-
+        
         var webChildren: String?
         if is_webview {
             var injectionScript = LeapScreenHelper.layoutInjectionJSScript
@@ -139,7 +138,7 @@ class LeapViewProps:Codable {
                     group.leave()
                 })
             }
-        
+            
         } else { group.leave() }
         
         group.notify(queue: DispatchQueue.main) {
