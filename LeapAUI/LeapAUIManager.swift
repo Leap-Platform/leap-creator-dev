@@ -870,10 +870,10 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
 extension LeapAUIManager:LeapArrowButtonDelegate {
     
     func arrowShown() {
+       currentAssist?.hide()
     }
     
     func arrowHidden() {
-        
+       currentAssist?.unhide()
     }
-    
 }

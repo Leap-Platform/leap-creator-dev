@@ -760,6 +760,7 @@
 		D0B793192543186D00DB94DD /* LeapInViewComponents */ = {
 			isa = PBXGroup;
 			children = (
+				D032C58F24B70056006E8F2B /* LeapPointer */,
 				D0B7931A2543186D00DB94DD /* LeapLabel.swift */,
 				2D1BC4EB25ADB10F00B39606 /* LeapTipView.swift */,
 				D0B7931B2543186D00DB94DD /* LeapSpot.swift */,
@@ -800,7 +801,6 @@
 				D0B793082543186D00DB94DD /* LeapAUIComponents */,
 				D032C59A24B74C5B006E8F2B /* LeapAUIUtils */,
 				D032C59024B70061006E8F2B /* LeapButton */,
-				D032C58F24B70056006E8F2B /* LeapPointer */,
 				D07FEB052492C600004FFD99 /* LeapDisableAssistance */,
 				D07FEAFE2492C600004FFD99 /* LeapIconOptions */,
 				D04E8589248A886700BA5CA3 /* LeapImages */,

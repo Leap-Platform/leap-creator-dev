@@ -39,8 +39,12 @@ class LeapNativeAssist: UIView, LeapAssist {
         
     }
     
-    func hide(withAnim: Bool) {
-        
+    func hide() {
+        self.isHidden = true
+    }
+    
+    func unhide() {
+        self.isHidden = false
     }
     
     func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen:Bool, action: Dictionary<String, Any>?) {

@@ -10,9 +10,9 @@ import UIKit
 import WebKit
 
 enum LeapViewPortVisibility {
-    case InViewPort
-    case AboveViewPort
-    case BelowViewPort
+    case inViewPort
+    case aboveViewPort
+    case belowViewPort
 }
 
 protocol LeapArrowButtonDelegate:NSObjectProtocol {
@@ -98,7 +98,7 @@ class LeapArrowButton: UIButton {
         
         let visibilty = getViewVisibility()
         switch visibilty {
-        case .InViewPort:
+        case .inViewPort:
             hideArrow()
         default:
             showArrow(visibilty)
@@ -116,7 +116,7 @@ class LeapArrowButton: UIButton {
         rect = newRect
         let visibility = getRectVisibility()
         switch visibility {
-        case .InViewPort:
+        case .inViewPort:
             hideArrow()
         default:
             showArrow(visibility)
@@ -130,14 +130,14 @@ class LeapArrowButton: UIButton {
         inWebView = nil
     }
     
-    private func showArrow(_ visibility:LeapViewPortVisibility) {
-        if visibility == .AboveViewPort {
-            
-            self.setImage(UIImage.getImageFromBundle("scroll_arrow.png")?.getInvertedImage(), for: .normal)
-            
-        } else if visibility == .BelowViewPort {
+    private func showArrow(_ visibility: LeapViewPortVisibility) {
+        if visibility == .aboveViewPort {
             
             self.setImage(UIImage.getImageFromBundle("scroll_arrow.png"), for: .normal)
+            
+        } else if visibility == .belowViewPort {
+            
+            self.setImage(UIImage.getImageFromBundle("scroll_arrow.png")?.getInvertedImage(), for: .normal)
         }
         guard isHidden else { return }
         self.isHidden = false
@@ -151,9 +151,9 @@ class LeapArrowButton: UIButton {
     }
     
     private func getRectVisibility() -> LeapViewPortVisibility {
-        if isRectAboveVisibility(){ return .AboveViewPort }
-        else if isRectBelowVisibility() { return .BelowViewPort }
-        return .InViewPort
+        if isRectAboveVisibility(){ return .aboveViewPort }
+        else if isRectBelowVisibility() { return .belowViewPort }
+        return .inViewPort
     }
     
     private func isRectAboveVisibility() -> Bool {
@@ -192,9 +192,9 @@ class LeapArrowButton: UIButton {
 //            }
 //        }
 //        return visibility
-        if isViewAboveViewPort() { return .AboveViewPort }
-        else if isViewBelowViewPort() { return .BelowViewPort }
-        return .InViewPort
+        if isViewAboveViewPort() { return .aboveViewPort }
+        else if isViewBelowViewPort() { return .belowViewPort }
+        return .inViewPort
     }
     
     private func isViewAboveViewPort() -> Bool {

@@ -59,9 +59,10 @@ protocol LeapAssist {
     func performEnterAnimation(animation: String)
     
     /// hides the AUIComponent
-    /// - Parameters:
-    ///   - withAnim: value to check whether to have animation or without animation
-    func hide(withAnim: Bool)
+    func hide()
+    
+    /// unhides the AUIComponent
+    func unhide()
     
     /// performs exit animation after the enter animation
     /// - Parameters:
