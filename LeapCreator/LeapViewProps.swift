@@ -32,9 +32,9 @@ class LeapViewBounds:Codable {
 class LeapViewProps:Codable {
     
     var controller:String?
-    var acc_id:String
-    var acc_label:String
-    var acc_hint:String
+    var acc_id:String?
+    var acc_label:String?
+    var acc_hint:String?
     var tag:Int
     var class_name:String
     var node_index:Int
@@ -98,9 +98,9 @@ class LeapViewProps:Codable {
         
         group.enter()
         
-        acc_id = view.accessibilityIdentifier ?? ""
-        acc_label = view.accessibilityLabel ?? ""
-        acc_hint = view.accessibilityHint ?? ""
+        acc_id = view.accessibilityIdentifier
+        acc_label = view.accessibilityLabel
+        acc_hint = view.accessibilityHint
         tag = view.tag
         class_name = String(describing: type(of: view))
         node_index = view.superview?.subviews.firstIndex(of: view) ?? -1
@@ -144,7 +144,7 @@ class LeapViewProps:Codable {
         if !is_webview {
             var childViews = view.subviews
             let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
-            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains("Leap") }
+            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains(constant_leap) }
             childViews = childViews.filter{
                 guard let superview = $0.superview, let keyWindow = kw else { return true }
                 let frameToWindow = superview.convert($0.frame, to: keyWindow)

@@ -36,8 +36,8 @@ class LeapSound:LeapMedia {
     
     init(baseUrl: String, location: String?, code:String, info:Dictionary<String,Any>) {
         langCode = code
-        isTTS = info["isTTSEnabled"] as? Bool ?? false
-        text = info["text"] as? String
+        isTTS = info[constant_isTTSEnabled] as? Bool ?? false
+        text = info[constant_text] as? String
         name = info[constant_name] as? String
         super.init(baseUrl: baseUrl, location: location)
     }
