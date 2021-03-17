@@ -12,13 +12,13 @@ import Foundation
 class LeapMedia {
     
     let url:URL?
-    var name:String
+    var filename:String
     
     
     init(baseUrl:String, location:String?) {
         if location != nil { url = URL(string:baseUrl + location!)!  }
         else { url = nil }
-        name = location?.replacingOccurrences(of: "/", with: "$") ?? ""
+        filename = location?.replacingOccurrences(of: "/", with: "$") ?? ""
     }
 }
 
@@ -29,7 +29,7 @@ class LeapAUIContent:LeapMedia {
 }
 
 class LeapSound:LeapMedia {
-    
+    let name:String?
     var langCode:String?
     var format:String = "mp3"
     let isTTS:Bool
@@ -40,7 +40,7 @@ class LeapSound:LeapMedia {
         if let nameArray = location?.split(separator: ".") { if nameArray.count == 2 { format = String(nameArray[1]) } }
         isTTS = info["isTTSEnabled"] as? Bool ?? false
         text = info["text"] as? String
+        name = info[constant_name] as? String
         super.init(baseUrl: baseUrl, location: location)
-        if let newName = info[constant_name] as? String { name = newName }
     }
 }

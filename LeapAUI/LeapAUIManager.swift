@@ -483,17 +483,17 @@ extension LeapAUIManager {
                     return
                 }
             }
-            let soundPath = LeapSharedAUI.shared.getSoundFilePath(name: mediaName, code: code, format: currentAudio.format)
+            let soundPath = LeapSharedAUI.shared.getSoundFilePath(name: currentAudio.filename, code: code, format: currentAudio.format)
             let dlStatus = self.mediaManager.getCurrentMediaStatus(currentAudio)
             switch dlStatus {
             case .notDownloaded:
-                self.mediaManager.updatePriority(mediaName: mediaName, langCode: code, toPriority: .veryHigh)
+                self.mediaManager.updatePriority(mediaName: currentAudio.filename, langCode: code, toPriority: .veryHigh)
                 fallthrough
             case .isDownloading:
-                self.mediaManager.overrideMediaDownloadCompletion(mediaName, code: code) { [weak self] (success) in
+                self.mediaManager.overrideMediaDownloadCompletion(currentAudio.filename, code: code) { [weak self] (success) in
                     guard let instruction = self?.currentInstruction,
                           let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
-                          let currentMediaName = assistInfo[constant_soundName] as? String, mediaName == currentMediaName,
+                          let currentMediaName = assistInfo[constant_soundName] as? String, currentAudio.filename == currentMediaName,
                           let newCode = LeapPreferences.shared.currentLanguage, newCode == code, success else { return }
                     self?.playAudioFile(filePath: soundPath)
                 }

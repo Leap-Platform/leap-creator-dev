@@ -28,7 +28,7 @@ class LeapMediaManager {
     func startDownload(forMedia:LeapMedia, atPriority:Operation.QueuePriority,
                        completion: ((_ success: Bool) -> Void)? = nil) {
         var code:String?
-        var key = forMedia.name
+        var key = forMedia.filename
         if let sound = forMedia as? LeapSound {
             code = sound.langCode
             key = key + "_\(code!)"
@@ -77,7 +77,7 @@ class LeapMediaManager {
     }
     
     func getCurrentMediaStatus(_ media:LeapMedia) -> LeapDownloadStatus {
-        var key = media.name
+        var key = media.filename
         if let sound = media as? LeapSound { key = key + "_\(sound.langCode!)"}
         if let status = statusTracker[key] { return status }
         let path = LeapSharedAUI.shared.getFilePath(media: media)
