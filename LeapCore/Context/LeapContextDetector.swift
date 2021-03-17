@@ -113,7 +113,7 @@ extension LeapContextDetector {
     private func getChildren(_ currentView:UIView) -> [UIView] {
         var subviewArray:[UIView] = []
         subviewArray.append(currentView)
-        let validChildren = currentView.subviews.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains("Leap") }
+        let validChildren = currentView.subviews.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains(constant_leap) }
         var childrenToCheck = getVisibleChildren(validChildren)
         childrenToCheck = childrenToCheck.filter{
             guard let superview = $0.superview else { return true }
