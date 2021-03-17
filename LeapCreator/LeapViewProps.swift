@@ -61,6 +61,38 @@ class LeapViewProps:Codable {
     var is_ui_webview: Bool = false
     var is_wk_webview: Bool = false
     
+    enum CodingKeys: String, CodingKey {
+        case controller
+        case acc_id
+        case acc_label
+        case acc_hint
+        case tag
+        case class_name = "class"
+        case node_index
+        case bounds
+        case placeholder
+        case text
+        case is_focusable
+        case is_focused
+        case is_selected
+        case is_enabled
+        case is_user_interaction_enabled
+        case is_multiple_touch_enabled
+        case is_exclusive_touch
+        case is_clickable
+        case is_scroll_container
+        case is_webview
+        case location_x_on_screen
+        case location_y_on_screen
+        case bgColor
+        case tintColor
+        case uuid
+        case children
+        case web_children
+        case is_ui_webview
+        case is_wk_webview
+    }
+    
     init(view:UIView, finishListener: LeapFinishListener, completion: ((_ success: Bool, _ viewProps: LeapViewProps?) -> Void
     )? = nil) {
         
