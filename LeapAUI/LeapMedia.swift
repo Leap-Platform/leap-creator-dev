@@ -31,13 +31,11 @@ class LeapAUIContent:LeapMedia {
 class LeapSound:LeapMedia {
     let name:String?
     var langCode:String?
-    var format:String = "mp3"
     let isTTS:Bool
     let text:String?
     
     init(baseUrl: String, location: String?, code:String, info:Dictionary<String,Any>) {
         langCode = code
-        if let nameArray = location?.split(separator: ".") { if nameArray.count == 2 { format = String(nameArray[1]) } }
         isTTS = info["isTTSEnabled"] as? Bool ?? false
         text = info["text"] as? String
         name = info[constant_name] as? String

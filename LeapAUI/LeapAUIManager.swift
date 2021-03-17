@@ -483,7 +483,7 @@ extension LeapAUIManager {
                     return
                 }
             }
-            let soundPath = LeapSharedAUI.shared.getSoundFilePath(name: currentAudio.filename, code: code, format: currentAudio.format)
+            let soundPath = LeapSharedAUI.shared.getSoundFilePath(name: currentAudio.filename, code: code)
             let dlStatus = self.mediaManager.getCurrentMediaStatus(currentAudio)
             switch dlStatus {
             case .notDownloaded:
