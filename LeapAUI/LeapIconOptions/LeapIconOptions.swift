@@ -260,21 +260,24 @@ extension LeapIconOptions {
     }
     
     @objc func languageClicked() {
-        self.delegate?.languageClicked()
-        dismiss(true)
+        dismiss(true) { (_) in
+           self.delegate?.languageClicked()
+        }
     }
     
     @objc func stopClicked() {
-        self.delegate?.stopClicked()
-        dismiss(true)
+        dismiss(true) { (_) in
+           self.delegate?.stopClicked()
+        }
     }
     
     @objc func remove() {
-        dismiss(true)
-        self.delegate?.iconOptionsClosed()
+        dismiss(true) { (_) in
+           self.delegate?.iconOptionsClosed()
+        }
     }
     
-    func dismiss(_ animated: Bool) {
+    func dismiss(_ animated: Bool, _ completion: SuccessCallBack? = nil) {
         
         self.delegate?.iconOptionsDismissed()
         
@@ -305,8 +308,9 @@ extension LeapIconOptions {
                     self.button?.layer.cornerRadius = self.frame.height/2
                     self.button?.layoutIfNeeded()
                     self.layoutIfNeeded()
-                } completion: { (_) in
+                } completion: { (success) in
                     self.removeFromSuperview()
+                    completion?(success)
                 }
             }
             
@@ -316,6 +320,7 @@ extension LeapIconOptions {
             self.button?.layoutIfNeeded()
             self.layoutIfNeeded()
             self.removeFromSuperview()
+            completion?(true)
         }
     }
 }

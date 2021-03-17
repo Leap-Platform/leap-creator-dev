@@ -202,3 +202,5 @@ let constant_layout = "layout"
 let constant_viewport = "viewport"
 let constant_language = "language"
 let constant_stop = "stop"
+
+typealias SuccessCallBack = ((_ success: Bool) -> Void)

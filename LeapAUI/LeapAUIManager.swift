@@ -203,6 +203,13 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, AnyHashable>) {
         setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
+            if let _ = instruction[constant_soundName] as? String {
+                playAudio()
+                presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
+            }
+            return
+        }
         guard let view = currentTargetView else {
             performKeyWindowInstruction(instruction: instruction, iconInfo: nil)
             presentLeapButton(for: iconInfo, iconEnabled: true)
@@ -216,6 +223,13 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, AnyHashable>) {
         setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview)
+        guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
+            if let _ = instruction[constant_soundName] as? String {
+                playAudio()
+                presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
+            }
+            return
+        }
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
               let type = assistInfo[constant_type] as? String else { return }
         guard let anchorWebview = webview else { return }
@@ -317,7 +331,7 @@ extension LeapAUIManager: UIGestureRecognizerDelegate {
     
     @objc func leapButtonTap() {
         
-        guard let _ = currentAssist else {
+        guard let _ = currentInstruction else {
             auiManagerCallBack?.leapTapped()
             return
         }
@@ -776,6 +790,7 @@ extension LeapAUIManager {
         autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
             self.currentAssist?.remove(byContext: false, byUser: false, autoDismissed: true, panelOpen: false, action: nil)
             self.currentAssist = nil
+            self.currentInstruction = nil
             self.dismissLeapButton()
             self.autoDismissTimer?.invalidate()
             self.autoDismissTimer = nil
@@ -798,6 +813,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
         currentAssist = nil
+        currentInstruction = nil
         stopAudio()
         scrollArrowButton.noAssist()
         dismissLeapButton()
@@ -810,7 +826,6 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
     
     func stopClicked() {
         removeAllViews()
-        currentInstruction = nil
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
