@@ -119,12 +119,10 @@ class LeapViewProps:Codable {
                 if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }
                 return true
             }
-            if view.window == kw {
-                let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
-                for child in childrenToCheck { children.append(LeapViewProps(view: child, finishListener: finishListener))}
-            } else {
-                for child in childViews  { children.append(LeapViewProps(view: child, finishListener: finishListener)) }
-            }
+            
+            let childrenToCheck = getVisibleSiblings(allSiblings: childViews)
+            for child in childrenToCheck { children.append(LeapViewProps(view: child, finishListener: finishListener))}
+          
         } else { children = [] }
         
         
