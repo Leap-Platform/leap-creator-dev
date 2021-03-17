@@ -40,7 +40,7 @@ class LeapSharedAUI {
     
     func getFilePath(media:LeapMedia) -> URL {
         guard let sound = media as? LeapSound else { return getAUIContentFolderPath().appendingPathComponent(media.filename) }
-        return getSoundsFolderPath(langCode: sound.langCode!).appendingPathComponent(sound.filename).appendingPathExtension(sound.format)
+        return getSoundsFolderPath(langCode: sound.langCode!).appendingPathComponent(sound.filename)
     }
     
     func getFilePath(mediaName:String, langCode:String?) -> URL? {
@@ -49,7 +49,7 @@ class LeapSharedAUI {
         return nil
     }
     
-    func getSoundFilePath(name:String, code:String, format:String = "mp3") -> URL {
+    func getSoundFilePath(name:String, code:String) -> URL {
         let soundsFolder = getSoundsFolderPath(langCode: code)
         let soundPath = soundsFolder.appendingPathComponent(name)
         return soundPath
