@@ -105,7 +105,7 @@ class LeapStageManager {
     func stageDismissed(byUser:Bool, autoDismissed:Bool) {
         guard byUser || autoDismissed else { return }
         guard let stage = currentStage else { return }
-        if stage.type == .Sequence || stage.type == .ManualSequence { delegate?.removeStage(stage) }
+        delegate?.removeStage(stage)
         stagePerformed()
         currentStage = nil
     }
