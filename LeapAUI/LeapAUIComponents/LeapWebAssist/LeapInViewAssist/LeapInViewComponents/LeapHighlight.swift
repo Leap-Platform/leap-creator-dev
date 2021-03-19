@@ -683,8 +683,7 @@ class LeapHighlight: LeapTipView {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
-            
-            remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
+            performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: nil)
         }
     }
 }

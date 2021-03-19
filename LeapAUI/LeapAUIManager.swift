@@ -269,7 +269,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func removeAllViews() {
-        currentAssist?.remove(byContext: true, byUser: false, autoDismissed: false, panelOpen: false, action: nil)
+        currentAssist?.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: false, byContext: true, panelOpen: false, action: nil)
         currentAssist = nil
         currentInstruction = nil
         currentTargetView = nil
@@ -804,7 +804,7 @@ extension LeapAUIManager {
             autoDismissTimer = nil
         }
         autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
-            self.currentAssist?.remove(byContext: false, byUser: false, autoDismissed: true, panelOpen: false, action: nil)
+            self.currentAssist?.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: true, byContext: false, panelOpen: false, action: nil)
             self.currentAssist = nil
             self.currentInstruction = nil
             self.dismissLeapButton()

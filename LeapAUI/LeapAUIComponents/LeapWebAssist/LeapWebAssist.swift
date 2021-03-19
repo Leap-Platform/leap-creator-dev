@@ -54,7 +54,6 @@ class LeapWebAssist: UIView, LeapAssist {
         configuration.preferences = preferences
         configuration.dataDetectorTypes = [.all]
 
-        
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         self.webView.scrollView.isScrollEnabled = false
         self.webView.navigationDelegate = self
