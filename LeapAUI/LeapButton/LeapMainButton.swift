@@ -8,9 +8,19 @@
 
 import UIKit
 
+class LeapCloseTransaprentView:UIView {
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class LeapMainButton: LeapIconView {
     
-    var closeTransparentView: UIView?
+    var closeTransparentView: LeapCloseTransaprentView?
     
     var isDismissible = false
     
@@ -82,7 +92,7 @@ extension LeapMainButton: LeapDraggableDelegate {
             
             guard let keyWindow = UIApplication.shared.keyWindow, closeTransparentView == nil else { return }
             
-            closeTransparentView = UIView()
+            closeTransparentView = LeapCloseTransaprentView()
             
             closeIcon = UIImageView()
                         
