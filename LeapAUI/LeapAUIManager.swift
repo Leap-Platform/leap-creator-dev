@@ -796,13 +796,9 @@ extension LeapAUIManager {
     
     func startAutoDismissTimer() {
         guard let instruction = currentInstruction else { return }
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.auiManagerCallBack?.didDismissView(byUser: false, autoDismissed: true, panelOpen: false, action: nil)
-            }
-            return
-        }
-        guard let dismissTimer = assistInfo[constant_autoDismissDelay] as? Double else { return }
+        let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>
+        let timer:Double? = (assistInfo == nil) ? 2.0 : assistInfo![constant_autoDismissDelay] as? Double
+        guard let dismissTimer = timer else { return }
         if autoDismissTimer != nil {
             autoDismissTimer?.invalidate()
             autoDismissTimer = nil

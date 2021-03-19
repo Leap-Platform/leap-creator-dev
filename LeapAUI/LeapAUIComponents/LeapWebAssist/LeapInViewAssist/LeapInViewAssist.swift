@@ -93,7 +93,9 @@ class LeapInViewAssist: LeapWebAssist {
     }
     
     func getGlobalToViewFrame() -> CGRect {
-        
-        return webRect == nil ? toView!.superview!.convert(toView!.frame, to: inView) : toView!.convert(webRect!, to: inView)
+        guard let view = toView else { return .zero }
+        let superview = view.superview ?? UIApplication.shared.windows.first { $0.isKeyWindow }
+        guard let parent = superview else { return view.frame }
+        return webRect == nil ? parent.convert(view.frame, to: inView) : view.convert(webRect!, to: inView)
     }
 }
