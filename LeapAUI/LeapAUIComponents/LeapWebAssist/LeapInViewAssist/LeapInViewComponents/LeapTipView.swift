@@ -87,13 +87,12 @@ class LeapTipView: LeapInViewAssist {
         }
     }
     
-    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        
+    override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         if let userInteraction = toViewOriginalInteraction {
             
             toView?.isUserInteractionEnabled = userInteraction
         }
-        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+        super.performExitAnimation(animation: animation, byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -110,8 +109,8 @@ class LeapTipView: LeapInViewAssist {
         if frameForToView.contains(point) {
             
             if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
-                
-                remove(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
+                                
+                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: nil)
                 
                 return hitTestView
             

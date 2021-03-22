@@ -115,8 +115,8 @@ class LeapPointer: LeapInViewAssist {
         pointerLayer.removeFromSuperlayer()
     }
     
-    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+    override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+        super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
     }
     
     override func hide() {
@@ -279,9 +279,9 @@ class LeapFingerPointer: LeapPointer {
         super.removePointer()
     }
     
-    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+    override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         removePointer()
-        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+        super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
     }
 }
 
@@ -512,8 +512,8 @@ class LeapSwipePointer: LeapPointer {
         super.removePointer()
     }
     
-    override func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+    override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         removePointer()
-        super.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+        super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
     }
 }
