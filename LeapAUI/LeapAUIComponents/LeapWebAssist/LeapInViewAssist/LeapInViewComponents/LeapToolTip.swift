@@ -563,7 +563,11 @@ class LeapToolTip: LeapTipView {
         guard let width = rect[constant_width] else { return }
         guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
-        if dict["type"] as? String == "resize" { DispatchQueue.main.async { self.placePointer() } }
+        if dict["type"] as? String == "resize" { DispatchQueue.main.async {
+            
+            self.placePointer()
+            self.performEnterAnimation(animation: self.assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
+        } }
     }
     
     override func performEnterAnimation(animation: String) {
