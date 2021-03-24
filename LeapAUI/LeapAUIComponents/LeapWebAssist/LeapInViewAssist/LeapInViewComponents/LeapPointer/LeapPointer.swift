@@ -26,49 +26,14 @@ class LeapPointer: LeapInViewAssist {
         nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
-    func getInnerPath() -> UIBezierPath {
-        
-        let innerPath = UIBezierPath()
-        innerPath.move(to: CGPoint(x: 12, y: 2))
-        innerPath.addCurve(to: CGPoint(x: 14, y: 4), controlPoint1: CGPoint(x: 13.13, y: 2), controlPoint2: CGPoint(x: 14, y: 2.87))
-        innerPath.addLine(to: CGPoint(x: 14, y: 14.5))
-        innerPath.addCurve(to: CGPoint(x: 14.78, y: 15.49), controlPoint1: CGPoint(x: 13.99, y: 14.95), controlPoint2: CGPoint(x: 14.33, y: 15.39))
-        innerPath.addCurve(to: CGPoint(x: 15.91, y: 14.94), controlPoint1: CGPoint(x: 15.22, y: 15.59), controlPoint2: CGPoint(x: 15.71, y: 15.35))
-        innerPath.addCurve(to: CGPoint(x: 17.5, y: 14), controlPoint1: CGPoint(x: 16.13, y: 14.48), controlPoint2: CGPoint(x: 16.96, y: 14))
-        innerPath.addCurve(to: CGPoint(x: 18.48, y: 14.31), controlPoint1: CGPoint(x: 17.74, y: 14), controlPoint2: CGPoint(x: 18.19, y: 14.1))
-        innerPath.addCurve(to: CGPoint(x: 19, y: 15.5), controlPoint1: CGPoint(x: 18.78, y: 14.52), controlPoint2: CGPoint(x: 19, y: 14.77))
-        innerPath.addCurve(to: CGPoint(x: 19.77, y: 16.47), controlPoint1: CGPoint(x: 19, y: 15.94), controlPoint2: CGPoint(x: 19.34, y: 16.37))
-        innerPath.addLine(to: CGPoint(x: 19.77, y: 16.47))
-        innerPath.addCurve(to: CGPoint(x: 20.89, y: 15.95), controlPoint1: CGPoint(x: 20.22, y: 16.57), controlPoint2: CGPoint(x: 20.68, y: 16.35))
-        innerPath.addCurve(to: CGPoint(x: 22.02, y: 15), controlPoint1: CGPoint(x: 21.3, y: 15.14), controlPoint2: CGPoint(x: 21.52, y: 15.01))
-        innerPath.addCurve(to: CGPoint(x: 22.95, y: 15.31), controlPoint1: CGPoint(x: 22.15, y: 15), controlPoint2: CGPoint(x: 22.64, y: 15.09))
-        innerPath.addCurve(to: CGPoint(x: 23.5, y: 16.5), controlPoint1: CGPoint(x: 23.27, y: 15.53), controlPoint2: CGPoint(x: 23.5, y: 15.79))
-        innerPath.addCurve(to: CGPoint(x: 24.1, y: 17.42), controlPoint1: CGPoint(x: 23.5, y: 16.89), controlPoint2: CGPoint(x: 23.74, y: 17.27))
-        innerPath.addCurve(to: CGPoint(x: 25.19, y: 17.23), controlPoint1: CGPoint(x: 24.46, y: 17.58), controlPoint2: CGPoint(x: 24.9, y: 17.5))
-        innerPath.addCurve(to: CGPoint(x: 26.42, y: 17), controlPoint1: CGPoint(x: 25.57, y: 17.05), controlPoint2: CGPoint(x: 25.94, y: 16.99))
-        innerPath.addCurve(to: CGPoint(x: 28.66, y: 19.39), controlPoint1: CGPoint(x: 27.61, y: 17.15), controlPoint2: CGPoint(x: 28.23, y: 17.9))
-        innerPath.addCurve(to: CGPoint(x: 28.75, y: 25.31), controlPoint1: CGPoint(x: 29.08, y: 20.9), controlPoint2: CGPoint(x: 29.1, y: 23.05))
-        innerPath.addCurve(to: CGPoint(x: 26.83, y: 31.94), controlPoint1: CGPoint(x: 28.4, y: 27.58), controlPoint2: CGPoint(x: 27.71, y: 29.95))
-        innerPath.addCurve(to: CGPoint(x: 24.09, y: 36), controlPoint1: CGPoint(x: 26, y: 33.8), controlPoint2: CGPoint(x: 24.99, y: 35.25))
-        innerPath.addLine(to: CGPoint(x: 11.48, y: 36))
-        innerPath.addCurve(to: CGPoint(x: 2.44, y: 20.14), controlPoint1: CGPoint(x: 7.97, y: 31.86), controlPoint2: CGPoint(x: 4.62, y: 25.5))
-        innerPath.addCurve(to: CGPoint(x: 2.05, y: 17.92), controlPoint1: CGPoint(x: 1.98, y: 18.97), controlPoint2: CGPoint(x: 1.94, y: 18.3))
-        innerPath.addCurve(to: CGPoint(x: 4.34, y: 16.55), controlPoint1: CGPoint(x: 2.42, y: 16.95), controlPoint2: CGPoint(x: 3.45, y: 16.41))
-        innerPath.addCurve(to: CGPoint(x: 6.13, y: 18.47), controlPoint1: CGPoint(x: 5.41, y: 16.95), controlPoint2: CGPoint(x: 5.67, y: 17.66))
-        innerPath.addLine(to: CGPoint(x: 8.11, y: 22.45))
-        innerPath.addLine(to: CGPoint(x: 8.11, y: 22.45))
-        innerPath.addCurve(to: CGPoint(x: 9.23, y: 22.97), controlPoint1: CGPoint(x: 8.32, y: 22.85), controlPoint2: CGPoint(x: 8.78, y: 23.07))
-        innerPath.addLine(to: CGPoint(x: 9.24, y: 22.97))
-        innerPath.addCurve(to: CGPoint(x: 10, y: 21.99), controlPoint1: CGPoint(x: 9.68, y: 22.85), controlPoint2: CGPoint(x: 9.99, y: 22.45))
-        innerPath.addLine(to: CGPoint(x: 10, y: 4))
-        innerPath.addCurve(to: CGPoint(x: 12, y: 2), controlPoint1: CGPoint(x: 10, y: 2.87), controlPoint2: CGPoint(x: 10.88, y: 2))
-        innerPath.close()
-        return innerPath
+    func getFingerPointerImage() -> UIImage? {
+        return UIImage.getImageFromBundle("fingerPointer")
     }
     
     func removeNotifiers() {
         
     }
+    
     @objc func appWillEnterForeground () {
         startAnimation()
     }
@@ -131,24 +96,18 @@ class LeapPointer: LeapInViewAssist {
 class LeapFingerPointer: LeapPointer {
     
     var ringLayer: CAShapeLayer
-    var fingerLayer: CAShapeLayer
+    var fingerLayer: CALayer
     let pulse = CAAnimationGroup()
     let clickAnimation = CAAnimationGroup()
     
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
         
-        fingerLayer = CAShapeLayer()
+        fingerLayer = CALayer()
         ringLayer = CAShapeLayer()
         
         super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
-                
-        let pointerPath = getInnerPath()
-        
-        fingerLayer.path = pointerPath.cgPath
-        fingerLayer.fillColor = UIColor(red: 0.941, green: 0.663, blue: 0.122, alpha: 1.000).cgColor
-        fingerLayer.fillRule = .nonZero
-        fingerLayer.strokeColor = UIColor.white.cgColor
-        fingerLayer.lineWidth = 2.0
+                        
+        fingerLayer.contents = getFingerPointerImage()?.cgImage
         
         ringLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 1, height: 1)).cgPath
         
@@ -196,24 +155,8 @@ class LeapFingerPointer: LeapPointer {
     
     override func presentPointer(view: UIView) {
         toView = view
-        inView = findEligibleInView(view: toView!)
+        inView = toView?.window
         presentPointer()
-    }
-    
-    func findEligibleInView(view:UIView) -> UIView{
-        let eligibleView = view
-        if canCompletelyHoldPointer(eligibleView) { return eligibleView }
-        guard let superView = eligibleView.superview else { return eligibleView }
-        if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
-            if canCompletelyHoldPointer(superView) { return eligibleView }
-            else { return findEligibleInView(view: superView) }
-        } else {
-            return findEligibleInView(view: superView)
-        }
-    }
-    
-    func canCompletelyHoldPointer(_ view:UIView) -> Bool {
-        return (view.bounds.height > 80 && view.bounds.width > 80)
     }
     
     func setPosition() {
@@ -267,7 +210,6 @@ class LeapFingerPointer: LeapPointer {
         
         fingerLayer.add(clickAnimation, forKey: constant_click)
         ringLayer.add(pulse, forKey: "pulse")
-        
     }
     
     override func removeAnimation() {
@@ -297,7 +239,7 @@ class LeapSwipePointer: LeapPointer {
     var type: LeapSwipePointerType = .swipeDown // Default
     
     var ringLayer: CAShapeLayer
-    var fingerLayer: CAShapeLayer
+    var fingerLayer: CALayer
     
     let swipeAnimation = CAAnimationGroup()
     
@@ -305,18 +247,12 @@ class LeapSwipePointer: LeapPointer {
     
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl:String?) {
         
-        fingerLayer = CAShapeLayer()
+        fingerLayer = CALayer()
         ringLayer = CAShapeLayer()
         
         super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
-        
-        let pointerPath = getInnerPath()
-        
-        fingerLayer.path = pointerPath.cgPath
-        fingerLayer.fillColor = UIColor(red: 0.941, green: 0.663, blue: 0.122, alpha: 1.000).cgColor
-        fingerLayer.fillRule = .nonZero
-        fingerLayer.strokeColor = UIColor.white.cgColor
-        fingerLayer.lineWidth = 2.0
+                
+        fingerLayer.contents = getFingerPointerImage()?.cgImage
         
         ringLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 20, height: 20)).cgPath
         
@@ -397,24 +333,8 @@ class LeapSwipePointer: LeapPointer {
     
     override func presentPointer(view: UIView) {
         toView = view
-        inView = findEligibleInView(view: toView!)
+        inView = toView?.window
         presentPointer()
-    }
-    
-    func findEligibleInView(view:UIView) -> UIView{
-        let eligibleView = view
-        if canCompletelyHoldPointer(eligibleView) { return eligibleView }
-        guard let superView = eligibleView.superview else { return eligibleView }
-        if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
-            if canCompletelyHoldPointer(superView) { return eligibleView }
-            else { return findEligibleInView(view: superView) }
-        } else {
-            return findEligibleInView(view: superView)
-        }
-    }
-    
-    func canCompletelyHoldPointer(_ view:UIView) -> Bool {
-        return (view.bounds.height > 80 && view.bounds.width > 80)
     }
     
     func setPosition() {
