@@ -43,7 +43,6 @@ class LeapInternal:NSObject {
 extension LeapInternal {
     
     private func fetchConfig() {
-        print("config url = \(configUrl)")
         let url = URL(string: configUrl)
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"

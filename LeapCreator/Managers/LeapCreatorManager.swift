@@ -26,7 +26,6 @@ class LeapCreatorManager {
 
     func fetchCreatorConfig() {
         let url = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.CREATOR_CONFIG_ENDPOINT)
-        print("config url = \(url!.absoluteString)")
         var req = URLRequest(url: url!)
         req.httpMethod = "GET"
         req.addValue(apiKey!, forHTTPHeaderField: "x-auth-id")

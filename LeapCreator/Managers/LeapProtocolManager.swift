@@ -131,7 +131,6 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     }
     
     func openSocketConnection()->Void{
-        print("socketurl = \(SOCKET_URL)")
         let url: URL = URL(string: self.SOCKET_URL)!
         let urlRequest = URLRequest(url: url)
         webSocketTask = WebSocket(request: urlRequest)

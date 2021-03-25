@@ -74,7 +74,6 @@ class LeapBeaconManager {
     
     func sendSubsequentBeacons()-> Void{
         let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/device/beacon")!
-        print("beacon url = \(beaconDiscoveryUrl.absoluteString)")
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
         urlRequest.addValue(LeapCreatorShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")

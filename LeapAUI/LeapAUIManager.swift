@@ -447,7 +447,6 @@ extension LeapAUIManager {
     }
     
     func fetchSoundConfig() {
-        print("soundUrl = \(soundUrl)")
         let url = URL(string: soundUrl)
         var req = URLRequest(url: url!)
         guard let token = LeapPreferences.shared.apiKey else { fatalError("No API Key") }
