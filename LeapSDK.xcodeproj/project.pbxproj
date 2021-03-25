@@ -32,6 +32,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
 		D017401625F75D17002C051E /* scroll_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D017401525F75D17002C051E /* scroll_arrow.png */; };
 		D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* LeapCreatorInternal.swift */; };
 		D02C12F825DFC6B000C80E28 /* LeapCreatorConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* LeapCreatorConfig.swift */; };
@@ -250,6 +251,7 @@
 		2DD0E35225B6D7E700EBB9B8 /* LeapReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachability.swift; sourceTree = "<group>"; };
 		2DD0E35B25B7159400EBB9B8 /* LeapReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachabilityManager.swift; sourceTree = "<group>"; };
 		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
+		2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LeapMedia.xcassets; sourceTree = "<group>"; };
 		2DFFF57425A5D0DB001051D3 /* LeapAUIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAUIConstants.swift; sourceTree = "<group>"; };
 		B6153A32253E98DB008CA08F /* LeapBeaconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapBeaconManager.swift; sourceTree = "<group>"; };
 		B6153A3C253E9933008CA08F /* LeapPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPermissionManager.swift; sourceTree = "<group>"; };
@@ -568,6 +570,7 @@
 			children = (
 				D017401525F75D17002C051E /* scroll_arrow.png */,
 				2DD7445D25BB108200D7609A /* jiny_ping_close.png */,
+				2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */,
 			);
 			path = LeapImages;
 			sourceTree = "<group>";
@@ -993,6 +996,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */,
 				D0B603EF25DFB6BA0092F735 /* jiny_option_language.png in Resources */,
 				D0B603F025DFB6BA0092F735 /* jiny_option_cross.png in Resources */,
 				D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */,
