@@ -12,6 +12,17 @@ import AdSupport
 
 class LeapInternal:NSObject {
     var contextManager:LeapContextManager
+    private let configUrl:String = {
+        #if DEV
+            return "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch"
+        #elseif STAGE
+            return "https://odin-stage-gke.leap.is/odin/api/v1/config/fetch"
+        #elseif PROD
+            return "https://odin.leap.is/odin/api/v1/config/fetch"
+        #else
+            return "https://odin.leap.is/odin/api/v1/config/fetch"
+        #endif
+    }()
     
     init(_ token : String, uiManager:LeapAUIHandler?) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
@@ -32,7 +43,8 @@ class LeapInternal:NSObject {
 extension LeapInternal {
     
     private func fetchConfig() {
-        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch")
+        print("config url = \(configUrl)")
+        let url = URL(string: configUrl)
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"
         let dict:Dictionary<String,String> = [:]

@@ -24,6 +24,18 @@ class LeapAUIManager: NSObject {
     weak var auiManagerCallBack: LeapAUICallback?
     weak var delegate: LeapAUIManagerDelegate?
     
+    private var soundUrl: String = {
+        #if DEV
+            return "https://odin-dev-gke.leap.is/odin/api/v1/sounds"
+        #elseif STAGE
+            return "https://odin-stage-gke.leap.is/odin/api/v1/sounds"
+        #elseif PROD
+            return "https://odin.leap.is/odin/api/v1/sounds"
+        #else
+            return "https://odin.leap.is/odin/api/v1/sounds"
+        #endif
+    }()
+    
     var currentAssist: LeapAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
     
     var keyboardHeight: Float = 0
@@ -435,7 +447,8 @@ extension LeapAUIManager {
     }
     
     func fetchSoundConfig() {
-        let url = URL(string: "https://odin-dev-gke.leap.is/odin/api/v1/sounds")
+        print("soundUrl = \(soundUrl)")
+        let url = URL(string: soundUrl)
         var req = URLRequest(url: url!)
         guard let token = LeapPreferences.shared.apiKey else { fatalError("No API Key") }
         req.addValue(token, forHTTPHeaderField: "x-jiny-client-id")
