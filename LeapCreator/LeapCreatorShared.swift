@@ -18,8 +18,17 @@ class LeapCreatorShared {
     /// creator configuration
     var creatorConfig: LeapCreatorConfig?
     
-    /// Base Url
-    let ALFRED_DEV_BASE_URL: String = "https://alfred-dev-gke.leap.is"
+    let ALFRED_URL: String = {
+        #if DEV
+            return "https://alfred-dev-gke.leap.is"
+        #elseif STAGE
+            return "https://alfred-stage-gke.leap.is"
+        #elseif PROD
+            return "https://alfred.leap.is"
+        #else
+            return "https://alfred.leap.is"
+        #endif
+    }()
     
     /// End Point
     let CREATOR_CONFIG_ENDPOINT: String = "/alfred/api/v1/apps/creator"

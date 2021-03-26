@@ -9,8 +9,6 @@
 import Foundation
 
 class LeapBeaconManager {
-    private let ALFRED_URL_LOCAL: String  = "http://192.168.1.3:8080"
-    private let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is"
     
     let json = "{\"id\":\"\(LeapCreatorShared.shared.apiKey!)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(LeapCreatorShared.shared.apiKey!)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
     
@@ -54,7 +52,7 @@ class LeapBeaconManager {
     
     private func sendFirstDiscoveryBeacon(){
         //Do first network call to POST device metric
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/device/beacon")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
         urlRequest.addValue(LeapCreatorShared.shared.apiKey!, forHTTPHeaderField: "x-auth-id")
@@ -75,8 +73,7 @@ class LeapBeaconManager {
     }
     
     func sendSubsequentBeacons()-> Void{
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/device/beacon")!
-
+        let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/device/beacon")!
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
         urlRequest.addValue(LeapCreatorShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")

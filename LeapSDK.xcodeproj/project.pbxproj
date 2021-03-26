@@ -18,6 +18,39 @@
 			name = LeapCreatorUniversal;
 			productName = LeapCreatorUniversal;
 		};
+		D0992891260B744A00A1FF58 /* LeapUniversalDev */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D0992892260B744A00A1FF58 /* Build configuration list for PBXAggregateTarget "LeapUniversalDev" */;
+			buildPhases = (
+				D09928A1260B745800A1FF58 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = LeapUniversalDev;
+			productName = LeapUniversalDev;
+		};
+		D09928B1260B785100A1FF58 /* LeapUniversalStage */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D09928B3260B785100A1FF58 /* Build configuration list for PBXAggregateTarget "LeapUniversalStage" */;
+			buildPhases = (
+				D09928B2260B785100A1FF58 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = LeapUniversalStage;
+			productName = LeapUniversalDev;
+		};
+		D0ABE684260B78C6006D0E0C /* LeapUniversalProduction */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D0ABE686260B78C6006D0E0C /* Build configuration list for PBXAggregateTarget "LeapUniversalProduction" */;
+			buildPhases = (
+				D0ABE685260B78C6006D0E0C /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = LeapUniversalProduction;
+			productName = LeapUniversalDev;
+		};
 		D0F4688325DBC40700FEF37A /* LeapAUIUniversal */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "LeapAUIUniversal" */;
@@ -945,6 +978,9 @@
 					D051F20625E3D77A00A2D81B = {
 						CreatedOnToolsVersion = 12.4;
 					};
+					D0992891260B744A00A1FF58 = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					D0F4688325DBC40700FEF37A = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -973,6 +1009,9 @@
 				D02C12F225DFC6B000C80E28 /* LeapCreatorSDK */,
 				D0F2C49125DFCD81006BFF3D /* LeapSampleApp */,
 				D051F20625E3D77A00A2D81B /* LeapCreatorUniversal */,
+				D0992891260B744A00A1FF58 /* LeapUniversalDev */,
+				D09928B1260B785100A1FF58 /* LeapUniversalStage */,
+				D0ABE684260B78C6006D0E0C /* LeapUniversalProduction */,
 			);
 		};
 /* End PBXProject section */
@@ -1035,6 +1074,57 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSCHEME_NAME=\"LeapCreatorSDK\"\nFRAMEWORK_NAME=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n";
+		};
+		D09928A1260B745800A1FF58 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCHEME_NAME_AUI=\"LeapAUISDK\"\nFRAMEWORK_NAME_AUI=\"LeapAUISDK\"\nCONFIG_NAME=\"ReleaseLeapDev\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
+		};
+		D09928B2260B785100A1FF58 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCHEME_NAME_AUI=\"LeapAUISDK\"\nFRAMEWORK_NAME_AUI=\"LeapAUISDK\"\nCONFIG_NAME=\"ReleaseLeapStage\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
+		};
+		D0ABE685260B78C6006D0E0C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCHEME_NAME_AUI=\"LeapAUISDK\"\nFRAMEWORK_NAME_AUI=\"LeapAUISDK\"\nCONFIG_NAME=\"ReleaseLeapProduction\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
 		};
 		D0F4688F25DBC41200FEF37A /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1252,80 +1342,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		D02C131425DFC6B000C80E28 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = WP8MNQC9P9;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = LeapCreator/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		D02C131525DFC6B000C80E28 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = WP8MNQC9P9;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = LeapCreator/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		D051F20825E3D77A00A2D81B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		D051F20925E3D77A00A2D81B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		D0592E89241FA6E3007782A8 /* Debug */ = {
+		D0992796260B4CF500A1FF58 /* DebugLeapDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
@@ -1390,9 +1407,342 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = DebugLeapDev;
 		};
-		D0592E8A241FA6E3007782A8 /* Release */ = {
+		D0992797260B4CF500A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapDev;
+		};
+		D0992798260B4CF500A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LeapCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG DEV";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapDev;
+		};
+		D0992799260B4CF500A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapAUI/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG DEV";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapDev;
+		};
+		D099279A260B4CF500A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapCreator/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG DEV";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapDev;
+		};
+		D099279B260B4CF500A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapDev;
+		};
+		D099279C260B4CF500A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapDev;
+		};
+		D09927A4260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugLeapStage;
+		};
+		D09927A5260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapStage;
+		};
+		D09927A6260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LeapCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-stage";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STAGE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapStage;
+		};
+		D09927A7260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapAUI/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-stage";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STAGE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapStage;
+		};
+		D09927A8260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapCreator/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-stage";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STAGE";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapStage;
+		};
+		D09927A9260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapStage;
+		};
+		D09927AA260B4D0F00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapStage;
+		};
+		D09927B2260B4D2500A1FF58 /* ReleaseLeapDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
@@ -1451,9 +1801,403 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = ReleaseLeapDev;
 		};
-		D08DA66A25DEA2E800EB0EFC /* Debug */ = {
+		D09927B3260B4D2500A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09927B4260B4D2500A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LeapCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEV;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09927B5260B4D2500A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapAUI/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEV;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09927B6260B4D2500A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapCreator/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEV;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09927B7260B4D2500A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09927B8260B4D2500A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09927B9260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927BA260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927BB260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LeapCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-stage";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STAGE;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927BC260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapAUI/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-stage";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STAGE;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927BD260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapCreator/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-stage";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STAGE;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927BE260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927BF260B4D3200A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09927C0260B4D7100A1FF58 /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = DebugLeapProduction;
+		};
+		D09927C1260B4D7100A1FF58 /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapProduction;
+		};
+		D09927C2260B4D7100A1FF58 /* DebugLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -1481,46 +2225,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PROD";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = DebugLeapProduction;
 		};
-		D08DA66B25DEA2E800EB0EFC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = WP8MNQC9P9;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				INFOPLIST_FILE = LeapCore/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		D0B603F525DFB6BA0092F735 /* Debug */ = {
+		D09927C3260B4D7100A1FF58 /* DebugLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -1544,13 +2256,176 @@
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.aui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PROD";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = DebugLeapProduction;
 		};
-		D0B603F625DFB6BA0092F735 /* Release */ = {
+		D09927C4260B4D7100A1FF58 /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapCreator/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PROD";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapProduction;
+		};
+		D09927C5260B4D7100A1FF58 /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugLeapProduction;
+		};
+		D09927C6260B4D7100A1FF58 /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapProduction;
+		};
+		D09927C7260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D09927C8260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D09927C9260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = LeapCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PROD;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D09927CA260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -1573,12 +2448,42 @@
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.aui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PROD;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Release;
+			name = ReleaseLeapProduction;
 		};
-		D0F2C4B225DFCD81006BFF3D /* Debug */ = {
+		D09927CB260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = WP8MNQC9P9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LeapCreator/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PROD;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D09927CC260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
@@ -1597,44 +2502,159 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = ReleaseLeapProduction;
 		};
-		D0F2C4B325DFCD81006BFF3D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(EMBEDDED_CONTENT_CONTAINS_SWIFT)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = WP8MNQC9P9;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		D0F4688425DBC40700FEF37A /* Debug */ = {
+		D09927CD260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Debug;
+			name = ReleaseLeapProduction;
 		};
-		D0F4688525DBC40700FEF37A /* Release */ = {
+		D0992894260B744A00A1FF58 /* DebugLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Release;
+			name = DebugLeapProduction;
+		};
+		D0992895260B744A00A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapStage;
+		};
+		D0992896260B744A00A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapDev;
+		};
+		D0992898260B744A00A1FF58 /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D0992899260B744A00A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapStage;
+		};
+		D099289A260B744A00A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapDev;
+		};
+		D09928B5260B785100A1FF58 /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapProduction;
+		};
+		D09928B6260B785100A1FF58 /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapStage;
+		};
+		D09928B7260B785100A1FF58 /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapDev;
+		};
+		D09928B9260B785100A1FF58 /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D09928BA260B785100A1FF58 /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapStage;
+		};
+		D09928BB260B785100A1FF58 /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapDev;
+		};
+		D0ABE688260B78C6006D0E0C /* DebugLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapProduction;
+		};
+		D0ABE689260B78C6006D0E0C /* DebugLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapStage;
+		};
+		D0ABE68A260B78C6006D0E0C /* DebugLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugLeapDev;
+		};
+		D0ABE68C260B78C6006D0E0C /* ReleaseLeapProduction */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapProduction;
+		};
+		D0ABE68D260B78C6006D0E0C /* ReleaseLeapStage */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapStage;
+		};
+		D0ABE68E260B78C6006D0E0C /* ReleaseLeapDev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseLeapDev;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1642,65 +2662,132 @@
 		D02C131325DFC6B000C80E28 /* Build configuration list for PBXNativeTarget "LeapCreatorSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D02C131425DFC6B000C80E28 /* Debug */,
-				D02C131525DFC6B000C80E28 /* Release */,
+				D09927C4260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927A8260B4D0F00A1FF58 /* DebugLeapStage */,
+				D099279A260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927CB260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927BD260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B6260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 		D051F20725E3D77A00A2D81B /* Build configuration list for PBXAggregateTarget "LeapCreatorUniversal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D051F20825E3D77A00A2D81B /* Debug */,
-				D051F20925E3D77A00A2D81B /* Release */,
+				D09927C6260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927AA260B4D0F00A1FF58 /* DebugLeapStage */,
+				D099279C260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927CD260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927BF260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B8260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 		D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "LeapSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D0592E89241FA6E3007782A8 /* Debug */,
-				D0592E8A241FA6E3007782A8 /* Release */,
+				D09927C0260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927A4260B4D0F00A1FF58 /* DebugLeapStage */,
+				D0992796260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927C7260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927B9260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B2260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 		D08DA66925DEA2E800EB0EFC /* Build configuration list for PBXNativeTarget "LeapCoreSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D08DA66A25DEA2E800EB0EFC /* Debug */,
-				D08DA66B25DEA2E800EB0EFC /* Release */,
+				D09927C2260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927A6260B4D0F00A1FF58 /* DebugLeapStage */,
+				D0992798260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927C9260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927BB260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B4260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
+		};
+		D0992892260B744A00A1FF58 /* Build configuration list for PBXAggregateTarget "LeapUniversalDev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0992894260B744A00A1FF58 /* DebugLeapProduction */,
+				D0992895260B744A00A1FF58 /* DebugLeapStage */,
+				D0992896260B744A00A1FF58 /* DebugLeapDev */,
+				D0992898260B744A00A1FF58 /* ReleaseLeapProduction */,
+				D0992899260B744A00A1FF58 /* ReleaseLeapStage */,
+				D099289A260B744A00A1FF58 /* ReleaseLeapDev */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = DebugLeapProduction;
+		};
+		D09928B3260B785100A1FF58 /* Build configuration list for PBXAggregateTarget "LeapUniversalStage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D09928B5260B785100A1FF58 /* DebugLeapProduction */,
+				D09928B6260B785100A1FF58 /* DebugLeapStage */,
+				D09928B7260B785100A1FF58 /* DebugLeapDev */,
+				D09928B9260B785100A1FF58 /* ReleaseLeapProduction */,
+				D09928BA260B785100A1FF58 /* ReleaseLeapStage */,
+				D09928BB260B785100A1FF58 /* ReleaseLeapDev */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = DebugLeapProduction;
+		};
+		D0ABE686260B78C6006D0E0C /* Build configuration list for PBXAggregateTarget "LeapUniversalProduction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0ABE688260B78C6006D0E0C /* DebugLeapProduction */,
+				D0ABE689260B78C6006D0E0C /* DebugLeapStage */,
+				D0ABE68A260B78C6006D0E0C /* DebugLeapDev */,
+				D0ABE68C260B78C6006D0E0C /* ReleaseLeapProduction */,
+				D0ABE68D260B78C6006D0E0C /* ReleaseLeapStage */,
+				D0ABE68E260B78C6006D0E0C /* ReleaseLeapDev */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 		D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUISDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D0B603F525DFB6BA0092F735 /* Debug */,
-				D0B603F625DFB6BA0092F735 /* Release */,
+				D09927C3260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927A7260B4D0F00A1FF58 /* DebugLeapStage */,
+				D0992799260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927CA260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927BC260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B5260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 		D0F2C4B125DFCD81006BFF3D /* Build configuration list for PBXNativeTarget "LeapSampleApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D0F2C4B225DFCD81006BFF3D /* Debug */,
-				D0F2C4B325DFCD81006BFF3D /* Release */,
+				D09927C5260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927A9260B4D0F00A1FF58 /* DebugLeapStage */,
+				D099279B260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927CC260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927BE260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B7260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 		D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "LeapAUIUniversal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D0F4688425DBC40700FEF37A /* Debug */,
-				D0F4688525DBC40700FEF37A /* Release */,
+				D09927C1260B4D7100A1FF58 /* DebugLeapProduction */,
+				D09927A5260B4D0F00A1FF58 /* DebugLeapStage */,
+				D0992797260B4CF500A1FF58 /* DebugLeapDev */,
+				D09927C8260B4D7D00A1FF58 /* ReleaseLeapProduction */,
+				D09927BA260B4D3200A1FF58 /* ReleaseLeapStage */,
+				D09927B3260B4D2500A1FF58 /* ReleaseLeapDev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = DebugLeapProduction;
 		};
 /* End XCConfigurationList section */
 

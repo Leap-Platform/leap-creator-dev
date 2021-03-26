@@ -23,9 +23,6 @@ class LeapPermissionManager: LeapAppStateProtocol{
         
     }
     
-    
-    let ALFRED_URL_LOCAL: String = "http://192.168.1.3:8080";
-    let ALFRED_URL_DEV: String = "https://alfred-dev-gke.leap.is";
     var permissionListener: LeapPermissionListener
     var application: UIApplication
     let permissionGranted: String = "PERMISSION_GRANTED"
@@ -84,7 +81,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
     //Update the permission action to Alfred Server by POST
     func updatePermissionToServer(permission: String, status:Bool, appId: String){
         
-        let beaconDiscoveryUrl: URL = URL(string: "\(ALFRED_URL_DEV)/alfred/api/v1/apps/\(LeapCreatorShared.shared.apiKey!)/device/\(appId)")!
+        let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/apps/\(LeapCreatorShared.shared.apiKey!)/device/\(appId)")!
 
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
         urlRequest.addValue(LeapCreatorShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")

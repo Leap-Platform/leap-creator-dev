@@ -89,8 +89,17 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     let CASE_DEVICE_INFO = "DEVICE_INFO"
     let CASE_KILL_CREATOR = "KILL_AUTH"
 
-//    let SOCKET_URL: String? = "ws://15.206.167.18:4000/ws"
-    let SOCKET_URL: String? = "wss://raven-dev-gke.leap.is/ws"
+    let SOCKET_URL: String = {
+        #if DEV
+            return "wss://raven-dev-gke.leap.is/ws"
+        #elseif STAGE
+            return "wss://raven-stage-gke.leap.is/ws"
+        #elseif PROD
+            return "wss://raven.leap.is/ws"
+        #else
+            return "wss://raven.leap.is/ws"
+        #endif
+    }()
     
     var protocolListener: LeapProtocolListener
     var applicationInstance: UIApplication
@@ -122,7 +131,7 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     }
     
     func openSocketConnection()->Void{
-        let url: URL = URL(string: self.SOCKET_URL!)!
+        let url: URL = URL(string: self.SOCKET_URL)!
         let urlRequest = URLRequest(url: url)
         webSocketTask = WebSocket(request: urlRequest)
         webSocketTask?.delegate = self.socketMessageDelegate
