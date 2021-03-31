@@ -7,21 +7,49 @@
 //
 
 import Foundation
+import UIKit
 
+enum EventName: String {
+    case triggerEvent = "trigger_event"
+    case optInEvent = "opt_in_event"
+    case optOutEvent = "opt_out_event"
+    case instructionEvent = "instruction_event"
+    case flowSuccessEvent = "flow_success_event"
+    case flowStopEvent = "flow_stop_event"
+    case flowDisableEvent = "flow_disable_event"
+    case languageChangeEvent = "language_change_event"
+    case actionTrackingEvent = "action_tracking_event"
+    case leapSdkDisableEvent = "leap_sdk_disable_event"
+}
 
-class LeapAnalyticsEvent:Codable {
+class LeapAnalyticsEvent: Codable {
     
-    var leap_id:String
-    var leap_custom_events:LeapCustomEvent?
-    var leap_crash_event:Dictionary<String,String>?
-    var leap_standard_event:LeapStandardEvent?
-    var leap_timestamp:LeapTimeInfo
+    var id: String?
+    var sessionId: String?
+    var projectName: String?
+    var projectId: String?
+    var deploymentId: String?
+    var deploymentName: String?
+    var previousLanguage: String?
+    var language: String?
+    var timestamp: String?
+    var eventName: String?
+    var pageName: String?
+    var instructionName: String?
+    var actionEventType: String?
+    var actionEventValue: String?
     
     init() {
-        
-        leap_id = String.generateUUIDString()
-        leap_timestamp = LeapTimeInfo()
+        self.id = String.generateUUIDString()
+        self.sessionId = LeapSharedInformation.shared.getSessionId()
+        self.timestamp = LeapAnalyticsEvent.getTimeStamp()
     }
     
-    
+    private static func getTimeStamp() -> String {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        let date = Date()
+        let timeStamp = dateFormatter.string(from: date)
+        return timeStamp
+    }
 }

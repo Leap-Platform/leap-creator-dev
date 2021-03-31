@@ -55,6 +55,11 @@ import UIKit
     func optionPanelClosed()
 
     func disableAssistance()
+    func disableLeapSDK()
+    func didLanguageChangeForAudio()
+    
+    /// receives only AUI info
+    func receiveAUIEvent(action: Dictionary<String, Any>)
 }
 
 

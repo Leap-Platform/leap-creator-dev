@@ -846,7 +846,11 @@ extension LeapAUIManager: LeapAssistDelegate {
         scrollArrowButton.noAssist()
         dismissLeapButton()
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
-    }    
+    }
+    
+    func sendAUIEvent(action: Dictionary<String,Any>) {
+        auiManagerCallBack?.receiveAUIEvent(action: action)
+    }
 }
 
 // MARK: - ICON OPTIONS DELEGATE METHODS
@@ -870,9 +874,13 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
         let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
-            if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
-            else { self.startAutoDismissTimer() }
-            LeapPreferences.shared.currentLanguage = languageCode
+            if success, let code = languageCode {
+                LeapPreferences.shared.setUserLanguage(code)
+                LeapPreferences.shared.currentLanguage = languageCode
+                if let _ = self.currentInstruction?[constant_soundName] as? String {
+                   self.auiManagerCallBack?.didLanguageChangeForAudio()
+                }
+            } else { self.startAutoDismissTimer() }
             if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
                 webAssist.changeLanguage(locale: code)
                 self.playAudio()

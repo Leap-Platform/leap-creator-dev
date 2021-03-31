@@ -65,6 +65,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */; };
 		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
 		D017401625F75D17002C051E /* scroll_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D017401525F75D17002C051E /* scroll_arrow.png */; };
 		D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* LeapCreatorInternal.swift */; };
@@ -100,7 +101,6 @@
 		D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662E24629D5D001937EE /* LeapContextManager.swift */; };
 		D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* LeapConfig.swift */; };
 		D08DA63C25DEA2E800EB0EFC /* LeapTimeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */; };
-		D08DA63D25DEA2E800EB0EFC /* LeapStandardEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B792CA2542F8F600DB94DD /* LeapStandardEvent.swift */; };
 		D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8F248681F90082508C /* LeapStage.swift */; };
 		D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9B67725B6EECD00250133 /* LeapClickHandler.swift */; };
 		D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* LeapStageManager.swift */; };
@@ -277,6 +277,7 @@
 		2D2334C5258B16D70084768E /* LeapCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCarousel.swift; sourceTree = "<group>"; };
 		2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapIconSetting.swift; sourceTree = "<group>"; };
 		2D2AE918258D00AF0038A5C3 /* LeapSharedAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapSharedAUI.swift; sourceTree = "<group>"; };
+		2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapProjectParameters.swift; sourceTree = "<group>"; };
 		2D31F8C225B987790027E80F /* LeapPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPing.swift; sourceTree = "<group>"; };
 		2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageOptions.swift; sourceTree = "<group>"; };
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
@@ -367,7 +368,6 @@
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
 		D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapAUISDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0B792C82542F86300DB94DD /* LeapCustomEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCustomEvent.swift; sourceTree = "<group>"; };
-		D0B792CA2542F8F600DB94DD /* LeapStandardEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStandardEvent.swift; sourceTree = "<group>"; };
 		D0B793092543186D00DB94DD /* LeapAssistInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapAssistInfo.swift; sourceTree = "<group>"; };
 		D0B7930A2543186D00DB94DD /* LeapIconInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapIconInfo.swift; sourceTree = "<group>"; };
 		D0B7930B2543186D00DB94DD /* LeapAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapAssist.swift; sourceTree = "<group>"; };
@@ -525,6 +525,7 @@
 				D0521CA424F8ECF900EEE719 /* LeapFeature.swift */,
 				D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */,
 				2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */,
+				2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -706,7 +707,6 @@
 			isa = PBXGroup;
 			children = (
 				D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */,
-				D0B792CA2542F8F600DB94DD /* LeapStandardEvent.swift */,
 				D0B792C82542F86300DB94DD /* LeapCustomEvent.swift */,
 				D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */,
 				D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */,
@@ -1185,7 +1185,6 @@
 				D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */,
 				D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */,
 				D08DA63C25DEA2E800EB0EFC /* LeapTimeInfo.swift in Sources */,
-				D08DA63D25DEA2E800EB0EFC /* LeapStandardEvent.swift in Sources */,
 				D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */,
 				D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */,
 				D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */,
@@ -1205,6 +1204,7 @@
 				D08DA64E25DEA2E800EB0EFC /* LeapPage.swift in Sources */,
 				D08DA64F25DEA2E800EB0EFC /* LeapUtils.swift in Sources */,
 				D08DA65025DEA2E800EB0EFC /* LeapAssist.swift in Sources */,
+				2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */,
 				D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */,
 				D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */,
 				D08DA65325DEA2E800EB0EFC /* LeapContextInfo.swift in Sources */,
