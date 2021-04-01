@@ -195,6 +195,11 @@
 		D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702102591D13700F33729 /* jiny_default_icon.html */; };
 		D0B603F225DFB6BA0092F735 /* jiny_ping_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD7445D25BB108200D7609A /* jiny_ping_close.png */; };
 		D0B603F325DFB6BA0092F735 /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702112591D13700F33729 /* jiny_audio_anim.html */; };
+		D0C1345E2613210100D599B3 /* LeapPreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1345D2613210100D599B3 /* LeapPreviewManager.swift */; };
+		D0C1346826133CB100D599B3 /* LeapCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1346726133CB100D599B3 /* LeapCameraViewController.swift */; };
+		D0C1347426135CD200D599B3 /* leap_camera.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C1347226135CD200D599B3 /* leap_camera.png */; };
+		D0C1347526135CD200D599B3 /* leap_qrcode.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C1347326135CD200D599B3 /* leap_qrcode.png */; };
+		D0CA44C02615AAE4005E80E0 /* leap_option_cross.png in Resources */ = {isa = PBXBuildFile; fileRef = D0CA44BF2615AAE4005E80E0 /* leap_option_cross.png */; };
 		D0F2C49925DFCD81006BFF3D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
 		D0F2C49A25DFCD81006BFF3D /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 		D0F2C49B25DFCD81006BFF3D /* SearchHotelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */; };
@@ -398,7 +403,12 @@
 		D0BC371C249DCF24002648FF /* LeapViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapViewProps.swift; sourceTree = "<group>"; };
 		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
 		D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleWebViewsViewController.swift; sourceTree = "<group>"; };
+		D0C1345D2613210100D599B3 /* LeapPreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPreviewManager.swift; sourceTree = "<group>"; };
+		D0C1346726133CB100D599B3 /* LeapCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCameraViewController.swift; sourceTree = "<group>"; };
+		D0C1347226135CD200D599B3 /* leap_camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leap_camera.png; sourceTree = "<group>"; };
+		D0C1347326135CD200D599B3 /* leap_qrcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leap_qrcode.png; sourceTree = "<group>"; };
 		D0C9B67725B6EECD00250133 /* LeapClickHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapClickHandler.swift; sourceTree = "<group>"; };
+		D0CA44BF2615AAE4005E80E0 /* leap_option_cross.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leap_option_cross.png; sourceTree = "<group>"; };
 		D0D7293324AC9B0000F75D0D /* LeapJSMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapJSMaker.swift; sourceTree = "<group>"; };
 		D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSupportModals.swift; sourceTree = "<group>"; };
 		D0DC3EFF25540A8900B6FA93 /* LeapContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContext.swift; sourceTree = "<group>"; };
@@ -497,6 +507,7 @@
 				B6153A32253E98DB008CA08F /* LeapBeaconManager.swift */,
 				B69D8E32258A6D00004D858D /* LeapDeviceManager.swift */,
 				2D08591725A31FE9002D7993 /* LeapCreatorManager.swift */,
+				D0C1345D2613210100D599B3 /* LeapPreviewManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -533,6 +544,7 @@
 		D00B8F57249B2988006F4CA1 /* LeapCreator */ = {
 			isa = PBXGroup;
 			children = (
+				D0C1347126135C5900D599B3 /* Resources */,
 				2D08593D25A33908002D7993 /* Models */,
 				B69D8E31258A6C89004D858D /* Delegates */,
 				B69D8E30258A6C57004D858D /* Managers */,
@@ -545,6 +557,7 @@
 				B6E276FC2542F6410094C491 /* LeapCreatorShared.swift */,
 				2DD0E35225B6D7E700EBB9B8 /* LeapReachability.swift */,
 				2DD0E35B25B7159400EBB9B8 /* LeapReachabilityManager.swift */,
+				D0C1346726133CB100D599B3 /* LeapCameraViewController.swift */,
 			);
 			path = LeapCreator;
 			sourceTree = "<group>";
@@ -830,6 +843,16 @@
 			path = LeapKeyWindowComponents;
 			sourceTree = "<group>";
 		};
+		D0C1347126135C5900D599B3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D0CA44BF2615AAE4005E80E0 /* leap_option_cross.png */,
+				D0C1347226135CD200D599B3 /* leap_camera.png */,
+				D0C1347326135CD200D599B3 /* leap_qrcode.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		D0FDAC2324B48B3C00D9332B /* LeapAUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1021,6 +1044,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0CA44C02615AAE4005E80E0 /* leap_option_cross.png in Resources */,
+				D0C1347426135CD200D599B3 /* leap_camera.png in Resources */,
+				D0C1347526135CD200D599B3 /* leap_qrcode.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1152,9 +1178,11 @@
 			files = (
 				D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */,
 				D02C12F825DFC6B000C80E28 /* LeapCreatorConfig.swift in Sources */,
+				D0C1345E2613210100D599B3 /* LeapPreviewManager.swift in Sources */,
 				D02C12F925DFC6B000C80E28 /* LeapConstants.swift in Sources */,
 				D02C12FA25DFC6B000C80E28 /* LeapProtocolManager.swift in Sources */,
 				D02C12FB25DFC6B000C80E28 /* LeapSocketMessageDelegate.swift in Sources */,
+				D0C1346826133CB100D599B3 /* LeapCameraViewController.swift in Sources */,
 				D02C12FC25DFC6B000C80E28 /* LeapScreenHelper.swift in Sources */,
 				D02C12FD25DFC6B000C80E28 /* LeapPermissionManager.swift in Sources */,
 				D02C12FE25DFC6B000C80E28 /* LeapCreatorManager.swift in Sources */,

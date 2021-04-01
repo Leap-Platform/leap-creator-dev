@@ -20,6 +20,8 @@ class LeapContextManager:NSObject {
     private var stageManager:LeapStageManager?
     private var analyticsManager:LeapAnalyticsManager?
     private var configuration:LeapConfig?
+    private var previewConfig: LeapConfig?
+    private var previewSounds:Dictionary<String,Any>?
     private weak var auiHandler:LeapAUIHandler?
     private var taggedEvents:Dictionary<String,Any> = [:]
     
@@ -45,6 +47,31 @@ class LeapContextManager:NSObject {
         startSoundDownload()
         contextDetector?.start()
         NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("leap_creator_live"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(previewNotification(_:)), name: .init("leap_preview_config"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
+    }
+    
+    @objc func previewNotification(_ notification:NSNotification) {
+        contextDetector?.stop()
+        guard let previewDict = notification.object as? Dictionary<String,Any> else { return }
+        let tempConfig = previewDict["config"] as? Dictionary<String,Any>
+        let configDict = ["data":[tempConfig]]
+        assistManager?.resetAssistManager()
+        discoveryManager?.resetDiscovery()
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
+        auiHandler?.removeAllViews()
+        previewConfig = LeapConfig(withDict: configDict)
+        previewSounds = previewDict["sounds"] as? Dictionary<String,Any>
+        if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
+        contextDetector?.start()
+        auiHandler?.startMediaFetch()
+    }
+    
+    func currentConfiguration() -> LeapConfig? {
+        if let preview = previewConfig { return preview }
+        return configuration
     }
     
     @objc func authLiveNotification(_ notification:NSNotification) {
@@ -56,8 +83,22 @@ class LeapContextManager:NSObject {
         stageManager?.resetStageManager()
     }
     
+    @objc func endPreview() {
+        contextDetector?.stop()
+        if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
+        auiHandler?.removeAllViews()
+        assistManager?.resetAssistManager()
+        discoveryManager?.resetDiscovery()
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
+        previewSounds = nil
+        previewConfig = nil
+        contextDetector?.start()
+    }
+    
     func getProjectParameter(withId id: Int) -> LeapProjectParameters? {
-        for params in configuration?.projectParameters ?? [] {
+        for params in self.currentConfiguration()?.projectParameters ?? [] {
             if params.flowId == id {
                 return params
             }
@@ -81,17 +122,18 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     
     // MARK: - Identifier Methods
     func getWebIdentifier(identifierId: String) -> LeapWebIdentifier? {
-        return configuration!.webIdentifiers[identifierId]
+        return self.currentConfiguration()!.webIdentifiers[identifierId]
     }
     
     func getNativeIdentifier(identifierId: String) -> LeapNativeIdentifier? {
-        return configuration!.nativeIdentifiers[identifierId]
+        return self.currentConfiguration()!.nativeIdentifiers[identifierId]
     }
     
     
     // MARK: - Context Methods
     
     func getContextsToCheck() -> Array<LeapContext> {
+        
         return (assistManager?.getAssistsToCheck() ?? []) + (discoveryManager?.getDiscoveriesToCheck() ?? [])
     }
     
@@ -160,7 +202,10 @@ extension LeapContextManager:LeapContextDetectorDelegate {
 extension LeapContextManager:LeapAssistManagerDelegate {
     
     func getAllAssists() -> Array<LeapAssist> {
-        guard let config = configuration else { return [] }
+        if let preview = previewConfig {
+            return preview.assists
+        }
+        guard let config = self.currentConfiguration() else { return [] }
         return config.assists
     }
     
@@ -187,7 +232,10 @@ extension LeapContextManager:LeapAssistManagerDelegate {
 extension LeapContextManager:LeapDiscoveryManagerDelegate {
     
     func getAllDiscoveries() -> Array<LeapDiscovery> {
-        guard let config = configuration else { return [] }
+        if let preview = previewConfig {
+            return preview.discoveries
+        }
+        guard let config = self.currentConfiguration() else { return [] }
         return config.discoveries
     }
     
@@ -247,7 +295,7 @@ extension LeapContextManager:LeapStageManagerDelegate {
     func newStageFound(_ stage: LeapStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
         let iconInfo:Dictionary<String,AnyHashable> = {
             guard let fm = flowManager, let discId = fm.getDiscoveryId() else { return [:] }
-            let currentDiscovery = configuration?.discoveries.first { $0.id == discId }
+            let currentDiscovery = self.currentConfiguration()?.discoveries.first { $0.id == discId }
             guard let discovery = currentDiscovery, discovery.enableIcon else {return [:] }
             return getIconSettings(discId)
         }()
@@ -489,8 +537,9 @@ extension LeapContextManager: LeapAnalyticsManagerDelegate {
 extension LeapContextManager:LeapAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Any> {
-        guard let config = configuration else { return [:] }
-        return [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
+        guard let config = self.currentConfiguration() else { return [:] }
+        let discoverySounds = previewSounds != nil ? [previewSounds!] : config.discoverySounds
+        return [constant_discoverySounds:discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
     }
     
     func triggerEvent(identifier: String, value: Any) {
@@ -506,7 +555,7 @@ extension LeapContextManager:LeapAUICallback {
     
     func getCurrentLanguageOptionsTexts() -> Dictionary<String,String> {
         let langCode = getLanguageCode()
-        let lang = configuration?.languages.first{ $0.localeId == langCode }
+        let lang = self.currentConfiguration()?.languages.first{ $0.localeId == langCode }
         let languages = getLanguagesForCurrentInstruction()
         guard let language = lang else {
             var dict:Dictionary<String, String> = [constant_stop:"Stop"]
@@ -537,12 +586,12 @@ extension LeapContextManager:LeapAUICallback {
     
     func getLanguageCode() -> String {
         if let code = LeapPreferences.shared.getUserLanguage() { return code }
-        if let firstLanguage = configuration?.languages.first { return firstLanguage.localeId }
+        if let firstLanguage = self.currentConfiguration()?.languages.first { return firstLanguage.localeId }
         return "ang"
     }
     
     func getTTSCodeFor(code:String) -> String? {
-        let lang = configuration?.languages.first{ $0.localeId == code }
+        let lang = self.currentConfiguration()?.languages.first{ $0.localeId == code }
         guard let language = lang,
               let ttsInfo = language.ttsInfo,
               let locale = ttsInfo.ttsLocale,
@@ -700,7 +749,7 @@ extension LeapContextManager {
         }
         // optIn
         analyticsManager?.saveEvent(event: sendOptInEvent())
-        let flowSelected = configuration?.flows.first { $0.id == flowId }
+        let flowSelected = self.currentConfiguration()?.flows.first { $0.id == flowId }
         guard let flow = flowSelected, let fm = flowManager else {
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
@@ -714,7 +763,7 @@ extension LeapContextManager {
     func getIconSettings(_ discoveryId:Int) -> Dictionary<String,AnyHashable> {
         let jsonEncoder = JSONEncoder()
         jsonEncoder.outputFormatting = .prettyPrinted
-        guard let iconInfo = configuration?.iconSetting[String(discoveryId)],
+        guard let iconInfo = self.currentConfiguration()?.iconSetting[String(discoveryId)],
               let iconInfoData = try? jsonEncoder.encode(iconInfo),
               let iconInfoDict = try? JSONSerialization.jsonObject(with: iconInfoData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
         return iconInfoDict
@@ -723,7 +772,7 @@ extension LeapContextManager {
     func generateLangDicts(localeCodes:Array<String>?) -> Array<Dictionary<String,String>>{
         guard let codes = localeCodes else { return [] }
         let langDicts = codes.map { (langCode) -> Dictionary<String,String>? in
-            let tempLanguage = configuration?.languages.first { $0.localeId == langCode }
+            let tempLanguage = self.currentConfiguration()?.languages.first { $0.localeId == langCode }
             guard let language = tempLanguage else { return nil }
             return ["localeId":language.localeId, "localeName":language.name, "localeScript":language.script]
         }.compactMap { return $0 }
@@ -733,7 +782,7 @@ extension LeapContextManager {
     func getLiveDiscovery() -> LeapDiscovery? {
         guard let state = contextDetector?.getState(),
               let disId = state == .Discovery ? discoveryManager?.getCurrentDiscovery()?.id : flowManager?.getDiscoveryId() else { return nil }
-        let currentDiscovery = configuration?.discoveries.first{ $0.id == disId }
+        let currentDiscovery = self.currentConfiguration()?.discoveries.first{ $0.id == disId }
         return currentDiscovery
     }
     

@@ -85,11 +85,14 @@ class LeapMasterManager: LeapProtocolListener,
         protocolManager?.setup()
     }
     
-    func start(){
+    @objc func start(){
         self.appId = LeapCreatorShared.shared.apiKey
         beaconManager?.start(appId: self.appId!)
     }
     
+    @objc func stop() {
+        beaconManager?.stop()
+    }
     
 }
 
@@ -101,6 +104,9 @@ extension LeapMasterManager{
         nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         nc.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+        nc.addObserver(self, selector: #selector(stop), name: .init("leap_preview_config"), object: nil)
+        nc.addObserver(self, selector: #selector(start), name: .init("leap_end_preview"), object: nil)
+        
     }
     
     @objc private func appLaunched(){

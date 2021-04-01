@@ -45,6 +45,9 @@ class LeapCreatorInternal : NSObject{
 
 extension LeapCreatorInternal: LeapCreatorManagerDelegate {
     func fetchConfigSuccess() {
+        DispatchQueue.main.async {
+            LeapPreviewManager.shared.checkForAuthorisation()
+        }
         
         startSendingBeacons()
         
