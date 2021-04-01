@@ -114,6 +114,7 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     init(protocolListener: LeapProtocolListener) {
         self.protocolListener = protocolListener
         self.applicationInstance = UIApplication.shared
+        NotificationCenter.default.addObserver(self, selector: #selector(stopStreaming), name: .init("leap_preview_config"), object: nil)
     }
     
     func setup(){
@@ -143,6 +144,10 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         webSocketTask?.write(string: json, completion: {
             print("Connecting to room ID :: \(roomId)")
         })
+    }
+    
+    @objc func stopStreaming() {
+        streamingManager?.stop()
     }
 }
 
