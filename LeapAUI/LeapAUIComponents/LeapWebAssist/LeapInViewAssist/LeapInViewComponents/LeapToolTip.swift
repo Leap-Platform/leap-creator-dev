@@ -596,7 +596,7 @@ class LeapToolTip: LeapTipView {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
-            performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: nil)
+            performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_close: true]])
         }
     }
 }

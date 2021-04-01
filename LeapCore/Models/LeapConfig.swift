@@ -11,6 +11,7 @@ import Gzip
 
 class LeapConfig {
     
+    var projectParameters: Array<LeapProjectParameters> = []
     var webIdentifiers:Dictionary<String,LeapWebIdentifier> = [:]
     var nativeIdentifiers:Dictionary<String,LeapNativeIdentifier> = [:]
     var assists:Array<LeapAssist> = []
@@ -91,6 +92,11 @@ class LeapConfig {
             }
             if let newSupportedAppLocale = configDict[constant_supportedAppLocales] as? Array<String> {
                 supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
+            }
+            if let projectParams = configDict["projectParameters"] as? Dictionary<String, Any> {
+                let projectParameter = LeapProjectParameters(withDict: projectParams)
+                projectParameter.flowId = flows.first?.id
+                projectParameters.append(projectParameter)
             }
         }
     }

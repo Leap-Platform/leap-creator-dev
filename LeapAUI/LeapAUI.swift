@@ -40,10 +40,15 @@ import LeapCoreSDK
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
     
+    @objc public func disable() {
+        // Send Leap SDK Disable Event
+        auiManager.auiManagerCallBack?.disableLeapSDK()
+        auiManager.removeAllViews()
+    }
+    
     @objc public func addIdentifier(identifier:String, value:Any) {
         auiManager.addIdentifier(identifier: identifier, value: value)
     }
-    
 }
 
 extension LeapAUI:LeapAUIManagerDelegate {

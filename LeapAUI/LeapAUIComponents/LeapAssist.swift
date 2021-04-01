@@ -20,6 +20,9 @@ protocol LeapAssistDelegate: class {
     
     /// AUIComponent dismissed, with complete info
     func didDismissAssist(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
+    
+    /// AUIComponent with only info
+    func sendAUIEvent(action: Dictionary<String,Any>)
 }
 
 // The type that has properties and methods which is used by each AUIComponent when necessary

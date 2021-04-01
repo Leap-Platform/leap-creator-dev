@@ -108,9 +108,13 @@ class LeapTipView: LeapInViewAssist {
         
         if frameForToView.contains(point) {
             
+            if !(assistInfo?.highlightAnchor ?? false) {
+                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true]])
+            }
+            
             if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
                                 
-                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: nil)
+                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_anchor_click: true]])
                 
                 return hitTestView
             
