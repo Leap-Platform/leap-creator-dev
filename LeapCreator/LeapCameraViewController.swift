@@ -236,7 +236,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             return
         }
         presentLoader()
-        let projectName = infoDict["projectName"] as? String ?? ""
+        let projectName = infoDict["projectName"] ?? ""
         fetchPreviewConfig(previewId: id, projectName:projectName)
     }
     

@@ -43,6 +43,8 @@ class LeapInternal:NSObject {
 extension LeapInternal {
     
     private func fetchConfig() {
+        let payload = getPayload()
+        print(payload)
         let url = URL(string: configUrl)
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"
@@ -76,6 +78,44 @@ extension LeapInternal {
         ]
         getSavedHeaders().forEach { headers[$0.key] = $0.value }
         return headers
+    }
+    
+    private func getPayload() -> Dictionary<String,String> {
+        
+        let defaultStringProperties = LeapPropertiesHandler.shared.getDefaultStringProperties()
+        let defaultLongProperties = LeapPropertiesHandler.shared.getDefaultLongProperties()
+        let defaultIntProperties = LeapPropertiesHandler.shared.getDefaultIntProperties()
+        
+        let customLongProperties = LeapPropertiesHandler.shared.getCustomLongProperties()
+        let customStringProperties = LeapPropertiesHandler.shared.getCustomStringProperties()
+        let customIntProperties = LeapPropertiesHandler.shared.getCustomIntProperties()
+        
+        
+        var payload:Dictionary<String,String> = customStringProperties
+        defaultStringProperties.forEach { (key, value) in
+            payload[key] = value
+        }
+        
+        customIntProperties.forEach { (key,value) in
+            payload[key] = "\(value)"
+        }
+        
+        defaultIntProperties.forEach { (key, value) in
+            payload[key] = "\(value)"
+        }
+        
+        customLongProperties.forEach { (key,value) in
+            let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
+            payload[key] = "\(timeElapsed)"
+        }
+        
+        defaultLongProperties.forEach { (key, value) in
+            let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
+            payload[key] = "\(timeElapsed)"
+        }
+            
+        return payload
+        
     }
     
     private func saveHeaders(headers:Dictionary<AnyHashable, Any>) {

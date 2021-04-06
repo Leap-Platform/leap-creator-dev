@@ -472,7 +472,6 @@ extension LeapContextManager {
         event.projectId = projectParameter?.projectId
         event.projectName = projectParameter?.projectName
         event.eventName = EventName.actionTrackingEvent.rawValue
-        print(action)
         if let body = action?[constant_body] as? Dictionary<String, Any> {
             if let labelValue = body[constant_buttonLabel] as? String {
                 event.actionEventValue = labelValue
