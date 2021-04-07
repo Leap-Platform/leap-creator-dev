@@ -27,6 +27,7 @@ class LeapInternal:NSObject {
     init(_ token : String, uiManager:LeapAUIHandler?) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
         super.init()
+        self.contextManager.delegate = self
         LeapSharedInformation.shared.setAPIKey(token)
         LeapSharedInformation.shared.setSessionId()
         fetchConfig()
@@ -43,12 +44,15 @@ class LeapInternal:NSObject {
 extension LeapInternal {
     
     private func fetchConfig() {
+        let payload = getPayload()
+        let payloadData:Data = {
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
+            return payloadData
+        }()
         let url = URL(string: configUrl)
         var req = URLRequest(url: url!)
         req.httpMethod = "PUT"
-        let dict:Dictionary<String,String> = [:]
-        let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
-        req.httpBody = jsonData
+        req.httpBody = payloadData
         getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse,
@@ -76,6 +80,44 @@ extension LeapInternal {
         ]
         getSavedHeaders().forEach { headers[$0.key] = $0.value }
         return headers
+    }
+    
+    private func getPayload() -> Dictionary<String,String> {
+        
+        let defaultStringProperties = LeapPropertiesHandler.shared.getDefaultStringProperties()
+        let defaultLongProperties = LeapPropertiesHandler.shared.getDefaultLongProperties()
+        let defaultIntProperties = LeapPropertiesHandler.shared.getDefaultIntProperties()
+        
+        let customLongProperties = LeapPropertiesHandler.shared.getCustomLongProperties()
+        let customStringProperties = LeapPropertiesHandler.shared.getCustomStringProperties()
+        let customIntProperties = LeapPropertiesHandler.shared.getCustomIntProperties()
+        
+        
+        var payload:Dictionary<String,String> = customStringProperties
+        defaultStringProperties.forEach { (key, value) in
+            payload[key] = value
+        }
+        
+        customIntProperties.forEach { (key,value) in
+            payload[key] = "\(value)"
+        }
+        
+        defaultIntProperties.forEach { (key, value) in
+            payload[key] = "\(value)"
+        }
+        
+        customLongProperties.forEach { (key,value) in
+            let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
+            payload[key] = "\(timeElapsed)"
+        }
+        
+        defaultLongProperties.forEach { (key, value) in
+            let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
+            payload[key] = "\(timeElapsed)"
+        }
+            
+        return payload
+        
     }
     
     private func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
@@ -120,5 +162,38 @@ extension LeapInternal {
             let configuration = LeapConfig(withDict: config)
             self.contextManager.initialize(withConfig: configuration)
         }
+    }
+}
+
+extension LeapInternal: LeapContextManagerDelegate {
+    
+    
+    func fetchUpdatedConfig(config:@escaping(_ :LeapConfig?)->Void) {
+        let payload = getPayload()
+        let payloadData:Data = {
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
+            return payloadData
+        }()
+        let url = URL(string: configUrl)
+        var req = URLRequest(url: url!)
+        req.httpMethod = "PUT"
+        req.httpBody = payloadData
+        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode != 304,
+                  let resultData = data,
+                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                let savedConfig = self.getSavedConfig()
+                DispatchQueue.main.async { config(LeapConfig(withDict: savedConfig)) }
+                return
+            }
+            self.saveHeaders(headers: httpResponse.allHeaderFields)
+            self.saveConfig(config: configDict)
+            DispatchQueue.main.async { config(LeapConfig(withDict: configDict)) }
+            
+        }
+        configTask.resume()
     }
 }

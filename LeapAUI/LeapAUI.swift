@@ -33,6 +33,42 @@ import LeapCoreSDK
         super.init()
     }
     
+    @discardableResult
+    @objc public func buildWith(apiKey: String) -> LeapAUI {
+        token = apiKey
+        guard !(token!.isEmpty) else { fatalError("Empty token. Token cannot be empty") }
+        LeapPreferences.shared.apiKey = apiKey
+        LeapPropertiesHandler.shared.start()
+        return self
+    }
+    
+    @discardableResult
+    @objc public func addProperty(_ key: String, stringValue: String) -> LeapAUI {
+        LeapPropertiesHandler.shared.saveCustomStringProperty(key, stringValue)
+        return self
+    }
+    
+    @discardableResult
+    @objc public func addProperty(_ key: String, intValue: Int) -> LeapAUI {
+        LeapPropertiesHandler.shared.saveCustomIntProperty(key, intValue)
+        return self
+    }
+    
+    @discardableResult
+    @objc public func addProperty(_ key: String, dateValue: Date) -> LeapAUI {
+        let dateSince1970 = Int64(dateValue.timeIntervalSince1970)
+        LeapPropertiesHandler.shared.saveCustomLongProperty(key, dateSince1970)
+        return self
+    }
+    
+    @objc public func start() {
+        auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
+    }
+    
+    @objc public func flush() {
+        auiManager.auiManagerCallBack?.flush()
+    }
+    
     @objc public func initialize(withToken apiKey:String) {
         token = apiKey
         LeapPreferences.shared.apiKey = token

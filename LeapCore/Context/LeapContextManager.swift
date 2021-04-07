@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+protocol LeapContextManagerDelegate:NSObjectProtocol {
+    func fetchUpdatedConfig(config:@escaping(_ :LeapConfig?)->Void)
+}
+
 /// LeapContextManager class acts as the central hub of the Core SDK once the config is downloaded. It invokes the LeapContextDetector class which helps in identifying the current flow, page and stage to be executed. LeapContextManager acts as the delegate to LeapContextDetector receiving information about flow, page and stage and passing it to LeapFlowManager & LeapStageManager.  LeapContextManager also acts as delegate to LeapStageManager, there by understanding if a new stage is identified or the same stage is identified and invoking the AUI SDK . LeapContextManger is also responsible for communicating with LeapAnalyticsManager
 class LeapContextManager:NSObject {
     
@@ -23,6 +27,7 @@ class LeapContextManager:NSObject {
     private var previewConfig: LeapConfig?
     private var previewSounds:Dictionary<String,Any>?
     private weak var auiHandler:LeapAUIHandler?
+    public weak var delegate:LeapContextManagerDelegate?
     private var taggedEvents:Dictionary<String,Any> = [:]
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {
@@ -472,7 +477,6 @@ extension LeapContextManager {
         event.projectId = projectParameter?.projectId
         event.projectName = projectParameter?.projectName
         event.eventName = EventName.actionTrackingEvent.rawValue
-        print(action)
         if let body = action?[constant_body] as? Dictionary<String, Any> {
             if let labelValue = body[constant_buttonLabel] as? String {
                 event.actionEventValue = labelValue
@@ -710,6 +714,50 @@ extension LeapContextManager:LeapAUICallback {
     func receiveAUIEvent(action: Dictionary<String, Any>) {
         analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
     }
+    
+    func flush() {
+        delegate?.fetchUpdatedConfig(config: { (config) in
+            guard let config = config, let state = self.contextDetector?.getState() else { return }
+            switch state {
+            case .Discovery:
+                guard let liveContext = self.getLiveContext() else {
+                    self.contextDetector?.stop()
+                    self.resetAllManagers()
+                    self.configuration = config
+                    self.contextDetector?.start()
+                    return
+                }
+                if let assist = liveContext as? LeapAssist, config.assists.contains(assist) {
+                    self.contextDetector?.stop()
+                    self.configuration = config
+                    self.contextDetector?.start()
+                } else if let discovery = liveContext as? LeapDiscovery, config.discoveries.contains(discovery) {
+                    self.contextDetector?.stop()
+                    self.configuration = config
+                    self.contextDetector?.start()
+                } else {
+                    self.auiHandler?.removeAllViews()
+                    self.contextDetector?.stop()
+                    self.resetAllManagers()
+                    self.configuration = config
+                    self.contextDetector?.start()
+                }
+            case .Stage:
+                guard let flow = self.flowManager?.getArrayOfFlows().last,
+                      config.flows.contains(flow) else {
+                    self.contextDetector?.stop()
+                    self.contextDetector?.switchState()
+                    self.resetAllManagers()
+                    self.configuration = config
+                    self.contextDetector?.start()
+                    return
+                }
+                self.contextDetector?.stop()
+                self.configuration = config
+                self.contextDetector?.start()
+            }
+        })
+    }
 }
 
 // MARK: - ADDITIONAL METHODS
@@ -784,6 +832,14 @@ extension LeapContextManager {
               let disId = state == .Discovery ? discoveryManager?.getCurrentDiscovery()?.id : flowManager?.getDiscoveryId() else { return nil }
         let currentDiscovery = self.currentConfiguration()?.discoveries.first{ $0.id == disId }
         return currentDiscovery
+    }
+    
+    func resetAllManagers() {
+        self.assistManager?.resetAssistManager()
+        self.discoveryManager?.resetDiscoveryManager()
+        self.flowManager?.resetFlowsArray()
+        self.pageManager?.resetPageManager()
+        self.stageManager?.resetStageManager()
     }
     
 }
