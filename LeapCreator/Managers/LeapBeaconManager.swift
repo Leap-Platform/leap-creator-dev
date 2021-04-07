@@ -7,10 +7,30 @@
 //
 
 import Foundation
+import UIKit
 
 class LeapBeaconManager {
     
-    let json = "{\"id\":\"\(LeapCreatorShared.shared.apiKey!)\",\"name\":\"iPhone\",\"type\":\"IOS\",\"appApiKey\":\"\(LeapCreatorShared.shared.apiKey!)\",\"model\" :\"iPhone11\",\"osVersion\" : \"10.3\",\"height\" : \"2280\",\"width\" : \"1080\",\"appVersionCode\" : \"90\",\"appVersionName\" : \"2.0.2\",\"authToolVersionCode\" :\"10\",\"authToolVersionName\" : \"4.0.1\",\"status\":\"AVAILABLE\"}"
+    let json:String = {
+        let info:Dictionary<String,String> = [
+            "id"                    : "\(LeapCreatorShared.shared.apiKey!)",
+            "name"                  : UIDevice.current.name,
+            "type"                  : "IOS",
+            "appApiKey"             : "\(LeapCreatorShared.shared.apiKey!)",
+            "model"                 : "\(UIDevice.current.model)",
+            "osVersion"             : UIDevice.current.systemVersion,
+            "height"                : "\(UIScreen.main.bounds.height)",
+            "width"                 : "\(UIScreen.main.bounds.width)",
+            "appVersionCode"        : Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String,
+            "appVesionName "        : Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
+            "status"                : "AVAILABLE",
+            "authToolsVersionName"  : Bundle(for: LeapBeaconManager.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
+            "authToolsVersionCode"  : Bundle(for: LeapBeaconManager.self).object(forInfoDictionaryKey: "CFBundleVersion") as! String,
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: info, options: .fragmentsAllowed),
+              let json = String(data: data, encoding: .utf8) else { return "{}" }
+        return json
+    }()
     
     var beaconListener: LeapBeaconListener
     var appId: String?
