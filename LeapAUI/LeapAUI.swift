@@ -66,7 +66,7 @@ import LeapCoreSDK
     }
     
     @objc public func flush() {
-        
+        auiManager.auiManagerCallBack?.flush()
     }
     
     @objc public func initialize(withToken apiKey:String) {

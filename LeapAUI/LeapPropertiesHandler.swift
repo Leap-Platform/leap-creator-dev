@@ -27,9 +27,9 @@ class LeapPropertiesHandler {
     let leapVersionKey = "leap_last_session_version"
     
     func start() {
-        print(prefs.value(forKey: leapSessionEndKey) as! Int64)
         let sessionStart = Int64(Date().timeIntervalSince1970)
         prefs.setValue(sessionStart, forKey: leapCurrentSessionKey)
+        prefs.synchronize()
         addObservers()
         setDefaultLongProperties()
         setDefaultIntProperties()

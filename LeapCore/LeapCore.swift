@@ -58,6 +58,8 @@ import UIKit
     func disableLeapSDK()
     func didLanguageChangeForAudio()
     
+    func flush()
+    
     /// receives only AUI info
     func receiveAUIEvent(action: Dictionary<String, Any>)
 }
