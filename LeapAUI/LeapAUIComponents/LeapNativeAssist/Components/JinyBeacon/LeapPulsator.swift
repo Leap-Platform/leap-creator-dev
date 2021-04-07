@@ -39,27 +39,26 @@ class LeapPulsator: CALayer {
     weak var inView: UIView?
     weak var pulsatorDelegate:LeapPulsatorDelegate?
 
+    var bgColor: UIColor = .red
     
-    let bgColor:UIColor
-    
-    init(with bgColor: UIColor) {
-        self.bgColor = bgColor
+    override init() {
         super.init()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override init(layer: Any) {
+        super.init(layer: layer)
     }
     
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func setPosition(_ position:String) {
         pos = LeapPulsePosition(rawValue: position) ?? .Center
     }
     
     func placeBeacon() {
-        let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
-        guard let keyWindow = kw else { fatalError() }
-        keyWindow.layer.addSublayer(self)
         let toViewFrameForKw = toView?.superview?.convert(toView!.frame, to: nil)
         guard let frame = toViewFrameForKw else { fatalError() }
         bounds = CGRect(x: 0, y: 0, width: minRadius*2, height: minRadius*2)
@@ -101,9 +100,6 @@ class LeapPulsator: CALayer {
     }
     
     func placeBeacon(rect:CGRect, inWebView:UIView) {
-        let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
-        guard let keyWindow = kw else { fatalError() }
-        keyWindow.layer.addSublayer(self)
         let frame = inWebView.convert(rect, to: nil)
         bounds = CGRect(x: 0, y: 0, width: minRadius*2, height: minRadius*2)
         backgroundColor = bgColor.cgColor
@@ -141,7 +137,6 @@ class LeapPulsator: CALayer {
         
         self.position = CGPoint(x: x, y: y)
         startAnimation()
-        
     }
     
     func startAnimation() {

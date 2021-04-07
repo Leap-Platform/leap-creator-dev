@@ -106,6 +106,7 @@ class LeapInstruction {
     
     var soundName:String?
     var assistInfo:LeapAssistInfo?
+    var id = String.generateUUIDString()
     
     init(withDict instructionDict:Dictionary<String,Any>) {
         soundName = instructionDict[constant_soundName] as? String

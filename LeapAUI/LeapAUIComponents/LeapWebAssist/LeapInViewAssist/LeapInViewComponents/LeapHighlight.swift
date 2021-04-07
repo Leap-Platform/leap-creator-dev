@@ -115,9 +115,7 @@ class LeapHighlight: LeapTipView {
        assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
          
        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
-                
-       toViewOriginalInteraction = self.toView?.isUserInteractionEnabled
-                
+                                
        maskLayer.bounds = self.webView.bounds
     
        cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
@@ -597,15 +595,6 @@ class LeapHighlight: LeapTipView {
         self.layer.mask = fillLayer
         
         self.layer.masksToBounds = true
-        
-        if (assistInfo?.highlightAnchor ?? false) && assistInfo?.highlightClickable ?? false {
-            
-            toView?.isUserInteractionEnabled = true
-        
-        } else {
-            
-            toView?.isUserInteractionEnabled = false
-        }
     }
     
     /// sets toolTip size based on the webview's callback.
@@ -682,8 +671,12 @@ class LeapHighlight: LeapTipView {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
+        if (assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false) && !tappedOnToView {
             performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_close: true]])
+        }
+        
+        if tappedOnToView && !(assistInfo?.highlightAnchor ?? false) {
+            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true]])
         }
     }
 }

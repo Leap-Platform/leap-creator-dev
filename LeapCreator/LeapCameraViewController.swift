@@ -219,7 +219,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         //Check if is leap QR
         guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,String>,
-              infoDict["owner"] == "leap" else {
+              infoDict["owner"] == "LEAP" else {
                 presentWarning("Invalid QR Code!")
                 return
               }

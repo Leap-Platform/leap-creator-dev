@@ -29,6 +29,8 @@ class LeapContextManager:NSObject {
     private weak var auiHandler:LeapAUIHandler?
     public weak var delegate:LeapContextManagerDelegate?
     private var taggedEvents:Dictionary<String,Any> = [:]
+    private var lastEventId: String?
+    private var lastEventLanguage: String?
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {
         auiHandler = uiHandler
@@ -102,9 +104,9 @@ class LeapContextManager:NSObject {
         contextDetector?.start()
     }
     
-    func getProjectParameter(withId id: Int) -> LeapProjectParameters? {
+    func getProjectParameter() -> LeapProjectParameters? {
         for params in self.currentConfiguration()?.projectParameters ?? [] {
-            if params.flowId == id {
+            if let id = configuration?.flows.first?.id, params.id == id {
                 return params
             }
         }
@@ -336,148 +338,104 @@ extension LeapContextManager:LeapStageManagerDelegate {
 // MARK: - CREATE AND SEND ANALYTICS EVENT
 extension LeapContextManager {
     
-    func sendTriggerEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.triggerEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
+    func sendStartScreenEvent(instructionId: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = getProjectParameter() else { return nil }
+        if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
+            return nil
+        }
+        let event = LeapAnalyticsEvent(withEvent: EventName.startScreenEvent, withParams: projectParameter)
+        lastEventId = instructionId
+        lastEventLanguage = event.language
+        print("start screen")
         return event
     }
     
     func sendOptInEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.optInEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.optInEvent, withParams: projectParameter)
+        print("Opt in")
         return event
     }
     
     func sendOptOutEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.optOutEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.optOutEvent, withParams: projectParameter)
+        print("Opt out")
+        return event
+    }
+        
+    func sendInstructionEvent(instructionId: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = getProjectParameter() else { return nil }
+        if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
+            return nil
+        }
+        let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
+        lastEventId = instructionId
+        lastEventLanguage = event.language
+        event.instructionName = stageManager?.getCurrentStage()?.name
+        event.pageName = pageManager?.getCurrentPage()?.name
+        print("element seen")
         return event
     }
     
-    func sendInstructionEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager, let sm = stageManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.instructionEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
-        event.instructionName = sm.getCurrentStage()?.name
-        return event
-    }
-    
-    func sendAssistInstructionEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.instructionEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
+    func sendAssistInstructionEvent(instructionId: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = getProjectParameter() else { return nil }
+        if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
+            return nil
+        }
+        let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
+        lastEventId = instructionId
+        lastEventLanguage = event.language
         event.instructionName = assistManager?.getCurrentAssist()?.name
+        print("assist element seen")
         return event
     }
     
     func sendFlowSuccessEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.flowSuccessEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.flowSuccessEvent, withParams: projectParameter)
+        print("flow success")
         return event
     }
     
     func sendFlowStopEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager, let pm = pageManager, let sm = stageManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.flowStopEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
-        event.instructionName = sm.getCurrentStage()?.name
-        event.pageName = pm.getCurrentPage()?.name
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.flowStopEvent, withParams: projectParameter)
+        event.instructionName = stageManager?.getCurrentStage()?.name
+        event.pageName = pageManager?.getCurrentPage()?.name
+        print("flow stop")
         return event
     }
     
     func sendFlowDisableEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.flowDisableEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.flowDisableEvent, withParams: projectParameter)
+        print("flow disable")
         return event
     }
     
-    func sendLanguageChangeEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.languageChangeEvent.rawValue
-        event.language = LeapPreferences.shared.currentLanguage
-        event.previousLanguage = LeapPreferences.shared.previousLanguage
+    func sendLanguageChangeEvent(from previousLanguage: String, to currentLanguage: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.languageChangeEvent, withParams: projectParameter)
+        event.language = currentLanguage
+        event.previousLanguage = previousLanguage
+        print("Language change")
         return event
     }
     
     func sendAUIActionTrackingEvent(action: Dictionary<String,Any>?) -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.actionTrackingEvent.rawValue
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.actionTrackingEvent, withParams: projectParameter)
+        print(action)
         if let body = action?[constant_body] as? Dictionary<String, Any> {
+            
+            if let id = body[constant_id] as? String {
+                
+                if lastEventId == id { return nil }
+                
+                lastEventId = id
+            }
+            
             if let labelValue = body[constant_buttonLabel] as? String {
                 event.actionEventValue = labelValue
             }
@@ -495,19 +453,15 @@ extension LeapContextManager {
                 event.actionEventValue = nil
             }
         }
+        print("AUI action tracking")
         return event
     }
     
     func sendLeapSDKDisableEvent() -> LeapAnalyticsEvent? {
-        guard let fm = flowManager else { return nil }
-        let flowsArray = fm.getArrayOfFlows()
-        guard flowsArray.count > 0 else { return nil }
-        let event = LeapAnalyticsEvent()
-        let projectParameter = getProjectParameter(withId: (flowsArray.first?.id)!)
-        event.deploymentId = projectParameter?.deploymentId
-        event.projectId = projectParameter?.projectId
-        event.projectName = projectParameter?.projectName
-        event.eventName = EventName.triggerEvent.rawValue
+        guard let projectParameter = getProjectParameter() else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.leapSdkDisableEvent, withParams: projectParameter)
+        event.language = nil
+        print("Leap SDK disable")
         return event
     }
 }
@@ -607,18 +561,24 @@ extension LeapContextManager:LeapAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            if let am = assistManager, let _ = am.getCurrentAssist() {
+            if let am = assistManager, let assist = am.getCurrentAssist() {
                 // assist Instriuction
-                analyticsManager?.saveEvent(event: sendAssistInstructionEvent())
+                guard let instruction = assist.instruction else { return }
+                analyticsManager?.saveEvent(event: sendAssistInstructionEvent(instructionId: instruction.id))
             }
-            else if let dm = discoveryManager, let _ = dm.getCurrentDiscovery() {
+            else if let dm = discoveryManager, let discovery = dm.getCurrentDiscovery() {
                 
-               // trigger event
-               analyticsManager?.saveEvent(event: sendTriggerEvent())
+               // start screen event
+                guard let instruction = discovery.instruction else { return }
+                analyticsManager?.saveEvent(event: sendStartScreenEvent(instructionId: instruction.id))
             }
         case .Stage:
              // stage instruction
-            analyticsManager?.saveEvent(event: sendInstructionEvent())
+            // TODO: triggered multiple times
+            // TODO: Instruction should be triggered once, check id (UUID) and if there is a change in language, can send event again.
+            // TODO: - above scenario for start screen and element seen
+            guard let sm = stageManager, let stage = sm.getCurrentStage(), let instruction = stage.instruction else { return }
+            analyticsManager?.saveEvent(event: sendInstructionEvent(instructionId: instruction.id))
             break
         }
     }
@@ -628,16 +588,20 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action: Dictionary<String,Any>?) {
-        // aui action tracking
-        if let action = action {
-            analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
-        }
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
             guard let liveContext = getLiveContext() else { return }
             if let _  = liveContext as? LeapAssist { assistManager?.assistDismissed(byUser: byUser, autoDismissed: autoDismissed) }
             else if let _ = liveContext as? LeapDiscovery { handleDiscoveryDismiss(byUser: byUser, action: action) }
+            
+            if let am = assistManager, let _ = am.getCurrentAssist() {
+                // aui action tracking
+                if let action = action {
+                    analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
+                }
+            }
+            
         case .Stage:
             guard let sm = stageManager, let stage = sm.getCurrentStage() else { return }
              // Flow success Event
@@ -655,6 +619,11 @@ extension LeapContextManager:LeapAUICallback {
                 contextDetector?.switchState()
             }
             sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
+            
+            // aui action tracking
+            if let action = action {
+                analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
+            }
         }
     }
     
@@ -705,9 +674,9 @@ extension LeapContextManager:LeapAUICallback {
         analyticsManager?.saveEvent(event: sendLeapSDKDisableEvent())
     }
     
-    func didLanguageChangeForAudio() {
-        if let previous = LeapPreferences.shared.previousLanguage, let current = LeapPreferences.shared.currentLanguage, previous != current {
-           analyticsManager?.saveEvent(event: sendLanguageChangeEvent())
+    func didLanguageChange(from previousLanguage: String, to currentLanguage: String) {
+        if previousLanguage != currentLanguage {
+            analyticsManager?.saveEvent(event: sendLanguageChangeEvent(from: previousLanguage, to: currentLanguage))
         }
     }
     

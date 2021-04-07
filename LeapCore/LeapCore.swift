@@ -56,7 +56,7 @@ import UIKit
 
     func disableAssistance()
     func disableLeapSDK()
-    func didLanguageChangeForAudio()
+    func didLanguageChange(from previousLanguage: String, to currentLanguage: String)
     
     func flush()
     

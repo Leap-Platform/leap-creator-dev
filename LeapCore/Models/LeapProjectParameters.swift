@@ -14,8 +14,9 @@ class LeapProjectParameters: NSObject, Codable {
     var deploymentId: String?
     var deploymentName: String?
     var projectName: String?
+    var deploymentVersion: String?
     var projectId: String?
-    var flowId: Int?
+    var id: Int?
     
     init(withDict paramDict: Dictionary<String, Any>) {
         
@@ -27,6 +28,9 @@ class LeapProjectParameters: NSObject, Codable {
         }
         if let deploymentName = paramDict["deploymentName"] as? String {
             self.deploymentName = deploymentName
+        }
+        if let deploymentVersion = paramDict["deploymentVersion"] as? String {
+            self.deploymentVersion = deploymentVersion
         }
         if let projectName = paramDict["projectName"] as? String {
             self.projectName = projectName

@@ -23,9 +23,6 @@ class LeapTipView: LeapInViewAssist {
     /// toolTipView which carries webView.
     var toolTipView = UIView(frame: .zero)
     
-    /// original isUserInteractionEnabled boolean value of the toView.
-    var toViewOriginalInteraction: Bool?
-    
     /// A view frame to highlight the source view to which tooltip is pointed to.
     var highlightType: LeapHighlightType = .rect
     
@@ -34,6 +31,8 @@ class LeapTipView: LeapInViewAssist {
     
     /// spacing of the highlight area after manipulation
     var manipulatedHighlightSpacing = 10.0
+    
+    var tappedOnToView = false
     
     /// method called to auto focus on the target view of the aui component.
     func setupAutoFocus() {
@@ -88,14 +87,12 @@ class LeapTipView: LeapInViewAssist {
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        if let userInteraction = toViewOriginalInteraction {
-            
-            toView?.isUserInteractionEnabled = userInteraction
-        }
         super.performExitAnimation(animation: animation, byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        
+        tappedOnToView = false
         
         let hitTestView = super.hitTest(point, with: event)
         
@@ -108,19 +105,23 @@ class LeapTipView: LeapInViewAssist {
         
         if frameForToView.contains(point) {
             
-            if !(assistInfo?.highlightAnchor ?? false) {
-                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true]])
-            }
+            tappedOnToView = true 
             
             if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
                                 
                 performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_anchor_click: true]])
                 
-                return hitTestView
+                self.removeFromSuperview()
+                                
+                return viewToCheck
+            
+            } else if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) {
+                                
+                return viewToCheck
             
             } else {
                 
-                return viewToCheck
+                return hitTestView
             }
                         
         } else {

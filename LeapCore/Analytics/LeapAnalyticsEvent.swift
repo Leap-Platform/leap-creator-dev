@@ -10,16 +10,16 @@ import Foundation
 import UIKit
 
 enum EventName: String {
-    case triggerEvent = "trigger_event"
-    case optInEvent = "opt_in_event"
-    case optOutEvent = "opt_out_event"
-    case instructionEvent = "instruction_event"
-    case flowSuccessEvent = "flow_success_event"
-    case flowStopEvent = "flow_stop_event"
-    case flowDisableEvent = "flow_disable_event"
-    case languageChangeEvent = "language_change_event"
-    case actionTrackingEvent = "action_tracking_event"
-    case leapSdkDisableEvent = "leap_sdk_disable_event"
+    case startScreenEvent = "flow_start"
+    case optInEvent = "flow_opt_in"
+    case optOutEvent = "flow_opt_out"
+    case instructionEvent = "element_seen"
+    case flowSuccessEvent = "flow_success"
+    case flowStopEvent = "flow_stop"
+    case flowDisableEvent = "flow_disable"
+    case languageChangeEvent = "flow_language_change"
+    case actionTrackingEvent = "element_action"
+    case leapSdkDisableEvent = "leap_sdk_disable"
 }
 
 class LeapAnalyticsEvent: Codable {
@@ -30,6 +30,7 @@ class LeapAnalyticsEvent: Codable {
     var projectId: String?
     var deploymentId: String?
     var deploymentName: String?
+    var deploymentVersion: String?
     var previousLanguage: String?
     var language: String?
     var timestamp: String?
@@ -39,10 +40,17 @@ class LeapAnalyticsEvent: Codable {
     var actionEventType: String?
     var actionEventValue: String?
     
-    init() {
+    init(withEvent eventName: EventName, withParams projectParams: LeapProjectParameters) {
         self.id = String.generateUUIDString()
         self.sessionId = LeapSharedInformation.shared.getSessionId()
         self.timestamp = LeapAnalyticsEvent.getTimeStamp()
+        self.deploymentId = projectParams.deploymentId
+        self.deploymentVersion = projectParams.deploymentVersion
+        self.projectId = projectParams.projectId
+        self.projectName = projectParams.projectName
+        self.deploymentName = projectParams.deploymentName
+        self.eventName = eventName.rawValue
+        self.language = LeapPreferences.shared.getUserLanguage()
     }
     
     private static func getTimeStamp() -> String {
