@@ -30,7 +30,7 @@ class LeapAUIManager: NSObject {
         #elseif STAGE
             return "https://odin-stage-gke.leap.is/odin/api/v1/sounds"
         #elseif PROD
-            return "https://odin-dev-gke.leap.is/odin/api/v1/sounds"
+            return "https://odin.leap.is/odin/api/v1/sounds"
         #else
             return "https://odin.leap.is/odin/api/v1/sounds"
         #endif
