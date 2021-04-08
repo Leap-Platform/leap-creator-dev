@@ -372,7 +372,7 @@ extension LeapContextManager {
         let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
         lastEventId = instructionId
         lastEventLanguage = event.language
-        event.instructionName = stageManager?.getCurrentStage()?.name
+        event.elementName = stageManager?.getCurrentStage()?.name
         event.pageName = pageManager?.getCurrentPage()?.name
         print("element seen")
         return event
@@ -386,7 +386,7 @@ extension LeapContextManager {
         let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
         lastEventId = instructionId
         lastEventLanguage = event.language
-        event.instructionName = assistManager?.getCurrentAssist()?.name
+        event.elementName = assistManager?.getCurrentAssist()?.name
         print("assist element seen")
         return event
     }
@@ -401,7 +401,7 @@ extension LeapContextManager {
     func sendFlowStopEvent() -> LeapAnalyticsEvent? {
         guard let projectParameter = getProjectParameter() else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowStopEvent, withParams: projectParameter)
-        event.instructionName = stageManager?.getCurrentStage()?.name
+        event.elementName = stageManager?.getCurrentStage()?.name
         event.pageName = pageManager?.getCurrentPage()?.name
         print("flow stop")
         return event

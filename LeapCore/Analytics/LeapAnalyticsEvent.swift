@@ -36,7 +36,7 @@ class LeapAnalyticsEvent: Codable {
     var timestamp: String?
     var eventName: String?
     var pageName: String?
-    var instructionName: String?
+    var elementName: String?
     var actionEventType: String?
     var actionEventValue: String?
     
