@@ -272,7 +272,7 @@ extension LeapAUIManager: LeapAUIHandler {
         else if let tooltip = currentAssist as? LeapToolTip { tooltip.updatePointer() }
         else if let highlight = currentAssist as? LeapHighlight { highlight.updateHighlight() }
         else if let spot = currentAssist as? LeapSpot { spot.updateSpot() }
-        else if let beacon = currentAssist as? LeapBeacon { beacon.setAlignment() }
+        else if let beacon = currentAssist as? LeapBeacon { beacon.show() }
         scrollArrowButton.checkForView()
     }
     
@@ -473,7 +473,7 @@ extension LeapAUIManager {
     
     func playAudio() {
         DispatchQueue.global().async {
-            guard let code = LeapPreferences.shared.currentLanguage,
+            guard let code = LeapPreferences.shared.getUserLanguage(),
                   let mediaName = self.currentInstruction?[constant_soundName]  as? String else {
                 self.startAutoDismissTimer()
                 return
@@ -506,7 +506,7 @@ extension LeapAUIManager {
                     guard let instruction = self?.currentInstruction,
                           let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
                           let currentMediaName = assistInfo[constant_soundName] as? String, currentAudio.filename == currentMediaName,
-                          let newCode = LeapPreferences.shared.currentLanguage, newCode == code, success else { return }
+                          let newCode = LeapPreferences.shared.getUserLanguage(), newCode == code, success else { return }
                     self?.playAudioFile(filePath: soundPath)
                 }
             case .downloaded:
@@ -566,8 +566,7 @@ extension LeapAUIManager {
                 DispatchQueue.main.async {
                     let languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
                         if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
-                        LeapPreferences.shared.currentLanguage = languageCode
-                        if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
+                        if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
                             webAssist.changeLanguage(locale: code)
                         }
                         self.startDiscoverySoundDownload()
@@ -580,7 +579,7 @@ extension LeapAUIManager {
         }
         
         if localeCodes.count == 1 {
-            LeapPreferences.shared.currentLanguage = localeCodes.first?[constant_localeId]
+            LeapPreferences.shared.setUserLanguage(localeCodes.first?[constant_localeId] ?? "ang")
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
             handler?(true)
@@ -595,7 +594,7 @@ extension LeapAUIManager {
             showLanguageOptions()
             return
         }
-        LeapPreferences.shared.currentLanguage = langCode
+        LeapPreferences.shared.setUserLanguage(langCode)
         self.startDiscoverySoundDownload()
         self.startStageSoundDownload()
         handler?(true)
@@ -607,7 +606,7 @@ extension LeapAUIManager {
     
     private func setupDefaultValues(instruction: Dictionary<String,Any>, langCode: String?, view: UIView?, rect: CGRect?, webview: UIView?) {
         if let code = langCode {
-            LeapPreferences.shared.currentLanguage = code
+            LeapPreferences.shared.setUserLanguage(code)
             self.startDiscoverySoundDownload()
             self.startStageSoundDownload()
         }
@@ -875,13 +874,10 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         autoDismissTimer = nil
         let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
             if success, let code = languageCode {
+                self.auiManagerCallBack?.didLanguageChange(from: LeapPreferences.shared.getUserLanguage()!, to: code)
                 LeapPreferences.shared.setUserLanguage(code)
-                LeapPreferences.shared.currentLanguage = languageCode
-                if let _ = self.currentInstruction?[constant_soundName] as? String {
-                   self.auiManagerCallBack?.didLanguageChangeForAudio()
-                }
             } else { self.startAutoDismissTimer() }
-            if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.currentLanguage {
+            if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
                 webAssist.changeLanguage(locale: code)
                 self.playAudio()
             }

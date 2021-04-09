@@ -40,6 +40,7 @@ class LeapAnalyticsManager {
     
     func saveEvent(event: LeapAnalyticsEvent?) {
         guard let event = event, let payload = generatePayload(event) else { return }
+        print("\(payload)")
         let prefs = UserDefaults.standard
         var savedEvents = prefs.object(forKey: "leap_saved_events") as? Array<Dictionary<String, String>> ?? []
         savedEvents.append(payload)

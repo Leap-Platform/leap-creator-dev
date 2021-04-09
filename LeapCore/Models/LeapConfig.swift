@@ -93,9 +93,16 @@ class LeapConfig {
             if let newSupportedAppLocale = configDict[constant_supportedAppLocales] as? Array<String> {
                 supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
             }
-            if let projectParams = configDict["projectParameters"] as? Dictionary<String, Any> {
+            if let projectParams = configDict[constant_projectParameters] as? Dictionary<String, Any>, let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>>, discoveryDictsArray.count > 0 {
                 let projectParameter = LeapProjectParameters(withDict: projectParams)
-                projectParameter.flowId = flows.first?.id
+                let discovery = LeapDiscovery(withDict: discoveryDictsArray.first!)
+                projectParameter.id = discovery.id
+                projectParameters.append(projectParameter)
+            }
+            if let projectParams = configDict[constant_projectParameters] as? Dictionary<String, Any>, let assistsDictsArray = configDict[constant_assists] as? Array<Dictionary<String,Any>>, assistsDictsArray.count > 0 {
+                let projectParameter = LeapProjectParameters(withDict: projectParams)
+                let assist = LeapAssist(withDict: assistsDictsArray.first!)
+                projectParameter.id = assist.id
                 projectParameters.append(projectParameter)
             }
         }

@@ -447,7 +447,7 @@ extension LeapWebAssist: WKNavigationDelegate {
         
         self.isHidden = false
         
-        if let language = LeapPreferences.shared.currentLanguage {
+        if let language = LeapPreferences.shared.getUserLanguage() {
             
            changeLanguage(locale: language)
         }

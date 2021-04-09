@@ -14,14 +14,11 @@ class LeapPreferences {
     static let shared = LeapPreferences()
     
     let prefs = UserDefaults.standard
-    var currentLanguage: String?
-    var previousLanguage: String?
     var apiKey: String?
     
-    let languageCode = "leap_audio_language_code"
+    let languageCode = "leap_language_code"
     
     func setUserLanguage(_ language: String) {
-        previousLanguage = getUserLanguage()
         prefs.setValue(language, forKey: languageCode)
         prefs.synchronize()
     }

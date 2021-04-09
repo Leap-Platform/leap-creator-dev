@@ -49,7 +49,7 @@ extension UIApplication {
 extension String {
     
     static func generateUUIDString() -> String {
-        return "\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))LEAP\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
+        return "\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
     }
     
     static func randomString(_ length: Int) -> String {

@@ -100,6 +100,8 @@ class LeapFingerPointer: LeapPointer {
     let pulse = CAAnimationGroup()
     let clickAnimation = CAAnimationGroup()
     
+    private var id = String.generateUUIDString()
+        
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
         
         fingerLayer = CALayer()
@@ -125,9 +127,9 @@ class LeapFingerPointer: LeapPointer {
     }
     
     override func presentPointer() {
-        inView?.layer.addSublayer(pointerLayer)
+        self.layer.addSublayer(pointerLayer)
         setPosition()
-        toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
+        inView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
         delegate?.didPresentAssist()
         startAnimation()
         addNotifiers()
@@ -135,11 +137,13 @@ class LeapFingerPointer: LeapPointer {
     
     override func presentPointer(toRect: CGRect, inView:UIView?) {
         self.inView = inView
-        let toViewFrame = toRect
-        let y = toViewFrame.midY - 15
-        let x = toViewFrame.midX - 21
+        webRect = toRect
+        let y = webRect!.midY - 15
+        let x = webRect!.midX - 21
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
-        inView?.layer.addSublayer(pointerLayer)
+        self.inView?.addSubview(self)
+        configureOverlayView()
+        self.layer.addSublayer(pointerLayer)
         pointerLayer.zPosition = 10
         delegate?.didPresentAssist()
         startAnimation()
@@ -147,16 +151,44 @@ class LeapFingerPointer: LeapPointer {
     
     override func updateRect(newRect: CGRect, inView: UIView?) {
         self.inView = inView
-        let toViewFrame = newRect
-        let y = toViewFrame.midY - 15
-        let x = toViewFrame.midX - 21
+        webRect = newRect
+        let y = webRect!.midY - 15
+        let x = webRect!.midX - 21
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
     }
     
     override func presentPointer(view: UIView) {
         toView = view
         inView = toView?.window
+        inView?.addSubview(self)
+        configureOverlayView()
         presentPointer()
+    }
+    
+    override func configureOverlayView() {
+        
+        guard let superView = self.superview else {
+            
+            return
+        }
+                        
+        // Setting Constraints to self
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+
+        superView.addConstraint(NSLayoutConstraint(item: self, attribute: .centerX, relatedBy: .equal, toItem: superView, attribute: .centerX, multiplier: 1, constant: 0))
+
+        superView.addConstraint(NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: superView, attribute: .centerY, multiplier: 1, constant: 0))
+
+        superView.addConstraint(NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: superView, attribute: .width, multiplier: 1, constant: 0))
+
+        superView.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: superView, attribute: .height, multiplier: 1, constant: 0))
+        
+        // Overlay View to be clear by default
+        
+        self.backgroundColor = .clear
+        
+        self.isUserInteractionEnabled = false
     }
     
     func setPosition() {
@@ -218,12 +250,31 @@ class LeapFingerPointer: LeapPointer {
     
     override func removePointer() {
         if let _ = toView?.layer.observationInfo { toView?.layer.removeObserver(pointerLayer, forKeyPath: "position") }
+        self.removeFromSuperview()
         super.removePointer()
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         removePointer()
         super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+                
+        let hitTestView = super.hitTest(point, with: event)
+        
+        let frameForToView = getGlobalToViewFrame()
+        
+        if frameForToView.contains(point) {
+    
+            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
+            
+            return hitTestView
+        
+        } else {
+            
+            return hitTestView
+        }
     }
 }
 
