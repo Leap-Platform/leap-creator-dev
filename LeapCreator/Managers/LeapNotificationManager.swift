@@ -104,7 +104,7 @@ class LeapNotificationManager:NSObject {
 }
 
 
-extension LeapPreviewManager: UNUserNotificationCenterDelegate {
+extension LeapNotificationManager: UNUserNotificationCenterDelegate {
     
     //for displaying notification when app is in foreground
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -151,7 +151,7 @@ extension LeapPreviewManager: UNUserNotificationCenterDelegate {
     }
 }
 
-extension LeapPreviewManager: LeapCameraViewControllerDelegate {
+extension LeapNotificationManager: LeapCameraViewControllerDelegate {
     
     func configFetched(type: NotificationType, config: Dictionary<String, Any>, projectName:String) {
         NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
