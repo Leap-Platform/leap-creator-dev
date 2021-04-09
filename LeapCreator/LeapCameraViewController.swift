@@ -248,7 +248,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
            let projectName = infoDict["projectName"] ?? ""
            fetchPreviewConfig(previewId: id, projectName:projectName)
         
-        } else if infoDict["platformType"] == "IOS", infoDict["type"] == "SAMPLEAPP" {
+        } else if infoDict["platformType"] == "IOS", infoDict["type"] == "SAMPLE_APP" {
             
             configureSampleApp(infoDict: infoDict)
             
