@@ -1,5 +1,5 @@
 //
-//  LeapPreviewManager.swift
+//  LeapNotificationManager.swift
 //  LeapCreatorSDK
 //
 //  Created by Aravind GS on 30/03/21.
@@ -10,22 +10,30 @@ import Foundation
 import UIKit
 import UserNotifications
 
+enum NotificationType: String {
+    case preview
+    case sampleApp
+}
 
-class LeapPreviewManager:NSObject {
+class LeapNotificationManager:NSObject {
     
-    static let shared = LeapPreviewManager()
+    static let shared = LeapNotificationManager()
     let notificationCenter = UNUserNotificationCenter.current()
     
-    func checkForAuthorisation() {
+    func checkForAuthorisation(type: NotificationType = .preview, infoDict: Dictionary<String, Any>? = nil) {
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate(notification:)), name: UIApplication.willTerminateNotification, object: nil)
         
         notificationCenter.delegate = self
         notificationCenter.getNotificationSettings { (settings) in
             switch settings.authorizationStatus {
             case .notDetermined:
-                self.askAuthorisation()
+                self.askAuthorisation(type: type, infoDict: infoDict)
             case .authorized:
-                self.triggerNotification()
+                if type == .preview {
+                   self.triggerNotification()
+                } else if type == .sampleApp {
+                   self.triggerSampleAppNotification(infoDict: infoDict!)
+                }
             case .denied:
                 break
             default:
@@ -38,10 +46,16 @@ class LeapPreviewManager:NSObject {
         notificationCenter.removeDeliveredNotifications(withIdentifiers: ["LeapScanNotification", "LeapEndPreviewNotification"])
     }
     
-    func askAuthorisation() {
+    func askAuthorisation(type: NotificationType, infoDict: Dictionary<String, Any>?) {
         notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (result, err) in
             if let error = err { print(error.localizedDescription) }
-            if result { self.triggerNotification() }
+            if result {
+                if type == .preview {
+                   self.triggerNotification()
+                } else if type == .sampleApp {
+                   self.triggerSampleAppNotification(infoDict: infoDict!)
+                }
+            }
         }
     }
     
@@ -60,9 +74,33 @@ class LeapPreviewManager:NSObject {
         let request = UNNotificationRequest(identifier: "LeapScanNotification", content: content, trigger: nil)
         
         self.notificationCenter.add(request, withCompletionHandler: nil)
-        
     }
     
+    func triggerSampleAppNotification(infoDict: Dictionary<String, Any>) {
+        
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+         
+        guard settings.authorizationStatus == .authorized else { return }
+            
+        let rescanAction = UNNotificationAction(identifier: "Rescan",
+                      title: "Rescan",
+                      options: UNNotificationActionOptions(rawValue: 0))
+                
+        let scanSuccessCategory = UNNotificationCategory(identifier: "scanSuccess", actions: [rescanAction], intentIdentifiers: [], options: [])
+                
+        UNUserNotificationCenter.current().setNotificationCategories([scanSuccessCategory])
+                    
+        let content = UNMutableNotificationContent()
+        content.categoryIdentifier = "scanSuccess"
+        if let appName = infoDict["appName"] as? String {
+           content.title = appName
+           content.subtitle = "connected"
+        }
+        let request = UNNotificationRequest(identifier: "LeapScanNotification", content: content, trigger: nil)
+            
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }
+    }
 }
 
 
@@ -88,6 +126,8 @@ extension LeapPreviewManager: UNUserNotificationCenterDelegate {
             viewc.present(camVC, animated: true)
         case "EndPreview":
             NotificationCenter.default.post(name: NSNotification.Name("leap_end_preview"), object:  nil)
+        case "Rescan":
+            NotificationCenter.default.post(name: NSNotification.Name("rescan"), object: nil)
         default:
             break
         }
@@ -113,13 +153,19 @@ extension LeapPreviewManager: UNUserNotificationCenterDelegate {
 
 extension LeapPreviewManager: LeapCameraViewControllerDelegate {
     
-    func configFetched(config: Dictionary<String, Any>, projectName:String) {
+    func configFetched(type: NotificationType, config: Dictionary<String, Any>, projectName:String) {
         NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
-        triggerEndPreviewNotification(projName: projectName)
+        if type == .preview {
+           triggerEndPreviewNotification(projName: projectName)
+        } else if type == .sampleApp {
+           triggerSampleAppNotification(infoDict: config)
+        }
     }
     
-    func closed() {
-        triggerNotification()
+    func closed(type: NotificationType) {
+        if type == .preview {
+           triggerNotification()
+        }
     }
     
 }
