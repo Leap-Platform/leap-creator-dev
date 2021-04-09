@@ -22,4 +22,10 @@ import UIKit
         LeapCreatorShared.shared.apiKey = token
         creatorInternal?.start()
     }
+    
+    public func openSampleApp(delegate: SampleAppDelegate) -> UIViewController {
+        let leapCameraViewController = LeapCameraViewController()
+        leapCameraViewController.sampleAppDelegate = delegate
+        return leapCameraViewController
+    }
 }

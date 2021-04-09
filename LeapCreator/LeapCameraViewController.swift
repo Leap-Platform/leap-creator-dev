@@ -9,14 +9,20 @@
 import UIKit
 import AVFoundation
 
-protocol LeapCameraViewControllerDelegate {
-    func configFetched(config:Dictionary<String,Any>, projectName:String)
-    func closed()
+protocol LeapCameraViewControllerDelegate: class {
+    func configFetched(type: NotificationType, config:Dictionary<String,Any>, projectName:String)
+    func closed(type: NotificationType)
+}
+
+public protocol SampleAppDelegate: class {
+    func sendInfo(infoDict: Dictionary<String,Any>)
 }
 
 class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
-    var delegate:LeapCameraViewControllerDelegate?
+    weak var delegate:LeapCameraViewControllerDelegate?
+    weak var sampleAppDelegate: SampleAppDelegate?
+    var notificationType: NotificationType = .preview
     let cameraImage = UIImageView()
     let openCamera = UIButton()
     let qrCodeImage = UIImageView()
@@ -46,6 +52,11 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
         setupView()
+        
+        if let infoDict = (UserDefaults.standard.object(forKey: "infoDict") as? Dictionary<String,Any>) {
+            
+            configureSampleApp(infoDict: infoDict)
+        }
     }
     
     func setupView() {
@@ -210,7 +221,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         captureSession = nil
     }
     
-    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         guard let metaDataObj = metadataObjects.first,
               let readableObj = metaDataObj as? AVMetadataMachineReadableCodeObject,
               let stringValue = readableObj.stringValue else { return }
@@ -231,13 +242,19 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         }
         
         // Check if is of type PREVIEW
-        guard let id = infoDict["id"], infoDict["type"] == "PREVIEW" else {
+        if let id = infoDict["id"], infoDict["type"] == "PREVIEW" {
+           presentLoader()
+           notificationType = .preview
+           let projectName = infoDict["projectName"] ?? ""
+           fetchPreviewConfig(previewId: id, projectName:projectName)
+        
+        } else if infoDict["platformType"] == "IOS", infoDict["type"] == "SAMPLEAPP" {
+            
+            configureSampleApp(infoDict: infoDict)
+            
+        } else {
             presentWarning("Invalid QR Code!")
-            return
         }
-        presentLoader()
-        let projectName = infoDict["projectName"] ?? ""
-        fetchPreviewConfig(previewId: id, projectName:projectName)
     }
     
     func presentLoader() {
@@ -285,12 +302,19 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 }
                 self.previewLayer.removeFromSuperlayer()
                 self.scannerView?.removeFromSuperview()
-                self.delegate?.configFetched(config: previewDict, projectName: projectName)
+                self.delegate?.configFetched(type: .preview, config: previewDict, projectName: projectName)
                 self.dismiss(animated: true, completion: nil)
                 
             }
         }
         task.resume()
+    }
+    
+    func configureSampleApp(infoDict: Dictionary<String, Any>) {
+        
+        notificationType = .sampleApp
+        self.delegate?.configFetched(type: .sampleApp, config: infoDict, projectName: "")
+        self.sampleAppDelegate?.sendInfo(infoDict: infoDict)
     }
     
     func presentWarning(_ title:String) {
@@ -328,15 +352,12 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraButton.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 20).isActive = true
         cameraButton.widthAnchor.constraint(equalTo: scannerView!.widthAnchor, multiplier: 0.33).isActive = true
         
-       
-        
         setupCloseButton(inView: warningView!)
-        
     }
     
     @objc func closeButtonClicked() {
         dismiss(animated: true, completion: nil )
-        delegate?.closed()
+        delegate?.closed(type: notificationType)
     }
     
     @objc func learnMoreClicked() {

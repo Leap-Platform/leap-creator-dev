@@ -197,7 +197,7 @@
 		D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702102591D13700F33729 /* jiny_default_icon.html */; };
 		D0B603F225DFB6BA0092F735 /* jiny_ping_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD7445D25BB108200D7609A /* jiny_ping_close.png */; };
 		D0B603F325DFB6BA0092F735 /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702112591D13700F33729 /* jiny_audio_anim.html */; };
-		D0C1345E2613210100D599B3 /* LeapPreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1345D2613210100D599B3 /* LeapPreviewManager.swift */; };
+		D0C1345E2613210100D599B3 /* LeapNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1345D2613210100D599B3 /* LeapNotificationManager.swift */; };
 		D0C1346826133CB100D599B3 /* LeapCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1346726133CB100D599B3 /* LeapCameraViewController.swift */; };
 		D0C1347426135CD200D599B3 /* leap_camera.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C1347226135CD200D599B3 /* leap_camera.png */; };
 		D0C1347526135CD200D599B3 /* leap_qrcode.png in Resources */ = {isa = PBXBuildFile; fileRef = D0C1347326135CD200D599B3 /* leap_qrcode.png */; };
@@ -406,7 +406,7 @@
 		D0BC371C249DCF24002648FF /* LeapViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapViewProps.swift; sourceTree = "<group>"; };
 		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
 		D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleWebViewsViewController.swift; sourceTree = "<group>"; };
-		D0C1345D2613210100D599B3 /* LeapPreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPreviewManager.swift; sourceTree = "<group>"; };
+		D0C1345D2613210100D599B3 /* LeapNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapNotificationManager.swift; sourceTree = "<group>"; };
 		D0C1346726133CB100D599B3 /* LeapCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCameraViewController.swift; sourceTree = "<group>"; };
 		D0C1347226135CD200D599B3 /* leap_camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leap_camera.png; sourceTree = "<group>"; };
 		D0C1347326135CD200D599B3 /* leap_qrcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leap_qrcode.png; sourceTree = "<group>"; };
@@ -510,7 +510,7 @@
 				B6153A32253E98DB008CA08F /* LeapBeaconManager.swift */,
 				B69D8E32258A6D00004D858D /* LeapDeviceManager.swift */,
 				2D08591725A31FE9002D7993 /* LeapCreatorManager.swift */,
-				D0C1345D2613210100D599B3 /* LeapPreviewManager.swift */,
+				D0C1345D2613210100D599B3 /* LeapNotificationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -1182,7 +1182,7 @@
 			files = (
 				D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */,
 				D02C12F825DFC6B000C80E28 /* LeapCreatorConfig.swift in Sources */,
-				D0C1345E2613210100D599B3 /* LeapPreviewManager.swift in Sources */,
+				D0C1345E2613210100D599B3 /* LeapNotificationManager.swift in Sources */,
 				D02C12F925DFC6B000C80E28 /* LeapConstants.swift in Sources */,
 				D02C12FA25DFC6B000C80E28 /* LeapProtocolManager.swift in Sources */,
 				D02C12FB25DFC6B000C80E28 /* LeapSocketMessageDelegate.swift in Sources */,

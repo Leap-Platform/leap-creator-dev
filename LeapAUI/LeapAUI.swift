@@ -79,6 +79,7 @@ import LeapCoreSDK
     @objc public func disable() {
         // Send Leap SDK Disable Event
         auiManager.auiManagerCallBack?.disableLeapSDK()
+        LeapPreferences.shared.apiKey = nil
         auiManager.removeAllViews()
     }
     
