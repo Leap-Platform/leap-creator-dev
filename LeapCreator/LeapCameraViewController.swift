@@ -51,11 +51,14 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
 
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
-        setupView()
         
         if let infoDict = (UserDefaults.standard.object(forKey: "infoDict") as? Dictionary<String,Any>) {
             
-            configureSampleApp(infoDict: infoDict)
+           configureSampleApp(infoDict: infoDict)
+
+        } else {
+        
+           setupView()
         }
     }
     
