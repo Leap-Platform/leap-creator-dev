@@ -154,11 +154,13 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
 extension LeapNotificationManager: LeapCameraViewControllerDelegate {
     
     func configFetched(type: NotificationType, config: Dictionary<String, Any>, projectName:String) {
-        NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
+        
         if type == .preview {
+            NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
            triggerEndPreviewNotification(projName: projectName)
         } else if type == .sampleApp {
-           triggerSampleAppNotification(infoDict: config)
+            
+            checkForAuthorisation(type: .sampleApp, infoDict: config)
         }
     }
     

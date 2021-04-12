@@ -45,8 +45,10 @@ class LeapCreatorInternal : NSObject{
 
 extension LeapCreatorInternal: LeapCreatorManagerDelegate {
     func fetchConfigSuccess() {
-        DispatchQueue.main.async {
-            LeapNotificationManager.shared.checkForAuthorisation()
+        if  let name = Bundle.main.bundleIdentifier , name != "com.leap.LeapSampleApp" {
+            DispatchQueue.main.async {
+                LeapNotificationManager.shared.checkForAuthorisation()
+            }
         }
         
         startSendingBeacons()

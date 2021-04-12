@@ -23,9 +23,12 @@ import UIKit
         creatorInternal?.start()
     }
     
-    public func openSampleApp(delegate: SampleAppDelegate) -> UIViewController {
+    public func openSampleApp(delegate: SampleAppDelegate) -> UIViewController? {
+        let name = Bundle.main.bundleIdentifier
+        if name != "com.leap.LeapSampleApp"  { return nil }
         let leapCameraViewController = LeapCameraViewController()
         leapCameraViewController.sampleAppDelegate = delegate
+        leapCameraViewController.delegate = LeapNotificationManager.shared
         return leapCameraViewController
     }
 }
