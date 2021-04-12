@@ -103,7 +103,6 @@ class LeapNotificationManager:NSObject {
     }
 }
 
-
 extension LeapNotificationManager: UNUserNotificationCenterDelegate {
     
     //for displaying notification when app is in foreground
@@ -157,16 +156,17 @@ extension LeapNotificationManager: LeapCameraViewControllerDelegate {
         
         if type == .preview {
             NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
-           triggerEndPreviewNotification(projName: projectName)
+            triggerEndPreviewNotification(projName: projectName)
         } else if type == .sampleApp {
-            
             checkForAuthorisation(type: .sampleApp, infoDict: config)
         }
     }
     
     func closed(type: NotificationType) {
         if type == .preview {
-           triggerNotification()
+            triggerNotification()
+        } else if type == .sampleApp {
+            checkForAuthorisation(type: type, infoDict: UserDefaults.standard.object(forKey: "sampleAppInfoDict") as? Dictionary<String, Any>)
         }
     }
     
