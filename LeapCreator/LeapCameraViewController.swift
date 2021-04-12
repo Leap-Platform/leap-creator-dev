@@ -25,6 +25,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     var notificationType: NotificationType = .preview
     let cameraImage = UIImageView()
     let openCamera = UIButton()
+    let closeButton = UIButton()
     let qrCodeImage = UIImageView()
     let headingLabel = UILabel()
     var warningView:UIView?
@@ -52,13 +53,31 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
         
-        if let infoDict = (UserDefaults.standard.object(forKey: "infoDict") as? Dictionary<String,Any>) {
+        if let infoDict = (UserDefaults.standard.object(forKey: "sampleAppInfoDict") as? Dictionary<String,Any>), let rescan = (UserDefaults.standard.object(forKey: "sampleAppRescan") as? Bool) {
             
-           configureSampleApp(infoDict: infoDict)
+            if rescan {
+                
+               notificationType = .sampleApp
+                
+               setupView()
+            
+            } else {
+            
+               configureSampleApp(infoDict: infoDict)
+            }
 
         } else {
         
            setupView()
+            
+            if Bundle.main.bundleIdentifier == "com.leap.LeapSampleApp" {
+                
+                closeButton.isHidden = true
+            
+            } else {
+                
+                closeButton.isHidden = false
+            }
         }
     }
     
@@ -149,20 +168,19 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         
     }
     private func setupCloseButton(inView:UIView) {
-        let close = UIButton(frame: .zero)
-        close.backgroundColor = UIColor(white: 0, alpha: 0.8)
-        close.layer.cornerRadius = 16
-        close.layer.masksToBounds = true
-        close.addTarget(self, action: #selector(closeButtonClicked), for: .touchUpInside)
+        closeButton.backgroundColor = UIColor(white: 0, alpha: 0.8)
+        closeButton.layer.cornerRadius = 16
+        closeButton.layer.masksToBounds = true
+        closeButton.addTarget(self, action: #selector(closeButtonClicked), for: .touchUpInside)
         let image = UIImage(named: "leap_option_cross.png", in: Bundle(for: LeapCreator.self), compatibleWith: nil)
-        close.setImage(image!, for: .normal)
-        close.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        inView.addSubview(close)
-        close.translatesAutoresizingMaskIntoConstraints = false
-        close.topAnchor.constraint(equalTo: inView.topAnchor, constant:30).isActive = true
-        close.trailingAnchor.constraint(equalTo: inView.trailingAnchor, constant: -16).isActive = true
-        close.widthAnchor.constraint(equalToConstant: 32).isActive = true
-        close.heightAnchor.constraint(equalTo: close.widthAnchor).isActive = true
+        closeButton.setImage(image!, for: .normal)
+        closeButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        inView.addSubview(closeButton)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant:30).isActive = true
+        closeButton.trailingAnchor.constraint(equalTo: inView.trailingAnchor, constant: -16).isActive = true
+        closeButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
     }
     
     @objc func cameraButtonClicked() {
@@ -232,26 +250,26 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         captureSession.stopRunning()
         
         //Check if is leap QR
-        guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,String>,
-              infoDict["owner"] == "LEAP" else {
+        guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any>,
+              infoDict["owner"] as? String == "LEAP"  else {
                 presentWarning("Invalid QR Code!")
                 return
               }
         
         // Check if is iOS Platform
-        guard infoDict["platformType"] == "IOS" else {
+        guard infoDict["platformType"] as? String == "IOS" else {
             presentWarning("Invalid QR Code!")
             return
         }
         
         // Check if is of type PREVIEW
-        if let id = infoDict["id"], infoDict["type"] == "PREVIEW" {
+        if let id = infoDict["id"] as? String, infoDict["type"] as? String == "PREVIEW" {
            presentLoader()
            notificationType = .preview
-           let projectName = infoDict["projectName"] ?? ""
+           let projectName = infoDict["projectName"] as? String ?? ""
            fetchPreviewConfig(previewId: id, projectName:projectName)
         
-        } else if infoDict["platformType"] == "IOS", infoDict["type"] == "SAMPLE_APP" {
+        } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP" {
             
             configureSampleApp(infoDict: infoDict)
             
