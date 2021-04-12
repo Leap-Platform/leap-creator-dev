@@ -150,6 +150,8 @@ class LeapDisableAssistanceDialog: UIView {
         dialogLabel.numberOfLines = 2
         
         dialogLabel.textAlignment = .center
+        
+        dialogLabel.textColor = .black
     }
     
     func configureDialogButton1() {
