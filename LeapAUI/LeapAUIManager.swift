@@ -319,9 +319,9 @@ extension LeapAUIManager: LeapAUIHandler {
         leapButton = LeapMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#00000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(leapButton!)
-        leapButton!.tapGestureRecognizer.addTarget(self, action: #selector(leapButtonTap))
-        leapButton!.tapGestureRecognizer.delegate = self
-        leapButton!.stateDelegate = self
+        leapButton?.tapGestureRecognizer.addTarget(self, action: #selector(leapButtonTap))
+        leapButton?.tapGestureRecognizer.delegate = self
+        leapButton?.stateDelegate = self
         leapButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
         leapButton?.bottomConstraint = leapButtonBottomConstraint!
         leapButton?.disableDialog.delegate = self
@@ -333,8 +333,8 @@ extension LeapAUIManager: LeapAUIHandler {
         }
         let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: leapButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
         NSLayoutConstraint.activate([leapButtonBottomConstraint!, cornerConstraint])
-        leapButton!.htmlUrl = iconSetting.htmlUrl
-        leapButton!.iconSize = mainIconSize
+        leapButton?.htmlUrl = iconSetting.htmlUrl
+        leapButton?.iconSize = mainIconSize
         leapButton?.configureIconButton()
     }
 }
@@ -441,18 +441,21 @@ extension LeapAUIManager {
     }
     
     func startDiscoverySoundDownload() {
+        guard auiManagerCallBack != nil else { return }
         let code = auiManagerCallBack!.getLanguageCode()
         let discoverySoundsForCode = discoverySoundsJson[code] ?? []
         for sound in discoverySoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .normal) } }
     }
     
     func fetchSoundConfig() {
-        let url = URL(string: soundUrl)
-        var req = URLRequest(url: url!)
+        guard let url = URL(string: soundUrl) else { return }
+        var req = URLRequest(url: url)
         guard let token = LeapPreferences.shared.apiKey else { fatalError("No API Key") }
         req.addValue(token, forHTTPHeaderField: "x-jiny-client-id")
-        req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, forHTTPHeaderField: "x-app-version-name")
-        req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String, forHTTPHeaderField: "x-app-version-code")
+        let bundleShortVersionString = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Empty"
+        req.addValue(bundleShortVersionString, forHTTPHeaderField: "x-app-version-name")
+        let bundleVersion = (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Empty"
+        req.addValue(bundleVersion, forHTTPHeaderField: "x-app-version-code")
         let session = URLSession.shared
         let configTask = session.dataTask(with: req) {[weak self] (data, response, error) in
             guard let resultData = data else { return }
@@ -466,6 +469,7 @@ extension LeapAUIManager {
     }
     
     func startStageSoundDownload() {
+        guard auiManagerCallBack != nil else { return }
         let code = auiManagerCallBack!.getLanguageCode()
         let stageSoundsForCode = stageSoundsJson[code] ?? []
         for sound in stageSoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .low) } }
@@ -545,7 +549,7 @@ extension LeapAUIManager {
         
         self.audioPlayer?.stop()
         
-        if self.audioPlayer != nil && !(self.audioPlayer?.isPlaying)! {
+        if self.audioPlayer != nil && !(self.audioPlayer?.isPlaying ?? false) {
             self.audioPlayer = nil
             leapButton?.iconState = .rest
             startAutoDismissTimer()
@@ -656,7 +660,8 @@ extension LeapAUIManager {
             
         case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
             let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: nil)
-            swipePointer.type = LeapSwipePointerType(rawValue: type)!
+            guard let swipePointerType = LeapSwipePointerType(rawValue: type) else { return }
+            swipePointer.type = swipePointerType
             currentAssist = swipePointer
             swipePointer.presentPointer(view: inView)
         default:
@@ -682,7 +687,8 @@ extension LeapAUIManager {
             
         case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
             let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: nil)
-            swipePointer.type = LeapSwipePointerType(rawValue: type)!
+            guard let swipePointerType = LeapSwipePointerType(rawValue: type) else { return }
+            swipePointer.type = swipePointerType
             currentAssist = swipePointer
             swipePointer.presentPointer(toRect: rect, inView: inWebview)
             
@@ -808,7 +814,7 @@ extension LeapAUIManager {
     func startAutoDismissTimer() {
         guard let instruction = currentInstruction else { return }
         let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>
-        let timer:Double? = (assistInfo == nil) ? 2.0 : assistInfo![constant_autoDismissDelay] as? Double
+        let timer: Double? = (assistInfo == nil) ? 2.0 : assistInfo![constant_autoDismissDelay] as? Double
         guard let dismissTimer = timer else { return }
         if autoDismissTimer != nil {
             autoDismissTimer?.invalidate()
@@ -822,7 +828,8 @@ extension LeapAUIManager {
             self.autoDismissTimer?.invalidate()
             self.autoDismissTimer = nil
         })
-        RunLoop.main.add(autoDismissTimer!, forMode: .default)
+        guard let autoDismissTimer = autoDismissTimer else { return }
+        RunLoop.main.add(autoDismissTimer, forMode: .default)
     }
 }
 
@@ -874,7 +881,9 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         autoDismissTimer = nil
         let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
             if success, let code = languageCode {
-                self.auiManagerCallBack?.didLanguageChange(from: LeapPreferences.shared.getUserLanguage()!, to: code)
+                if let userLanguage = LeapPreferences.shared.getUserLanguage() {
+                   self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
+                }
                 LeapPreferences.shared.setUserLanguage(code)
             } else { self.startAutoDismissTimer() }
             if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {

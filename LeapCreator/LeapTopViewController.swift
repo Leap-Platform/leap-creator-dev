@@ -12,12 +12,12 @@ import UIKit
 
 
 extension UIViewController {
-    func topMostViewController() -> UIViewController {
+    func topMostViewController() -> UIViewController? {
         if self.presentedViewController == nil {
             return self
         }
         if let navigation = self.presentedViewController as? UINavigationController {
-            return (navigation.visibleViewController?.topMostViewController())!
+            return navigation.visibleViewController?.topMostViewController()
         }
         if let tab = self.presentedViewController as? UITabBarController {
             if let selectedTab = tab.selectedViewController {
@@ -25,7 +25,7 @@ extension UIViewController {
             }
             return tab.topMostViewController()
         }
-        return self.presentedViewController!.topMostViewController()
+        return self.presentedViewController?.topMostViewController()
     }
     
     func showToast(message : String, font: UIFont = UIFont.boldSystemFont(ofSize: 17), color: UIColor) {

@@ -59,6 +59,7 @@ class LeapPulsator: CALayer {
     }
     
     func placeBeacon() {
+        guard toView != nil else { return }
         let toViewFrameForKw = toView?.superview?.convert(toView!.frame, to: nil)
         guard let frame = toViewFrameForKw else { fatalError() }
         bounds = CGRect(x: 0, y: 0, width: minRadius*2, height: minRadius*2)

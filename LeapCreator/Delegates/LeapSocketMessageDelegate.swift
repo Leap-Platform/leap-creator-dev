@@ -31,13 +31,12 @@ class LeapSocketMessageDelegate: WebSocketDelegate{
            case .text(let text):
              print("received text: \(text)")
             
-            let data = text.data(using: .utf8)
-            let jsonData = try? JSONSerialization.jsonObject(with: (data)!,  options: []) as? [String: Any]
+            guard let data = text.data(using: .utf8) else { return }
+            guard let jsonData = try? JSONSerialization.jsonObject(with: data,  options: []) as? [String: Any] else { return }
             //fetch the status and room info from the json
-            if jsonData![constant_id] == nil { return }
-            let id = (jsonData?[constant_id]) as! String
-            let typeOfPacket = (jsonData?[constant_type]) as! String
-            
+            if jsonData[constant_id] == nil { return }
+            guard let typeOfPacket = (jsonData[constant_type]) as? String else { return }
+            guard let id = (jsonData[constant_id]) as? String else { return }
             self.leapSocketListener.onReceivePacket(id: id, type: typeOfPacket)
             
            case .binary(let data):

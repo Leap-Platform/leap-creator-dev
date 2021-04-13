@@ -84,7 +84,8 @@ class LeapDiscoveryManager {
                 self.discoveryTimer = nil
                 self.delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
             })
-            RunLoop.main.add(discoveryTimer!, forMode: .default)
+            guard let discoveryTimer = self.discoveryTimer else { return }
+            RunLoop.main.add(discoveryTimer, forMode: .default)
         } else  {
             delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
         }

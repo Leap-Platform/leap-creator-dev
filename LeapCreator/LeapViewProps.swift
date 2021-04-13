@@ -216,7 +216,7 @@ extension String {
 extension UIColor {
     
     func getComponentDict() ->Dictionary<String,Int> {
-        guard cgColor.components?.count ?? 0 > 2  else { return [:] }
+        guard cgColor.components != nil, cgColor.components?.count ?? 0 > 2  else { return [:] }
         let rComponent = cgColor.components![0]
         let gComponent = cgColor.components![1]
         let bComponent = cgColor.components![2]

@@ -69,7 +69,8 @@ class LeapStageManager {
                 self.stageTimer = nil
                 self.delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
             })
-            RunLoop.main.add(stageTimer!, forMode: .default)
+            guard let stageTimer = self.stageTimer else { return }
+            RunLoop.main.add(stageTimer, forMode: .default)
         } else  {
             delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
         }
@@ -113,9 +114,10 @@ class LeapStageManager {
     func stagePerformed() {
         guard let stage = currentStage else { return }
         if stageTracker[stage.name] == nil { stageTracker[stage.name] = 0 }
+        guard stageTracker[stage.name] != nil else { return }
         stageTracker[stage.name]!  += 1
         if let terminationFrequency = stage.terminationFrequency, let perFlow = terminationFrequency.perFlow, perFlow != -1 {
-            if stageTracker[stage.name]! >= perFlow { delegate?.removeStage(stage) }
+            if stageTracker[stage.name] != nil, stageTracker[stage.name]! >= perFlow { delegate?.removeStage(stage) }
         }
         if stage.isSuccess {
             delegate?.isSuccessStagePerformed()

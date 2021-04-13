@@ -49,8 +49,8 @@ extension LeapInternal {
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
             return payloadData
         }()
-        let url = URL(string: configUrl)
-        var req = URLRequest(url: url!)
+        guard let url = URL(string: configUrl) else { return }
+        var req = URLRequest(url: url)
         req.httpMethod = "PUT"
         req.httpBody = payloadData
         getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
@@ -72,10 +72,11 @@ extension LeapInternal {
     }
     
     private func getHeaders() -> Dictionary<String,String> {
+        guard let apiKey = LeapSharedInformation.shared.getAPIKey(), let versionCode = LeapSharedInformation.shared.getVersionCode(), let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
         var headers = [
-            "x-jiny-client-id"      : LeapSharedInformation.shared.getAPIKey(),
-            "x-app-version-code"    : LeapSharedInformation.shared.getVersionCode(),
-            "x-app-version-name"    : LeapSharedInformation.shared.getVersionName(),
+            "x-jiny-client-id"      : apiKey,
+            "x-app-version-code"    : versionCode,
+            "x-app-version-name"    : versionName,
             "Content-Type"          : "application/json"
         ]
         getSavedHeaders().forEach { headers[$0.key] = $0.value }
@@ -174,8 +175,8 @@ extension LeapInternal: LeapContextManagerDelegate {
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
             return payloadData
         }()
-        let url = URL(string: configUrl)
-        var req = URLRequest(url: url!)
+        guard let url = URL(string: configUrl) else { return }
+        var req = URLRequest(url: url)
         req.httpMethod = "PUT"
         req.httpBody = payloadData
         getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }

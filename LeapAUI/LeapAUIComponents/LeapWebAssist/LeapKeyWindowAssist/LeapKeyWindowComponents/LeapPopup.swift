@@ -59,7 +59,7 @@ class LeapPopup: LeapKeyWindowAssist {
         heightConstraint?.constant = height
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
         self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .bottom)
     }

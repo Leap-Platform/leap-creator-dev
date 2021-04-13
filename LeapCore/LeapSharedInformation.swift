@@ -47,16 +47,16 @@ extension LeapSharedInformation {
         apiKey = token
     }
     
-    func getAPIKey() -> String { return apiKey! }
+    func getAPIKey() -> String? { return apiKey }
     
 }
 
 // MARK: - SESSION ID GENERATOR, GETTER AND SETTER
 extension LeapSharedInformation {
     
-    func getSessionId() -> String {
+    func getSessionId() -> String? {
            if sessionId == nil { setSessionId() }
-           return sessionId!
+           return sessionId
        }
        
        func setSessionId() {
@@ -74,12 +74,12 @@ extension LeapSharedInformation {
 
 // MARK: - APP INFO
 extension LeapSharedInformation {
-    func getVersionCode() -> String {
-        return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+    func getVersionCode() -> String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
     }
     
-    func getVersionName() -> String {
-        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+    func getVersionName() -> String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
     }
     
 }

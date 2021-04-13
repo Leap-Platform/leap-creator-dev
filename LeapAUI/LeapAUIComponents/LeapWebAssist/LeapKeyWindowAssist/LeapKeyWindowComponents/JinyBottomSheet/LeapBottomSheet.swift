@@ -94,7 +94,7 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         heightConstraint?.constant = sizeHeight
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
         self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .top)
     }

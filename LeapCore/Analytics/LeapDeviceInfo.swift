@@ -32,7 +32,7 @@ class LeapDeviceInfo:Codable {
         screen_height = "\(UIScreen.main.bounds.height)"
         first_installed = ""
         last_updated = ""
-        version_code = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? ""
-        version_string = (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? ""
+        version_code = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Empty"
+        version_string = (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Empty"
     }
 }

@@ -54,7 +54,7 @@ class LeapFlowManager {
     func popLastFlow() {
         guard flowsArray.count > 0 else { return }
         let _ = flowsArray.popLast()
-        if flowsArray.count == 0 { delegate!.noActiveFlows() }
+        if flowsArray.count == 0, let delegate = self.delegate { delegate.noActiveFlows() }
     }
     
     func getDiscoveryId() -> Int? { return startedFromDiscovery }

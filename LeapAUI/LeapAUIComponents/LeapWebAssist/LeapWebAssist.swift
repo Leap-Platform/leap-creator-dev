@@ -428,7 +428,7 @@ class LeapWebAssist: UIView, LeapAssist {
     /// - Parameters:
     ///   - webView: WebView object on which the method is called.
     ///   - navigation: to uniquely identify a webpage load from start to finish.
-    func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
     }
     
@@ -443,7 +443,7 @@ class LeapWebAssist: UIView, LeapAssist {
 
 extension LeapWebAssist: WKNavigationDelegate {
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
         self.isHidden = false
         
@@ -457,7 +457,7 @@ extension LeapWebAssist: WKNavigationDelegate {
         performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
     }
     
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation?, withError error: Error) {
         
         delegate?.failedToPresentAssist()
     }
@@ -502,7 +502,7 @@ extension LeapWebAssist:WKURLSchemeHandler {
             urlSchemeTask.didReceive(fileData)
             urlSchemeTask.didFinish()
         } else {
-            guard let newUrl = URL(string: baseUrl!+fileName) else { return }
+            guard let baseUrl = baseUrl, let newUrl = URL(string: baseUrl+fileName) else { return }
             let dlTask = URLSession.shared.downloadTask(with: newUrl) { (loc, res, err) in
                 guard let location = loc else { return }
                 DispatchQueue.main.async {

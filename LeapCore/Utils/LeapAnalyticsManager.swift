@@ -53,8 +53,8 @@ class LeapAnalyticsManager {
         clientCallbackEvent.projectId = nil
         clientCallbackEvent.deploymentId = nil
         
-        let clientPayload = generatePayload(clientCallbackEvent)
-        delegate.sendPayload(clientPayload!)
+        guard let clientPayload = generatePayload(clientCallbackEvent) else { return }
+        delegate.sendPayload(clientPayload)
         
         if savedEvents.count >= MAX_COUNT {
             var eventsToFlush = prefs.object(forKey: "leap_flush_events") as? Array<Dictionary<String, String>> ?? []

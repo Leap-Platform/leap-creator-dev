@@ -139,7 +139,7 @@ class LeapLabel: LeapInViewAssist {
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
         configureLabel()
     }

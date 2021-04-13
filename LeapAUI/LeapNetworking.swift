@@ -107,7 +107,8 @@ class LeapDownloadOperation: LeapOperation {
             self.statusUpdate(false,true,true,filePath)
             return
         }
-        let request = URLRequest(url: media.url!)
+        guard let url = media.url else { return }
+        let request = URLRequest(url: url)
         let dlTask = session.downloadTask(with: request) { (fileUrl, urlResponse, error) in
             self.executing(false)
             self.finished(true)
@@ -122,7 +123,7 @@ class LeapDownloadOperation: LeapOperation {
     }
     
     func copyFileToLeapFolder(_ inputLocation: URL) {
-        let folderPath = LeapSharedAUI.shared.getFolderPath(media: media)
+        guard let folderPath = LeapSharedAUI.shared.getFolderPath(media: media) else { return }
         if !LeapSharedAUI.shared.checkIfFolderExists(folder: folderPath) {
             do { try fm.createDirectory(at: folderPath, withIntermediateDirectories: true, attributes: [:]) }
             catch let folderCreationError { fatalError("Failed to create Leap folder becaues \(folderCreationError.localizedDescription)") }

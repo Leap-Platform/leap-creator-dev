@@ -65,6 +65,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
 
             
            // UIApplication.shared.keyWindow!.rootViewController?.present(alert, animated: true)
+            guard self.permissionAlert != nil else { return }
             UIApplication.getCurrentVC()?.present(self.permissionAlert!, animated: true)
         }
         
@@ -79,12 +80,11 @@ class LeapPermissionManager: LeapAppStateProtocol{
     }
     
     //Update the permission action to Alfred Server by POST
-    func updatePermissionToServer(permission: String, status:Bool, appId: String){
-        
-        let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/apps/\(LeapCreatorShared.shared.apiKey!)/device/\(appId)")!
-
+    func updatePermissionToServer(permission: String, status:Bool, appId: String) {
+        guard let apiKey = LeapCreatorShared.shared.apiKey else { return }
+        guard let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/apps/\(apiKey)/device/\(appId)") else { return }
         var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        urlRequest.addValue(LeapCreatorShared.shared.apiKey! , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(apiKey , forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "PUT"
   
@@ -204,8 +204,8 @@ class LeapPermissionManager: LeapAppStateProtocol{
 }
 
 protocol LeapPermissionListener{
-    func onPermissionGranted(permission: String, status: Bool)->Void
-    func onPermissionRejected(permnission: String)->Void
-    func onPermissionStatusUpdation(permission: String)->Void
+    func onPermissionGranted(permission: String, status: Bool)
+    func onPermissionRejected(permnission: String)
+    func onPermissionStatusUpdation(permission: String)
 }
 

@@ -172,8 +172,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         closeButton.layer.cornerRadius = 16
         closeButton.layer.masksToBounds = true
         closeButton.addTarget(self, action: #selector(closeButtonClicked), for: .touchUpInside)
-        let image = UIImage(named: "leap_option_cross.png", in: Bundle(for: LeapCreator.self), compatibleWith: nil)
-        closeButton.setImage(image!, for: .normal)
+        guard let image = UIImage(named: "leap_option_cross.png", in: Bundle(for: LeapCreator.self), compatibleWith: nil) else { return }
+        closeButton.setImage(image, for: .normal)
         closeButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         inView.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -220,6 +220,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         previewLayer.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y, width: self.view.frame.width, height: self.view.frame.height * 0.5)
         previewLayer.videoGravity = .resizeAspectFill
         scannerView?.layer.addSublayer(previewLayer)
+        guard scannerView != nil else { return }
         setupCloseButton(inView: scannerView!)
         captureSession.startRunning()
     }
@@ -282,29 +283,31 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         fetchView = UIView(frame: .zero)
         fetchView?.layer.cornerRadius = 8
         fetchView?.layer.masksToBounds = true
-        fetchView!.backgroundColor = UIColor(white: 0, alpha: 0.8)
-        scannerView!.addSubview(fetchView!)
-        fetchView!.translatesAutoresizingMaskIntoConstraints = false
-        fetchView!.centerXAnchor.constraint(equalTo: scannerView!.centerXAnchor).isActive = true
-        fetchView!.centerYAnchor.constraint(equalTo: scannerView!.centerYAnchor).isActive = true
-        fetchView!.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        fetchView!.heightAnchor.constraint(equalTo: fetchView!.widthAnchor).isActive = true
+        fetchView?.backgroundColor = UIColor(white: 0, alpha: 0.8)
+        guard scannerView != nil else { return }
+        scannerView?.addSubview(fetchView!)
+        fetchView?.translatesAutoresizingMaskIntoConstraints = false
+        fetchView?.centerXAnchor.constraint(equalTo: scannerView!.centerXAnchor).isActive = true
+        fetchView?.centerYAnchor.constraint(equalTo: scannerView!.centerYAnchor).isActive = true
+        fetchView?.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        fetchView?.heightAnchor.constraint(equalTo: fetchView!.widthAnchor).isActive = true
         
         let activity = UIActivityIndicatorView(style: .whiteLarge)
-        fetchView!.addSubview(activity)
+        fetchView?.addSubview(activity)
         activity.startAnimating()
         activity.translatesAutoresizingMaskIntoConstraints = false
         activity.centerXAnchor.constraint(equalTo: fetchView!.centerXAnchor).isActive = true
         activity.centerYAnchor.constraint(equalTo: fetchView!.centerYAnchor).isActive = true
-        
     }
     
     func fetchPreviewConfig(previewId: String, projectName: String) {
         guard let url = URL(string: previewUrl) else { return }
         var req = URLRequest(url: url)
-        req.addValue(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, forHTTPHeaderField: "x-app-version-name")
+        let bundleShortVersionString = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Empty"
+        req.addValue(bundleShortVersionString, forHTTPHeaderField: "x-app-version-name")
         req.addValue(previewId, forHTTPHeaderField: "x-preview-id")
-        req.addValue(LeapCreatorShared.shared.apiKey!, forHTTPHeaderField: "x-auth-id")
+        guard let apiKey = LeapCreatorShared.shared.apiKey else { return }
+        req.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
         
         let task = URLSession.shared.dataTask(with: req) { (data, respsonse, error) in
             DispatchQueue.main.async {
@@ -341,8 +344,9 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     func presentWarning(_ title:String) {
         warningView = UIView(frame: .zero)
         warningView?.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        guard scannerView != nil else { return }
         scannerView?.addSubview(warningView!)
-        warningView!.translatesAutoresizingMaskIntoConstraints = false
+        warningView?.translatesAutoresizingMaskIntoConstraints = false
         warningView?.leadingAnchor.constraint(equalTo: scannerView!.leadingAnchor).isActive = true
         warningView?.topAnchor.constraint(equalTo: scannerView!.topAnchor).isActive = true
         warningView?.trailingAnchor.constraint(equalTo: scannerView!.trailingAnchor).isActive = true

@@ -41,7 +41,7 @@ class LeapPropertiesHandler {
     }
     
     @objc func appWillTerminate(_ notification:NSNotification) {
-        let sessionStartTime = prefs.value(forKey: leapCurrentSessionKey) as! Int64
+        let sessionStartTime = prefs.value(forKey: leapCurrentSessionKey) as? Int64
         let sessionEndTime = Int64(Date().timeIntervalSince1970)
         prefs.setValue(sessionStartTime, forKey: leapSessionStartKey)
         prefs.setValue(sessionEndTime, forKey: leapSessionEndKey)
@@ -192,7 +192,7 @@ class LeapPropertiesHandler {
     
     private func getLastUpdated() -> Int64 {
         let defaultLongProps = getDefaultLongProperties()
-        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         if let lastSessionVersion = prefs.string(forKey: leapVersionKey),
            lastSessionVersion == currentVersion {
             return defaultLongProps["timeElapsedSinceLastUpdate"] ?? Int64(Date().timeIntervalSince1970)
@@ -207,6 +207,4 @@ class LeapPropertiesHandler {
         let randomString = String((0..<length).map{_ in letters.randomElement()!})
         return randomString
     }
-    
-    
 }

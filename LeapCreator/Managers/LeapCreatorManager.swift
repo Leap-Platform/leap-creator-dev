@@ -25,10 +25,11 @@ class LeapCreatorManager {
     }
 
     func fetchCreatorConfig() {
-        let url = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.CREATOR_CONFIG_ENDPOINT)
-        var req = URLRequest(url: url!)
+        guard let url = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.CREATOR_CONFIG_ENDPOINT) else { return }
+        var req = URLRequest(url: url)
         req.httpMethod = "GET"
-        req.addValue(apiKey!, forHTTPHeaderField: "x-auth-id")
+        guard let apiKey = apiKey else { return }
+        req.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
         req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "x-apple-ad-id")
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         

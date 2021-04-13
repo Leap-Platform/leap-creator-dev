@@ -33,14 +33,14 @@ class LeapSharedAUI {
         return getParentLeapFolder().appendingPathComponent("aui_component")
     }
     
-    func getFolderPath(media:LeapMedia) -> URL {
-        if let sound = media as? LeapSound { return getSoundsFolderPath(langCode: sound.langCode!) }
+    func getFolderPath(media:LeapMedia) -> URL? {
+        if let sound = media as? LeapSound, let langCode = sound.langCode { return getSoundsFolderPath(langCode: langCode) }
         return getAUIContentFolderPath()
     }
     
     func getFilePath(media:LeapMedia) -> URL {
-        guard let sound = media as? LeapSound else { return getAUIContentFolderPath().appendingPathComponent(media.filename) }
-        return getSoundsFolderPath(langCode: sound.langCode!).appendingPathComponent(sound.filename)
+        guard let sound = media as? LeapSound, let langCode = sound.langCode else { return getAUIContentFolderPath().appendingPathComponent(media.filename) }
+        return getSoundsFolderPath(langCode: langCode).appendingPathComponent(sound.filename)
     }
     
     func getFilePath(mediaName:String, langCode:String?) -> URL? {
