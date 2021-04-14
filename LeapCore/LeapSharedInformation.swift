@@ -72,6 +72,29 @@ extension LeapSharedInformation {
     
 }
 
+// MARK: - LEAP ID GENERATOR, GETTER AND SETTER
+
+extension LeapSharedInformation {
+    
+    func getLeapId() -> String {
+        guard let leapId = prefs.value(forKey: "leap_id") as? String else { return generateLeapId() }
+        return leapId
+    }
+    
+    private func generateLeapId() -> String {
+        let leapId =  "\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
+        prefs.setValue(leapId, forKey: "leap_id")
+        prefs.synchronize()
+        return leapId
+    }
+    
+    func randomString(_ length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyz0123456789"
+        let randomString = String((0..<length).map{_ in letters.randomElement()!})
+        return randomString
+    }
+}
+
 // MARK: - APP INFO
 extension LeapSharedInformation {
     func getVersionCode() -> String? {
