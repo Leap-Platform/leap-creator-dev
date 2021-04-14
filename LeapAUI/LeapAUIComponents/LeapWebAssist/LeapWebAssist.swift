@@ -369,7 +369,7 @@ class LeapWebAssist: UIView, LeapAssist {
     ///   - superView: view to which LeapIconView is added.
     ///   - toItemView: LeapIconView constraints set w.r.t this view.
     ///   - alignmentType: whether it is top or bottom.
-    func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType) {
+    func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0) {
         
         guard let enabled = iconInfo?.isEnabled, enabled else {
             
@@ -388,7 +388,7 @@ class LeapWebAssist: UIView, LeapAssist {
         
         self.leapIconView.translatesAutoresizingMaskIntoConstraints = false
         
-        var attributeType1: NSLayoutConstraint.Attribute = .leading
+        var cornerConstraint: NSLayoutConstraint.Attribute = .leading
         
         var attributeType2: NSLayoutConstraint.Attribute = .top
         
@@ -398,7 +398,7 @@ class LeapWebAssist: UIView, LeapAssist {
         
         if !(iconInfo?.isLeftAligned ?? false) {
 
-            attributeType1 = .trailing
+            cornerConstraint = .trailing
         }
         
         if alignmentType == .top {
@@ -410,7 +410,7 @@ class LeapWebAssist: UIView, LeapAssist {
             distance = -self.leapIconView.iconGap
         }
                 
-        superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: attributeType1, relatedBy: .equal, toItem: toItemView, attribute: attributeType1, multiplier: 1, constant: 0))
+        superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: cornerConstraint, relatedBy: .equal, toItem: toItemView, attribute: cornerConstraint, multiplier: 1, constant: cornerDistance))
         
         superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
         

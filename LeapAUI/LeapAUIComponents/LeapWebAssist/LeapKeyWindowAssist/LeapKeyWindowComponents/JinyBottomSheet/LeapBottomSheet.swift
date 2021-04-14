@@ -12,6 +12,8 @@ import WebKit
 
 /// LeapBottomSheet - A Web KeyWindowAssist AUI Component class to show a bottomSheet over a window.
 class LeapBottomSheet: LeapKeyWindowAssist {
+    
+    let associatedIconCornerDistance: CGFloat = 12
         
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
         super.init(withDict: assistDict, iconDict: iconDict, baseUrl: baseUrl)
@@ -96,7 +98,7 @@ class LeapBottomSheet: LeapKeyWindowAssist {
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
-        self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .top)
+        self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .top, cornerDistance: associatedIconCornerDistance)
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
