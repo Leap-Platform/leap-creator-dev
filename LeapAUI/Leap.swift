@@ -37,6 +37,7 @@ import LeapCoreSDK
     
     @discardableResult
     @objc public func withBuilder(_ apiKey: String) -> Leap {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
         token = apiKey
         guard !(token!.isEmpty) else { fatalError("Empty token. Token cannot be empty") }
         LeapPreferences.shared.apiKey = apiKey
@@ -64,17 +65,20 @@ import LeapCoreSDK
     }
     
     @objc public func start() {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
         guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
         isStarted = true
     }
     
     @objc public func flush() {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
         guard !isStarted else { return }
         auiManager.auiManagerCallBack?.flush()
     }
     
     @objc public func start(_ apiKey:String) {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return } 
         token = apiKey
         LeapPreferences.shared.apiKey = token
         LeapPropertiesHandler.shared.start()
