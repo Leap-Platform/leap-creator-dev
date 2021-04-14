@@ -8,7 +8,7 @@
 
 import UIKit
 import LeapCreatorSDK
-import LeapAUISDK
+import LeapSDK
 
 @available(iOS 13.0, *)
 @UIApplicationMain

@@ -36,7 +36,11 @@ class LeapCreatorData: Codable {
 
 class LeapCreatorConfig: Codable {
     
+    var appName: String?
+    
     var beacon: Beacon?
+    
+    var documentation: Documentation?
     
     var permission: Permission?
     
@@ -45,7 +49,9 @@ class LeapCreatorConfig: Codable {
     var streaming: Streaming?
     
     enum CodingKeys: String, CodingKey {
+        case appName = "appName"
         case beacon = "beacon"
+        case documentation = "documentation"
         case permission = "permission"
         case message = "message"
         case streaming = "streaming"
@@ -61,7 +67,11 @@ class LeapCreatorConfig: Codable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
+        self.appName = try container.decodeIfPresent(String.self, forKey: .appName)
+        
         self.beacon = try container.decodeIfPresent(Beacon.self, forKey: .beacon)
+        
+        self.documentation = try container.decodeIfPresent(Documentation.self, forKey: .documentation)
         
         self.permission = try? container.decodeIfPresent(Permission.self, forKey: .permission)
      
@@ -95,6 +105,42 @@ class Beacon: Codable {
                 
         self.interval = try container.decode(Double.self, forKey: .interval)
 
+    }
+    
+    // MARK: - Encodable
+    func encode(to encoder: Encoder) throws {
+    }
+}
+
+class Documentation: Codable {
+    
+    var connectSampleApp: String?
+    
+    var mirrorApp: String?
+    
+    var previewDevice: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case connectSampleApp = "connectSampleApp"
+        case mirrorApp = "mirrorApp"
+        case previewDevice = "previewDevice"
+    }
+    
+    init() {
+        
+    }
+    
+    // MARK: - Decodable
+    required convenience init(from decoder: Decoder) throws {
+        self.init()
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+                
+        self.connectSampleApp = try container.decode(String.self, forKey: .connectSampleApp)
+        
+        self.mirrorApp = try container.decode(String.self, forKey: .mirrorApp)
+        
+        self.previewDevice = try container.decode(String.self, forKey: .previewDevice)
     }
     
     // MARK: - Encodable
