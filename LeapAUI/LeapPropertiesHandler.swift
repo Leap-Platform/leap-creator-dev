@@ -77,7 +77,7 @@ class LeapPropertiesHandler {
     func setDefaultStringProperties() {
         let deviceLanguage = Locale.preferredLanguages.first ?? "en"
         let stringProperties = [
-            "deviceLanguageCode":deviceLanguage
+            "deviceLanguage":deviceLanguage
         ]
         prefs.setValue(stringProperties, forKey: defaultStringPropertiesKey)
         prefs.synchronize()
