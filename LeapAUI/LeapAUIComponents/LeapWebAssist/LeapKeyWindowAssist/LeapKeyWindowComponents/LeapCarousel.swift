@@ -143,7 +143,7 @@ class LeapCarousel: LeapKeyWindowAssist {
         heightConstraint?.constant = height
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
         if type == .fullScreen {
         

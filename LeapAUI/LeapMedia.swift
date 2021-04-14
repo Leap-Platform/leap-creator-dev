@@ -14,7 +14,6 @@ class LeapMedia {
     let url:URL?
     var filename:String
     
-    
     init(baseUrl:String, location:String?) {
         if location != nil { url = URL(string:baseUrl + location!)!  }
         else { url = nil }

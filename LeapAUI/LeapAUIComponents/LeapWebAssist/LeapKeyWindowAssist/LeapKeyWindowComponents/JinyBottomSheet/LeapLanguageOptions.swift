@@ -68,7 +68,7 @@ class LeapLanguageOptions: LeapBottomSheet {
         webView.evaluateJavaScript("initIOSHtml('\(discoveryLanguagesScript)', '\(self.iconInfo?.backgroundColor ?? "#00000000")')", completionHandler: nil)
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         super.didFinish(webView, didFinish: navigation)
         
         getLanguages()

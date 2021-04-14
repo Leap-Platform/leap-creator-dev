@@ -36,9 +36,10 @@ class LeapMainButton: LeapIconView {
     
     let disableDialog = LeapDisableAssistanceDialog()
     
-    private var gradientLayer: CAGradientLayer = {
+    private var gradientLayer: CAGradientLayer? = {
         let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.init(hex: "#99090909")!.cgColor, UIColor.clear.cgColor]
+        guard let color = UIColor.init(hex: "#99090909") else { return nil }
+        gradientLayer.colors = [color.cgColor, UIColor.clear.cgColor]
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 0, y: 0)
         gradientLayer.frame = CGRect.zero
@@ -123,10 +124,10 @@ extension LeapMainButton: LeapDraggableDelegate {
             closeIconHeightConstraint = NSLayoutConstraint(item: closeIcon, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
             
             NSLayoutConstraint.activate([closeIconWidthConstraint!, closeIconHeightConstraint!])
-                        
-            closeTransparentView?.layer.insertSublayer(gradientLayer, below: closeIcon.layer)
-            
-            gradientLayer.frame = UIApplication.shared.keyWindow!.bounds
+            guard gradientLayer != nil else { return }
+            closeTransparentView?.layer.insertSublayer(gradientLayer!, below: closeIcon.layer)
+            guard let window = UIApplication.shared.keyWindow else { return }
+            gradientLayer?.frame = window.bounds
         }
     }
     

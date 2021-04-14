@@ -28,9 +28,10 @@ class LeapArrowButton: UIButton {
     weak var delegate:LeapArrowButtonDelegate?
     
     weak var inWebView: WKWebView?
-    lazy var bottomConstraint:NSLayoutConstraint = {
+    lazy var bottomConstraint: NSLayoutConstraint? = {
         let bottomConstant:CGFloat = keyboardHeight + 24
-        return NSLayoutConstraint(item: self.superview!, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: bottomConstant)
+        guard let superView = self.superview else { return nil }
+        return NSLayoutConstraint(item: superView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: bottomConstant)
     }()
     
     init(arrowDelegate:LeapArrowButtonDelegate) {
@@ -76,13 +77,14 @@ class LeapArrowButton: UIButton {
         widthAnchor.constraint(equalToConstant: 40).isActive = true
         heightAnchor.constraint(equalTo: widthAnchor).isActive = true
         leadingAnchor.constraint(equalTo: keywindow.leadingAnchor, constant: 24).isActive = true
-        NSLayoutConstraint.activate([bottomConstraint])
+        guard bottomConstraint != nil else { return }
+        NSLayoutConstraint.activate([bottomConstraint!])
         addTarget(self, action: #selector(clicked), for: .touchUpInside)
     }
     
     private func updateArrowPosition() {
         UIView.animate(withDuration: 0.1) {
-            self.bottomConstraint.constant = self.keyboardHeight + 24
+            self.bottomConstraint?.constant = self.keyboardHeight + 24
             self.layoutIfNeeded()
         }
     }
@@ -251,7 +253,8 @@ class LeapArrowButton: UIButton {
                 let parentView = nestedScrolls[nestedScrolls.count - 1 - i]
                 let childView = nestedScrolls[nestedScrolls.count - 1 - i - 1]
                 if let scroller = parentView as? UIScrollView {
-                    let childViewRectWRTParent = childView.superview!.convert(childView.frame, to: scroller)
+                    guard let superView = childView.superview else { return }
+                    let childViewRectWRTParent = superView.convert(childView.frame, to: scroller)
                     scroller.scrollRectToVisible(childViewRectWRTParent, animated: true)
                 }
             }
@@ -266,7 +269,7 @@ class LeapArrowButton: UIButton {
             
         }
         let currentVc = UIApplication.getCurrentVC()
-        let view = currentVc!.view!
-        view.endEditing(true)
+        guard let currentVCView = currentVc?.view else { return }
+        currentVCView.endEditing(true)
     }
 }

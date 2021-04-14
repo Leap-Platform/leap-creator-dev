@@ -95,13 +95,15 @@ class LeapConfig {
             }
             if let projectParams = configDict[constant_projectParameters] as? Dictionary<String, Any>, let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>>, discoveryDictsArray.count > 0 {
                 let projectParameter = LeapProjectParameters(withDict: projectParams)
-                let discovery = LeapDiscovery(withDict: discoveryDictsArray.first!)
+                guard let firstDiscovery = discoveryDictsArray.first else { return }
+                let discovery = LeapDiscovery(withDict: firstDiscovery)
                 projectParameter.id = discovery.id
                 projectParameters.append(projectParameter)
             }
             if let projectParams = configDict[constant_projectParameters] as? Dictionary<String, Any>, let assistsDictsArray = configDict[constant_assists] as? Array<Dictionary<String,Any>>, assistsDictsArray.count > 0 {
                 let projectParameter = LeapProjectParameters(withDict: projectParams)
-                let assist = LeapAssist(withDict: assistsDictsArray.first!)
+                guard let firstAssist = assistsDictsArray.first else { return }
+                let assist = LeapAssist(withDict: firstAssist)
                 projectParameter.id = assist.id
                 projectParameters.append(projectParameter)
             }

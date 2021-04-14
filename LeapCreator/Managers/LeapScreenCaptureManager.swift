@@ -36,16 +36,12 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         self.completeListener = completeHierarchyFinishListener
     }
     
-    func capture(webSocket: WebSocket, room: String)->Void{
+    func capture(webSocket: WebSocket, room: String) {
         self.socket = webSocket
         self.roomId = room
-        let screenShotImage = getScreenCapture()
-        if screenShotImage == nil {
-            return
-        }
+        guard let screenShotImage = getScreenCapture() else { return }
         getHierarchy(finishListener: self.completeListener) { [weak self] (hierarchy) in
-            
-           self?.sendData(screenCapture: screenShotImage!,hierarchy: hierarchy)
+           self?.sendData(screenCapture: screenShotImage,hierarchy: hierarchy)
         }
     }
     
@@ -58,16 +54,14 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         self.task = DispatchWorkItem {
             self.postMessage(payload: payload)
         }
-        
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: self.task!)
-        
+        guard let task = self.task else { return }
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: task)
     }
     
-    func postMessage(payload: Dictionary<String, Any>)->Void{
-        let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
-        
-        let payloadString = String(data: payloadData!, encoding: .utf8)
-        let splittedString = payloadString!.components(withMaxLength: 10000)
+    func postMessage(payload: Dictionary<String, Any>) {
+        guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
+        guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
+        let splittedString = payloadString.components(withMaxLength: 10000)
         let length = splittedString.count
         let room = self.roomId as String?
         var index: Int = -1
@@ -109,8 +103,8 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         }
     }
     
-    func getScreenCapture()->String?{
-        let image: UIImage = LeapScreenHelper.captureScreenshot()!
+    func getScreenCapture() ->String? {
+        guard let image: UIImage = LeapScreenHelper.captureScreenshot() else { return nil }
         let encodedImageBase64: String? = image.jpegData(compressionQuality: 0.3)?.base64EncodedString()
         return encodedImageBase64
     }

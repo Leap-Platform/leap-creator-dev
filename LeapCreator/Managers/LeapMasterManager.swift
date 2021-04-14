@@ -17,7 +17,8 @@ class LeapMasterManager: LeapProtocolListener,
     func onSessionClosed() {
         // sessiontime out
         //send a toast message on screen and start beacons
-        self.beaconManager?.start(appId: self.appId!)
+        guard let appId = self.appId else { return }
+        self.beaconManager?.start(appId: appId)
     }
     
     
@@ -35,19 +36,23 @@ class LeapMasterManager: LeapProtocolListener,
     // Permission Listeners
     func onPermissionStatusUpdation(permission: String) {
         if permission == PERMISSION_GRANTED {
-            self.protocolManager?.start(roomId: (self.beaconManager?.roomId)!)
+            guard let roomId = self.beaconManager?.roomId else { return }
+            self.protocolManager?.start(roomId: roomId)
         } else {
-            self.beaconManager?.start(appId: self.appId!)
+            guard let appId = self.appId else { return }
+            self.beaconManager?.start(appId: appId)
         }
     }
     
    //Beacon Listeners
     func onPermissionGranted(permission: String, status: Bool) {
-        self.permissionManager?.updatePermissionStatus(permission: PERMISSION_GRANTED, status: status, appId: self.appId!)
+        guard let appId = self.appId else { return }
+        self.permissionManager?.updatePermissionStatus(permission: PERMISSION_GRANTED, status: status, appId: appId)
     }
     
     func onPermissionRejected(permnission: String) {
-        self.permissionManager?.updatePermissionStatus(permission: PERMISSION_REJECTED, appId: self.appId!)
+        guard let appId = self.appId else { return }
+        self.permissionManager?.updatePermissionStatus(permission: PERMISSION_REJECTED, appId: appId)
     }
     
     func onBeaconFailure() {
@@ -55,8 +60,8 @@ class LeapMasterManager: LeapProtocolListener,
     
     
     // App ID fetch Listeners
-    func onIdFound() -> String {
-        return (appIdManager?.appStoreId)!
+    func onIdFound() -> String? {
+        return appIdManager?.appStoreId
     }
     
    //local variables
@@ -87,7 +92,8 @@ class LeapMasterManager: LeapProtocolListener,
     
     @objc func start(){
         self.appId = LeapCreatorShared.shared.apiKey
-        beaconManager?.start(appId: self.appId!)
+        guard let appId = self.appId else { return }
+        beaconManager?.start(appId: appId)
     }
     
     @objc func stop() {

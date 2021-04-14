@@ -41,20 +41,24 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     
     func onConnectionEstablished() {
         //write the command to join the room
-        self.sendJoinRoomRequest(roomId: self.roomId!)
-        self.streamingManager?.start(webSocket: webSocketTask!, roomId: self.roomId!)
-        self.healthMonitor!.start(webSocket: webSocketTask!, room: self.roomId!)
+        guard let roomId = self.roomId else { return }
+        self.sendJoinRoomRequest(roomId: roomId)
+        guard let webSocketTask = webSocketTask else { return }
+        self.streamingManager?.start(webSocket: webSocketTask, roomId: roomId)
+        self.healthMonitor?.start(webSocket: webSocketTask, room: roomId)
     }
     
     func onReceivePacket(id: String, type: String) {
         switch type {
         case CASE_SCREENSHOT:
             streamingManager?.stop()
-            captureManager?.capture(webSocket: self.webSocketTask!, room: self.roomId!)
+            guard let roomId = self.roomId, let webSocketTask = self.webSocketTask else { return }
+            captureManager?.capture(webSocket: webSocketTask, room: roomId)
             break
         case CASE_SCREENSTREAM:
             self.captureManager?.stop()
-            self.streamingManager?.start(webSocket: webSocketTask!, roomId: self.roomId!)
+            guard let roomId = self.roomId, let webSocketTask = self.webSocketTask else { return }
+            self.streamingManager?.start(webSocket: webSocketTask, roomId: roomId)
             break
             
         case CASE_PING:
@@ -131,8 +135,8 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         //sendJoinRoomRequest(roomId: roomId)
     }
     
-    func openSocketConnection()->Void{
-        let url: URL = URL(string: self.SOCKET_URL)!
+    func openSocketConnection() {
+        guard let url: URL = URL(string: self.SOCKET_URL) else { return }
         let urlRequest = URLRequest(url: url)
         webSocketTask = WebSocket(request: urlRequest)
         webSocketTask?.delegate = self.socketMessageDelegate

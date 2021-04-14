@@ -55,18 +55,19 @@ class LeapStreamingManager: LeapAppStateProtocol {
         startStreaming()
     }
     
-    func startStreaming(){
-        var encodedImage: String = ""
+    func startStreaming() {
+        var encodedImage: String?
         
-        if self.isAppInForeground {
-            self.image = self.resizeImage(image: (LeapScreenHelper.captureScreenshot()!))
-            if self.image != self.previousImage {
-            encodedImage = self.getBase64EncodedImage(image: self.image!, compression: 0.8)
+        if self.isAppInForeground, let captureScreenShot = LeapScreenHelper.captureScreenshot() {
+            self.image = self.resizeImage(image: captureScreenShot)
+            if self.image != self.previousImage, let image = self.image {
+            encodedImage = self.getBase64EncodedImage(image: image, compression: 0.8)
             }
         }else{
             encodedImage = APP_IN_BACKGROUND_BASE64_IMAGE
         }
-        self.streamHandler(encode: encodedImage)
+        guard let encodeImage = encodedImage else { return }
+        self.streamHandler(encode: encodeImage)
     }
     
     private func streamHandler(encode: String){
@@ -75,9 +76,9 @@ class LeapStreamingManager: LeapAppStateProtocol {
         }
     }
     
-    private func getBase64EncodedImage(image: UIImage, compression: Float)-> String{
-        let imageEncode: String? = (self.image?.jpegData(compressionQuality: CGFloat(compression))?.base64EncodedString())!
-        return imageEncode!
+    private func getBase64EncodedImage(image: UIImage, compression: Float) -> String? {
+        let imageEncode: String? = self.image?.jpegData(compressionQuality: CGFloat(compression))?.base64EncodedString()
+        return imageEncode
     }
  
     
@@ -103,10 +104,11 @@ class LeapStreamingManager: LeapAppStateProtocol {
     }
     
     func enableNextIteration(){
-        DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND/self.FRAME_RATE), execute: self.streamingTask!)
+        guard let streamingTask = self.streamingTask else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND/self.FRAME_RATE), execute: streamingTask)
     }
     
-    func resizeImage(image: UIImage) -> UIImage {
+    func resizeImage(image: UIImage) -> UIImage? {
         var actualHeight: Float = Float(image.size.height)
         var actualWidth: Float = Float(image.size.width)
         let maxHeight: Float = 640.0
@@ -138,10 +140,10 @@ class LeapStreamingManager: LeapAppStateProtocol {
         let rect = CGRect(x: 0.0, y: 0.0, width: CGFloat(actualWidth), height: CGFloat(actualHeight))
         UIGraphicsBeginImageContext(rect.size)
         image.draw(in: rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        let imageData = img!.jpegData(compressionQuality: CGFloat(compressionQuality))
+        guard let img = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        guard let imageData = img.jpegData(compressionQuality: CGFloat(compressionQuality)) else { return nil }
         UIGraphicsEndImageContext()
-        return UIImage(data: imageData!)!
+        return UIImage(data: imageData)
     }
     
     func stop(){

@@ -62,6 +62,7 @@ import LeapCoreSDK
     }
     
     @objc public func start() {
+        guard token != nil else { return }
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
     

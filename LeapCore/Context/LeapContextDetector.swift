@@ -299,7 +299,7 @@ extension LeapContextDetector {
     
     private func addNativeListeners(nativeContexts:Array<LeapContext>, in hierarchy:Array<UIView>) {
         let nativeContextAndViewArray:Array<(Int,UIView)> = nativeContexts.map { (context) -> (Int, UIView)? in
-            let identifier = context.instruction!.assistInfo!.identifier!
+            guard let instruction = context.instruction, let assistInfo = instruction.assistInfo, let identifier = assistInfo.identifier else { return nil }
             guard let view = getViewsForIdentifer(identifierId: identifier, hierarchy: hierarchy)?.first else { return nil }
             return (context.id,view)
         }.compactMap{ return $0 }
@@ -331,12 +331,14 @@ extension LeapContextDetector {
             }
             counter += 1
             if webIdsToCheck.count > 0, counter < webviews.count {
-                self.getPassingWebIds(webIdsToCheck, inSingleWebview: webviews[counter], completion: checkCompletion!)
+                guard let checkCompletion = checkCompletion else { return }
+                self.getPassingWebIds(webIdsToCheck, inSingleWebview: webviews[counter], completion: checkCompletion)
             } else {
                 self.clickHandler.addClickListener(to: passingIdsAndWebView)
             }
         }
-        getPassingWebIds(webIdsToCheck, inSingleWebview: webviews[counter], completion: checkCompletion!)
+        guard let completion = checkCompletion else { return }
+        getPassingWebIds(webIdsToCheck, inSingleWebview: webviews[counter], completion: completion)
     }
     
     /// Get list of passing native identifiers and webidentifires
@@ -406,7 +408,7 @@ extension LeapContextDetector {
             return
         }
         if isWeb {
-            guard let webId = delegate!.getWebIdentifier(identifierId: identifier) else {
+            guard let delegate = self.delegate, let webId = delegate.getWebIdentifier(identifierId: identifier) else {
                 targetCheckCompleted(nil, nil, nil)
                 return
             }
@@ -414,7 +416,7 @@ extension LeapContextDetector {
                 targetCheckCompleted(nil, rect, webview)
             }
         } else {
-            guard let _ = delegate!.getNativeIdentifier(identifierId: identifier) else {
+            guard let delegate = self.delegate, let _ = delegate.getNativeIdentifier(identifierId: identifier) else {
                 targetCheckCompleted(nil, nil, nil)
                 return
             }
@@ -455,7 +457,7 @@ extension LeapContextDetector {
         if let currentController = UIApplication.getCurrentVC() {
             let controllerString = String(describing: type(of: currentController.self))
             controllerFilteredIdentifiers = controllerFilteredIdentifiers.filter { (identifier) -> Bool in
-                guard let nativeIdentifier = delegate!.getNativeIdentifier(identifierId: identifier) else { return false }
+                guard let delegate = self.delegate, let nativeIdentifier = delegate.getNativeIdentifier(identifierId: identifier) else { return false }
                 guard let controllerCheckString = nativeIdentifier.controller, !controllerCheckString.isEmpty else { return true }
                 return controllerString == controllerCheckString
             }
@@ -480,13 +482,14 @@ extension LeapContextDetector {
     ///   - hierarchy: the hierarchy of views to check against
     /// - Returns: an array of UIViews passing for the native identifier
     private func getViewsForIdentifer(identifierId:String, hierarchy:Array<UIView>) -> Array<UIView>? {
-        guard let identifier = delegate!.getNativeIdentifier(identifierId: identifierId) else { return nil }
+        guard let delegate = self.delegate, let identifier = delegate.getNativeIdentifier(identifierId: identifierId) else { return nil }
         guard let params = identifier.idParameters else { return nil }
         var anchorViews = getViewsMatchingIdParams(hierarchy, params)
         if let matchingProps = identifier.viewProps {
             anchorViews = getViewsHavingMatchingProps(views: anchorViews, viewProps: matchingProps)
         }
-        if identifier.isAnchorSameAsTarget! || anchorViews.count == 0 { return anchorViews }
+        guard let isAnchorSameAsTarget = identifier.isAnchorSameAsTarget else { return nil }
+        if isAnchorSameAsTarget || anchorViews.count == 0 { return anchorViews }
         guard let relations = identifier.relationToTarget else { return anchorViews }
         let targetViews = getViewsFromRelation(anchorViews, relations)
         guard let targetIdParams = identifier.target?.idParameters, targetViews.count > 0 else { return targetViews }
@@ -505,7 +508,7 @@ extension LeapContextDetector {
         if params.accLabel != nil { resultViews = resultViews.filter{ $0.accessibilityLabel == params.accLabel } }
         if params.tag != nil { resultViews = resultViews.filter{ $0.tag == params.tag } }
         if params.className != nil { resultViews = resultViews.filter{ String(describing: type(of: $0)) == params.className! }}
-        if params.text != nil, let localeText = params.text![constant_ang] {
+        if let text = params.text, let localeText = text[constant_ang] {
             resultViews =  resultViews.filter { (view) -> Bool in
                 if let label = view as? UILabel { return label.text == localeText }
                 else if let button = view as? UIButton { return (button.title(for: .normal) == localeText) }
@@ -578,10 +581,12 @@ extension LeapContextDetector {
             passingWebIds = Array(Set((passingWebIds + passingWebIdsInSingleWebView)))
             if counter == inAllWebviews.count { completion(passingWebIds) }
             else {
-                self.getPassingWebIds(webIds, inSingleWebview: inAllWebviews[counter], completion: passingWebIdsInSingleWebViewCompletion!)
+                guard let completion = passingWebIdsInSingleWebViewCompletion else { return }
+                self.getPassingWebIds(webIds, inSingleWebview: inAllWebviews[counter], completion: completion)
             }
         }
-        getPassingWebIds(webIds, inSingleWebview: inAllWebviews[counter], completion: passingWebIdsInSingleWebViewCompletion!)
+        guard let completion = passingWebIdsInSingleWebViewCompletion else { return }
+        getPassingWebIds(webIds, inSingleWebview: inAllWebviews[counter], completion: completion)
     }
     
     /// Get passing web ids in specific webviwe
@@ -673,11 +678,13 @@ extension LeapContextDetector {
             if rect != nil { rectCalculated(rect, webviews[counter]) }
             else {
                 counter += 1
-                if counter < webviews.count { self.calculateBoundsWithScript(_script: boundsScript, in: webviews[counter], rectCalculated: resultCompletion!) }
+                guard let resultCompletion = resultCompletion else { return }
+                if counter < webviews.count { self.calculateBoundsWithScript(_script: boundsScript, in: webviews[counter], rectCalculated: resultCompletion) }
                 else { rectCalculated(nil, nil) }
             }
         }
-        calculateBoundsWithScript(_script: boundsScript, in: webviews[counter], rectCalculated: resultCompletion!)
+        guard let completion = resultCompletion else { return }
+        calculateBoundsWithScript(_script: boundsScript, in: webviews[counter], rectCalculated: completion)
     }
     
     /// Gets the rect for a web identifier from a specific webview

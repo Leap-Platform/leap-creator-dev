@@ -27,11 +27,9 @@ class LeapMediaManager {
     
     func startDownload(forMedia:LeapMedia, atPriority:Operation.QueuePriority,
                        completion: ((_ success: Bool) -> Void)? = nil) {
-        var code:String?
         var key = forMedia.filename
-        if let sound = forMedia as? LeapSound {
-            code = sound.langCode
-            key = key + "_\(code!)"
+        if let sound = forMedia as? LeapSound, let code = sound.langCode {
+            key = key + "_\(code)"
         }
         guard !isAlreadyDownloaded(media: forMedia) else {
             updateStatus(key: key, status: .downloaded)
@@ -78,7 +76,7 @@ class LeapMediaManager {
     
     func getCurrentMediaStatus(_ media:LeapMedia) -> LeapDownloadStatus {
         var key = media.filename
-        if let sound = media as? LeapSound { key = key + "_\(sound.langCode!)"}
+        if let sound = media as? LeapSound, let langCode = sound.langCode { key = key + "_\(langCode)"}
         if let status = statusTracker[key] { return status }
         let path = LeapSharedAUI.shared.getFilePath(media: media)
         if FileManager.default.fileExists(atPath: path.path) { return .downloaded }

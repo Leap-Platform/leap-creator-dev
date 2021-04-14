@@ -46,6 +46,8 @@ class LeapDisableAssistanceDialog: UIView {
     
     func showBottomDialog(with dialogText: String = "Do you want to permanently disable the assistance?", dialogText1: String = "No", dialogText2: String = "Yes") {
         
+        guard UIApplication.shared.keyWindow != nil else { return }
+        
         UIApplication.shared.keyWindow?.addSubview(self)
         
         configureOverlay()

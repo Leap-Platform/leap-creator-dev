@@ -119,7 +119,7 @@ class LeapToolTip: LeapTipView {
     
        let arrowDirection = getArrowDirection()
             
-       guard let direction = arrowDirection else {
+       guard let direction = arrowDirection, inView != nil else {
                 
          return
        }
@@ -244,7 +244,7 @@ class LeapToolTip: LeapTipView {
     ///   - direction: ToolTip arrow direction.
     func drawMaskLayerFor(_ direction:LeapTooltipArrowDirection) {
     
-        var path:UIBezierPath?
+        var path: UIBezierPath
 
         switch direction {
         
@@ -259,7 +259,7 @@ class LeapToolTip: LeapTipView {
             
         let contentPath = UIBezierPath(rect: self.webView.bounds)
         
-        contentPath.append(path!)
+        contentPath.append(path)
         
         maskLayer.fillRule = .evenOdd
         
@@ -452,7 +452,9 @@ class LeapToolTip: LeapTipView {
         
         let size = globalToView.size
         
-        let path = UIBezierPath(rect: inView!.bounds)
+        guard let inView = self.inView else { return }
+        
+        let path = UIBezierPath(rect: inView.bounds)
                 
         var transparentPath = UIBezierPath()
         

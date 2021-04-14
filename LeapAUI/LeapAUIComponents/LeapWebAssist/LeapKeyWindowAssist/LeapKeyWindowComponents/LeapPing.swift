@@ -181,7 +181,7 @@ class LeapPing: LeapKeyWindowAssist {
         widthConstraint?.constant = sizeWidth ?? width
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
                 
         self.configurePingClose(superView: self, toItemView: self.webView)
     }

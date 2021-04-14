@@ -91,6 +91,8 @@ class LeapSlideIn: LeapKeyWindowAssist {
     ///   - alignment: the alignment of the webview whether it is left or right.
     private func configureWebViewForSlideIn(alignment: LeapAlignmentType) {
         
+        guard inView != nil else { return }
+        
         inView?.addSubview(self)
                                 
         // Setting Constraints to Self

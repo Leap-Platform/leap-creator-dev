@@ -14,13 +14,13 @@ class LeapCreatorInternal : NSObject{
     var masterManager: LeapMasterManager?
     var creatorManager: LeapCreatorManager?
     var applicationContext: UIApplication
-    var appDelegate: UIApplicationDelegate
+    var appDelegate: UIApplicationDelegate?
     
     init(apiKey : String) {
         self.applicationContext = UIApplication.shared
         self.apiKey = apiKey
         self.masterManager = LeapMasterManager(key: apiKey)
-        self.appDelegate = UIApplication.shared.delegate!
+        self.appDelegate = UIApplication.shared.delegate
     }
     
     deinit {
@@ -31,7 +31,8 @@ class LeapCreatorInternal : NSObject{
     
     func start() {
         NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
-        self.creatorManager = LeapCreatorManager(key: self.apiKey!, delegate: self)
+        guard let apiKey = self.apiKey else { return }
+        self.creatorManager = LeapCreatorManager(key: apiKey, delegate: self)
         self.creatorManager?.fetchCreatorConfig()
     }
     

@@ -143,21 +143,23 @@ class LeapNotification: LeapKeyWindowAssist {
         heightConstraint?.constant = height
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
                 
-            guard self.alignment == .top || self.alignment == .bottom else {
+        guard self.alignment == .top || self.alignment == .bottom else {
                     
-                return
-            }
+            return
+        }
+        
+        guard self.inView != nil else { return }
                                                 
-            if self.alignment == .top {
+        if self.alignment == .top {
                     
-                self.configureLeapIconView(superView: self.inView!, toItemView: webView, alignmentType: .bottom)
+            self.configureLeapIconView(superView: self.inView!, toItemView: webView, alignmentType: .bottom)
                 
-            } else {
+        } else {
                     
-                self.configureLeapIconView(superView: self.inView!, toItemView: webView, alignmentType: .top)
-            }
+            self.configureLeapIconView(superView: self.inView!, toItemView: webView, alignmentType: .top)
+        }
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

@@ -81,7 +81,8 @@ class LeapAssistManager {
                 self.assistTimer = nil
                 self.delegate?.newAssistIdentified(assist, view: view, rect: rect, inWebview: webview)
             })
-            RunLoop.main.add(assistTimer!, forMode: .default)
+            guard let assistTimer = self.assistTimer else { return }
+            RunLoop.main.add(assistTimer, forMode: .default)
         } else  {
             delegate?.newAssistIdentified(assist, view: view, rect: rect, inWebview: webview)
         }

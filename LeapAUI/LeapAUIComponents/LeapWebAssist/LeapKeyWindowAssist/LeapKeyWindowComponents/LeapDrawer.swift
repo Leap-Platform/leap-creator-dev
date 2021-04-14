@@ -169,7 +169,7 @@ class LeapDrawer: LeapKeyWindowAssist {
         leapIconView.configureIconButton()
     }
     
-    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
         configureLeapIconView(superView: self, toItemView: webView, alignmentType: .bottom)
     }

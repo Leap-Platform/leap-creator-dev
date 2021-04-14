@@ -88,12 +88,12 @@ class LeapReachabilityManager {
     }
 
     @objc func reachabilityChanged(_ note: Notification) {
-        let reachability = note.object as! LeapReachability
-        
-        if reachability.connection != .unavailable {
-            updateLabelColourWhenReachable(reachability)
+        let reachability = note.object as? LeapReachability
+        guard let reachable = reachability else { return }
+        if reachable.connection != .unavailable {
+            updateLabelColourWhenReachable(reachable)
         } else {
-            updateLabelColourWhenNotReachable(reachability)
+            updateLabelColourWhenNotReachable(reachable)
         }
     }
     

@@ -133,6 +133,8 @@ class LeapIconView: UIView {
     /// sets iconButton's constraints w.r.t self.
     func configureIconButton() {
         
+        guard iconWebView != nil else { return }
+        
         self.addSubview(iconWebView!)
         
         // Setting Constraints to iconButton
@@ -175,6 +177,8 @@ class LeapIconView: UIView {
     
     /// sets iconButton's constraints w.r.t self.
     func configureAudioIconButon() {
+        
+        guard audioWebView != nil else { return }
         
         self.addSubview(audioWebView!)
         
@@ -254,7 +258,7 @@ class LeapIconView: UIView {
     func changeToLoading() {
         self.loadingLayer?.removeFromSuperlayer()
         self.loadingView?.removeFromSuperview()
-        
+        guard self.iconWebView != nil else { return }
         loadingView = UIView(frame: self.iconWebView!.frame)
         loadingView?.backgroundColor = .clear
         self.iconWebView?.addSubview(loadingView!)
@@ -311,7 +315,7 @@ class LeapIconView: UIView {
 
 extension LeapIconView: WKNavigationDelegate {
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
         
         self.iconWebView?.backgroundColor = iconBackgroundColor
         self.audioWebView?.backgroundColor = iconBackgroundColor

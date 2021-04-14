@@ -86,8 +86,8 @@ class LeapScreenHelper {
         hierarchy[constant_screen_height] = UIScreen.main.nativeBounds.height
         hierarchy[constant_client_package_name] = Bundle.main.bundleIdentifier
         hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
-        let keyWindow = UIApplication.shared.windows.first{ $0.isKeyWindow }
-        _ = LeapViewProps(view: keyWindow!, finishListener: finishListener) { (_, props) in
+        guard let keyWindow = (UIApplication.shared.windows.first{ $0.isKeyWindow }) else { return }
+        _ = LeapViewProps(view: keyWindow, finishListener: finishListener) { (_, props) in
             do {
                 let jsonEncoder = JSONEncoder()
                 jsonEncoder.outputFormatting = .prettyPrinted
@@ -101,11 +101,11 @@ class LeapScreenHelper {
         }        
     }
 
-    static func jsonToString(json: AnyObject) -> String{
+    static func jsonToString(json: AnyObject) -> String? {
         do {
             let data1 =  try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
             let convertedString = String(data: data1, encoding: String.Encoding.utf8) // the data will be converted to the string
-            return (convertedString)!
+            return convertedString
         } catch let myJSONError {
             print(myJSONError)
             return "nil"

@@ -80,7 +80,8 @@ import UIKit
         assert(token != "", "Incorrect token")
         self.apiKey = token
         self.isTest = isTest
-        self.leapInternal = LeapInternal.init(self.apiKey!, uiManager: uiManager)
+        guard let apiKey = self.apiKey else { return nil }
+        self.leapInternal = LeapInternal.init(apiKey, uiManager: uiManager)
         return self.leapInternal?.auiCallback()
     }
 }

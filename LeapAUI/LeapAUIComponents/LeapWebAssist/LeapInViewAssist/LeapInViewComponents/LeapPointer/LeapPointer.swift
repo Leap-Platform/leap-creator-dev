@@ -50,7 +50,7 @@ class LeapPointer: LeapInViewAssist {
         
     }
     
-    func presentPointer(view:UIView) {
+    func presentPointer(view: UIView) {
         toView = view
         if toView?.window != UIApplication.shared.keyWindow {
             inView = toView!.window
@@ -68,8 +68,9 @@ class LeapPointer: LeapInViewAssist {
         
     }
     
-    func getToViewPositionForInView() -> CGRect {
-        return toView!.superview!.convert(toView!.frame, to: inView!)
+    func getToViewPositionForInView() -> CGRect? {
+        guard toView != nil, inView != nil else { return nil }
+        return toView?.superview?.convert(toView!.frame, to: inView!)
     }
     
     func removeAnimation() {
@@ -192,7 +193,7 @@ class LeapFingerPointer: LeapPointer {
     }
     
     func setPosition() {
-        let toViewFrame = getToViewPositionForInView()
+        guard let toViewFrame = getToViewPositionForInView() else { return }
         let y = toViewFrame.midY - 15
         let x = toViewFrame.midX - 21
         pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
@@ -389,7 +390,7 @@ class LeapSwipePointer: LeapPointer {
     }
     
     func setPosition() {
-        let toViewFrame = getToViewPositionForInView()
+        guard let toViewFrame = getToViewPositionForInView() else { return }
         pointerLayer.frame.size = CGSize(width: 42, height: 54)
         var y = toViewFrame.midY - 15
         var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
@@ -433,7 +434,7 @@ class LeapSwipePointer: LeapPointer {
         fadeAnimation.duration = 0.2
         fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
         
-        let toViewFrame = toRect ?? getToViewPositionForInView()
+        guard let toViewFrame = toRect ?? getToViewPositionForInView() else { return }
         
         switch type {
         

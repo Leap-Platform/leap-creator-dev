@@ -16,17 +16,18 @@ extension UIImage {
         return image
     }
     
-    func getInvertedImage() -> UIImage {
+    func getInvertedImage() -> UIImage? {
         let rect =  CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
         //Create a bitmap based graphics context based on size
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 1)
         let currentContext = UIGraphicsGetCurrentContext() //Get current Quartz 2d drawing environment
         currentContext?.clip(to: rect)
-        currentContext?.draw(self.cgImage!, in: rect)
+        guard let cgImage = self.cgImage else { return nil }
+        currentContext?.draw(cgImage, in: rect)
           
         // Inverted image
-        let drawImage = UIGraphicsGetImageFromCurrentImageContext()
-        let invertedImage = UIImage(cgImage: (drawImage?.cgImage!)!, scale: self.scale, orientation: self.imageOrientation)
+        guard let drawImage = UIGraphicsGetImageFromCurrentImageContext(), let drawCGImage = drawImage.cgImage else { return nil }
+        let invertedImage = UIImage(cgImage: drawCGImage, scale: self.scale, orientation: self.imageOrientation)
         return invertedImage
     }
 }

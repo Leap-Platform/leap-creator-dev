@@ -76,7 +76,7 @@ class LeapBeacon: LeapNativeAssist {
         if webRect != nil  {
             
             if lastLocation != webRect?.origin {
-            
+                guard toView != nil else { return }
                 pulsator.placeBeacon(rect: webRect!, inWebView: toView!)
             }
             lastLocation = webRect!.origin

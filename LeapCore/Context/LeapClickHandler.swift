@@ -80,7 +80,8 @@ class LeapClickHandler:NSObject {
             return viewFrame.contains(location)
         }
         guard let contextFound = contextIdentified else { return }
-        delegate?.nativeClickEventForContext(id: contextFound.0, onView: contextFound.1.view!)
+        guard let contextFoundView = contextFound.1.view else { return }
+        delegate?.nativeClickEventForContext(id: contextFound.0, onView: contextFoundView)
     }
 }
 
@@ -102,7 +103,8 @@ extension UIWindow {
         if (isSwizzled) { return }
         let sendEvent = class_getInstanceMethod(object_getClass(self), #selector(UIApplication.sendEvent(_:)))
         let swizzledSendEvent = class_getInstanceMethod(object_getClass(self), #selector(UIWindow.swizzledSendEvent(_:)))
-        method_exchangeImplementations(sendEvent!, swizzledSendEvent!)
+        guard let event = sendEvent, let swizzledEvent = swizzledSendEvent else { return }
+        method_exchangeImplementations(event, swizzledEvent)
         isSwizzled = true
     }
     

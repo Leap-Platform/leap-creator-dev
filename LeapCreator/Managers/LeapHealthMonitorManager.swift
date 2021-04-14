@@ -40,18 +40,21 @@ class LeapHealthMonitorManager {
     
     func sendPing() {
         if isSessionActive() {
-            let payload = "{\"room\":\"\(roomId!)\",\"message\": {\"commandType\":\"PING\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
+            guard let roomId = roomId else { return }
+            let payload = "{\"room\":\"\(roomId)\",\"message\": {\"commandType\":\"PING\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
             self.webSocket?.write(string: payload, completion: {
                 print("PING has been sent! ")
             })
         } else {
             self.healthListener.onSessionClosed()
         }
-        DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: self.pingTask!)
+        guard let pingTask = self.pingTask else { return }
+        DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: pingTask)
     }
     
     func sendPong() {
-        let payload = "{\"room\":\"\(roomId!)\",\"message\": {\"commandType\":\"PONG\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
+        guard let roomId = roomId else { return }
+        let payload = "{\"room\":\"\(roomId)\",\"message\": {\"commandType\":\"PONG\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
         self.webSocket?.write(string: payload, completion: {
             print(" payload : \(payload)")
             print("PONG has been sent! ")
@@ -59,7 +62,8 @@ class LeapHealthMonitorManager {
     }
     
     func isSessionActive() -> Bool {
-        return ((NSDate().timeIntervalSince1970 - self.lastPongTime!) < (self.MAX_FAILED_ATTEMPTS * self.PING_INTERVAL))
+        guard let lastPongTime = self.lastPongTime else { return false }
+        return ((NSDate().timeIntervalSince1970 - lastPongTime) < (self.MAX_FAILED_ATTEMPTS * self.PING_INTERVAL))
     }
     
     func receivePong() {

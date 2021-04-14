@@ -237,6 +237,7 @@ extension LeapIconOptions {
             if self.isLeftAligned {
                 self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: width, height: self.frame.height)
             } else {
+                guard self.button != nil else { return }
                 let newXPosition = self.frame.minX - (width-self.button!.frame.width)
                 self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: width, height: self.frame.height)
             }
@@ -302,6 +303,7 @@ extension LeapIconOptions {
                     if self.isLeftAligned {
                         self.frame = CGRect(x: self.frame.minX, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
                     } else {
+                        guard self.button != nil else { return }
                         let newXPosition = self.button!.center.x - (self.frame.height/2)
                         self.frame = CGRect(x: newXPosition, y: self.frame.minY, width: self.frame.height, height: self.frame.height)
                     }

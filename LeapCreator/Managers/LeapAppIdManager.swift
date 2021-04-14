@@ -23,6 +23,6 @@ class LeapAppIdManager{
     }
 }
 
-protocol LeapAppIdListener{
-    func onIdFound()->String 
+protocol LeapAppIdListener {
+    func onIdFound() -> String?
 }

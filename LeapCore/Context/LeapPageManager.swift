@@ -31,8 +31,8 @@ class LeapPageManager {
     func getCurrentPage() -> LeapPage? { return currentPage }
     
     func removeStage(_ stage:LeapStage) {
-        guard let _ = currentPage else { return }
-        currentPage!.stages = currentPage!.stages.filter{ $0 != stage }
+        guard let currentPage = currentPage else { return }
+        currentPage.stages = currentPage.stages.filter{ $0 != stage }
     }
     func resetPageManager() { currentPage = nil }
     
