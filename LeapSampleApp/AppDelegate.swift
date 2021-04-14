@@ -17,11 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 //        LeapAUI.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
-        LeapAUI.shared.buildWith(apiKey: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        LeapAUI.shared.withBuilder(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         .addProperty("username", stringValue: "Aravind")
         .addProperty("age", intValue: 30)
         .addProperty("ts", dateValue: Date()).start()
-        LeapCreator.shared.initialize(withToken: Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        LeapCreator.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         return true
     }
 

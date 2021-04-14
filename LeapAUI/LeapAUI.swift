@@ -34,7 +34,7 @@ import LeapCoreSDK
     }
     
     @discardableResult
-    @objc public func buildWith(apiKey: String) -> LeapAUI {
+    @objc public func withBuilder(_ apiKey: String) -> LeapAUI {
         token = apiKey
         guard !(token!.isEmpty) else { fatalError("Empty token. Token cannot be empty") }
         LeapPreferences.shared.apiKey = apiKey
@@ -62,7 +62,7 @@ import LeapCoreSDK
     }
     
     @objc public func start() {
-        guard token != nil else { return }
+        guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
     }
     
@@ -70,11 +70,11 @@ import LeapCoreSDK
         auiManager.auiManagerCallBack?.flush()
     }
     
-    @objc public func initialize(withToken apiKey:String) {
+    @objc public func start(_ apiKey:String) {
         token = apiKey
         LeapPreferences.shared.apiKey = token
-        guard token != nil, token != "" else { fatalError("Empty token. Token cannot be empty") }
-        auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
+        LeapPropertiesHandler.shared.start()
+        start()
     }
     
     @objc public func disable() {
