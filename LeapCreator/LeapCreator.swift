@@ -14,7 +14,7 @@ import UIKit
     private var creatorInternal:LeapCreatorInternal?
     private var token:String?
   
-   @objc public func initialize(withToken apiKey:String) -> Void {
+   @objc public func start(_ apiKey:String) -> Void {
         LeapReachabilityManager.shared.initialize()
         token = apiKey
         creatorInternal = LeapCreatorInternal(apiKey: apiKey)
