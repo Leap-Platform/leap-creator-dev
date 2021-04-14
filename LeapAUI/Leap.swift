@@ -10,19 +10,20 @@ import Foundation
 import LeapCoreSDK
 
 
-@objc public protocol LeapAUIClientCallback:NSObjectProtocol {
+@objc public protocol LeapCallback:NSObjectProtocol {
     
     @objc func eventNotification(eventInfo:Dictionary<String,Any>)
 }
 
-@objc public class LeapAUI:NSObject {
+@objc public class Leap:NSObject {
     
-    @objc public static let shared = LeapAUI()
+    @objc public static let shared = Leap()
     private var token:String?
     private var auiManager:LeapAUIManager
-    @objc public weak var clientCallback:LeapAUIClientCallback? {
+    private var isStarted:Bool
+    @objc public weak var callback:LeapCallback? {
         didSet{
-            if clientCallback != nil { auiManager.delegate = self }
+            if callback != nil { auiManager.delegate = self }
             else { auiManager.delegate = nil }
         }
     }
@@ -30,11 +31,12 @@ import LeapCoreSDK
     private override init() {
         auiManager = LeapAUIManager()
         auiManager.addObservers()
+        isStarted = false
         super.init()
     }
     
     @discardableResult
-    @objc public func withBuilder(_ apiKey: String) -> LeapAUI {
+    @objc public func withBuilder(_ apiKey: String) -> Leap {
         token = apiKey
         guard !(token!.isEmpty) else { fatalError("Empty token. Token cannot be empty") }
         LeapPreferences.shared.apiKey = apiKey
@@ -43,19 +45,19 @@ import LeapCoreSDK
     }
     
     @discardableResult
-    @objc public func addProperty(_ key: String, stringValue: String) -> LeapAUI {
+    @objc public func addProperty(_ key: String, stringValue: String) -> Leap {
         LeapPropertiesHandler.shared.saveCustomStringProperty(key, stringValue)
         return self
     }
     
     @discardableResult
-    @objc public func addProperty(_ key: String, intValue: Int) -> LeapAUI {
+    @objc public func addProperty(_ key: String, intValue: Int) -> Leap {
         LeapPropertiesHandler.shared.saveCustomIntProperty(key, intValue)
         return self
     }
     
     @discardableResult
-    @objc public func addProperty(_ key: String, dateValue: Date) -> LeapAUI {
+    @objc public func addProperty(_ key: String, dateValue: Date) -> Leap {
         let dateSince1970 = Int64(dateValue.timeIntervalSince1970)
         LeapPropertiesHandler.shared.saveCustomLongProperty(key, dateSince1970)
         return self
@@ -64,9 +66,11 @@ import LeapCoreSDK
     @objc public func start() {
         guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
+        isStarted = true
     }
     
     @objc public func flush() {
+        guard !isStarted else { return }
         auiManager.auiManagerCallBack?.flush()
     }
     
@@ -89,15 +93,15 @@ import LeapCoreSDK
     }
 }
 
-extension LeapAUI:LeapAUIManagerDelegate {
+extension Leap:LeapAUIManagerDelegate {
     func eventGenerated(event: Dictionary<String, Any>) {
-        guard let callback = clientCallback else { return }
+        guard let callback = callback else { return }
         callback.eventNotification(eventInfo: event)
     }
     
     
     func isClientCallbackRequired() -> Bool {
-        guard let _ = clientCallback else { return false }
+        guard let _ = callback else { return false }
         return true
     }
 }
