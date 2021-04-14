@@ -432,17 +432,21 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     @objc func learnMore1Clicked() {
-        if let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice, let url = URL(string: previewDeviceUrl) {
-            
-            UIApplication.shared.open(url)
-        }
+        
+        let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice ?? constant_previewDeviceUrl
+        
+        guard let url = URL(string: previewDeviceUrl) else { return }
+        
+        UIApplication.shared.open(url)
     }
     
     @objc func learnMore2Clicked() {
-        if let connectSampleAppUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.connectSampleApp, let url = URL(string: connectSampleAppUrl) {
-            
-            UIApplication.shared.open(url)
-        }
+        
+        let connectSampleAppUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.connectSampleApp ?? constant_connectSampleAppUrl
+        
+        guard let url = URL(string: connectSampleAppUrl) else { return }
+        
+        UIApplication.shared.open(url)
     }
     
     @objc func scanAgain() {
