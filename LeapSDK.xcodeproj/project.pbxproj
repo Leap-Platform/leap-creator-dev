@@ -7,17 +7,6 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		D051F20625E3D77A00A2D81B /* LeapCreatorUniversal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D051F20725E3D77A00A2D81B /* Build configuration list for PBXAggregateTarget "LeapCreatorUniversal" */;
-			buildPhases = (
-				D002373025E3EFA300BE1069 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = LeapCreatorUniversal;
-			productName = LeapCreatorUniversal;
-		};
 		D0992891260B744A00A1FF58 /* LeapUniversalDev */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = D0992892260B744A00A1FF58 /* Build configuration list for PBXAggregateTarget "LeapUniversalDev" */;
@@ -50,17 +39,6 @@
 			);
 			name = LeapUniversalProduction;
 			productName = LeapUniversalDev;
-		};
-		D0F4688325DBC40700FEF37A /* LeapAUIUniversal */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "LeapAUIUniversal" */;
-			buildPhases = (
-				D0F4688F25DBC41200FEF37A /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = LeapAUIUniversal;
-			productName = JinyAUIUniversal;
 		};
 /* End PBXAggregateTarget section */
 
@@ -145,7 +123,7 @@
 		D08DA66625DEA2E800EB0EFC /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C91E24B9B2BF001A04DF /* AdSupport.framework */; };
 		D08DA66725DEA2E800EB0EFC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; platformFilter = ios; };
 		D096B3E825F0F027009BE7B3 /* LeapArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D096B3E725F0F027009BE7B3 /* LeapArrowButton.swift */; };
-		D0B603BD25DFB6BA0092F735 /* LeapAUI.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* LeapAUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0B603BD25DFB6BA0092F735 /* Leap.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* Leap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B603BF25DFB6BA0092F735 /* LeapHighlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931C2543186D00DB94DD /* LeapHighlight.swift */; };
 		D0B603C025DFB6BA0092F735 /* LeapToolTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931D2543186D00DB94DD /* LeapToolTip.swift */; };
 		D0B603C125DFB6BA0092F735 /* LeapDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793222543186D00DB94DD /* LeapDrawer.swift */; };
@@ -158,7 +136,7 @@
 		D0B603C825DFB6BA0092F735 /* LeapNativeAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793112543186D00DB94DD /* LeapNativeAssist.swift */; };
 		D0B603C925DFB6BA0092F735 /* LeapNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */; };
 		D0B603CA25DFB6BA0092F735 /* Leap+UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793142543186D00DB94DD /* Leap+UIColor.swift */; };
-		D0B603CB25DFB6BA0092F735 /* LeapAUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3024B4A49700D9332B /* LeapAUI.swift */; };
+		D0B603CB25DFB6BA0092F735 /* Leap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FDAC3024B4A49700D9332B /* Leap.swift */; };
 		D0B603CC25DFB6BA0092F735 /* LeapNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793242543186D00DB94DD /* LeapNotification.swift */; };
 		D0B603CD25DFB6BA0092F735 /* LeapMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0938E11251DD8E900FD462E /* LeapMedia.swift */; };
 		D0B603CE25DFB6BA0092F735 /* LeapSlideIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793272543186D00DB94DD /* LeapSlideIn.swift */; };
@@ -214,13 +192,13 @@
 		D0F2C4A225DFCD81006BFF3D /* LoginOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04BBA362472832000DF9716 /* LoginOptionViewController.swift */; };
 		D0F2C4A325DFCD81006BFF3D /* FlightSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */; };
 		D0F2C4A425DFCD81006BFF3D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E44E42420AABA00A43FEA /* SceneDelegate.swift */; };
-		D0F2C4A625DFCD81006BFF3D /* LeapAUISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */; };
+		D0F2C4A625DFCD81006BFF3D /* LeapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapSDK.framework */; };
 		D0F2C4A725DFCD81006BFF3D /* LeapCoreSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; };
 		D0F2C4A825DFCD81006BFF3D /* LeapCreatorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */; };
 		D0F2C4AA25DFCD81006BFF3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D03E44ED2420AABC00A43FEA /* LaunchScreen.storyboard */; };
 		D0F2C4AB25DFCD81006BFF3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D03E44EB2420AABC00A43FEA /* Assets.xcassets */; };
 		D0F2C4AC25DFCD81006BFF3D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D03E44E82420AABA00A43FEA /* Main.storyboard */; };
-		D0F2C4AE25DFCD81006BFF3D /* LeapAUISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D0F2C4AE25DFCD81006BFF3D /* LeapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F2C4AF25DFCD81006BFF3D /* LeapCoreSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F2C4B025DFCD81006BFF3D /* LeapCreatorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -263,7 +241,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D0F2C4AE25DFCD81006BFF3D /* LeapAUISDK.framework in Embed Frameworks */,
+				D0F2C4AE25DFCD81006BFF3D /* LeapSDK.framework in Embed Frameworks */,
 				D0F2C4AF25DFCD81006BFF3D /* LeapCoreSDK.framework in Embed Frameworks */,
 				D0F2C4B025DFCD81006BFF3D /* LeapCreatorSDK.framework in Embed Frameworks */,
 			);
@@ -375,7 +353,7 @@
 		D0ABD033248126820069FA67 /* LeapSDKInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSDKInfo.swift; sourceTree = "<group>"; };
 		D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSharedInformation.swift; sourceTree = "<group>"; };
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
-		D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapAUISDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0B603F725DFB6BA0092F735 /* LeapSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0B793092543186D00DB94DD /* LeapAssistInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapAssistInfo.swift; sourceTree = "<group>"; };
 		D0B7930A2543186D00DB94DD /* LeapIconInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapIconInfo.swift; sourceTree = "<group>"; };
 		D0B7930B2543186D00DB94DD /* LeapAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapAssist.swift; sourceTree = "<group>"; };
@@ -418,9 +396,9 @@
 		D0E55D582479747E005B3EAB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeapSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewController.swift; sourceTree = "<group>"; };
-		D0FDAC2424B48B3C00D9332B /* LeapAUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeapAUI.h; sourceTree = "<group>"; };
+		D0FDAC2424B48B3C00D9332B /* Leap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Leap.h; sourceTree = "<group>"; };
 		D0FDAC2524B48B3C00D9332B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D0FDAC3024B4A49700D9332B /* LeapAUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAUI.swift; sourceTree = "<group>"; };
+		D0FDAC3024B4A49700D9332B /* Leap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leap.swift; sourceTree = "<group>"; };
 		D0FDAC3724B4BF7100D9332B /* LeapAUIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAUIManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -460,7 +438,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0F2C4A625DFCD81006BFF3D /* LeapAUISDK.framework in Frameworks */,
+				D0F2C4A625DFCD81006BFF3D /* LeapSDK.framework in Frameworks */,
 				D0F2C4A725DFCD81006BFF3D /* LeapCoreSDK.framework in Frameworks */,
 				D0F2C4A825DFCD81006BFF3D /* LeapCreatorSDK.framework in Frameworks */,
 			);
@@ -641,7 +619,7 @@
 			isa = PBXGroup;
 			children = (
 				D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */,
-				D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */,
+				D0B603F725DFB6BA0092F735 /* LeapSDK.framework */,
 				D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */,
 				D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */,
 			);
@@ -866,10 +844,10 @@
 				D07FEB052492C600004FFD99 /* LeapDisableAssistance */,
 				D07FEAFE2492C600004FFD99 /* LeapIconOptions */,
 				D04E8589248A886700BA5CA3 /* LeapImages */,
-				D0FDAC2424B48B3C00D9332B /* LeapAUI.h */,
+				D0FDAC2424B48B3C00D9332B /* Leap.h */,
 				D0FDAC2524B48B3C00D9332B /* Info.plist */,
 				2D2AE918258D00AF0038A5C3 /* LeapSharedAUI.swift */,
-				D0FDAC3024B4A49700D9332B /* LeapAUI.swift */,
+				D0FDAC3024B4A49700D9332B /* Leap.swift */,
 				D0FDAC3724B4BF7100D9332B /* LeapAUIManager.swift */,
 				D0938E0D251DD67000FD462E /* LeapMediaManager.swift */,
 				D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */,
@@ -902,7 +880,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0B603BD25DFB6BA0092F735 /* LeapAUI.h in Headers */,
+				D0B603BD25DFB6BA0092F735 /* Leap.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -951,9 +929,9 @@
 			productReference = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D0B603B925DFB6BA0092F735 /* LeapAUISDK */ = {
+		D0B603B925DFB6BA0092F735 /* LeapSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUISDK" */;
+			buildConfigurationList = D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapSDK" */;
 			buildPhases = (
 				D0B603BC25DFB6BA0092F735 /* Headers */,
 				D0B603BE25DFB6BA0092F735 /* Sources */,
@@ -965,9 +943,9 @@
 			dependencies = (
 				D0B603BA25DFB6BA0092F735 /* PBXTargetDependency */,
 			);
-			name = LeapAUISDK;
+			name = LeapSDK;
 			productName = JinyAUI;
-			productReference = D0B603F725DFB6BA0092F735 /* LeapAUISDK.framework */;
+			productReference = D0B603F725DFB6BA0092F735 /* LeapSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D0F2C49125DFCD81006BFF3D /* LeapSampleApp */ = {
@@ -1002,13 +980,7 @@
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Aravind GS";
 				TargetAttributes = {
-					D051F20625E3D77A00A2D81B = {
-						CreatedOnToolsVersion = 12.4;
-					};
 					D0992891260B744A00A1FF58 = {
-						CreatedOnToolsVersion = 12.4;
-					};
-					D0F4688325DBC40700FEF37A = {
 						CreatedOnToolsVersion = 12.4;
 					};
 				};
@@ -1030,12 +1002,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D0F4688325DBC40700FEF37A /* LeapAUIUniversal */,
 				D08DA63225DEA2E800EB0EFC /* LeapCoreSDK */,
-				D0B603B925DFB6BA0092F735 /* LeapAUISDK */,
+				D0B603B925DFB6BA0092F735 /* LeapSDK */,
 				D02C12F225DFC6B000C80E28 /* LeapCreatorSDK */,
 				D0F2C49125DFCD81006BFF3D /* LeapSampleApp */,
-				D051F20625E3D77A00A2D81B /* LeapCreatorUniversal */,
 				D0992891260B744A00A1FF58 /* LeapUniversalDev */,
 				D09928B1260B785100A1FF58 /* LeapUniversalStage */,
 				D0ABE684260B78C6006D0E0C /* LeapUniversalProduction */,
@@ -1088,23 +1058,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		D002373025E3EFA300BE1069 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSCHEME_NAME=\"LeapCreatorSDK\"\nFRAMEWORK_NAME=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n";
-		};
 		D09928A1260B745800A1FF58 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1120,7 +1073,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SCHEME_NAME_AUI=\"LeapAUISDK\"\nFRAMEWORK_NAME_AUI=\"LeapAUISDK\"\nCONFIG_NAME=\"ReleaseLeapDev\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
+			shellScript = "SCHEME_NAME_AUI=\"LeapSDK\"\nFRAMEWORK_NAME_AUI=\"LeapSDK\"\nCONFIG_NAME=\"ReleaseLeapDev\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
 		};
 		D09928B2260B785100A1FF58 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1137,7 +1090,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SCHEME_NAME_AUI=\"LeapAUISDK\"\nFRAMEWORK_NAME_AUI=\"LeapAUISDK\"\nCONFIG_NAME=\"ReleaseLeapStage\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
+			shellScript = "SCHEME_NAME_AUI=\"LeapSDK\"\nFRAMEWORK_NAME_AUI=\"LeapSDK\"\nCONFIG_NAME=\"ReleaseLeapStage\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
 		};
 		D0ABE685260B78C6006D0E0C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1154,24 +1107,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SCHEME_NAME_AUI=\"LeapAUISDK\"\nFRAMEWORK_NAME_AUI=\"LeapAUISDK\"\nCONFIG_NAME=\"ReleaseLeapProduction\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
-		};
-		D0F4688F25DBC41200FEF37A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "SCHEME_NAME=\"LeapAUISDK\"\nFRAMEWORK_NAME=\"LeapAUISDK\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n";
+			shellScript = "SCHEME_NAME_AUI=\"LeapSDK\"\nFRAMEWORK_NAME_AUI=\"LeapSDK\"\nCONFIG_NAME=\"ReleaseLeapProduction\"\nSIMULATOR_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_AUI=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_AUI}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./build/${CONFIG_NAME}\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_AUI} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_AUI} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_AUI} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_AUI}/Products/Library/Frameworks/${FRAMEWORK_NAME_AUI}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_AUI}.xcframework\n  \n  \nSCHEME_NAME_CORE=\"LeapCoreSDK\"\nFRAMEWORK_NAME_CORE=\"LeapCoreSDK\"\nSIMULATOR_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CORE=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CORE}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CORE} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CORE} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CORE} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CORE}/Products/Library/Frameworks/${FRAMEWORK_NAME_CORE}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CORE}.xcframework\n\n\n\nSCHEME_NAME_CREATOR=\"LeapCreatorSDK\"\nFRAMEWORK_NAME_CREATOR=\"LeapCreatorSDK\"\nSIMULATOR_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH_CREATOR=\"${BUILD_DIR}/${CONFIG_NAME}/${FRAMEWORK_NAME_CREATOR}-iphoneos.xcarchive\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME_CREATOR} \\\n  -configuration ${CONFIG_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH_CREATOR} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH_CREATOR}/Products/Library/Frameworks/${FRAMEWORK_NAME_CREATOR}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME_CREATOR}.xcframework\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1275,7 +1211,7 @@
 				D02E95FE261A4641001A2AA2 /* LeapPropertiesHandler.swift in Sources */,
 				D0B603C925DFB6BA0092F735 /* LeapNetworking.swift in Sources */,
 				D0B603CA25DFB6BA0092F735 /* Leap+UIColor.swift in Sources */,
-				D0B603CB25DFB6BA0092F735 /* LeapAUI.swift in Sources */,
+				D0B603CB25DFB6BA0092F735 /* Leap.swift in Sources */,
 				D0B603CC25DFB6BA0092F735 /* LeapNotification.swift in Sources */,
 				D0B603CD25DFB6BA0092F735 /* LeapMedia.swift in Sources */,
 				D0B603CE25DFB6BA0092F735 /* LeapSlideIn.swift in Sources */,
@@ -1346,7 +1282,7 @@
 		};
 		D0F2C49425DFCD81006BFF3D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D0B603B925DFB6BA0092F735 /* LeapAUISDK */;
+			target = D0B603B925DFB6BA0092F735 /* LeapSDK */;
 			targetProxy = D0F2C49525DFCD81006BFF3D /* PBXContainerItemProxy */;
 		};
 		D0F2C49625DFCD81006BFF3D /* PBXTargetDependency */ = {
@@ -1440,14 +1376,6 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		2DD28752261E11C000BCA210 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
@@ -1568,14 +1496,6 @@
 			};
 			name = Debug;
 		};
-		2DD28757261E11C000BCA210 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
 		2DD28758261E11C000BCA210 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1658,14 +1578,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		2DD2875C261E11D500BCA210 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1782,14 +1694,6 @@
 			};
 			name = Release;
 		};
-		2DD28761261E11D500BCA210 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		2DD28762261E11D500BCA210 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1878,14 +1782,6 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = DebugLeapDev;
-		};
-		D0992797260B4CF500A1FF58 /* DebugLeapDev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = DebugLeapDev;
 		};
@@ -2006,14 +1902,6 @@
 			};
 			name = DebugLeapDev;
 		};
-		D099279C260B4CF500A1FF58 /* DebugLeapDev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = DebugLeapDev;
-		};
 		D09927A4260B4D0F00A1FF58 /* DebugLeapStage */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2078,14 +1966,6 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = DebugLeapStage;
-		};
-		D09927A5260B4D0F00A1FF58 /* DebugLeapStage */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = DebugLeapStage;
 		};
@@ -2206,14 +2086,6 @@
 			};
 			name = DebugLeapStage;
 		};
-		D09927AA260B4D0F00A1FF58 /* DebugLeapStage */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = DebugLeapStage;
-		};
 		D09927B2260B4D2500A1FF58 /* ReleaseLeapDev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2272,14 +2144,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = ReleaseLeapDev;
-		};
-		D09927B3260B4D2500A1FF58 /* ReleaseLeapDev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = ReleaseLeapDev;
 		};
@@ -2396,14 +2260,6 @@
 			};
 			name = ReleaseLeapDev;
 		};
-		D09927B8260B4D2500A1FF58 /* ReleaseLeapDev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = ReleaseLeapDev;
-		};
 		D09927B9260B4D3200A1FF58 /* ReleaseLeapStage */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2462,14 +2318,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = ReleaseLeapStage;
-		};
-		D09927BA260B4D3200A1FF58 /* ReleaseLeapStage */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = ReleaseLeapStage;
 		};
@@ -2586,14 +2434,6 @@
 			};
 			name = ReleaseLeapStage;
 		};
-		D09927BF260B4D3200A1FF58 /* ReleaseLeapStage */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = ReleaseLeapStage;
-		};
 		D09927C0260B4D7100A1FF58 /* DebugLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2658,14 +2498,6 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = DebugLeapProduction;
-		};
-		D09927C1260B4D7100A1FF58 /* DebugLeapProduction */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = DebugLeapProduction;
 		};
@@ -2786,14 +2618,6 @@
 			};
 			name = DebugLeapProduction;
 		};
-		D09927C6260B4D7100A1FF58 /* DebugLeapProduction */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = DebugLeapProduction;
-		};
 		D09927C7260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2852,14 +2676,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = ReleaseLeapProduction;
-		};
-		D09927C8260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = ReleaseLeapProduction;
 		};
@@ -2973,14 +2789,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = ReleaseLeapProduction;
-		};
-		D09927CD260B4D7D00A1FF58 /* ReleaseLeapProduction */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = ReleaseLeapProduction;
 		};
@@ -3146,21 +2954,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = DebugLeapProduction;
 		};
-		D051F20725E3D77A00A2D81B /* Build configuration list for PBXAggregateTarget "LeapCreatorUniversal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D09927C6260B4D7100A1FF58 /* DebugLeapProduction */,
-				D09927AA260B4D0F00A1FF58 /* DebugLeapStage */,
-				D099279C260B4CF500A1FF58 /* DebugLeapDev */,
-				2DD28757261E11C000BCA210 /* Debug */,
-				D09927CD260B4D7D00A1FF58 /* ReleaseLeapProduction */,
-				D09927BF260B4D3200A1FF58 /* ReleaseLeapStage */,
-				D09927B8260B4D2500A1FF58 /* ReleaseLeapDev */,
-				2DD28761261E11D500BCA210 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = DebugLeapProduction;
-		};
 		D0592E71241FA6E3007782A8 /* Build configuration list for PBXProject "LeapSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -3236,7 +3029,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = DebugLeapProduction;
 		};
-		D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapAUISDK" */ = {
+		D0B603F425DFB6BA0092F735 /* Build configuration list for PBXNativeTarget "LeapSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D09927C3260B4D7100A1FF58 /* DebugLeapProduction */,
@@ -3262,21 +3055,6 @@
 				D09927BE260B4D3200A1FF58 /* ReleaseLeapStage */,
 				D09927B7260B4D2500A1FF58 /* ReleaseLeapDev */,
 				2DD28760261E11D500BCA210 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = DebugLeapProduction;
-		};
-		D0F4688625DBC40700FEF37A /* Build configuration list for PBXAggregateTarget "LeapAUIUniversal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D09927C1260B4D7100A1FF58 /* DebugLeapProduction */,
-				D09927A5260B4D0F00A1FF58 /* DebugLeapStage */,
-				D0992797260B4CF500A1FF58 /* DebugLeapDev */,
-				2DD28752261E11C000BCA210 /* Debug */,
-				D09927C8260B4D7D00A1FF58 /* ReleaseLeapProduction */,
-				D09927BA260B4D3200A1FF58 /* ReleaseLeapStage */,
-				D09927B3260B4D2500A1FF58 /* ReleaseLeapDev */,
-				2DD2875C261E11D500BCA210 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = DebugLeapProduction;
