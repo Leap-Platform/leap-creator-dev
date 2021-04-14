@@ -70,6 +70,7 @@ class LeapContextManager:NSObject {
         stageManager?.resetStageManager()
         auiHandler?.removeAllViews()
         previewConfig = LeapConfig(withDict: configDict)
+        analyticsManager = nil
         previewSounds = previewDict["sounds"] as? Dictionary<String,Any>
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         contextDetector?.start()
@@ -101,6 +102,7 @@ class LeapContextManager:NSObject {
         stageManager?.resetStageManager()
         previewSounds = nil
         previewConfig = nil
+        analyticsManager = LeapAnalyticsManager(self)
         contextDetector?.start()
     }
     
