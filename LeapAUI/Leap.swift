@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import LeapCoreSDK
 
 
@@ -36,8 +37,8 @@ import LeapCoreSDK
     }
     
     @discardableResult
-    @objc public func withBuilder(_ apiKey: String) -> Leap {
-        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
+    @objc public func withBuilder(_ apiKey: String) -> Leap? {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return nil }
         token = apiKey
         guard !(token!.isEmpty) else { fatalError("Empty token. Token cannot be empty") }
         LeapPreferences.shared.apiKey = apiKey

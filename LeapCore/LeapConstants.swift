@@ -210,5 +210,7 @@ let constant_viewport = "viewport"
 let constant_language = "language"
 let constant_stop = "stop"
 let constant_projectParameters = "projectParameters"
+let constant_previewDeviceUrl = "https://docs.leap.is/getting-started-with-leap/how-to-preview-projects-on-device"
+let constant_connectSampleAppUrl = "https://docs.leap.is/getting-started-with-leap/how-to-connect-sample-app"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
