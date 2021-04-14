@@ -75,10 +75,8 @@ class LeapPropertiesHandler {
     }
     
     func setDefaultStringProperties() {
-        let leapId = getLeapId()
         let deviceLanguage = Locale.preferredLanguages.first ?? "en"
         let stringProperties = [
-            "googleAdId":leapId,
             "deviceLanguageCode":deviceLanguage
         ]
         prefs.setValue(stringProperties, forKey: defaultStringPropertiesKey)
@@ -180,15 +178,7 @@ class LeapPropertiesHandler {
         return (intProps["totalTimeSpentOnApp"] ?? 0) + lastSessionDuration
     }
     
-    private func getLeapId() -> String {
-        let stringProperties = getDefaultStringProperties()
-        guard let leapId = stringProperties["leap_id"] else { return generateLeapId() }
-        return leapId
-    }
-    
-    private func generateLeapId() -> String {
-        return "\(randomString(8))-\(randomString(4))-\(randomString(4))-\(randomString(4))-\(randomString(12))"
-    }
+   
     
     private func getLastUpdated() -> Int64 {
         let defaultLongProps = getDefaultLongProperties()
@@ -202,9 +192,4 @@ class LeapPropertiesHandler {
         return Int64(Date().timeIntervalSince1970)
     }
     
-    func randomString(_ length: Int) -> String {
-        let letters = "abcdefghijklmnopqrstuvwxyz0123456789"
-        let randomString = String((0..<length).map{_ in letters.randomElement()!})
-        return randomString
-    }
 }

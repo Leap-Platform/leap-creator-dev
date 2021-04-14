@@ -77,6 +77,7 @@ extension LeapInternal {
             "x-jiny-client-id"      : apiKey,
             "x-app-version-code"    : versionCode,
             "x-app-version-name"    : versionName,
+            "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
             "Content-Type"          : "application/json"
         ]
         getSavedHeaders().forEach { headers[$0.key] = $0.value }
