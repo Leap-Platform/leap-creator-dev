@@ -80,7 +80,7 @@ class LeapPing: LeapKeyWindowAssist {
         NSLayoutConstraint.activate([widthConstraint!, heightConstraint!])
     }
     
-    override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType) {
+    override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0) {
         
         guard let enabled = iconInfo?.isEnabled, enabled else {
             
