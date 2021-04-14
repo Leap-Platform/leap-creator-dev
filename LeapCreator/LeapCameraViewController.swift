@@ -29,8 +29,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     let qrCodeImage = UIImageView()
     let headingLabel = UILabel()
     var warningView:UIView?
-    let descLabel = UILabel()
-    let learnMoreButton = UIButton()
+    let descLabel1 = UILabel()
+    let descLabel2 = UILabel()
+    let learnMoreButton1 = UIButton()
+    let learnMoreButton2 = UIButton()
     var fetchView: UIView?
     var scannerView:UIView?
     var captureSession: AVCaptureSession!
@@ -67,10 +69,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             }
 
         } else {
-        
-           setupView()
             
             if Bundle.main.bundleIdentifier == "com.leap.LeapSampleApp" {
+                
+                notificationType = .sampleApp
                 
                 closeButton.isHidden = true
             
@@ -78,6 +80,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 
                 closeButton.isHidden = false
             }
+            
+            setupView()
         }
     }
     
@@ -115,27 +119,69 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     private func setupDescLabel() {
-        descLabel.text = "To preview projects on device"
-        descLabel.textColor = .white
-        descLabel.textAlignment = .center
-        descLabel.numberOfLines = 0
-        descLabel.font = UIFont(name: "Helvetica Neue", size: 15)
-        view.addSubview(descLabel)
-        descLabel.translatesAutoresizingMaskIntoConstraints = false
-        descLabel.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
-        descLabel.centerXAnchor.constraint(equalTo: qrCodeImage.centerXAnchor).isActive = true
-        descLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 50).isActive = true
+        if notificationType == .preview {
+            descLabel1.text = "To preview projects on device"
+            descLabel1.textColor = .white
+            descLabel1.textAlignment = .center
+            descLabel1.numberOfLines = 0
+            descLabel1.font = UIFont(name: "Helvetica Neue", size: 15)
+            view.addSubview(descLabel1)
+            descLabel1.translatesAutoresizingMaskIntoConstraints = false
+            descLabel1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
+            descLabel1.centerXAnchor.constraint(equalTo: qrCodeImage.centerXAnchor).isActive = true
+            descLabel1.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 50).isActive = true
+        } else {
+            descLabel1.text = "1. To preview projects on device"
+            descLabel1.textColor = .white
+            descLabel1.textAlignment = .center
+            descLabel1.numberOfLines = 0
+            descLabel1.font = UIFont(name: "Helvetica Neue", size: 15)
+            view.addSubview(descLabel1)
+            descLabel1.translatesAutoresizingMaskIntoConstraints = false
+            descLabel1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
+            descLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+            
+            descLabel2.text = "2. To connect Sample app"
+            descLabel2.textColor = .white
+            descLabel2.textAlignment = .center
+            descLabel2.numberOfLines = 0
+            descLabel2.font = UIFont(name: "Helvetica Neue", size: 15)
+            view.addSubview(descLabel2)
+            descLabel2.translatesAutoresizingMaskIntoConstraints = false
+            descLabel2.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 60).isActive = true
+            descLabel2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+        }
     }
     
     private func setupLearnMoreButton() {
-        learnMoreButton.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
-        learnMoreButton.setTitle("Learn More", for: .normal)
-        learnMoreButton.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
-        learnMoreButton.addTarget(self, action: #selector(learnMoreClicked), for: .touchUpInside)
-        view.addSubview(learnMoreButton)
-        learnMoreButton.translatesAutoresizingMaskIntoConstraints = false
-        learnMoreButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        learnMoreButton.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 16).isActive = true
+        if notificationType == .preview {
+            learnMoreButton1.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
+            learnMoreButton1.setTitle("Learn More", for: .normal)
+            learnMoreButton1.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
+            learnMoreButton1.addTarget(self, action: #selector(learnMore1Clicked), for: .touchUpInside)
+            view.addSubview(learnMoreButton1)
+            learnMoreButton1.translatesAutoresizingMaskIntoConstraints = false
+            learnMoreButton1.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            learnMoreButton1.topAnchor.constraint(equalTo: descLabel1.bottomAnchor, constant: 16).isActive = true
+        } else {
+            learnMoreButton1.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
+            learnMoreButton1.setTitle("Learn More", for: .normal)
+            learnMoreButton1.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
+            learnMoreButton1.addTarget(self, action: #selector(learnMore1Clicked), for: .touchUpInside)
+            view.addSubview(learnMoreButton1)
+            learnMoreButton1.translatesAutoresizingMaskIntoConstraints = false
+                        learnMoreButton1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 14).isActive = true
+            learnMoreButton1.leadingAnchor.constraint(equalTo: descLabel1.trailingAnchor, constant: 15).isActive = true
+            
+            learnMoreButton2.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
+            learnMoreButton2.setTitle("Learn More", for: .normal)
+            learnMoreButton2.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
+            learnMoreButton2.addTarget(self, action: #selector(learnMore2Clicked), for: .touchUpInside)
+            view.addSubview(learnMoreButton2)
+            learnMoreButton2.translatesAutoresizingMaskIntoConstraints = false
+            learnMoreButton2.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 54).isActive = true
+            learnMoreButton2.leadingAnchor.constraint(equalTo: descLabel2.trailingAnchor, constant: 15).isActive = true
+        }
     }
     
     private func setupCameraButton() {
@@ -270,7 +316,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
            let projectName = infoDict["projectName"] as? String ?? ""
            fetchPreviewConfig(previewId: id, projectName:projectName)
         
-        } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP" {
+        } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP", Bundle.main.bundleIdentifier == "com.leap.LeapSampleApp" {
             
             configureSampleApp(infoDict: infoDict)
             
@@ -385,8 +431,18 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         delegate?.closed(type: notificationType)
     }
     
-    @objc func learnMoreClicked() {
-        
+    @objc func learnMore1Clicked() {
+        if let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice, let url = URL(string: previewDeviceUrl) {
+            
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc func learnMore2Clicked() {
+        if let connectSampleAppUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.connectSampleApp, let url = URL(string: connectSampleAppUrl) {
+            
+            UIApplication.shared.open(url)
+        }
     }
     
     @objc func scanAgain() {

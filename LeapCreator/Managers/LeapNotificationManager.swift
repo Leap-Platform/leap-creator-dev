@@ -32,7 +32,7 @@ class LeapNotificationManager:NSObject {
                 if type == .preview {
                    self.triggerNotification()
                 } else if type == .sampleApp {
-                   self.triggerSampleAppNotification(infoDict: infoDict)
+                   self.triggerNotification(notificationType: type)
                 }
             case .denied:
                 break
@@ -53,54 +53,35 @@ class LeapNotificationManager:NSObject {
                 if type == .preview {
                    self.triggerNotification()
                 } else if type == .sampleApp {
-                   self.triggerSampleAppNotification(infoDict: infoDict)
+                   self.triggerNotification(notificationType: type)
                 }
             }
         }
     }
     
-    func triggerNotification() {
+    func triggerNotification(notificationType: NotificationType = .preview) {
         
-        let rescanAction = UNNotificationAction(identifier: "PreviewScan", title: "Scan", options: UNNotificationActionOptions(rawValue: 0))
+        var rescanAction: UNNotificationAction?
         
-        let scanSuccessCategory = UNNotificationCategory(identifier: "scanSuccess", actions: [rescanAction], intentIdentifiers: [], options: [])
+        if notificationType == .preview {
+            rescanAction = UNNotificationAction(identifier: "PreviewScan", title: "Scan", options: UNNotificationActionOptions(rawValue: 0))
+        } else if notificationType == .sampleApp {
+            
+            rescanAction = UNNotificationAction(identifier: "Rescan", title: "Scan", options: UNNotificationActionOptions(rawValue: 0))
+        }
+                
+        let scanSuccessCategory = UNNotificationCategory(identifier: "scanSuccess", actions: [rescanAction!], intentIdentifiers: [], options: [])
         
         self.notificationCenter.setNotificationCategories([scanSuccessCategory])
 
         let content = UNMutableNotificationContent()
         content.categoryIdentifier = "scanSuccess"
-        content.title = (Bundle.main.infoDictionary?["CFBundleName"] as? String) ?? "Empty"
+        content.title = "Leap creator mode: ON"
         let bundleShortVersionString = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "Empty"
         content.body = "App Version: \(bundleShortVersionString)"
         let request = UNNotificationRequest(identifier: "LeapScanNotification", content: content, trigger: nil)
         
         self.notificationCenter.add(request, withCompletionHandler: nil)
-    }
-    
-    func triggerSampleAppNotification(infoDict: Dictionary<String, Any>) {
-        
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-         
-        guard settings.authorizationStatus == .authorized else { return }
-            
-        let rescanAction = UNNotificationAction(identifier: "Rescan",
-                      title: "Rescan",
-                      options: UNNotificationActionOptions(rawValue: 0))
-                
-        let scanSuccessCategory = UNNotificationCategory(identifier: "scanSuccess", actions: [rescanAction], intentIdentifiers: [], options: [])
-                
-        UNUserNotificationCenter.current().setNotificationCategories([scanSuccessCategory])
-                    
-        let content = UNMutableNotificationContent()
-        content.categoryIdentifier = "scanSuccess"
-        if let appName = infoDict["appName"] as? String {
-           content.title = appName
-           content.subtitle = "connected"
-        }
-        let request = UNNotificationRequest(identifier: "LeapScanNotification", content: content, trigger: nil)
-            
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-        }
     }
 }
 
