@@ -38,6 +38,7 @@ class LeapViewProps:Codable {
     var tag:Int
     var class_name:String
     var node_index:Int
+    var is_recyclerview:Bool
     var bounds:LeapViewBounds
     var placeholder:String?
     var text:String?
@@ -69,6 +70,7 @@ class LeapViewProps:Codable {
         case tag
         case class_name = "class"
         case node_index
+        case is_recyclerview
         case bounds
         case placeholder
         case text
@@ -104,6 +106,7 @@ class LeapViewProps:Codable {
         tag = view.tag
         class_name = String(describing: type(of: view))
         node_index = view.superview?.subviews.firstIndex(of: view) ?? -1
+        is_recyclerview = view.isKind(of: UITableView.self) || view.isKind(of: UICollectionView.self)
         bounds = LeapViewBounds(view: view)
         is_focusable = view.canBecomeFocused
         is_focused = view.isFocused
