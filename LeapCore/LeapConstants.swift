@@ -213,5 +213,9 @@ let constant_stop = "stop"
 let constant_projectParameters = "projectParameters"
 let constant_previewDeviceUrl = "https://docs.leap.is/getting-started-with-leap/how-to-preview-projects-on-device"
 let constant_connectSampleAppUrl = "https://docs.leap.is/getting-started-with-leap/how-to-connect-sample-app"
+let constant_cameraAccess = "It looks like your privacy settings are preventing us from accessing your camera to do QR code scanning. You can fix this by tapping on 'GO'"
+let constant_incorrectAppOrVersionWarning = "Incorrect app or version"
+let constant_connectSampleAppWarning = "Invalid QR code! \n\nConnect to Sample App before preview"
+let constant_invalidQRCodeWarning = "Invalid QR Code!"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
