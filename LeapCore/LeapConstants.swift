@@ -217,5 +217,6 @@ let constant_cameraAccess = "It looks like your privacy settings are preventing 
 let constant_incorrectAppOrVersionWarning = "Incorrect app or version"
 let constant_connectSampleAppWarning = "Invalid QR code! \n\nConnect to Sample App before preview"
 let constant_invalidQRCodeWarning = "Invalid QR Code!"
+let constant_totalTimeSpentOnApp = "totalTimeSpentOnApp"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
