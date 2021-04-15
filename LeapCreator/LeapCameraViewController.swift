@@ -107,7 +107,9 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             case .notDetermined: // The user has not yet been asked for camera access.
                 AVCaptureDevice.requestAccess(for: .video) { granted in
                     if granted {
-                        self.setupCaptureSession()
+                        DispatchQueue.main.async {
+                           self.setupCaptureSession()
+                        }
                     }
                 }
             
