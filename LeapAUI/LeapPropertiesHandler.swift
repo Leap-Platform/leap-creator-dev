@@ -43,17 +43,12 @@ class LeapPropertiesHandler {
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(didFinishLaunching(_:)), name: UIApplication.didFinishLaunchingNotification, object: nil)
-    }
-    
-    @objc func didFinishLaunching(_ notification: NSNotification) {
-        if let totalTimeSpentOnApp = prefs.value(forKey: constant_totalTimeSpentOnApp) as? Int64 {
-            totalTime = totalTimeSpentOnApp
-        }
     }
     
     @objc func didBecomeActive(_ notification: NSNotification) {
+        if let totalTimeSpentOnApp = prefs.value(forKey: constant_totalTimeSpentOnApp) as? Int64 {
+            totalTime = totalTimeSpentOnApp
+        }
         startTime = Int64(Date().timeIntervalSince1970)
     }
     
