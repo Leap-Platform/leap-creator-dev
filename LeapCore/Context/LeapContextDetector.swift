@@ -506,7 +506,7 @@ extension LeapContextDetector {
         var resultViews = views
         if params.accId != nil { resultViews = resultViews.filter{ $0.accessibilityIdentifier == params.accId } }
         if params.accLabel != nil { resultViews = resultViews.filter{ $0.accessibilityLabel == params.accLabel } }
-        if params.tag != nil { resultViews = resultViews.filter{ $0.tag == params.tag } }
+        if params.tag != nil { resultViews = resultViews.filter{ "\($0.tag)" == params.tag } }
         if params.className != nil { resultViews = resultViews.filter{ String(describing: type(of: $0)) == params.className! }}
         if let text = params.text, let localeText = text[constant_ang] {
             resultViews =  resultViews.filter { (view) -> Bool in
