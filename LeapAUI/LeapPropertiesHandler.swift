@@ -25,6 +25,9 @@ class LeapPropertiesHandler {
     let leapSessionEndKey = "leap_last_session_end"
     let leapCurrentSessionKey = "leap_current_session_start"
     let leapVersionKey = "leap_last_session_version"
+    private var startTime: Int64 = 0
+    private var endTime: Int64 = 0
+    private var totalTime: Int64 = 0
     
     func start() {
         let sessionStart = Int64(Date().timeIntervalSince1970)
@@ -37,15 +40,38 @@ class LeapPropertiesHandler {
     }
     
     func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(willResignActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didFinishLaunching(_:)), name: UIApplication.didFinishLaunchingNotification, object: nil)
     }
     
-    @objc func appWillTerminate(_ notification:NSNotification) {
-        let sessionStartTime = prefs.value(forKey: leapCurrentSessionKey) as? Int64
+    @objc func didFinishLaunching(_ notification: NSNotification) {
+        if let totalTimeSpentOnApp = prefs.value(forKey: constant_totalTimeSpentOnApp) as? Int64 {
+            totalTime = totalTimeSpentOnApp
+        }
+    }
+    
+    @objc func didBecomeActive(_ notification: NSNotification) {
+        startTime = Int64(Date().timeIntervalSince1970)
+    }
+    
+    @objc func willResignActive(_ notification: NSNotification) {
+        endTime = Int64(Date().timeIntervalSince1970)
+        totalTime = totalTime + (endTime - startTime)
+        DispatchQueue.main.async {
+        // save total time spent on app
+            self.prefs.setValue(self.totalTime, forKey: constant_totalTimeSpentOnApp)
+        // replace session start time and session end time
+            let sessionStartTime = self.prefs.value(forKey: self.leapCurrentSessionKey) as? Int64
         let sessionEndTime = Int64(Date().timeIntervalSince1970)
-        prefs.setValue(sessionStartTime, forKey: leapSessionStartKey)
-        prefs.setValue(sessionEndTime, forKey: leapSessionEndKey)
-        prefs.synchronize()
+        // save session start time
+            self.prefs.setValue(sessionStartTime, forKey: self.leapSessionStartKey)
+        // save session end time
+            self.prefs.setValue(sessionEndTime, forKey: self.leapSessionEndKey)
+            print("Total time spent on the app is \(self.totalTime) seconds")
+        }
     }
     
     func setDefaultLongProperties() {
@@ -68,7 +94,7 @@ class LeapPropertiesHandler {
         let totalDuration = getTotalDuration()
         let intProperties: Dictionary<String, Int> = [
             "sessionCount"          : sessionCount,
-            "totalTimeSpentOnApp"   : totalDuration
+            constant_totalTimeSpentOnApp   : totalDuration
         ]
         prefs.setValue(intProperties, forKey: defaultIntPropetiesKey)
         prefs.synchronize()
@@ -167,18 +193,10 @@ class LeapPropertiesHandler {
         let defaultIntProps = getDefaultIntProperties()
         return (defaultIntProps["sessionCount"] ?? 0) + 1
     }
-    
 
     private func getTotalDuration() -> Int {
-        let intProps = getDefaultIntProperties()
-        guard let lastSessionStart  = prefs.value(forKey:leapSessionStartKey) as? Int64,
-              let lastSessionEnd = prefs.value(forKey: leapSessionEndKey) as? Int64 else { return 0 }
-        var lastSessionDuration = Int(lastSessionEnd - lastSessionStart)
-        if lastSessionDuration < 0 { lastSessionDuration = 0 }
-        return (intProps["totalTimeSpentOnApp"] ?? 0) + lastSessionDuration
+        return Int(prefs.value(forKey: constant_totalTimeSpentOnApp) as? Int64 ?? 0)
     }
-    
-   
     
     private func getLastUpdated() -> Int64 {
         let defaultLongProps = getDefaultLongProperties()
