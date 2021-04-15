@@ -48,7 +48,7 @@ class LeapNativeParameters {
         accId = paramsDict[constant_ACC_ID] as? String
         accLabel = paramsDict[constant_ACC_LABEL] as? String
         tag = paramsDict[constant_TAG] as? String
-        className = paramsDict[constant_class] as? String
+        className = paramsDict[constant_className] as? String
         text = paramsDict[constant_text] as? Dictionary<String,String>
         placeholder = paramsDict[constant_placeholder] as? Dictionary<String,String>
         textRegex = paramsDict[constant_text_regex] as? String
