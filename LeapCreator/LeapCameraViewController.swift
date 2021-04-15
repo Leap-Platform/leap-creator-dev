@@ -182,25 +182,26 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             descLabel1.centerXAnchor.constraint(equalTo: qrCodeImage.centerXAnchor).isActive = true
             descLabel1.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 50).isActive = true
         } else {
-            descLabel1.text = "1. To preview projects on device"
+            descLabel1.text = "1. To connect Sample app"
             descLabel1.textColor = .white
             descLabel1.textAlignment = .center
             descLabel1.numberOfLines = 0
             descLabel1.font = UIFont(name: "Helvetica Neue", size: 15)
+            descLabel1.adjustsFontSizeToFitWidth = true
             view.addSubview(descLabel1)
             descLabel1.translatesAutoresizingMaskIntoConstraints = false
             descLabel1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
-            descLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
-            
-            descLabel2.text = "2. To connect Sample app"
+            descLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIScreen.main.bounds.size.width*0.07).isActive = true
+            descLabel2.text = "2. To preview projects on device"
             descLabel2.textColor = .white
             descLabel2.textAlignment = .center
             descLabel2.numberOfLines = 0
             descLabel2.font = UIFont(name: "Helvetica Neue", size: 15)
+            descLabel2.adjustsFontSizeToFitWidth = true
             view.addSubview(descLabel2)
             descLabel2.translatesAutoresizingMaskIntoConstraints = false
             descLabel2.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 60).isActive = true
-            descLabel2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+            descLabel2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIScreen.main.bounds.size.width*0.07).isActive = true
         }
     }
     
@@ -219,19 +220,23 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             learnMoreButton1.setTitle("Learn More", for: .normal)
             learnMoreButton1.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
             learnMoreButton1.addTarget(self, action: #selector(learnMore1Clicked), for: .touchUpInside)
+            learnMoreButton1.titleLabel?.adjustsFontSizeToFitWidth = true
+            learnMoreButton1.sizeToFit()
             view.addSubview(learnMoreButton1)
             learnMoreButton1.translatesAutoresizingMaskIntoConstraints = false
-                        learnMoreButton1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 14).isActive = true
-            learnMoreButton1.leadingAnchor.constraint(equalTo: descLabel1.trailingAnchor, constant: 15).isActive = true
+            learnMoreButton1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 14).isActive = true
+            learnMoreButton1.leadingAnchor.constraint(equalTo: descLabel1.trailingAnchor, constant: UIScreen.main.bounds.width*0.015).isActive = true
             
             learnMoreButton2.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
             learnMoreButton2.setTitle("Learn More", for: .normal)
             learnMoreButton2.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
             learnMoreButton2.addTarget(self, action: #selector(learnMore2Clicked), for: .touchUpInside)
+            learnMoreButton2.titleLabel?.adjustsFontSizeToFitWidth = true
+            learnMoreButton2.sizeToFit()
             view.addSubview(learnMoreButton2)
             learnMoreButton2.translatesAutoresizingMaskIntoConstraints = false
             learnMoreButton2.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 54).isActive = true
-            learnMoreButton2.leadingAnchor.constraint(equalTo: descLabel2.trailingAnchor, constant: 15).isActive = true
+            learnMoreButton2.leadingAnchor.constraint(equalTo: descLabel2.trailingAnchor, constant: UIScreen.main.bounds.width*0.015).isActive = true
         }
     }
     
@@ -248,10 +253,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         openCamera.topAnchor.constraint(equalTo: cameraImage.bottomAnchor, constant: 30).isActive = true
         openCamera.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         openCamera.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        openCamera.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.33).isActive = true
+        openCamera.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
     }
     
-    private func setupCameraIcon(){
+    private func setupCameraIcon() {
         let image = UIImage(named: "leap_camera.png", in: Bundle(for: LeapCreator.self), compatibleWith: nil)
         guard let icon = image else { return }
         cameraImage.image = icon
@@ -487,20 +492,20 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     @objc func learnMore1Clicked() {
-        
-        let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice ?? constant_previewDeviceUrl
-        
-        guard let url = URL(string: previewDeviceUrl) else { return }
-        
-        UIApplication.shared.open(url)
+        if notificationType == .preview {
+            let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice ?? constant_previewDeviceUrl
+            guard let url = URL(string: previewDeviceUrl) else { return }
+            UIApplication.shared.open(url)
+        } else {
+            let connectSampleAppUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.connectSampleApp ?? constant_connectSampleAppUrl
+            guard let url = URL(string: connectSampleAppUrl) else { return }
+            UIApplication.shared.open(url)
+        }
     }
     
     @objc func learnMore2Clicked() {
-        
-        let connectSampleAppUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.connectSampleApp ?? constant_connectSampleAppUrl
-        
-        guard let url = URL(string: connectSampleAppUrl) else { return }
-        
+        let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice ?? constant_previewDeviceUrl
+        guard let url = URL(string: previewDeviceUrl) else { return }
         UIApplication.shared.open(url)
     }
     
