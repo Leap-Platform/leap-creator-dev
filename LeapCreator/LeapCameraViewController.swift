@@ -93,6 +93,55 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         setupCameraButton()
         setupCloseButton(inView: self.view)
         setupLearnMoreButton()
+        askForCameraAccess()
+    }
+    
+    @objc func askForCameraAccess() {
+        
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+            case .authorized: // The user has previously granted access to the camera.
+                DispatchQueue.main.async {
+                   self.setupCaptureSession()
+                }
+            
+            case .notDetermined: // The user has not yet been asked for camera access.
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    if granted {
+                        self.setupCaptureSession()
+                    }
+                }
+            
+            case .denied: // The user has previously denied access.
+                DispatchQueue.main.async {
+                    self.showAlertToSettings()
+                }
+                return
+
+            case .restricted: // The user can't grant access due to restrictions.
+                return
+        @unknown default:
+            return
+        }
+    }
+    
+    func showAlertToSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+
+        let goButton = "Go"
+        var goAction = UIAlertAction(title: goButton, style: .default, handler: nil)
+        let cancelButton = "Cancel"
+        let cancelAction = UIAlertAction(title: cancelButton, style: .cancel, handler: nil)
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+
+            goAction = UIAlertAction(title: goButton, style: .default, handler: {(alert: UIAlertAction!) -> Void in
+                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+            })
+        }
+
+        let alert = UIAlertController(title: "Permission Required", message: constant_cameraAccess, preferredStyle: .alert)
+        alert.addAction(goAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func setupQRCodeImage() {
@@ -191,7 +240,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         openCamera.setTitle("Open Camera", for: .normal)
         openCamera.setTitleColor(.white, for: .normal)
         openCamera.titleLabel?.font = UIFont(name: "Helvetica Neue Bold", size: 15)
-        openCamera.addTarget(self, action: #selector(cameraButtonClicked), for: .touchUpInside)
+        openCamera.addTarget(self, action: #selector(askForCameraAccess), for: .touchUpInside)
         view.addSubview(openCamera)
         openCamera.translatesAutoresizingMaskIntoConstraints = false
         openCamera.topAnchor.constraint(equalTo: cameraImage.bottomAnchor, constant: 30).isActive = true
@@ -229,7 +278,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
     }
     
-    @objc func cameraButtonClicked() {
+    @objc func setupCaptureSession() {
         
         setupScannerView()
         captureSession = AVCaptureSession()
@@ -299,19 +348,18 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         //Check if is leap QR
         guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any>,
               infoDict["owner"] as? String == "LEAP"  else {
-                presentWarning("Invalid QR Code!")
+                presentWarning(constant_invalidQRCodeWarning)
                 return
               }
         
         // Check if is iOS Platform
         guard infoDict["platformType"] as? String == "IOS" else {
-            presentWarning("Invalid QR Code!")
+            presentWarning(constant_invalidQRCodeWarning)
             return
         }
         
         // Check if is of type PREVIEW
         if let id = infoDict["id"] as? String, infoDict["type"] as? String == "PREVIEW" {
-           presentLoader()
            notificationType = .preview
            let projectName = infoDict["projectName"] as? String ?? ""
            fetchPreviewConfig(previewId: id, projectName:projectName)
@@ -321,7 +369,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             configureSampleApp(infoDict: infoDict)
             
         } else {
-            presentWarning("Invalid QR Code!")
+            presentWarning(constant_invalidQRCodeWarning)
         }
     }
     
@@ -352,29 +400,32 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         let bundleShortVersionString = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Empty"
         req.addValue(bundleShortVersionString, forHTTPHeaderField: "x-app-version-name")
         req.addValue(previewId, forHTTPHeaderField: "x-preview-id")
-        guard let apiKey = LeapCreatorShared.shared.apiKey else { return }
+        guard let apiKey = LeapCreatorShared.shared.apiKey else {
+            self.presentWarning(constant_connectSampleAppWarning)
+            return
+        }
+        presentLoader()
         req.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
         
         let task = URLSession.shared.dataTask(with: req) { (data, respsonse, error) in
             DispatchQueue.main.async {
                 self.fetchView?.removeFromSuperview()
                 guard let httpresponse = respsonse as? HTTPURLResponse, httpresponse.statusCode == 200 else {
-                    self.presentWarning("Incorrect app or version")
+                    self.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
                 guard error == nil, let data = data else {
-                    self.presentWarning("Incorrect app or version")
+                    self.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
                 guard let previewDict = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any> else {
-                    self.presentWarning("Incorrect app or version")
+                    self.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
                 self.previewLayer.removeFromSuperlayer()
                 self.scannerView?.removeFromSuperview()
                 self.delegate?.configFetched(type: .preview, config: previewDict, projectName: projectName)
                 self.dismiss(animated: true, completion: nil)
-                
             }
         }
         task.resume()
@@ -401,6 +452,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         let warningLabel = UILabel(frame: .zero)
         warningLabel.text = title
+        warningLabel.numberOfLines = 0
+        warningLabel.textAlignment = .center
         warningLabel.textColor = .white
         warningLabel.font = UIFont(name: "Helvetica Neue Bold", size: 20)
         warningView?.addSubview(warningLabel)
