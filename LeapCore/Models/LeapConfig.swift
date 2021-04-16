@@ -24,7 +24,7 @@ class LeapConfig {
     var iconSetting: Dictionary<String, LeapIconSetting> = [:]
     var webViewList:Array<Dictionary<String,Any>> = []
     
-    init(withDict dataDict:Dictionary<String,Any>) {
+    init(withDict dataDict:Dictionary<String,Any>, isPreview:Bool) {
         
         var configsArray:Array<Dictionary<String,Any>> = []
         if let base64ConfigStrings  = dataDict[constant_data] as? Array<String> {
@@ -67,7 +67,7 @@ class LeapConfig {
             }
             if let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>> {
                 discoveries += discoveryDictsArray.map({ (discoveryDict) -> LeapDiscovery? in
-                    let discovery = LeapDiscovery(withDict: discoveryDict)
+                    let discovery = LeapDiscovery(withDict: discoveryDict,isPreview: isPreview)
                     if discoveries.contains(discovery) { return nil }
                     if let discoveryId = discoveryDict[constant_id] as? Int, let iconSetting = configDict[constant_iconSetting] as? Dictionary<String, Any> {
                         if let discoveryIconSetting = iconSetting[String(discoveryId)] as? Dictionary<String, Any> {
@@ -79,7 +79,7 @@ class LeapConfig {
             }
             if let assistsDictsArray = configDict[constant_assists] as? Array<Dictionary<String,Any>> {
                 assists += assistsDictsArray.map({ (assistDict) -> LeapAssist? in
-                    let assist = LeapAssist(withDict: assistDict)
+                    let assist = LeapAssist(withDict: assistDict,isPreview: isPreview)
                     if assists.contains(assist) { return nil }
                     return assist
                 }).compactMap{ return $0 }
@@ -96,14 +96,14 @@ class LeapConfig {
             if let projectParams = configDict[constant_projectParameters] as? Dictionary<String, Any>, let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>>, discoveryDictsArray.count > 0 {
                 let projectParameter = LeapProjectParameters(withDict: projectParams)
                 guard let firstDiscovery = discoveryDictsArray.first else { return }
-                let discovery = LeapDiscovery(withDict: firstDiscovery)
+                let discovery = LeapDiscovery(withDict: firstDiscovery, isPreview: isPreview)
                 projectParameter.id = discovery.id
                 projectParameters.append(projectParameter)
             }
             if let projectParams = configDict[constant_projectParameters] as? Dictionary<String, Any>, let assistsDictsArray = configDict[constant_assists] as? Array<Dictionary<String,Any>>, assistsDictsArray.count > 0 {
                 let projectParameter = LeapProjectParameters(withDict: projectParams)
                 guard let firstAssist = assistsDictsArray.first else { return }
-                let assist = LeapAssist(withDict: firstAssist)
+                let assist = LeapAssist(withDict: firstAssist, isPreview: isPreview)
                 projectParameter.id = assist.id
                 projectParameters.append(projectParameter)
             }

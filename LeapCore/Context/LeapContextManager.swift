@@ -63,13 +63,13 @@ class LeapContextManager:NSObject {
         guard let previewDict = notification.object as? Dictionary<String,Any> else { return }
         let tempConfig = previewDict["config"] as? Dictionary<String,Any>
         let configDict = ["data":[tempConfig]]
-        assistManager?.resetAssistManager()
-        discoveryManager?.resetDiscovery()
+        assistManager?.resetManagerSession()
+        discoveryManager?.resetManagerSession()
         flowManager?.resetFlowsArray()
         pageManager?.resetPageManager()
         stageManager?.resetStageManager()
         auiHandler?.removeAllViews()
-        previewConfig = LeapConfig(withDict: configDict)
+        previewConfig = LeapConfig(withDict: configDict, isPreview: true)
         analyticsManager = nil
         previewSounds = previewDict["sounds"] as? Dictionary<String,Any>
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
@@ -95,8 +95,8 @@ class LeapContextManager:NSObject {
         contextDetector?.stop()
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         auiHandler?.removeAllViews()
-        assistManager?.resetAssistManager()
-        discoveryManager?.resetDiscovery()
+        assistManager?.resetManagerSession()
+        discoveryManager?.resetManagerSession()
         flowManager?.resetFlowsArray()
         pageManager?.resetPageManager()
         stageManager?.resetStageManager()

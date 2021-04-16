@@ -14,12 +14,15 @@ class LeapAssist:LeapContext {
     var terminationFrequency:LeapFlowTerminationFrequency?
     var localeCode:String
     
-    init(withDict assistDict:Dictionary<String,Any>) {
+    init(withDict assistDict:Dictionary<String,Any>, isPreview:Bool) {
         type = assistDict[constant_type] as? String ?? "NORMAL"
         localeCode = assistDict[constant_localeCode]  as? String ?? ""
-        if let terminationFrequencyDict = assistDict[constant_terminationFrequency] as? Dictionary<String,Int> {
-            terminationFrequency = LeapFlowTerminationFrequency(with: terminationFrequencyDict)
+        if !isPreview {
+            if let terminationFrequencyDict = assistDict[constant_terminationFrequency] as? Dictionary<String,Int> {
+                terminationFrequency = LeapFlowTerminationFrequency(with: terminationFrequencyDict)
+            }
         }
+        
         super.init(with: assistDict)
         
     }
@@ -28,7 +31,7 @@ class LeapAssist:LeapContext {
 extension LeapAssist {
     
     func copy(with zone: NSZone? = nil) -> LeapAssist {
-        let copy = LeapAssist(withDict: [:])
+        let copy = LeapAssist(withDict: [:],isPreview: false)
         copy.id = self.id
         copy.name = self.name
         copy.webIdentifiers = self.webIdentifiers
