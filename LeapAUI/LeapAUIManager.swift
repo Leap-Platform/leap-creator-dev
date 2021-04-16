@@ -88,7 +88,7 @@ extension LeapAUIManager {
     @objc func keyboardDidHide(_ notification: NSNotification) {
         keyboardHeight = 0
         if leapButton != nil {
-            leapButtonBottomConstraint?.constant = 20.0
+            leapButtonBottomConstraint?.constant = mainIconBottomConstant
             leapButton?.updateConstraints()
         }
     }
