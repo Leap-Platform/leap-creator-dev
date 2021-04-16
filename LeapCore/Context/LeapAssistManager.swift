@@ -100,6 +100,13 @@ class LeapAssistManager {
         currentAssist = nil
     }
     
+    func resetManagerSession() {
+        assistTimer?.invalidate()
+        assistTimer = nil
+        currentAssist = nil
+        assistsCompletedInSession = []
+    }
+    
     func assistDismissed(byUser:Bool, autoDismissed:Bool) {
         guard let assist = currentAssist, byUser || autoDismissed  else { return }
         if byUser { LeapSharedInformation.shared.assistDismissedByUser(assistId: assist.id) }

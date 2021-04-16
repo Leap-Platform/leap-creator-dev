@@ -161,7 +161,7 @@ extension LeapInternal {
 extension LeapInternal {
     private func startContextDetection(config:Dictionary<String,AnyHashable>) {
         DispatchQueue.main.async {
-            let configuration = LeapConfig(withDict: config)
+            let configuration = LeapConfig(withDict: config,isPreview: false)
             self.contextManager.initialize(withConfig: configuration)
         }
     }
@@ -188,12 +188,12 @@ extension LeapInternal: LeapContextManagerDelegate {
                   let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
                 if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
                 let savedConfig = self.getSavedConfig()
-                DispatchQueue.main.async { config(LeapConfig(withDict: savedConfig)) }
+                DispatchQueue.main.async { config(LeapConfig(withDict: savedConfig, isPreview: false)) }
                 return
             }
             self.saveHeaders(headers: httpResponse.allHeaderFields)
             self.saveConfig(config: configDict)
-            DispatchQueue.main.async { config(LeapConfig(withDict: configDict)) }
+            DispatchQueue.main.async { config(LeapConfig(withDict: configDict, isPreview: false)) }
             
         }
         configTask.resume()

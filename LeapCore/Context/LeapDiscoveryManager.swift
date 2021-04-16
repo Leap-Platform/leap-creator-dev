@@ -133,6 +133,14 @@ class LeapDiscoveryManager {
         currentDiscovery = nil
     }
     
+    func resetManagerSession() {
+        discoveryTimer?.invalidate()
+        discoveryTimer = nil
+        currentDiscovery = nil
+        completedDiscoveriesInSession = []
+        identifiedDiscoveriesInSession = []
+    }
+    
     func discoveryDismissed(byUser:Bool, optIn:Bool) {
         guard let discovery = currentDiscovery, byUser || optIn else { return }
         if byUser && !optIn { LeapSharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id) }

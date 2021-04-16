@@ -81,17 +81,21 @@ class LeapDiscovery:LeapContext {
     var localeCodes: Array<String>?
     var languageOption: Dictionary<String,String>?
     
-    init(withDict discoveryDict:Dictionary<String,Any>) {
+    init(withDict discoveryDict:Dictionary<String,Any>, isPreview:Bool) {
         triggerMode = LeapTriggerMode(rawValue: (discoveryDict[constant_triggerMode] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  LeapTriggerMode.Single
         enableIcon = discoveryDict[constant_enableIcon] as? Bool ?? false
         autoStart = discoveryDict[constant_autoStart] as? Bool ?? false
-        if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Int> {
-            terminationfrequency = LeapFlowTerminationFrequency(with: freqDict)
-        }
         flowId = discoveryDict[constant_flowId] as? Int
-        if let triggerFrequencyDict = discoveryDict[constant_triggerFrequency] as? Dictionary<String,String> {
-            triggerFrequency = LeapTriggerFrequency(with: triggerFrequencyDict)
+        
+        if !isPreview {
+            if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Int> {
+                terminationfrequency = LeapFlowTerminationFrequency(with: freqDict)
+            }
+            if let triggerFrequencyDict = discoveryDict[constant_triggerFrequency] as? Dictionary<String,String> {
+                triggerFrequency = LeapTriggerFrequency(with: triggerFrequencyDict)
+            }
         }
+        
         if let localeCodes = discoveryDict[constant_localeCodes] as? [String] {
             self.localeCodes = localeCodes
         }
@@ -107,7 +111,7 @@ class LeapDiscovery:LeapContext {
 extension LeapDiscovery {
     
     func copy(with zone: NSZone? = nil) -> LeapDiscovery {
-        let copy = LeapDiscovery(withDict: [:])
+        let copy = LeapDiscovery(withDict: [:],isPreview: false)
         copy.id = self.id
         copy.name = self.name
         copy.webIdentifiers = self.webIdentifiers
