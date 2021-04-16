@@ -22,9 +22,9 @@ class LeapViewBounds:Codable {
     
     init(view:UIView) {
         let rect = view.superview?.convert(view.frame, to: nil)
-        left = Float(rect?.origin.x ?? 0) * Float(UIScreen.main.scale)
+        left = ((rect?.origin.x ?? 0) < 0 ? 0 : Float(rect?.origin.x ?? 0)) * Float(UIScreen.main.scale)
         top = Float(rect?.origin.y ?? 0) * Float(UIScreen.main.scale)
-        right = left + Float(view.bounds.size.width * UIScreen.main.scale)
+        right = left + ((view.bounds.size.width > UIScreen.main.bounds.width ? Float(UIScreen.main.bounds.width) : Float(view.bounds.size.width)) * Float(UIScreen.main.scale))
         bottom = top + Float(view.bounds.size.height * UIScreen.main.scale)
     }
 }
