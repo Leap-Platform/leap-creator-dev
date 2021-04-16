@@ -107,6 +107,7 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
             viewc.present(camVC, animated: true)
         case "EndPreview":
             NotificationCenter.default.post(name: NSNotification.Name("leap_end_preview"), object:  nil)
+            triggerNotification(notificationType: .preview)
         case "Rescan":
             NotificationCenter.default.post(name: NSNotification.Name("rescan"), object: nil)
         default:
