@@ -108,7 +108,9 @@ class LeapContextManager:NSObject {
     
     func getProjectParameter() -> LeapProjectParameters? {
         for params in self.currentConfiguration()?.projectParameters ?? [] {
-            if let id = configuration?.flows.first?.id, params.id == id {
+            if let discoveryId = discoveryManager?.getCurrentDiscovery()?.id, params.id == discoveryId {
+                return params
+            } else if let assistId = assistManager?.getCurrentAssist()?.id, params.id == assistId {
                 return params
             }
         }
