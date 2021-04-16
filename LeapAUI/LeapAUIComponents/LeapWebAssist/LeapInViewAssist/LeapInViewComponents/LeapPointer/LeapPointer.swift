@@ -310,7 +310,7 @@ class LeapSwipePointer: LeapPointer {
         
         ringLayer.fillColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1.0).cgColor
         ringLayer.strokeColor = UIColor.white.cgColor
-        ringLayer.lineWidth = 5.0
+        ringLayer.lineWidth = 1.0
         
         pointerLayer.addSublayer(ringLayer)
         ringLayer.frame = CGRect(x: 11, y: 4, width: 20, height: 20)
@@ -420,19 +420,37 @@ class LeapSwipePointer: LeapPointer {
     }
     
     override func startAnimation(toRect: CGRect? = nil) {
-                
+        
+        //Zero opacity animation
+        let zeroOpacityAnimation = CABasicAnimation(keyPath: "opacity")
+        zeroOpacityAnimation.beginTime = 0
+        zeroOpacityAnimation.fromValue = 0
+        zeroOpacityAnimation.toValue = 0
+        zeroOpacityAnimation.duration = 0.3
+        zeroOpacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        
+        // FadeIn Animation
+        let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeInAnimation.beginTime = 0.3
+        fadeInAnimation.fromValue = 0
+        fadeInAnimation.toValue = 1
+        fadeInAnimation.duration = 0.3
+        fadeInAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        
+        // Finger Animation
         let fingerAnimation = CABasicAnimation()
-        fingerAnimation.beginTime = 0.2
-        fingerAnimation.duration = 1.4
+        fingerAnimation.beginTime = 0.6
+        fingerAnimation.duration = 1
         fingerAnimation.fillMode = .forwards
         fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
-        let fadeAnimation = CABasicAnimation(keyPath: "opacity")
-        fadeAnimation.beginTime = 1.2
-        fadeAnimation.fromValue = 1
-        fadeAnimation.toValue = 0
-        fadeAnimation.duration = 0.2
-        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        // FadeOut Animation
+        let fadeOutAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeOutAnimation.beginTime = 1.45
+        fadeOutAnimation.fromValue = 1
+        fadeOutAnimation.toValue = 0
+        fadeOutAnimation.duration = 0.15
+        fadeOutAnimation.timingFunction = CAMediaTimingFunction(name: .easeIn)
         
         guard let toViewFrame = toRect ?? getToViewPositionForInView() else { return }
         
@@ -468,8 +486,8 @@ class LeapSwipePointer: LeapPointer {
         }
         
         let group = CAAnimationGroup()
-        group.duration = 1.4
-        group.animations = [fingerAnimation, fadeAnimation]
+        group.duration = 1.6
+        group.animations = [zeroOpacityAnimation, fadeInAnimation, fingerAnimation, fadeOutAnimation]
         group.repeatCount = .infinity
         
         pointerLayer.add(group, forKey: "slideFade")
