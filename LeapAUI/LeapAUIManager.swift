@@ -618,6 +618,8 @@ extension LeapAUIManager {
         currentTargetView = view
         currentTargetRect = rect
         currentWebView = webview
+        autoDismissTimer?.invalidate()
+        autoDismissTimer = nil
     }
     
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
@@ -856,7 +858,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         currentInstruction = nil
         stopAudio()
         scrollArrowButton.noAssist()
-        dismissLeapButton()
+        if !byContext { dismissLeapButton() }
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
