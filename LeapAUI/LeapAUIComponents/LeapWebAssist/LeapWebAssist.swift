@@ -331,14 +331,11 @@ class LeapWebAssist: UIView, LeapAssist {
                     
                     self.alpha = 0
                     
-                }) { (success) in
+                }) { (_) in
                     
-                    if success {
-                        
-                        self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
-                        
-                        self.leapIconView.removeFromSuperview()
-                    }
+                    self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
+                    
+                    self.leapIconView.removeFromSuperview()
                 }
                 
             default: self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
