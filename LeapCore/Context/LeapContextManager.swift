@@ -107,10 +107,24 @@ class LeapContextManager:NSObject {
     }
     
     func getProjectParameter() -> LeapProjectParameters? {
+        let id: Int? = {
+            guard let state = contextDetector?.getState() else { return nil }
+            switch state {
+            case .Discovery:
+                if let am = assistManager,
+                   let assist = am.getCurrentAssist() { return assist.id }
+                else if let dm = discoveryManager,
+                        let discovery = dm.getCurrentDiscovery() { return discovery.id }
+                else { return nil }
+                
+            case .Stage:
+                if let fm = flowManager { return fm.getDiscoveryId()}
+            }
+            return nil
+        }()
+        
         for params in self.currentConfiguration()?.projectParameters ?? [] {
-            if let discoveryId = discoveryManager?.getCurrentDiscovery()?.id, params.id == discoveryId {
-                return params
-            } else if let assistId = assistManager?.getCurrentAssist()?.id, params.id == assistId {
+            if params.id == id {
                 return params
             }
         }
@@ -431,7 +445,6 @@ extension LeapContextManager {
     func sendAUIActionTrackingEvent(action: Dictionary<String,Any>?) -> LeapAnalyticsEvent? {
         guard let projectParameter = getProjectParameter() else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.actionTrackingEvent, withParams: projectParameter)
-        print(action)
         if let body = action?[constant_body] as? Dictionary<String, Any> {
             
             if let id = body[constant_id] as? String {
@@ -610,6 +623,10 @@ extension LeapContextManager:LeapAUICallback {
             
         case .Stage:
             guard let sm = stageManager, let stage = sm.getCurrentStage() else { return }
+            // aui action tracking
+            if let action = action {
+                analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
+            }
              // Flow success Event
             if stage.isSuccess {
                 analyticsManager?.saveEvent(event: sendFlowSuccessEvent())
@@ -625,11 +642,6 @@ extension LeapContextManager:LeapAUICallback {
                 contextDetector?.switchState()
             }
             sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
-            
-            // aui action tracking
-            if let action = action {
-                analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
-            }
         }
     }
     
@@ -645,6 +657,8 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func optionPanelStopClicked() {
+        // Flow Stop event
+        analyticsManager?.saveEvent(event: sendFlowStopEvent())
         guard let dis = getLiveDiscovery() else {
             contextDetector?.start()
             return
