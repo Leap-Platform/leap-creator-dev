@@ -44,7 +44,7 @@ import UIKit
     func getLanguageCode() -> String
     func getTTSCodeFor(code:String) -> String?
     
-    func didPresentView()
+    func didPresentAssist()
     func failedToPerform()
     func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     
