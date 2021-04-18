@@ -29,6 +29,10 @@ class LeapPropertiesHandler {
     private var endTime: Int64 = 0
     private var totalTime: Int64 = 0
     
+    init() {
+        captureStartAndTotalTime()
+    }
+    
     func start() {
         let sessionStart = Int64(Date().timeIntervalSince1970)
         prefs.setValue(sessionStart, forKey: leapCurrentSessionKey)
@@ -46,6 +50,10 @@ class LeapPropertiesHandler {
     }
     
     @objc func didBecomeActive(_ notification: NSNotification) {
+        captureStartAndTotalTime()
+    }
+    
+    func captureStartAndTotalTime() {
         if let totalTimeSpentOnApp = prefs.value(forKey: constant_totalTimeSpentOnApp) as? Int64 {
             totalTime = totalTimeSpentOnApp
         }
@@ -60,7 +68,7 @@ class LeapPropertiesHandler {
             self.prefs.setValue(self.totalTime, forKey: constant_totalTimeSpentOnApp)
         // replace session start time and session end time
             let sessionStartTime = self.prefs.value(forKey: self.leapCurrentSessionKey) as? Int64
-        let sessionEndTime = Int64(Date().timeIntervalSince1970)
+            let sessionEndTime = Int64(Date().timeIntervalSince1970)
         // save session start time
             self.prefs.setValue(sessionStartTime, forKey: self.leapSessionStartKey)
         // save session end time
