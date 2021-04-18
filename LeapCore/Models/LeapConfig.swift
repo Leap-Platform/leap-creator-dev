@@ -87,7 +87,10 @@ class LeapConfig {
             if let discoverySoundsDict = configDict[constant_discoverySounds] as? Dictionary<String,Any> {
                 discoverySounds.append(discoverySoundsDict)
             }
-            if let auiContentsDict = configDict[constant_auiContent] as? Dictionary<String,Any> {
+            if var auiContentsDict = configDict[constant_auiContent] as? Dictionary<String,Any> {
+                var contents = auiContentsDict[constant_content] as? Array<AnyHashable> ?? []
+                contents = contents.filter { !($0 is NSNull) }.compactMap { return $0 }
+                auiContentsDict[constant_content] = contents
                 auiContent.append(auiContentsDict)
             }
             if let newSupportedAppLocale = configDict[constant_supportedAppLocales] as? Array<String> {
