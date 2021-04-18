@@ -218,5 +218,9 @@ let constant_incorrectAppOrVersionWarning = "Incorrect app or version"
 let constant_connectSampleAppWarning = "Invalid QR code! \n\nConnect to Sample App before preview"
 let constant_invalidQRCodeWarning = "Invalid QR Code!"
 let constant_totalTimeSpentOnApp = "totalTimeSpentOnApp"
+let constant_PreviewScan = "PreviewScan"
+let constant_EndPreview = "EndPreview"
+let constant_SampleAppScan = "SampleAppScan"
+let constant_Scan = "Scan"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
