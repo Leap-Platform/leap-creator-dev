@@ -157,7 +157,10 @@ extension LeapAUIManager: LeapAUIHandler {
     func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String) {
         setupDefaultValues(instruction:instruction, langCode: localeCode, view: view, rect: nil, webview: nil)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
-            if let _ = instruction[constant_soundName] as? String { playAudio() }
+            if let _ = instruction[constant_soundName] as? String {
+                auiManagerCallBack?.didPresentAssist()
+                playAudio()
+            }
             return
         }
         guard let view = currentTargetView else {
@@ -172,7 +175,10 @@ extension LeapAUIManager: LeapAUIHandler {
     func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String) {
         setupDefaultValues(instruction:instruction, langCode: localeCode, view: nil, rect: rect, webview: webview)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
-            if let _ = instruction[constant_soundName] as? String { playAudio() }
+            if let _ = instruction[constant_soundName] as? String {
+                auiManagerCallBack?.didPresentAssist()
+                playAudio()
+            }
             return
         }
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
@@ -219,6 +225,7 @@ extension LeapAUIManager: LeapAUIHandler {
         setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
             if let _ = instruction[constant_soundName] as? String {
+                auiManagerCallBack?.didPresentAssist()
                 playAudio()
                 presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
             }
@@ -239,6 +246,7 @@ extension LeapAUIManager: LeapAUIHandler {
         setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
             if let _ = instruction[constant_soundName] as? String {
+                auiManagerCallBack?.didPresentAssist()
                 playAudio()
                 presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
             }
@@ -846,7 +854,7 @@ extension LeapAUIManager: LeapAssistDelegate {
     
     func didPresentAssist() {
         playAudio()
-        auiManagerCallBack?.didPresentView()
+        auiManagerCallBack?.didPresentAssist()
     }
     
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }

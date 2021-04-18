@@ -576,7 +576,7 @@ extension LeapContextManager:LeapAUICallback {
         return "\(locale)-\(region)"
     }
     
-    func didPresentView() {
+    func didPresentAssist() {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
