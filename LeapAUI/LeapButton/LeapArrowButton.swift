@@ -261,9 +261,10 @@ class LeapArrowButton: UIButton {
         } else if let toRect = rect, let webview = inWebView {
             let contentOffSetY = webview.scrollView.contentOffset.y
             if toRect.minY < 0 {
-                webview.scrollView.contentOffset = CGPoint(x: 0, y: contentOffSetY + toRect.minY)
+                let toScrollY = (contentOffSetY + toRect.minY) < 0 ? 0 : contentOffSetY + toRect.minY
+                webview.scrollView.contentOffset = CGPoint(x: 0, y: toScrollY)
             } else {
-                let yTranslation = toRect.maxY - webview.scrollView.frame.height
+                let yTranslation = (toRect.maxY - webview.scrollView.frame.height) > webview.scrollView.contentSize.height ? webview.scrollView.contentSize.height - webview.frame.height : toRect.maxY - webview.scrollView.frame.height
                 webview.scrollView.contentOffset = CGPoint(x:0, y: contentOffSetY + yTranslation)
             }
             
