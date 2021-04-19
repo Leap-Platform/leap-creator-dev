@@ -206,11 +206,11 @@ class LeapPropertiesHandler {
         let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         if let lastSessionVersion = prefs.string(forKey: leapVersionKey),
            lastSessionVersion == currentVersion {
-            return defaultLongProps["timeElapsedSinceLastUpdate"] ?? Int64(Date().timeIntervalSince1970)
+            return defaultLongProps["timeElapsedSinceLastUpdate"] ?? getInstalledDate()
         }
         prefs.setValue(currentVersion, forKey: leapVersionKey)
         prefs.synchronize()
-        return Int64(Date().timeIntervalSince1970)
+        return getInstalledDate()
     }
     
 }
