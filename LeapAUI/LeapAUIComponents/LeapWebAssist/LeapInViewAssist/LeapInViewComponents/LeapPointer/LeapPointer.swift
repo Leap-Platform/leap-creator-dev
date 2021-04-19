@@ -117,10 +117,10 @@ class LeapFingerPointer: LeapPointer {
         ringLayer.fillColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6).cgColor
         
         pointerLayer.addSublayer(ringLayer)
-        ringLayer.frame = CGRect(x: 21, y: 20, width: 1, height: 1)
+        ringLayer.frame = CGRect(x: 50, y: 50, width: 1, height: 1)
         
         pointerLayer.addSublayer(fingerLayer)
-        fingerLayer.frame = CGRect(x: 9, y: 10, width: 31, height: 39)
+        fingerLayer.frame = CGRect(x: 34.5, y: 50, width: 41, height: 50)
     }
     
     required init?(coder: NSCoder) {
@@ -139,9 +139,9 @@ class LeapFingerPointer: LeapPointer {
     override func presentPointer(toRect: CGRect, inView:UIView?) {
         self.inView = inView
         webRect = toRect
-        let y = webRect!.midY - 15
-        let x = webRect!.midX - 21
-        pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        let y = webRect!.midY - 50
+        let x = webRect!.midX - 50
+        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
         self.inView?.addSubview(self)
         configureOverlayView()
         self.layer.addSublayer(pointerLayer)
@@ -153,9 +153,9 @@ class LeapFingerPointer: LeapPointer {
     override func updateRect(newRect: CGRect, inView: UIView?) {
         self.inView = inView
         webRect = newRect
-        let y = webRect!.midY - 15
-        let x = webRect!.midX - 21
-        pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        let y = webRect!.midY - 50
+        let x = webRect!.midX - 50
+        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
     }
     
     override func presentPointer(view: UIView) {
@@ -194,9 +194,9 @@ class LeapFingerPointer: LeapPointer {
     
     func setPosition() {
         guard let toViewFrame = getToViewPositionForInView() else { return }
-        let y = toViewFrame.midY - 15
-        let x = toViewFrame.midX - 21
-        pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        let y = toViewFrame.midY - 50
+        let x = toViewFrame.midX - 50
+        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -210,32 +210,55 @@ class LeapFingerPointer: LeapPointer {
     override func startAnimation(toRect: CGRect? = nil) {
         let fingerAnimation = CABasicAnimation(keyPath: "transform.scale")
         fingerAnimation.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
-        fingerAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(0.5, 0.5, 1))
-        fingerAnimation.duration = 0.5
-        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
-        fingerAnimation.autoreverses = true
+        fingerAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(0.667, 0.667, 1))
+        fingerAnimation.beginTime = 0.2
+        fingerAnimation.duration = 0.3
+        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
-        clickAnimation.animations = [fingerAnimation]
-        clickAnimation.repeatCount = .infinity
-        clickAnimation.duration = 1.3
-        clickAnimation.beginTime = CACurrentMediaTime()
+        let anchorAnimation1 = CABasicAnimation(keyPath: "anchorPoint")
+        anchorAnimation1.fromValue = CGPoint(x: 0.5, y: 0.5)
+        anchorAnimation1.toValue = CGPoint(x: 0.56, y: 0.75)
+        anchorAnimation1.beginTime = 0.2
+        anchorAnimation1.duration = 0.3
+        anchorAnimation1.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        let reverseFingerAnimation = CABasicAnimation(keyPath: "transform.scale")
+        reverseFingerAnimation.fromValue = fingerAnimation.toValue
+        reverseFingerAnimation.toValue = fingerAnimation.fromValue
+        reverseFingerAnimation.beginTime = 0.5
+        reverseFingerAnimation.duration = 0.3
+        reverseFingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        let anchorAnimation2 = CABasicAnimation(keyPath: "anchorPoint")
+        anchorAnimation2.fromValue = anchorAnimation1.toValue
+        anchorAnimation2.toValue = anchorAnimation1.fromValue
+        anchorAnimation2.beginTime = 0.5
+        anchorAnimation2.duration = 0.3
+        anchorAnimation2.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         let scaleAnimation = CABasicAnimation(keyPath: "transform.scale")
         scaleAnimation.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
-        scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(40, 40, 1))
-        scaleAnimation.duration = 0.5
-        scaleAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(70, 70, 1))
+        scaleAnimation.beginTime = 0.5
+        scaleAnimation.duration = 0.9
+        scaleAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
         opacityAnimation.fromValue = 1.0
         opacityAnimation.toValue = 0.0
-        opacityAnimation.duration = 0.5
-        opacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        opacityAnimation.beginTime = 0.65
+        opacityAnimation.duration = 0.75
+        opacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
+        clickAnimation.animations = [fingerAnimation, reverseFingerAnimation, anchorAnimation1, anchorAnimation2]
+        clickAnimation.beginTime = 0
+        clickAnimation.duration = 1.4
+        clickAnimation.repeatCount = .infinity
+
         pulse.animations = [scaleAnimation, opacityAnimation]
+        pulse.duration = 1.4
+        pulse.beginTime = CACurrentMediaTime()
         pulse.repeatCount = .infinity
-        pulse.duration = 1.3
-        pulse.beginTime = CACurrentMediaTime() + 0.5
         
         fingerLayer.masksToBounds = false
         ringLayer.masksToBounds = false
@@ -313,10 +336,10 @@ class LeapSwipePointer: LeapPointer {
         ringLayer.lineWidth = 1.0
         
         pointerLayer.addSublayer(ringLayer)
-        ringLayer.frame = CGRect(x: 11, y: 4, width: 20, height: 20)
+        ringLayer.frame = CGRect(x: 40, y: 40, width: 20, height: 20)
         
         pointerLayer.addSublayer(fingerLayer)
-        fingerLayer.frame = CGRect(x: 9, y: 10, width: 31, height: 39)
+        fingerLayer.frame = CGRect(x: 34.5, y: 48, width: 41, height: 50)
     }
 
     required init?(coder: NSCoder) {
@@ -333,26 +356,26 @@ class LeapSwipePointer: LeapPointer {
     }
     
     override func presentPointer(toRect: CGRect, inView:UIView?) {
-        pointerLayer.frame.size = CGSize(width: 42, height: 54)
+        pointerLayer.frame.size = CGSize(width: 100, height: 100)
         self.inView = inView
         let toViewFrame = toRect
-        var y = toViewFrame.midY - 15
+        var y = toViewFrame.midY - 50
         var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         switch type {
         case .swipeLeft:
-            y = toViewFrame.midY - 15
+            y = toViewFrame.midY - 50
             x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
         case .swipeRight:
-            y = toViewFrame.midY - 15
+            y = toViewFrame.midY - 50
             x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         case .swipeUp:
             y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
-            x = toViewFrame.midX - 21
+            x = toViewFrame.midX - 50
         case .swipeDown:
             y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
-            x = toViewFrame.midX - 21
+            x = toViewFrame.midX - 50
         }
-        pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
         inView?.layer.addSublayer(pointerLayer)
         pointerLayer.zPosition = 10
         toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
@@ -362,25 +385,25 @@ class LeapSwipePointer: LeapPointer {
     
     override func updateRect(newRect: CGRect, inView: UIView?) {
         self.inView = inView
-        pointerLayer.frame.size = CGSize(width: 42, height: 54)
+        pointerLayer.frame.size = CGSize(width: 100, height: 100)
         let toViewFrame = newRect
-        var y = toViewFrame.midY - 15
+        var y = toViewFrame.midY - 50
         var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         switch type {
         case .swipeLeft:
-            y = toViewFrame.midY - 15
+            y = toViewFrame.midY - 50
             x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
         case .swipeRight:
-            y = toViewFrame.midY - 15
+            y = toViewFrame.midY - 50
             x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         case .swipeUp:
             y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
-            x = toViewFrame.midX - 21
+            x = toViewFrame.midX - 50
         case .swipeDown:
             y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
-            x = toViewFrame.midX - 21
+            x = toViewFrame.midX - 50
         }
-        pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
     }
     
     override func presentPointer(view: UIView) {
@@ -391,24 +414,24 @@ class LeapSwipePointer: LeapPointer {
     
     func setPosition() {
         guard let toViewFrame = getToViewPositionForInView() else { return }
-        pointerLayer.frame.size = CGSize(width: 42, height: 54)
-        var y = toViewFrame.midY - 15
+        pointerLayer.frame.size = CGSize(width: 100, height: 100)
+        var y = toViewFrame.midY - 50
         var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         switch type {
         case .swipeLeft:
-            y = toViewFrame.midY - 15
+            y = toViewFrame.midY - 50
             x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
         case .swipeRight:
-            y = toViewFrame.midY - 15
+            y = toViewFrame.midY - 50
             x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
         case .swipeUp:
             y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
-            x = toViewFrame.midX - 21
+            x = toViewFrame.midX - 50
         case .swipeDown:
             y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
-            x = toViewFrame.midX - 21
+            x = toViewFrame.midX - 50
         }
-        pointerLayer.frame = CGRect(x: x, y: y, width: 42, height: 54)
+        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -427,7 +450,7 @@ class LeapSwipePointer: LeapPointer {
         zeroOpacityAnimation.fromValue = 0
         zeroOpacityAnimation.toValue = 0
         zeroOpacityAnimation.duration = 0.3
-        zeroOpacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        zeroOpacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         // FadeIn Animation
         let fadeInAnimation = CABasicAnimation(keyPath: "opacity")
@@ -435,14 +458,14 @@ class LeapSwipePointer: LeapPointer {
         fadeInAnimation.fromValue = 0
         fadeInAnimation.toValue = 1
         fadeInAnimation.duration = 0.3
-        fadeInAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        fadeInAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         // Finger Animation
         let fingerAnimation = CABasicAnimation()
         fingerAnimation.beginTime = 0.6
         fingerAnimation.duration = 1
         fingerAnimation.fillMode = .forwards
-        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        fingerAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         
         // FadeOut Animation
         let fadeOutAnimation = CABasicAnimation(keyPath: "opacity")
@@ -450,7 +473,7 @@ class LeapSwipePointer: LeapPointer {
         fadeOutAnimation.fromValue = 1
         fadeOutAnimation.toValue = 0
         fadeOutAnimation.duration = 0.15
-        fadeOutAnimation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+        fadeOutAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         guard let toViewFrame = toRect ?? getToViewPositionForInView() else { return }
         
