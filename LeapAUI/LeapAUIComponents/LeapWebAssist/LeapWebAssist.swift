@@ -57,6 +57,8 @@ class LeapWebAssist: UIView, LeapAssist {
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         self.webView.scrollView.isScrollEnabled = false
         self.webView.navigationDelegate = self
+        self.webView.backgroundColor = .clear
+        self.webView.isOpaque = false
     }
     
     required init?(coder: NSCoder) {
