@@ -70,7 +70,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
 
         } else {
             
-            if Bundle.main.bundleIdentifier == "com.leap.LeapSampleApp" {
+            if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
                 
                 notificationType = .sampleApp
                 
@@ -371,7 +371,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
            let projectName = infoDict["projectName"] as? String ?? ""
            fetchPreviewConfig(previewId: id, projectName:projectName)
         
-        } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP", Bundle.main.bundleIdentifier == "com.leap.LeapSampleApp" {
+        } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP", Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
             
             configureSampleApp(infoDict: infoDict)
             
