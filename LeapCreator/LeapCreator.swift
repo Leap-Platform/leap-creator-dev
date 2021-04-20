@@ -27,7 +27,7 @@ import UIKit
     public func openSampleApp(delegate: SampleAppDelegate) -> UIViewController? {
         guard UIDevice.current.userInterfaceIdiom == .phone else { return nil } 
         let name = Bundle.main.bundleIdentifier
-        if name != "com.leap.LeapSampleApp"  { return nil }
+        if name != constant_LeapPreview_BundleId  { return nil }
         let leapCameraViewController = LeapCameraViewController()
         leapCameraViewController.sampleAppDelegate = delegate
         leapCameraViewController.delegate = LeapNotificationManager.shared
