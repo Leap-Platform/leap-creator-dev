@@ -395,9 +395,13 @@ class LeapWebAssist: UIView, LeapAssist {
         
         var distance: CGFloat = self.leapIconView.iconGap
         
+        var cornerPadding = cornerDistance
+        
         if !(iconInfo?.isLeftAligned ?? false) {
 
             cornerConstraint = .trailing
+            
+            cornerPadding = -cornerDistance
         }
         
         if alignmentType == .top {
@@ -409,7 +413,7 @@ class LeapWebAssist: UIView, LeapAssist {
             distance = -self.leapIconView.iconGap
         }
                 
-        superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: cornerConstraint, relatedBy: .equal, toItem: toItemView, attribute: cornerConstraint, multiplier: 1, constant: cornerDistance))
+        superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: cornerConstraint, relatedBy: .equal, toItem: toItemView, attribute: cornerConstraint, multiplier: 1, constant: cornerPadding))
         
         superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
         
