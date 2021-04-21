@@ -32,7 +32,11 @@ class LeapTipView: LeapInViewAssist {
     /// spacing of the highlight area after manipulation
     var manipulatedHighlightSpacing = 10.0
     
+    /// boolean to know whether a tap on toView occured
     var tappedOnToView = false
+    
+    /// previous rect of the component to update
+    var previousFrame = CGRect.zero
     
     /// method called to auto focus on the target view of the aui component.
     func setupAutoFocus() {

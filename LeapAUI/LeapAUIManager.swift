@@ -199,7 +199,7 @@ extension LeapAUIManager: LeapAUIHandler {
                 }
                 guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
                       let type = assistInfo[constant_type] as? String else { return }
-                self.performInViewNativeInstruction(instruction: instruction, inView: anchorView, type: type)
+                self.performInViewNativeInstruction(instruction: instruction, inView: anchorView, type: type, iconInfo: iconInfo)
                 self.dismissLeapButton()
             }
             else { self.presentLeapButton(for: iconInfo, iconEnabled: true) }
@@ -215,7 +215,7 @@ extension LeapAUIManager: LeapAUIHandler {
                       let type = assistInfo[constant_type] as? String,
                       let anchorWebview = webview else { return }
                 self.dismissLeapButton()
-                self.performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
+                self.performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type, iconInfo: iconInfo)
             }
             else { self.presentLeapButton(for: iconInfo, iconEnabled: true) }
         }
