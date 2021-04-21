@@ -64,6 +64,8 @@ class LeapSpot: LeapTipView {
     
     func updateSpot() {
         
+        if previousFrame.origin == getGlobalToViewFrame().origin { return }
+        
         if assistInfo?.highlightAnchor ?? true {
             
            highlightAnchor()
@@ -75,6 +77,8 @@ class LeapSpot: LeapTipView {
     func updateSpot(toRect: CGRect, inView: UIView?) {
         
         webRect = toRect
+        
+        if previousFrame.origin == getGlobalToViewFrame().origin { return }
         
         if assistInfo?.highlightAnchor ?? true {
             
@@ -233,6 +237,8 @@ class LeapSpot: LeapTipView {
     /// sets the pointer direction, origin and path for the toolTipView layer.
     func placePointer() {
         
+       previousFrame = getGlobalToViewFrame()
+        
        configureConnector()
     
        let arrowDirection = getArrowDirection()
@@ -242,20 +248,29 @@ class LeapSpot: LeapTipView {
          return
        }
         
-        if direction == .top {
-            
-            configureLeapIconView(superView: inView!, toItemView: toolTipView, alignmentType: .bottom)
-        
-        } else {
-            
-            configureLeapIconView(superView: inView!, toItemView: toolTipView, alignmentType: .top)
-        }
+       configureLeapIconViewForSpot(direction: direction)
             
        setOriginForDirection(direction: direction)
         
        drawMaskLayerFor(direction)
         
        configureCircularView()
+    }
+    
+    func configureLeapIconViewForSpot(direction: LeapTooltipArrowDirection) {
+        
+        self.removeConstraints(self.constraints)
+        
+        toolTipView.removeConstraints(toolTipView.constraints)
+        
+        if direction == .top {
+            
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: minimalSpacing)
+        
+        } else {
+            
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: minimalSpacing)
+        }
     }
     
     /// Observes the toolTipView's Origin, gets called when there is a change in position.
