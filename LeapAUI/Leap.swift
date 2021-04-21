@@ -74,7 +74,7 @@ import LeapCoreSDK
     
     @objc public func flush() {
         guard UIDevice.current.userInterfaceIdiom == .phone else { return }
-        guard !isStarted else { return }
+        guard isStarted else { return }
         auiManager.auiManagerCallBack?.flush()
     }
     
