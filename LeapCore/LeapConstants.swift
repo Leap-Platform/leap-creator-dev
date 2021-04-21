@@ -222,6 +222,6 @@ let constant_PreviewScan = "PreviewScan"
 let constant_EndPreview = "EndPreview"
 let constant_SampleAppScan = "SampleAppScan"
 let constant_Scan = "Scan"
-let constant_LeapPreview_BundleId = "com.leap.LeapPreview"
+let constant_LeapPreview_BundleId = "is.leap.LeapPreview"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
