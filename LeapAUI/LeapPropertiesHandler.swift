@@ -104,7 +104,11 @@ class LeapPropertiesHandler {
     }
     
     func setDefaultStringProperties() {
-        let deviceLanguage = Locale.preferredLanguages.first ?? "en"
+        let deviceLanguage:String = {
+            guard var code = Locale.preferredLanguages.first else { return "en" }
+            code =  code.components(separatedBy: "-").first ?? code
+            return code
+        }()
         let stringProperties = [
             "deviceLanguage":deviceLanguage
         ]
