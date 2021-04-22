@@ -64,6 +64,8 @@ class LeapSpot: LeapTipView {
     
     func updateSpot() {
         
+        guard let previousFrame = previousFrame else { return }
+        
         if previousFrame.origin == getGlobalToViewFrame().origin { return }
         
         if assistInfo?.highlightAnchor ?? true {
@@ -77,6 +79,8 @@ class LeapSpot: LeapTipView {
     func updateSpot(toRect: CGRect, inView: UIView?) {
         
         webRect = toRect
+        
+        guard let previousFrame = previousFrame else { return }
         
         if previousFrame.origin == getGlobalToViewFrame().origin { return }
         

@@ -79,6 +79,7 @@ class LeapPointer: LeapInViewAssist {
     
     func removePointer() {
         pointerLayer.removeFromSuperlayer()
+        self.removeFromSuperview()
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
@@ -87,10 +88,12 @@ class LeapPointer: LeapInViewAssist {
     
     override func hide() {
         self.pointerLayer.isHidden = true
+        self.isHidden = true
     }
     
     override func unhide() {
         self.pointerLayer.isHidden = false
+        self.isHidden = false
     }
 }
 
@@ -274,13 +277,12 @@ class LeapFingerPointer: LeapPointer {
     
     override func removePointer() {
         if let _ = toView?.layer.observationInfo { toView?.layer.removeObserver(pointerLayer, forKeyPath: "position") }
-        self.removeFromSuperview()
         super.removePointer()
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        removePointer()
         super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+        removePointer()
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -526,7 +528,7 @@ class LeapSwipePointer: LeapPointer {
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        removePointer()
         super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+        removePointer()
     }
 }
