@@ -41,6 +41,8 @@ class LeapPulsator: CALayer {
 
     var bgColor: UIColor = .red
     
+    var animationGroup: CAAnimationGroup?
+    
     override init() {
         super.init()
     }
@@ -97,7 +99,10 @@ class LeapPulsator: CALayer {
         }
         
         self.position = CGPoint(x: x, y: y)
-        startAnimation()
+        
+        if animationGroup == nil {
+            startAnimation()
+        }
     }
     
     func placeBeacon(rect:CGRect, inWebView:UIView) {
@@ -137,7 +142,10 @@ class LeapPulsator: CALayer {
         }
         
         self.position = CGPoint(x: x, y: y)
-        startAnimation()
+        
+        if animationGroup == nil {
+            startAnimation()
+        }
     }
     
     func startAnimation() {
@@ -145,28 +153,27 @@ class LeapPulsator: CALayer {
         opacityAnimation.values = [1.0, 0.7, 0.0]
         opacityAnimation.keyTimes = [0.0, 0.8, 1.0]
         opacityAnimation.duration = animationDuration
-        opacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        opacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
        
-        let scaleAnimation: CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
-        scaleAnimation.fromValue = NSValue(cgAffineTransform: .identity)
-        scaleAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(maxRadius/minRadius, maxRadius/minRadius, 1))
+        let scaleAnimation: CABasicAnimation = CABasicAnimation(keyPath: "transform.scale.xy")
+        scaleAnimation.fromValue = minRadius
+        scaleAnimation.toValue = maxRadius
         scaleAnimation.duration = animationDuration
-        scaleAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        scaleAnimation.timingFunction = CAMediaTimingFunction(name: .easeOut)
         
+        animationGroup = CAAnimationGroup()
+        animationGroup?.animations = [scaleAnimation, opacityAnimation]
+        animationGroup?.repeatCount = .infinity
+        animationGroup?.duration = animationDuration
         
-        let animationGroup: CAAnimationGroup = CAAnimationGroup()
-        animationGroup.animations = [scaleAnimation, opacityAnimation]
-        animationGroup.repeatCount = .infinity
-        animationGroup.duration = animationDuration
-        
-        masksToBounds = false
-        add(animationGroup, forKey: "pulse")
+        add(animationGroup!, forKey: "pulse")
         pulsatorDelegate?.didStartAnimation()
     }
     
     func stopAnimation() {
+        self.removeAllAnimations()
+        animationGroup = nil
         self.removeFromSuperlayer()
         pulsatorDelegate?.didStopAnimation()
     }
-    
 }
