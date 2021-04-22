@@ -539,7 +539,10 @@ extension LeapAUIManager {
                   self.leapButton?.iconState = .audioPlay
                }
             }
-        } catch  { }
+        } catch let error {
+            print(error.localizedDescription)
+            startAutoDismissTimer()
+        }
     }
     
     func tryTTS(text: String, code: String) {
