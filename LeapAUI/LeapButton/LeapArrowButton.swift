@@ -259,15 +259,15 @@ class LeapArrowButton: UIButton {
                 }
             }
         } else if let toRect = rect, let webview = inWebView {
-            let contentOffSetY = webview.scrollView.contentOffset.y
-            if toRect.minY < 0 {
-                let toScrollY = (contentOffSetY + toRect.minY) < 0 ? 0 : contentOffSetY + toRect.minY
-                webview.scrollView.contentOffset = CGPoint(x: 0, y: toScrollY)
-            } else {
-                let yTranslation = (toRect.maxY - webview.scrollView.frame.height) > webview.scrollView.contentSize.height ? webview.scrollView.contentSize.height - webview.frame.height : toRect.maxY - webview.scrollView.frame.height
-                webview.scrollView.contentOffset = CGPoint(x:0, y: contentOffSetY + yTranslation)
+            let visibility = getRectVisibility()
+            if visibility == .inViewPort { return }
+            else if visibility == .aboveViewPort {
+                let yOffset = toRect.minY < 0 ? 0 : toRect.minY
+                webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
+            } else if visibility == .belowViewPort {
+                let yOffset = toRect.maxY - webview.frame.height
+                webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
             }
-            
         }
         let currentVc = UIApplication.getCurrentVC()
         guard let currentVCView = currentVc?.view else { return }
