@@ -54,6 +54,8 @@ class LeapToolTip: LeapTipView {
     }
     
     func updatePointer() {
+        
+        guard let previousFrame = previousFrame else { return }
                 
         if previousFrame.origin == getGlobalToViewFrame().origin { return }
                 
@@ -68,6 +70,8 @@ class LeapToolTip: LeapTipView {
     func updatePointer(toRect: CGRect, inView: UIView?) {
         
         webRect = toRect
+        
+        guard let previousFrame = previousFrame else { return }
         
         if previousFrame.origin == getGlobalToViewFrame().origin { return }
         
@@ -317,47 +321,32 @@ class LeapToolTip: LeapTipView {
         
         // Start path from top left corner of html and travel to top point of arrow
         path.move(to: CGPoint(x: 0, y: 0))
-        let globalToView = getGlobalToViewFrame()
-        let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
+        let arrowMidX: CGFloat = getXForArrow()
         
         // Arrow points
         let arrowTopPoint = CGPoint(x: arrowMidX, y: 1)
         let arrowLeftPoint = CGPoint(x: arrowMidX-halfWidthForArrow, y: minimalSpacing)
         let arrowRightPoint = CGPoint(x: arrowMidX+halfWidthForArrow, y: minimalSpacing)
         
-        var leftPadding: CGFloat = minimalSpacing
-        
-        // edge case for left side tooltip
-        if arrowLeftPoint.x <= minimalSpacing && arrowMidX < UIScreen.main.bounds.midX {
-            leftPadding = 0
-        }
-        
         // Top Left Corner points
-        let tlCornerTopPoint = CGPoint(x: leftPadding + cornerRadius, y: minimalSpacing)
-        let tlCornerBottomPoint = CGPoint(x: leftPadding, y: minimalSpacing+cornerRadius)
-        let tlCornerControlPoint = CGPoint(x: leftPadding, y: minimalSpacing)
+        let tlCornerTopPoint = CGPoint(x: minimalSpacing + cornerRadius, y: minimalSpacing)
+        let tlCornerBottomPoint = CGPoint(x: minimalSpacing, y: minimalSpacing+cornerRadius)
+        let tlCornerControlPoint = CGPoint(x: minimalSpacing, y: minimalSpacing)
         
         // Bottom Left Corner Points
-        let blCornerTopPoint = CGPoint(x: leftPadding, y: contentSize.height - (minimalSpacing+cornerRadius))
-        let blCornerBottomPoint = CGPoint(x: (leftPadding + cornerRadius), y: contentSize.height - minimalSpacing)
-        let blCornerControlPoint = CGPoint(x: leftPadding, y: contentSize.height - minimalSpacing)
-        
-        var rightPadding: CGFloat = minimalSpacing
-        
-        // edge case for right side tooltip
-        if (UIScreen.main.bounds.size.width - contentSize.width) <= minimalSpacing && arrowMidX > UIScreen.main.bounds.midX {
-            rightPadding = 0
-        }
+        let blCornerTopPoint = CGPoint(x: minimalSpacing, y: contentSize.height - (minimalSpacing+cornerRadius))
+        let blCornerBottomPoint = CGPoint(x: (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let blCornerControlPoint = CGPoint(x: minimalSpacing, y: contentSize.height - minimalSpacing)
         
         // Bottom Right Corner Points
-        let brCornerBottomPoint = CGPoint(x: contentSize.width - (rightPadding + cornerRadius), y: contentSize.height - minimalSpacing)
-        let brCornerTopPoint = CGPoint(x: contentSize.width - rightPadding, y: contentSize.height - (minimalSpacing + cornerRadius))
-        let brCornerControlPoint = CGPoint(x: contentSize.width - rightPadding, y: contentSize.height - minimalSpacing)
+        let brCornerBottomPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let brCornerTopPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - (minimalSpacing + cornerRadius))
+        let brCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - minimalSpacing)
         
         // Top Right Corner Points
-        let trCornerBottomPoint = CGPoint(x: contentSize.width - rightPadding, y: minimalSpacing + cornerRadius )
-        let trCornerTopPoint = CGPoint(x: contentSize.width - (rightPadding + cornerRadius), y: minimalSpacing )
-        let trCornerControlPoint = CGPoint(x: contentSize.width - rightPadding, y: minimalSpacing)
+        let trCornerBottomPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing + cornerRadius )
+        let trCornerTopPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: minimalSpacing )
+        let trCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing)
         
         // Draw path to clip
         path.addLine(to: CGPoint(x: arrowMidX, y: 0))
@@ -389,47 +378,32 @@ class LeapToolTip: LeapTipView {
         
         // Start path from top left corner of html and travel to top point of arrow
         path.move(to: CGPoint(x: 0, y: contentSize.height))
-        let globalToView = getGlobalToViewFrame()
-        let arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
+        let arrowMidX: CGFloat = getXForArrow()
         
         // Arrow points
         let arrowBottomPoint = CGPoint(x: arrowMidX, y: contentSize.height - 1)
         let arrowLeftPoint = CGPoint(x: arrowMidX-halfWidthForArrow, y: contentSize.height - minimalSpacing)
         let arrowRightPoint = CGPoint(x: arrowMidX+halfWidthForArrow, y: contentSize.height - minimalSpacing)
         
-        var leftPadding: CGFloat = minimalSpacing
-        
-        // edge case for left side tooltip
-        if arrowLeftPoint.x <= minimalSpacing && arrowMidX < UIScreen.main.bounds.midX {
-            leftPadding = 0
-        }
-        
         // Top Left Corner points
-        let tlCornerTopPoint = CGPoint(x: leftPadding + cornerRadius, y: minimalSpacing)
-        let tlCornerBottomPoint = CGPoint(x: leftPadding, y: minimalSpacing+cornerRadius)
-        let tlCornerControlPoint = CGPoint(x: leftPadding, y: minimalSpacing)
+        let tlCornerTopPoint = CGPoint(x: minimalSpacing + cornerRadius, y: minimalSpacing)
+        let tlCornerBottomPoint = CGPoint(x: minimalSpacing, y: minimalSpacing+cornerRadius)
+        let tlCornerControlPoint = CGPoint(x: minimalSpacing, y: minimalSpacing)
         
         // Bottom Left Corner Points
-        let blCornerTopPoint = CGPoint(x: leftPadding, y: contentSize.height - (minimalSpacing+cornerRadius))
-        let blCornerBottomPoint = CGPoint(x: (leftPadding + cornerRadius), y: contentSize.height - minimalSpacing)
-        let blCornerControlPoint = CGPoint(x: leftPadding, y: contentSize.height - minimalSpacing)
-        
-        var rightPadding: CGFloat = minimalSpacing
-        
-        // edge case for right side tooltip
-        if (UIScreen.main.bounds.size.width - contentSize.width) <= minimalSpacing && arrowMidX > UIScreen.main.bounds.midX {
-            rightPadding = 0
-        }
+        let blCornerTopPoint = CGPoint(x: minimalSpacing, y: contentSize.height - (minimalSpacing+cornerRadius))
+        let blCornerBottomPoint = CGPoint(x: (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let blCornerControlPoint = CGPoint(x: minimalSpacing, y: contentSize.height - minimalSpacing)
         
         // Bottom Right Corner Points
-        let brCornerBottomPoint = CGPoint(x: contentSize.width - (rightPadding + cornerRadius), y: contentSize.height - minimalSpacing)
-        let brCornerTopPoint = CGPoint(x: contentSize.width - rightPadding, y: contentSize.height - (minimalSpacing + cornerRadius))
-        let brCornerControlPoint = CGPoint(x: contentSize.width - rightPadding, y: contentSize.height - minimalSpacing)
+        let brCornerBottomPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: contentSize.height - minimalSpacing)
+        let brCornerTopPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - (minimalSpacing + cornerRadius))
+        let brCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: contentSize.height - minimalSpacing)
         
         // Top Right Corner Points
-        let trCornerBottomPoint = CGPoint(x: contentSize.width - rightPadding, y: minimalSpacing + cornerRadius )
-        let trCornerTopPoint = CGPoint(x: contentSize.width - (rightPadding + cornerRadius), y: minimalSpacing )
-        let trCornerControlPoint = CGPoint(x: contentSize.width - rightPadding, y: minimalSpacing)
+        let trCornerBottomPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing + cornerRadius )
+        let trCornerTopPoint = CGPoint(x: contentSize.width - (minimalSpacing + cornerRadius), y: minimalSpacing )
+        let trCornerControlPoint = CGPoint(x: contentSize.width - minimalSpacing, y: minimalSpacing)
         
         // Draw path to clip
         path.addLine(to: CGPoint(x: arrowMidX, y: contentSize.height))
@@ -451,6 +425,25 @@ class LeapToolTip: LeapTipView {
         path.addLine(to: CGPoint(x: 0, y: 0))
         path.close()
         return path
+    }
+    
+    func getXForArrow() -> CGFloat {
+        let globalToView = getGlobalToViewFrame()
+        var arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
+                
+        // edge case for left side tooltip
+        if (arrowMidX-halfWidthForArrow) <= minimalSpacing && arrowMidX < UIScreen.main.bounds.midX {
+            toolTipView.frame.origin.x -= minimalSpacing
+        }
+                
+        // edge case for right side tooltip
+        if (UIScreen.main.bounds.size.width - (toolTipView.frame.origin.x + toolTipView.frame.size.width)) <= minimalSpacing && arrowMidX > UIScreen.main.bounds.midX {
+            toolTipView.frame.origin.x += minimalSpacing
+        }
+        
+        arrowMidX = globalToView.midX - toolTipView.frame.origin.x
+        
+        return arrowMidX
     }
         
     /// finds eligible parent view.

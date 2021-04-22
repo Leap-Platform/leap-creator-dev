@@ -36,7 +36,7 @@ class LeapTipView: LeapInViewAssist {
     var tappedOnToView = false
     
     /// previous rect of the component to update
-    var previousFrame = CGRect.zero
+    var previousFrame: CGRect?
     
     /// method called to auto focus on the target view of the aui component.
     func setupAutoFocus() {
