@@ -191,12 +191,9 @@ class LeapNotification: LeapKeyWindowAssist {
                     
                   self.frame.origin.x = UIScreen.main.bounds.width
                     
-                    
                 }) { (success) in
                     
                     self.removeFromSuperview()
-                    
-                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             case (.down, .bottom):
@@ -207,12 +204,9 @@ class LeapNotification: LeapKeyWindowAssist {
                     
                   self.frame.origin.y = UIScreen.main.bounds.height
                     
-                    
                 }) { (success) in
                     
                     self.removeFromSuperview()
-                    
-                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             case (.left, .top), (.left, .bottom):
@@ -223,12 +217,9 @@ class LeapNotification: LeapKeyWindowAssist {
                     
                   self.frame.origin.x = -(UIScreen.main.bounds.width)
                     
-                    
                 }) { (success) in
                     
                     self.removeFromSuperview()
-                    
-                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             case (.up, .top):
@@ -239,17 +230,16 @@ class LeapNotification: LeapKeyWindowAssist {
                     
                   self.frame.origin.y = -(UIScreen.main.bounds.height)
                     
-                    
                 }) { (success) in
                     
                     self.removeFromSuperview()
-                    
-                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             default:
                 break
             }
+            
+            self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
         }
     }
 }
