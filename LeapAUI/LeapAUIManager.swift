@@ -289,14 +289,18 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func removeAllViews() {
+        removeCurrentAssist()
+        leapIconOptions?.dismiss(false)
+        dismissLeapButton()
+    }
+    
+    func removeCurrentAssist() {
         currentAssist?.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: false, byContext: true, panelOpen: false, action: nil)
         currentAssist = nil
         currentInstruction = nil
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
-        leapIconOptions?.dismiss(false)
-        dismissLeapButton()
     }
     
     func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool) {
@@ -844,8 +848,6 @@ extension LeapAUIManager {
             }
             
             assist.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: true, byContext: false, panelOpen: false, action: nil)
-            self.currentAssist = nil
-            
         })
         guard let autoDismissTimer = autoDismissTimer else { return }
         RunLoop.main.add(autoDismissTimer, forMode: .default)

@@ -51,7 +51,7 @@ class LeapNativeAssist: UIView, LeapAssist {
     }
     
     func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
-        
+        self.removeFromSuperview()
     }
 
 }

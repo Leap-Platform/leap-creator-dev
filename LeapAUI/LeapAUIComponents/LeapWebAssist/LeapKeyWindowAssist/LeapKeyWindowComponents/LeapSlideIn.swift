@@ -208,8 +208,6 @@ class LeapSlideIn: LeapKeyWindowAssist {
                 }) { (success) in
                     
                     self.webView.removeFromSuperview()
-                    
-                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             case (.left, .left):
@@ -222,13 +220,13 @@ class LeapSlideIn: LeapKeyWindowAssist {
                 }) { (success) in
                     
                     self.webView.removeFromSuperview()
-                    
-                    self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
                 }
                 
             default:
                 break
             }
+            
+            self.delegate?.didDismissAssist(byContext: false, byUser: true, autoDismissed: false, panelOpen: false, action: nil)
         }
     }
 }

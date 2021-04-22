@@ -97,7 +97,7 @@ class LeapBeacon: LeapNativeAssist {
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
         pulsator.stopAnimation()
-        self.removeFromSuperview()
+        remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
     /// sets up customised LeapBeacon's class, toView and inView.

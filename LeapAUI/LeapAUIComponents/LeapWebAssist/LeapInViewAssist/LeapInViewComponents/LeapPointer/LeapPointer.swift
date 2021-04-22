@@ -83,7 +83,7 @@ class LeapPointer: LeapInViewAssist {
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+        super.performExitAnimation(animation: animation, byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
     }
     
     override func hide() {
@@ -281,7 +281,7 @@ class LeapFingerPointer: LeapPointer {
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+        super.performExitAnimation(animation: animation, byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
         removePointer()
     }
     
@@ -528,7 +528,7 @@ class LeapSwipePointer: LeapPointer {
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        super.performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "", byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+        super.performExitAnimation(animation: animation, byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
         removePointer()
     }
 }
