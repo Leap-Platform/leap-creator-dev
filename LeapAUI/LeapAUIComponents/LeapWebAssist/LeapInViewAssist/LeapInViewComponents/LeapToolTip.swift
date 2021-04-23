@@ -432,12 +432,12 @@ class LeapToolTip: LeapTipView {
         var arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
                 
         // edge case for left side tooltip
-        if (arrowMidX-halfWidthForArrow) <= minimalSpacing {
+        if (globalToView.midX-minimalSpacing) <= minimalSpacing {
             toolTipView.frame.origin.x -= minimalSpacing
         }
                 
         // edge case for right side tooltip
-        if (UIScreen.main.bounds.size.width - (toolTipView.frame.origin.x + toolTipView.frame.size.width)) <= minimalSpacing {
+        if (UIScreen.main.bounds.size.width - (globalToView.midX+minimalSpacing)) <= minimalSpacing {
             toolTipView.frame.origin.x += minimalSpacing
         }
         
