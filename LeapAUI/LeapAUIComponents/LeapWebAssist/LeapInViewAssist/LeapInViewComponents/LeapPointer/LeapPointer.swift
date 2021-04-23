@@ -151,6 +151,7 @@ class LeapFingerPointer: LeapPointer {
         pointerLayer.zPosition = 10
         delegate?.didPresentAssist()
         startAnimation()
+        addNotifiers()
     }
     
     override func updateRect(newRect: CGRect, inView: UIView?) {
@@ -208,6 +209,13 @@ class LeapFingerPointer: LeapPointer {
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    override func appWillEnterForeground() {
+        fingerLayer.removeAllAnimations()
+        ringLayer.removeAllAnimations()
+        
+        startAnimation()
     }
     
     override func startAnimation(toRect: CGRect? = nil) {
@@ -320,6 +328,8 @@ class LeapSwipePointer: LeapPointer {
     
     let swipeAnimation = CAAnimationGroup()
     
+    var toRect: CGRect?
+    
     private var screenWidth = UIScreen.main.bounds.width
     
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl:String?) {
@@ -382,10 +392,15 @@ class LeapSwipePointer: LeapPointer {
         pointerLayer.zPosition = 10
         toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
         delegate?.didPresentAssist()
+        self.toRect = toRect
         startAnimation(toRect: toRect)
+        addNotifiers()
     }
     
     override func updateRect(newRect: CGRect, inView: UIView?) {
+        
+        if toRect == newRect { return }
+        
         self.inView = inView
         pointerLayer.frame.size = CGSize(width: 100, height: 100)
         let toViewFrame = newRect
@@ -406,6 +421,10 @@ class LeapSwipePointer: LeapPointer {
             x = toViewFrame.midX - 50
         }
         pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
+        
+        toRect = newRect
+        
+        resetAnimation()
     }
     
     override func presentPointer(view: UIView) {
@@ -442,6 +461,16 @@ class LeapSwipePointer: LeapPointer {
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
+    }
+    
+    override func appWillEnterForeground() {
+        resetAnimation()
+    }
+    
+    func resetAnimation() {
+        pointerLayer.removeAllAnimations()
+        
+        startAnimation(toRect: toRect)
     }
     
     override func startAnimation(toRect: CGRect? = nil) {
@@ -519,7 +548,7 @@ class LeapSwipePointer: LeapPointer {
     }
     
     override func removeAnimation() {
-        ringLayer.removeAllAnimations()
+        pointerLayer.removeAllAnimations()
     }
     
     override func removePointer() {
