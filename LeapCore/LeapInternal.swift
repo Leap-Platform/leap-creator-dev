@@ -117,11 +117,8 @@ extension LeapInternal {
             let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
             payload[key] = "\(timeElapsed)"
         }
-        
-        payload[constant_totalTimeSpentOnApp] = "300000000"
-            
+                    
         return payload
-        
     }
     
     private func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
