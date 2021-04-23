@@ -22,6 +22,7 @@ class LeapNotificationManager: NSObject {
     
     override init() {
         super.init()
+        self.notificationCenter.removeAllDeliveredNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate(notification:)), name: UIApplication.willTerminateNotification, object: nil)
         notificationCenter.delegate = self
     }
@@ -88,7 +89,7 @@ class LeapNotificationManager: NSObject {
         let bundleShortVersionString = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "Empty"
         content.body = "App Version: \(bundleShortVersionString)"
         let request = UNNotificationRequest(identifier: "LeapScanNotification", content: content, trigger: nil)
-        
+        self.notificationCenter.removeAllDeliveredNotifications()
         self.notificationCenter.add(request, withCompletionHandler: nil)
     }
 }
