@@ -106,7 +106,7 @@ class LeapDisableAssistanceDialog: UIView {
         
         // Support Constraint
         
-        self.addConstraint(NSLayoutConstraint(item: bottomDialogView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.3, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: bottomDialogView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.33, constant: 0))
         
         bottomDialogView.backgroundColor = .white
         
@@ -129,7 +129,7 @@ class LeapDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: leapIcon, attribute: .centerX, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerX, multiplier: 1, constant: 0))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: leapIcon, attribute: .top, relatedBy: .equal, toItem: bottomDialogView, attribute: .top, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: leapIcon, attribute: .centerY, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerY, multiplier: 0.4, constant: 0))
         
         leapIcon.iconSize = mainIconSize
         leapIcon.configureIconButton()
@@ -147,7 +147,7 @@ class LeapDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogLabel, attribute: .leading, relatedBy: .equal, toItem: bottomDialogView, attribute: .leading, multiplier: 1, constant: 30))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogLabel, attribute: .top, relatedBy: .equal, toItem: leapIcon, attribute: .bottom, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogLabel, attribute: .centerY, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerY, multiplier: 1, constant: 0))
         
         dialogLabel.numberOfLines = 2
         
@@ -164,7 +164,7 @@ class LeapDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .centerX, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerX, multiplier: 1, constant: -60))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .top, relatedBy: .equal, toItem: dialogLabel, attribute: .bottom, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .centerY, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerY, multiplier: 1.55, constant: 0))
         
         dialogButton1.addConstraint(NSLayoutConstraint(item: dialogButton1, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100))
         
@@ -189,7 +189,7 @@ class LeapDisableAssistanceDialog: UIView {
         
         bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .centerX, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerX, multiplier: 1, constant: 60))
         
-        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .top, relatedBy: .equal, toItem: dialogLabel, attribute: .bottom, multiplier: 1, constant: (UIApplication.shared.keyWindow?.frame.height)!*0.022))
+        bottomDialogView.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .centerY, relatedBy: .equal, toItem: bottomDialogView, attribute: .centerY, multiplier: 1.55, constant: 0))
         
         dialogButton2.addConstraint(NSLayoutConstraint(item: dialogButton2, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100))
         
