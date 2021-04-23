@@ -225,8 +225,7 @@ class LeapIconView: UIView {
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Leap").appendingPathComponent("aui_component")
         let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = documentPath.appendingPathComponent(fileName)
-        let req = URLRequest(url: filePath)
-        self.iconWebView?.load(req)
+        self.iconWebView?.loadHTML(withUrl: filePath)
     }
     
     func loadAudioAnim() {
