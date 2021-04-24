@@ -17,10 +17,10 @@ class LeapPage:LeapContext {
     init(withDict pageDict:Dictionary<String,Any>) {
         previousId = pageDict[constant_prevId] as? Int
         mustHavePreviousPage = pageDict[constant_mustHavePrevPage] as? Bool
-        if let stagesDictsArray = pageDict[constant_stages] as? Array<Dictionary<String,Any>> {
-            for stageDict in stagesDictsArray { stages.append(LeapStage(withDict: stageDict)) }
-        }
         super.init(with: pageDict)
+        if let stagesDictsArray = pageDict[constant_stages] as? Array<Dictionary<String,Any>> {
+            for stageDict in stagesDictsArray { stages.append(LeapStage(withDict: stageDict, pageId: id)) }
+        }
     }
     
     func copy(with zone: NSZone? = nil) -> LeapPage {
