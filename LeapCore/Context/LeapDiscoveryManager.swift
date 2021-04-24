@@ -55,6 +55,8 @@ class LeapDiscoveryManager {
             }
             return true
         })
+        guard let liveDisc = currentDiscovery else { return discoveriesToCheck }
+        if !discoveriesToCheck.contains(liveDisc) { discoveriesToCheck.append(liveDisc) }
         return discoveriesToCheck
     }
     
@@ -114,6 +116,11 @@ class LeapDiscoveryManager {
         return false
     }
     
+    func discoveryPresented() {
+        guard let discovery = currentDiscovery else { return }
+        LeapSharedInformation.shared.discoveryPresent(discoveryId: discovery.id)
+    }
+    
     func resetDiscovery() {
         guard let _ = currentDiscovery else { return }
         discoveryTimer?.invalidate()
@@ -150,7 +157,6 @@ class LeapDiscoveryManager {
     func markCurrentDiscoveryComplete() {
         guard let discovery = currentDiscovery else { return }
         if !(completedDiscoveriesInSession.contains(discovery.id)) { completedDiscoveriesInSession.append(discovery.id) }
-        LeapSharedInformation.shared.discoveryPresent(discoveryId: discovery.id)
         currentDiscovery = nil
     }
     

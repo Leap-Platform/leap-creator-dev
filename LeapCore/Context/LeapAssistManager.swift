@@ -32,7 +32,7 @@ class LeapAssistManager {
         let assistSessionCount = LeapSharedInformation.shared.getAssistsPresentedInfo()
         let assistsDismissedByUser = LeapSharedInformation.shared.getDismissedAssistInfo()
         guard let allAssists = delegate?.getAllAssists() else { return [] }
-        let assistsToCheck = allAssists.filter { (tempAssist) -> Bool in
+        var assistsToCheck = allAssists.filter { (tempAssist) -> Bool in
             /// Eliminate assists already presented in current session
             if assistsCompletedInSession.contains(tempAssist.id) { return false }
             
@@ -50,6 +50,8 @@ class LeapAssistManager {
             }
             return true
         }
+        guard let liveAssist = currentAssist else { return assistsToCheck }
+        if !assistsToCheck.contains(liveAssist) { assistsToCheck.append(liveAssist) }
         return assistsToCheck
     }
     
@@ -107,6 +109,11 @@ class LeapAssistManager {
         assistsCompletedInSession = []
     }
     
+    func assistPresented() {
+        guard let assist = currentAssist else { return }
+        LeapSharedInformation.shared.assistPresented(assistId: assist.id)
+    }
+    
     func assistDismissed(byUser:Bool, autoDismissed:Bool) {
         guard let assist = currentAssist, byUser || autoDismissed  else { return }
         if byUser { LeapSharedInformation.shared.assistDismissedByUser(assistId: assist.id) }
@@ -116,7 +123,6 @@ class LeapAssistManager {
     func markCurrentAssistComplete() {
         guard let assist = currentAssist else { return }
         if !(assistsCompletedInSession.contains(assist.id)) { assistsCompletedInSession.append(assist.id) }
-        LeapSharedInformation.shared.assistPresented(assistId: assist.id)
         currentAssist = nil
     }
     
