@@ -47,6 +47,17 @@ class LeapBeacon: LeapNativeAssist {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func addNotifier() {
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    @objc func appWillEnterForeground() {
+        pulsator.removeAllAnimations()
+        
+        pulsator.startAnimation()
+    }
+    
     /// presents beacon after setting up view, setting up alignment and when start() method called.
     func presentBeacon() {
         
@@ -55,6 +66,8 @@ class LeapBeacon: LeapNativeAssist {
         setAlignment()
         
         show()
+        
+        addNotifier()
     }
     
     func presentBeacon(toRect: CGRect, inView: UIView?) {
