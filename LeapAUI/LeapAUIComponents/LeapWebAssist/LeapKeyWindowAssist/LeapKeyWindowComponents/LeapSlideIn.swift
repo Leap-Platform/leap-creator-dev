@@ -172,8 +172,6 @@ class LeapSlideIn: LeapKeyWindowAssist {
             UIView.animate(withDuration: 0.2) {
                 
                 self.frame.origin.x = xPosition
-                
-                self.delegate?.didPresentAssist()
             }
         
         } else {
@@ -182,9 +180,7 @@ class LeapSlideIn: LeapKeyWindowAssist {
             
             UIView.animate(withDuration: 0.2) {
                 
-                self.frame.origin.x = xPosition
-                
-                self.delegate?.didPresentAssist()
+                self.frame.origin.x = xPosition                
             }
         }
     }

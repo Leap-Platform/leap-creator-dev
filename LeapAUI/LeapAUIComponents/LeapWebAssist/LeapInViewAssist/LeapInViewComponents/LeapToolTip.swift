@@ -615,7 +615,6 @@ class LeapToolTip: LeapTipView {
         }) { (_) in
             UIView.animate(withDuration: 0.2) {
                 self.leapIconView.alpha = 1
-                self.delegate?.didPresentAssist()
             }
         }
     }

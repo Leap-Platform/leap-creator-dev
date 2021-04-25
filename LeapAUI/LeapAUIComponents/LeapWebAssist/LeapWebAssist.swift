@@ -141,8 +141,6 @@ class LeapWebAssist: UIView, LeapAssist {
                       UIView.animate(withDuration: 0.04) {
                         
                          self.leapIconView.alpha = 1
-                        
-                         self.delegate?.didPresentAssist()
                       }
                    }
                 
@@ -169,8 +167,6 @@ class LeapWebAssist: UIView, LeapAssist {
                       UIView.animate(withDuration: 0.04) {
                         
                           self.leapIconView.alpha = 1
-                        
-                          self.delegate?.didPresentAssist()
                       }
                    }
                 
@@ -191,8 +187,6 @@ class LeapWebAssist: UIView, LeapAssist {
                     UIView.animate(withDuration: 0.04) {
                         
                         self.leapIconView.alpha = 1
-                        
-                        self.delegate?.didPresentAssist()
                     }
                 }
                 
@@ -213,8 +207,6 @@ class LeapWebAssist: UIView, LeapAssist {
                     UIView.animate(withDuration: 0.04) {
                         
                        self.leapIconView.alpha = 1
-                        
-                       self.delegate?.didPresentAssist()
                     }
                 }
                 
@@ -243,13 +235,9 @@ class LeapWebAssist: UIView, LeapAssist {
                         self.webView.transform = CGAffineTransform.identity
                         
                         self.leapIconView.alpha = 1
-                        
-                        self.delegate?.didPresentAssist()
                     }
                 }
-                
-            default: self.delegate?.didPresentAssist()
-                
+            default: print("No animation")
             }
         }
     }
@@ -459,6 +447,8 @@ extension LeapWebAssist: WKNavigationDelegate {
         didFinish(webView, didFinish: navigation)
                 
         performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
+        
+        self.delegate?.didPresentAssist()
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation?, withError error: Error) {

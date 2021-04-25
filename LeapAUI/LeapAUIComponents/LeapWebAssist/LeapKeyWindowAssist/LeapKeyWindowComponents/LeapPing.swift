@@ -215,9 +215,6 @@ class LeapPing: LeapKeyWindowAssist {
                                       
                  self.layoutIfNeeded()
               }
-           } completion: { (_) in
-            
-              self.delegate?.didPresentAssist()
            }
     }
     
