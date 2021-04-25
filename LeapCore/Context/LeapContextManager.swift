@@ -582,11 +582,12 @@ extension LeapContextManager:LeapAUICallback {
         case .Discovery:
             if let am = assistManager, let assist = am.getCurrentAssist() {
                 // assist Instriuction
+                am.assistPresented()
                 guard let instruction = assist.instruction else { return }
                 analyticsManager?.saveEvent(event: sendAssistInstructionEvent(instructionId: instruction.id))
             }
             else if let dm = discoveryManager, let discovery = dm.getCurrentDiscovery() {
-                
+                dm.discoveryPresented()
                // start screen event
                 guard let instruction = discovery.instruction else { return }
                 analyticsManager?.saveEvent(event: sendStartScreenEvent(instructionId: instruction.id))

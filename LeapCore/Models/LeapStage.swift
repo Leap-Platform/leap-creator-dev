@@ -34,8 +34,9 @@ class LeapStage:LeapContext {
     let isSuccess:Bool
     let branchInfo:LeapBranchInfo?
     var terminationFrequency:LeapFlowTerminationFrequency?
+    var page:Int
     
-    init(withDict stageDict:Dictionary<String,Any>) {
+    init(withDict stageDict:Dictionary<String,Any>, pageId:Int) {
         
         let typeString = (stageDict[constant_type] as? String)?.uppercased() ?? "NORMAL"
         type = LeapStageType(rawValue: typeString) ?? .Normal
@@ -46,11 +47,12 @@ class LeapStage:LeapContext {
         if let frequencyDict = stageDict[constant_frequency] as? Dictionary<String,Int> {
             terminationFrequency = LeapFlowTerminationFrequency(with: frequencyDict)
         }
+        page = pageId
         super.init(with: stageDict)
     }
     
     func copy(with zone: NSZone? = nil) -> LeapStage {
-        let copy = LeapStage(withDict: [constant_type:self.type.rawValue, constant_isSuccess:self.isSuccess, constant_branchInfo:self.branchInfo ?? [:], constant_instruction:self.instructionInfoDict ?? [:]])
+        let copy = LeapStage(withDict: [constant_type:self.type.rawValue, constant_isSuccess:self.isSuccess, constant_branchInfo:self.branchInfo ?? [:], constant_instruction:self.instructionInfoDict ?? [:]], pageId: 0)
         copy.id = self.id
         copy.name = self.name
         copy.nativeIdentifiers = self.nativeIdentifiers
@@ -63,6 +65,7 @@ class LeapStage:LeapContext {
         copy.instructionInfoDict = self.instructionInfoDict
         copy.trigger = self.trigger
         copy.terminationFrequency = self.terminationFrequency
+        copy.page = self.page
         return copy
     }
 }

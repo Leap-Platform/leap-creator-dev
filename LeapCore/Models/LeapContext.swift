@@ -47,6 +47,9 @@ class LeapContext {
 extension LeapContext:Equatable {
     
     static func == (lhs:LeapContext, rhs:LeapContext) -> Bool {
+        if let lstage = lhs as? LeapStage, let rStage = rhs as? LeapStage {
+            return lstage.id == rStage.id && lstage.name == rStage.name && lstage.page == rStage.page
+        }
         return lhs.id == rhs.id && lhs.name == rhs.name
     }
     
