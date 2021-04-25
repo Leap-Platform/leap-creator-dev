@@ -164,8 +164,6 @@ class LeapLabel: LeapInViewAssist {
         UIView.animate(withDuration: 0.04) {
             
             self.webView.transform = CGAffineTransform.identity
-            
-            self.delegate?.didPresentAssist()
         }
     }
 }

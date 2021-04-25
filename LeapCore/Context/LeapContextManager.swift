@@ -598,12 +598,12 @@ extension LeapContextManager:LeapAUICallback {
             // TODO: Instruction should be triggered once, check id (UUID) and if there is a change in language, can send event again.
             // TODO: - above scenario for start screen and element seen
             guard let sm = stageManager, let stage = sm.getCurrentStage(), let instruction = stage.instruction else { return }
+            // Element seen Event
+            analyticsManager?.saveEvent(event: sendInstructionEvent(instructionId: instruction.id))
             // Flow success Event
             if stage.isSuccess {
                 analyticsManager?.saveEvent(event: sendFlowSuccessEvent())
             }
-            // Element seen Event
-            analyticsManager?.saveEvent(event: sendInstructionEvent(instructionId: instruction.id))
             break
         }
     }

@@ -195,9 +195,7 @@ class LeapCarousel: LeapKeyWindowAssist {
                 
                 self.webView.alpha = 1
                                 
-                self.leapIconView.alpha = 1
-                
-                self.delegate?.didPresentAssist()
+                self.leapIconView.alpha = 1                
             }
         }
     }
