@@ -109,6 +109,10 @@ class LeapToolTip: LeapTipView {
        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
                 
        maskLayer.bounds = self.webView.bounds
+        
+       // set webView to max width of the screen
+       let maxWidth = CGFloat(assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)
+       webView.frame.size.width =  maxWidth * UIScreen.main.bounds.width
     
        cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
 
