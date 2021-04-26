@@ -24,18 +24,6 @@ class LeapAUIManager: NSObject {
     weak var auiManagerCallBack: LeapAUICallback?
     weak var delegate: LeapAUIManagerDelegate?
     
-    private var soundUrl: String = {
-        #if DEV
-            return "https://odin-dev-gke.leap.is/odin/api/v1/sounds"
-        #elseif STAGE
-            return "https://odin-stage-gke.leap.is/odin/api/v1/sounds"
-        #elseif PROD
-            return "https://odin.leap.is/odin/api/v1/sounds"
-        #else
-            return "https://odin.leap.is/odin/api/v1/sounds"
-        #endif
-    }()
-    
     var currentAssist: LeapAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
     
     var keyboardHeight: Float = 0
@@ -49,8 +37,6 @@ class LeapAUIManager: NSObject {
     var leapIconOptions: LeapIconOptions?
     var mediaManager = LeapMediaManager()
     
-    var discoverySoundsJson: Dictionary<String,Array<LeapSound>> = [:]
-    var stageSoundsJson: Dictionary<String,Array<LeapSound>> = [:]
     lazy var scrollArrowButton = LeapArrowButton(arrowDelegate: self)
     
     var currentInstruction: Dictionary<String,Any>?
@@ -60,6 +46,8 @@ class LeapAUIManager: NSObject {
     
     var autoDismissTimer: Timer?
     private var baseUrl = String()
+    
+    let soundManager = LeapSoundManager()
     
     func addIdentifier(identifier: String, value: Any) {
         auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
@@ -104,15 +92,13 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func startMediaFetch() {
         
-        DispatchQueue.main.async { self.leapButton?.iconState = .loading }
-        
         DispatchQueue.global().async {[weak self] in
             
             guard let callback = self?.auiManagerCallBack else { return }
             let initialSounds = callback.getDefaultMedia()
             
             if let discoverySoundsDicts = initialSounds[constant_discoverySounds] as? Array<Dictionary<String,Any>> {
-                self?.discoverySoundsJson = self?.processSoundConfigs(configs:discoverySoundsDicts) ?? [:]
+                self?.soundManager.discoverySoundsJson = self?.soundManager.processSoundConfigs(configs:discoverySoundsDicts) ?? [:]
                 self?.startDiscoverySoundDownload()
             }
             
@@ -125,7 +111,7 @@ extension LeapAUIManager: LeapAUIHandler {
                         htmlBaseUrl = baseUrl
                         for content in contents {
                             let auiContent = LeapAUIContent(baseUrl: baseUrl, location: content)
-                            if let _ = auiContent.url { self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal) }
+                            if let _ = auiContent.url { self?.downloadFromMediaManager(forMedia: auiContent, atPriority: .normal) }
                         }
                     }
                 }
@@ -136,12 +122,15 @@ extension LeapAUIManager: LeapAUIHandler {
                     self?.baseUrl = baseUrl
                     for (_, value) in iconSettingDict {
                         let auiContent = LeapAUIContent(baseUrl: baseUrl, location: value.htmlUrl ?? "")
-                        if let _ = auiContent.url { self?.mediaManager.startDownload(forMedia: auiContent, atPriority: .normal) }
+                        if let _ = auiContent.url { self?.downloadFromMediaManager(forMedia: auiContent, atPriority: .normal) }
                     }
                 }
             }
             
-            self?.fetchSoundConfig()
+            self?.soundManager.fetchSoundConfig({ [weak self] (success) in
+                
+                if success { self?.startStageSoundDownload() }
+            })
         }
     }
     
@@ -351,12 +340,10 @@ extension LeapAUIManager: LeapAUIHandler {
     }
 }
 
-
 // MARK: - ICON TAP AND GESTURE HANDLING
 extension LeapAUIManager: UIGestureRecognizerDelegate {
     
     @objc func leapButtonTap() {
-        
         guard let _ = currentInstruction else {
             auiManagerCallBack?.leapTapped()
             return
@@ -417,74 +404,26 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     }
 }
 
-// MARK: - MEDIA FETCH AND HANDLING
+// MARK: - SOUND DOWNLOAD AND AUDIO HANDLING
 extension LeapAUIManager {
     
-    func processSoundConfigs(configs: Array<Dictionary<String,Any>>) -> Dictionary<String, Array<LeapSound>> {
-        var processedSoundsDict: Dictionary<String,Array<LeapSound>> = [:]
-        for config in configs {
-            let singleConfigProcessed = processSingleConfig(config: config)
-            singleConfigProcessed.forEach { (code, leapSoundsArray) in
-                let soundsForEachCode = (processedSoundsDict[code] ?? []) + leapSoundsArray
-                processedSoundsDict[code] = soundsForEachCode
-            }
-        }
-        return processedSoundsDict
-    }
-    
-    private func processSingleConfig(config: Dictionary<String,Any>) -> Dictionary<String, Array<LeapSound>> {
-        var processedSounds: Dictionary<String,Array<LeapSound>> = [:]
-        guard let baseUrl = config[constant_baseUrl] as? String,
-              let leapSounds = config[constant_leapSounds] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
-        leapSounds.forEach { (code, soundDictsArray) in
-            let processedSoundsArray = self.processLeapSounds(soundDictsArray, code: code, baseUrl: baseUrl)
-            let currentCodeSounds =  (processedSounds[code] ?? []) + processedSoundsArray
-            processedSounds[code] = currentCodeSounds
-        }
-        return processedSounds
-        
-    }
-    
-    private func processLeapSounds(_ sounds: Array<Dictionary<String,Any>>, code: String, baseUrl: String) -> Array<LeapSound> {
-        return sounds.map { (singleSoundDict) -> LeapSound? in
-            let url = singleSoundDict[constant_url] as? String
-            return LeapSound(baseUrl: baseUrl, location: url, code: code, info: singleSoundDict)
-        }.compactMap { return $0 }
+    func downloadFromMediaManager(forMedia: LeapMedia, atPriority: Operation.QueuePriority, completion: SuccessCallBack? = nil) {
+        DispatchQueue.main.async { self.leapButton?.iconState = .loading }
+        mediaManager.startDownload(forMedia: forMedia, atPriority: atPriority, completion: completion)
     }
     
     func startDiscoverySoundDownload() {
         guard auiManagerCallBack != nil else { return }
         let code = auiManagerCallBack!.getLanguageCode()
-        let discoverySoundsForCode = discoverySoundsJson[code] ?? []
-        for sound in discoverySoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .normal) } }
-    }
-    
-    func fetchSoundConfig() {
-        guard let url = URL(string: soundUrl) else { return }
-        var req = URLRequest(url: url)
-        guard let token = LeapPreferences.shared.apiKey else { fatalError("No API Key") }
-        req.addValue(token, forHTTPHeaderField: "x-jiny-client-id")
-        let bundleShortVersionString = (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Empty"
-        req.addValue(bundleShortVersionString, forHTTPHeaderField: "x-app-version-name")
-        let bundleVersion = (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Empty"
-        req.addValue(bundleVersion, forHTTPHeaderField: "x-app-version-code")
-        let session = URLSession.shared
-        let configTask = session.dataTask(with: req) {[weak self] (data, response, error) in
-            guard let resultData = data else { return }
-            guard let audioDict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any>
-            else { return }
-            guard let soundConfigs = audioDict[constant_data] as? Array<Dictionary<String,Any>> else { return }
-            self?.stageSoundsJson = self?.processSoundConfigs(configs: soundConfigs) ?? [:]
-            self?.startStageSoundDownload()
-        }
-        configTask.resume()
+        let discoverySoundsForCode = soundManager.discoverySoundsJson[code] ?? []
+        for sound in discoverySoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
     }
     
     func startStageSoundDownload() {
         guard auiManagerCallBack != nil else { return }
         let code = auiManagerCallBack!.getLanguageCode()
-        let stageSoundsForCode = stageSoundsJson[code] ?? []
-        for sound in stageSoundsForCode { if sound.url != nil { mediaManager.startDownload(forMedia: sound, atPriority: .low) } }
+        let stageSoundsForCode = soundManager.stageSoundsJson[code] ?? []
+        for sound in stageSoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .low) } }
     }
     
     func playAudio() {
@@ -494,10 +433,10 @@ extension LeapAUIManager {
                 self.startAutoDismissTimer()
                 return
             }
-            let soundsArrayForLanguage = self.discoverySoundsJson[code]  ?? []
+            let soundsArrayForLanguage = self.soundManager.discoverySoundsJson[code]  ?? []
             var audio = soundsArrayForLanguage.first { $0.name == mediaName }
             if audio ==  nil {
-                let stageSounds = self.stageSoundsJson[code] ?? []
+                let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
                 audio = stageSounds.first { $0.name == mediaName }
             }
             guard let currentAudio = audio else {
@@ -515,14 +454,11 @@ extension LeapAUIManager {
             let dlStatus = self.mediaManager.getCurrentMediaStatus(currentAudio)
             switch dlStatus {
             case .notDownloaded:
-                self.mediaManager.updatePriority(mediaName: currentAudio.filename, langCode: code, toPriority: .veryHigh)
+                self.downloadFromMediaManager(forMedia: currentAudio, atPriority: .veryHigh)
                 fallthrough
             case .isDownloading:
                 self.mediaManager.overrideMediaDownloadCompletion(currentAudio.filename, code: code) { [weak self] (success) in
-                    guard let instruction = self?.currentInstruction,
-                          let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
-                          let currentMediaName = assistInfo[constant_soundName] as? String, currentAudio.filename == currentMediaName,
-                          let newCode = LeapPreferences.shared.getUserLanguage(), newCode == code, success else { return }
+                    guard let newCode = LeapPreferences.shared.getUserLanguage(), newCode == code, success else { return }
                     self?.playAudioFile(filePath: soundPath)
                 }
             case .downloaded:
@@ -581,7 +517,7 @@ extension LeapAUIManager {
         
         func showLanguageOptions() {
             let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
-            if auiContent.url != nil { self.mediaManager.startDownload(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
+            if auiContent.url != nil { self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 DispatchQueue.main.async {
                     let languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
                         if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
