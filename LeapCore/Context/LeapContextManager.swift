@@ -616,16 +616,15 @@ extension LeapContextManager:LeapAUICallback {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
-            guard let liveContext = getLiveContext() else { return }
-            if let _  = liveContext as? LeapAssist { assistManager?.assistDismissed(byUser: byUser, autoDismissed: autoDismissed) }
-            else if let _ = liveContext as? LeapDiscovery { handleDiscoveryDismiss(byUser: byUser, action: action) }
-            
             if let am = assistManager, let _ = am.getCurrentAssist() {
                 // aui action tracking
                 if let action = action {
                     analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
                 }
             }
+            guard let liveContext = getLiveContext() else { return }
+            if let _  = liveContext as? LeapAssist { assistManager?.assistDismissed(byUser: byUser, autoDismissed: autoDismissed) }
+            else if let _ = liveContext as? LeapDiscovery { handleDiscoveryDismiss(byUser: byUser, action: action) }
             
         case .Stage:
             // aui action tracking
