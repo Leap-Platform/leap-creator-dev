@@ -409,7 +409,10 @@ extension LeapAUIManager {
     
     func downloadFromMediaManager(forMedia: LeapMedia, atPriority: Operation.QueuePriority, completion: SuccessCallBack? = nil) {
         DispatchQueue.main.async { self.leapButton?.iconState = .loading }
-        mediaManager.startDownload(forMedia: forMedia, atPriority: atPriority, completion: completion)
+        mediaManager.startDownload(forMedia: forMedia, atPriority: atPriority) { [weak self] (success) in
+            completion?(success)
+            DispatchQueue.main.async { self?.leapButton?.iconState = .rest }
+        }
     }
     
     func startDiscoverySoundDownload() {
@@ -458,6 +461,7 @@ extension LeapAUIManager {
                 fallthrough
             case .isDownloading:
                 self.mediaManager.overrideMediaDownloadCompletion(currentAudio.filename, code: code) { [weak self] (success) in
+                    DispatchQueue.main.async { self?.leapButton?.iconState = .rest }
                     guard let newCode = LeapPreferences.shared.getUserLanguage(), newCode == code, success else { return }
                     self?.playAudioFile(filePath: soundPath)
                 }
