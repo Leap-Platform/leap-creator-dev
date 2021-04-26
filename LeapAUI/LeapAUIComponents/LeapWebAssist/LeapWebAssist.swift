@@ -492,7 +492,14 @@ extension LeapWebAssist:WKURLSchemeHandler {
         let fileName = fileUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask)[0].appendingPathComponent("Leap").appendingPathComponent("aui_component").appendingPathComponent(fileName)
         if FileManager.default.fileExists(atPath: filePath.path), let fileData = try? Data(contentsOf: filePath) {
-            urlSchemeTask.didReceive(URLResponse())
+            let response:URLResponse = {
+                guard let base = self.baseUrl,
+                      let finalUrl = URL(string: (base+fileUrl)),
+                      fileName.contains(".svg") else { return URLResponse () }
+                let response = URLResponse(url: finalUrl, mimeType: "image/svg+xml", expectedContentLength: fileData.count, textEncodingName: nil)
+                return response
+            }()
+            urlSchemeTask.didReceive(response)
             urlSchemeTask.didReceive(fileData)
             urlSchemeTask.didFinish()
         } else {
