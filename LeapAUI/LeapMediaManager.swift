@@ -26,7 +26,7 @@ class LeapMediaManager {
     var dlTracker:Dictionary<String,LeapWeakDlOperations> = [:]
     
     func startDownload(forMedia:LeapMedia, atPriority:Operation.QueuePriority,
-                       completion: ((_ success: Bool) -> Void)? = nil) {
+                       completion: SuccessCallBack? = nil) {
         var key = forMedia.filename
         if let sound = forMedia as? LeapSound, let code = sound.langCode {
             key = key + "_\(code)"

@@ -44,6 +44,9 @@
 
 /* Begin PBXBuildFile section */
 		2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */; };
+		2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */; };
+		2D8CD7842636CE4D0049D21F /* svgTest.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D8CD7832636CE4D0049D21F /* svgTest.html */; };
+		2D8CD78C2636D06F0049D21F /* svgOriginalTest.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D8CD78B2636D06F0049D21F /* svgOriginalTest.html */; };
 		2DACA43D261E2863007293AC /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DACA43C261E2863007293AC /* Leap+String.swift */; };
 		2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */; };
 		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
@@ -265,6 +268,9 @@
 		2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapProjectParameters.swift; sourceTree = "<group>"; };
 		2D31F8C225B987790027E80F /* LeapPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPing.swift; sourceTree = "<group>"; };
 		2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageOptions.swift; sourceTree = "<group>"; };
+		2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSoundManager.swift; sourceTree = "<group>"; };
+		2D8CD7832636CE4D0049D21F /* svgTest.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = svgTest.html; path = ../../../../Downloads/svgTest.html; sourceTree = "<group>"; };
+		2D8CD78B2636D06F0049D21F /* svgOriginalTest.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = svgOriginalTest.html; path = ../../../../Downloads/svgOriginalTest.html; sourceTree = "<group>"; };
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
 		2DACA43C261E2863007293AC /* Leap+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+String.swift"; sourceTree = "<group>"; };
 		2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConstants.swift; sourceTree = "<group>"; };
@@ -462,6 +468,8 @@
 				D01BD33125D529C50078324B /* jiny_option_cross.png */,
 				2D1702102591D13700F33729 /* jiny_default_icon.html */,
 				2D1702112591D13700F33729 /* jiny_audio_anim.html */,
+				2D8CD78B2636D06F0049D21F /* svgOriginalTest.html */,
+				2D8CD7832636CE4D0049D21F /* svgTest.html */,
 			);
 			path = SupportedFiles;
 			sourceTree = "<group>";
@@ -849,6 +857,7 @@
 				2D2AE918258D00AF0038A5C3 /* LeapSharedAUI.swift */,
 				D0FDAC3024B4A49700D9332B /* Leap.swift */,
 				D0FDAC3724B4BF7100D9332B /* LeapAUIManager.swift */,
+				2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */,
 				D0938E0D251DD67000FD462E /* LeapMediaManager.swift */,
 				D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */,
 				D0938E11251DD8E900FD462E /* LeapMedia.swift */,
@@ -1039,9 +1048,11 @@
 				D0B603EF25DFB6BA0092F735 /* jiny_option_language.png in Resources */,
 				D0B603F025DFB6BA0092F735 /* jiny_option_cross.png in Resources */,
 				D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */,
+				2D8CD78C2636D06F0049D21F /* svgOriginalTest.html in Resources */,
 				D0B603F225DFB6BA0092F735 /* jiny_ping_close.png in Resources */,
 				D017401625F75D17002C051E /* scroll_arrow.png in Resources */,
 				D0B603F325DFB6BA0092F735 /* jiny_audio_anim.html in Resources */,
+				2D8CD7842636CE4D0049D21F /* svgTest.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1237,6 +1248,7 @@
 				D0B603E025DFB6BA0092F735 /* LeapSharedAUI.swift in Sources */,
 				D0B603E125DFB6BA0092F735 /* LeapCarousel.swift in Sources */,
 				D0B603E225DFB6BA0092F735 /* LeapBeacon.swift in Sources */,
+				2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */,
 				D0B603E325DFB6BA0092F735 /* LeapLayer.swift in Sources */,
 				D0B603E425DFB6BA0092F735 /* LeapAssistInfo.swift in Sources */,
 				D0B603E525DFB6BA0092F735 /* LeapAssist.swift in Sources */,
