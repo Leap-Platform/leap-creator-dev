@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LeapSDK
 
 class ManualScrollViewController: UIViewController {
 
@@ -14,7 +15,7 @@ class ManualScrollViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
