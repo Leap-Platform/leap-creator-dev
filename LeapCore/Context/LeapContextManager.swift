@@ -709,6 +709,7 @@ extension LeapContextManager:LeapAUICallback {
     
     func flush() {
         delegate?.fetchUpdatedConfig(config: { (config) in
+            DispatchQueue.main.async { self.auiHandler?.startMediaFetch() }
             guard let config = config, let state = self.contextDetector?.getState() else { return }
             switch state {
             case .Discovery:
@@ -738,6 +739,7 @@ extension LeapContextManager:LeapAUICallback {
                 guard let flow = self.flowManager?.getArrayOfFlows().last,
                       config.flows.contains(flow) else {
                     self.contextDetector?.stop()
+                    self.auiHandler?.removeAllViews()
                     self.contextDetector?.switchState()
                     self.resetAllManagers()
                     self.configuration = config
@@ -833,8 +835,8 @@ extension LeapContextManager {
     }
     
     func resetAllManagers() {
-        self.assistManager?.resetAssistManager()
-        self.discoveryManager?.resetDiscoveryManager()
+        self.assistManager?.resetManagerSession()
+        self.discoveryManager?.resetManagerSession()
         self.flowManager?.resetFlowsArray()
         self.pageManager?.resetPageManager()
         self.stageManager?.resetStageManager()
