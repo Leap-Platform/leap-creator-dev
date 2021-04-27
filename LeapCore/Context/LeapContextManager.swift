@@ -379,6 +379,7 @@ extension LeapContextManager {
     func sendOptOutEvent() -> LeapAnalyticsEvent? {
         guard let projectParameter = getProjectParameter() else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.optOutEvent, withParams: projectParameter)
+        lastEventId = nil
         print("Opt out")
         return event
     }
