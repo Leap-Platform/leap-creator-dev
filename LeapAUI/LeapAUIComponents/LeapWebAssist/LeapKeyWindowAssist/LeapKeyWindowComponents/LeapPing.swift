@@ -241,5 +241,7 @@ class LeapPing: LeapKeyWindowAssist {
             
             self.remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
         }
+        
+        self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
 }
