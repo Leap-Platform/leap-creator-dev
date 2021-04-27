@@ -85,6 +85,10 @@ class LeapDrawer: LeapKeyWindowAssist {
             
             configureConstraintsForLeftAlignment()
         }
+        
+        if #available(iOS 11.0, *) {
+            self.webView.scrollView.contentInsetAdjustmentBehavior = .never
+        }
     }
     
     /// Configuration of constraints for left alignment.
@@ -109,10 +113,6 @@ class LeapDrawer: LeapKeyWindowAssist {
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0))
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
-        
-        // Support Constraint
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
     }
     
     override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0) {
