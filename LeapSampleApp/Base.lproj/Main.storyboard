@@ -825,7 +825,7 @@
         <!--Navigation Controller-->
         <scene sceneID="XES-Uq-14T">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4RR-74-41g" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationController" automaticallyAdjustsScrollViewInsets="NO" id="4RR-74-41g" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cVL-Eu-SBs">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
