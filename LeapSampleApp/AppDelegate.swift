@@ -19,23 +19,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
             // In iOS 13 setup is done in SceneDelegate
         } else {
-            let window = UIWindow(frame: UIScreen.main.bounds)
-            self.window = window
+            self.window = UIWindow(frame: UIScreen.main.bounds)
             
             let mainstoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let newViewcontroller: UINavigationController = mainstoryboard.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
-            window.rootViewController = newViewcontroller
+            let navigationController = mainstoryboard.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
         }
-        
         return true
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        if #available(iOS 13.0, *) {
-            // In iOS 13 setup is done in SceneDelegate
-        } else {
-            self.window?.makeKeyAndVisible()
-        }
         
         Leap.shared.withBuilder(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)?
             .addProperty("username", stringValue: "Aravind")

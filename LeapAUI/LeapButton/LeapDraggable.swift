@@ -23,10 +23,11 @@ class LeapDraggable: UIPanGestureRecognizer {
     
     init() {
         super.init(target: nil, action: nil)
-        self.addTarget(self, action: #selector(panView(_:)))
+        self.addTarget(self, action: #selector(didPanHappen(_:)))
+        self.delegate = self
     }
     
-    @objc func panView(_ sender: UIPanGestureRecognizer) {
+    @objc func didPanHappen(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: self.view)
         
         if sender.state == .began {
@@ -66,5 +67,11 @@ class LeapDraggable: UIPanGestureRecognizer {
                 self.draggableDelegate?.iconDidRelease(atLocation: draggedLocation)
             }
         }
+    }
+}
+
+extension LeapDraggable: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

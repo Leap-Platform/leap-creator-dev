@@ -44,6 +44,7 @@
 
 /* Begin PBXBuildFile section */
 		2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */; };
+		2D5E52CF263965E30037575C /* LeapTappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5E52CE263965E30037575C /* LeapTappable.swift */; };
 		2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */; };
 		2DACA43D261E2863007293AC /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DACA43C261E2863007293AC /* Leap+String.swift */; };
 		2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */; };
@@ -265,6 +266,7 @@
 		2D2AE918258D00AF0038A5C3 /* LeapSharedAUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapSharedAUI.swift; sourceTree = "<group>"; };
 		2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapProjectParameters.swift; sourceTree = "<group>"; };
 		2D31F8C225B987790027E80F /* LeapPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPing.swift; sourceTree = "<group>"; };
+		2D5E52CE263965E30037575C /* LeapTappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapTappable.swift; sourceTree = "<group>"; };
 		2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageOptions.swift; sourceTree = "<group>"; };
 		2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSoundManager.swift; sourceTree = "<group>"; };
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
@@ -558,6 +560,7 @@
 			children = (
 				D07FEB232493A7F2004FFD99 /* LeapMainButton.swift */,
 				2D20BC8E25C05E6B007E80A6 /* LeapDraggable.swift */,
+				2D5E52CE263965E30037575C /* LeapTappable.swift */,
 				D096B3E725F0F027009BE7B3 /* LeapArrowButton.swift */,
 			);
 			path = LeapButton;
@@ -1242,6 +1245,7 @@
 				D0B603E225DFB6BA0092F735 /* LeapBeacon.swift in Sources */,
 				2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */,
 				D0B603E325DFB6BA0092F735 /* LeapLayer.swift in Sources */,
+				2D5E52CF263965E30037575C /* LeapTappable.swift in Sources */,
 				D0B603E425DFB6BA0092F735 /* LeapAssistInfo.swift in Sources */,
 				D0B603E525DFB6BA0092F735 /* LeapAssist.swift in Sources */,
 				D0B603E625DFB6BA0092F735 /* LeapLayoutInfo.swift in Sources */,

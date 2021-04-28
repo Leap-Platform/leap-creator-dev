@@ -52,7 +52,10 @@ class LeapIconView: UIView {
     let iconGap: CGFloat = 12
     
     /// tap gesture for iconWebView.
-    let tapGestureRecognizer = UITapGestureRecognizer()
+    let leapTappable = LeapTappable()
+    
+    /// pan gesture for iconWebView
+    let leapDraggable = LeapDraggable()
     
     /// if customised is true then this url is non-nil.
     var htmlUrl: String?
@@ -106,7 +109,6 @@ class LeapIconView: UIView {
         self.iconWebView?.isOpaque = false
         self.iconWebView?.navigationDelegate = self
         
-        self.iconWebView?.addGestureRecognizer(tapGestureRecognizer)
         self.iconWebView?.isUserInteractionEnabled = true
     }
     

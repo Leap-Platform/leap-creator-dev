@@ -32,8 +32,6 @@ class LeapMainButton: LeapIconView {
     
     private var closeIconWidthConstraint: NSLayoutConstraint?
     
-    let leapDraggable = LeapDraggable()
-    
     let disableDialog = LeapDisableAssistanceDialog()
     
     private var gradientLayer: CAGradientLayer? = {
@@ -52,8 +50,10 @@ class LeapMainButton: LeapIconView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.elevate(with: 20)
         
-        leapDraggable.draggableDelegate = self
+        self.addGestureRecognizer(leapTappable)
+        
         self.addGestureRecognizer(leapDraggable)
+        self.leapDraggable.draggableDelegate = self
         
         self.isDismissible = dismissible
     }
