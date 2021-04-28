@@ -320,12 +320,11 @@ extension LeapAUIManager: LeapAUIHandler {
         leapButton = LeapMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#00000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(leapButton!)
-        leapButton?.tapGestureRecognizer.addTarget(self, action: #selector(leapButtonTap))
-        leapButton?.tapGestureRecognizer.delegate = self
+        leapButton?.leapTappable.tappableDelegate = self
         leapButton?.stateDelegate = self
+        leapButton?.disableDialog.delegate = self
         leapButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
         leapButton?.bottomConstraint = leapButtonBottomConstraint!
-        leapButton?.disableDialog.delegate = self
         var distance = mainIconCornerConstant
         var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
         if iconSetting.leftAlign ?? false {
@@ -340,10 +339,10 @@ extension LeapAUIManager: LeapAUIHandler {
     }
 }
 
-// MARK: - ICON TAP AND GESTURE HANDLING
-extension LeapAUIManager: UIGestureRecognizerDelegate {
+// MARK: - HANDLING ICON TAP
+extension LeapAUIManager: LeapTappableDelegate {
     
-    @objc func leapButtonTap() {
+    func iconDidTap() {
         guard let _ = currentInstruction else {
             auiManagerCallBack?.leapTapped()
             return
@@ -358,12 +357,7 @@ extension LeapAUIManager: UIGestureRecognizerDelegate {
         leapIconOptions = LeapIconOptions(withDelegate: self, stopText: stopText, languageText: languageText, leapButton: button)
         leapIconOptions?.show()
     }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
 }
-
 
 // MARK: - LEAP MAIN BUTTON STATE HANDLING
 extension LeapAUIManager: LeapIconStateDelegate {

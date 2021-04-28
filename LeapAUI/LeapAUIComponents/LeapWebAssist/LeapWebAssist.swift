@@ -367,11 +367,7 @@ class LeapWebAssist: UIView, LeapAssist {
         superView.addSubview(leapIconView)
         
         leapIconView.htmlUrl = iconInfo?.htmlUrl
-        
-        leapIconView.tapGestureRecognizer.addTarget(self, action: #selector(leapIconButtonTapped))
-        
-        leapIconView.tapGestureRecognizer.delegate = self
-        
+                        
         leapIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
         
         self.leapIconView.translatesAutoresizingMaskIntoConstraints = false
@@ -520,18 +516,5 @@ extension LeapWebAssist:WKURLSchemeHandler {
     @available(iOS 11.0, *)
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
         
-    }
-    
-    
-}
-
-extension LeapWebAssist: UIGestureRecognizerDelegate {
-    
-    @objc func leapIconButtonTapped() {
-        
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
 }

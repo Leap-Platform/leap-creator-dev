@@ -125,9 +125,7 @@ class LeapDrawer: LeapKeyWindowAssist {
         superView.addSubview(leapIconView)
         
         leapIconView.htmlUrl = iconInfo?.htmlUrl
-        
-        leapIconView.tapGestureRecognizer.addTarget(self, action: #selector(leapIconButtonTapped))
-        
+                
         leapIconView.iconBackgroundColor = UIColor.init(hex: iconInfo?.backgroundColor ?? "") ?? .black
                 
         self.leapIconView.translatesAutoresizingMaskIntoConstraints = false
