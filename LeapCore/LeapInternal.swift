@@ -117,8 +117,6 @@ extension LeapInternal {
             payload[key] = "\(timeElapsed)"
         }
         
-        payload[constant_totalTimeSpentOnApp] = "300000000"
-                    
         return payload
     }
     
