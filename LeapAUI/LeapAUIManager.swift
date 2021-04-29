@@ -762,28 +762,37 @@ extension LeapAUIManager: AVSpeechSynthesizerDelegate {
 extension LeapAUIManager {
     
     func startAutoDismissTimer() {
-        guard let instruction = currentInstruction else { return }
-        let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>
-        let timer: Double? = (assistInfo == nil) ? 2000.0 : assistInfo![constant_autoDismissDelay] as? Double
-        guard let dismissTimer = timer else { return }
-        if autoDismissTimer != nil {
-            autoDismissTimer?.invalidate()
-            autoDismissTimer = nil
-        }
-        autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
-            self.currentInstruction = nil
-            self.dismissLeapButton()
-            self.autoDismissTimer?.invalidate()
-            self.autoDismissTimer = nil
-            guard let assist = self.currentAssist else {
-                self.auiManagerCallBack?.didDismissView(byUser: false, autoDismissed: true, panelOpen: false, action: nil)
-                return
+        DispatchQueue.main.async {
+            let languagePanelView:LeapLanguageOptions? = {
+                let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
+                guard let keyWindow = kw else { return nil }
+                let langPanel = keyWindow.subviews.first { $0.isKind(of: LeapLanguageOptions.self) } as? LeapLanguageOptions
+                return langPanel
+            }()
+            guard languagePanelView == nil else { return }
+            guard let instruction = self.currentInstruction else { return }
+            let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>
+            let timer: Double? = (assistInfo == nil) ? 2000.0 : assistInfo![constant_autoDismissDelay] as? Double
+            guard let dismissTimer = timer else { return }
+            if self.autoDismissTimer != nil {
+                self.autoDismissTimer?.invalidate()
+                self.autoDismissTimer = nil
             }
-            
-            assist.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: true, byContext: false, panelOpen: false, action: nil)
-        })
-        guard let autoDismissTimer = autoDismissTimer else { return }
-        RunLoop.main.add(autoDismissTimer, forMode: .default)
+            self.autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
+                self.currentInstruction = nil
+                self.dismissLeapButton()
+                self.autoDismissTimer?.invalidate()
+                self.autoDismissTimer = nil
+                guard let assist = self.currentAssist else {
+                    self.auiManagerCallBack?.didDismissView(byUser: false, autoDismissed: true, panelOpen: false, action: nil)
+                    return
+                }
+                
+                assist.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: true, byContext: false, panelOpen: false, action: nil)
+            })
+            guard let autoDismissTimer = self.autoDismissTimer else { return }
+            RunLoop.main.add(autoDismissTimer, forMode: .default)
+        }
     }
 }
 
