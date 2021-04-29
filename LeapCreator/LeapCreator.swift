@@ -15,7 +15,8 @@ import UIKit
     private var token:String?
   
    @objc public func start(_ apiKey:String) -> Void {
-        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
+        let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
+        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
         LeapReachabilityManager.shared.initialize()
         token = apiKey
         creatorInternal = LeapCreatorInternal(apiKey: apiKey)
@@ -25,7 +26,8 @@ import UIKit
     }
     
     public func openSampleApp(delegate: SampleAppDelegate) -> UIViewController? {
-        guard UIDevice.current.userInterfaceIdiom == .phone else { return nil } 
+        let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
+        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return nil}
         let name = Bundle.main.bundleIdentifier
         if name != constant_LeapPreview_BundleId  { return nil }
         let leapCameraViewController = LeapCameraViewController()

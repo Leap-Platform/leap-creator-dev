@@ -122,7 +122,6 @@
 		D08DA66325DEA2E800EB0EFC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92224B9B330001A04DF /* AVFoundation.framework */; };
 		D08DA66425DEA2E800EB0EFC /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = D08DA63325DEA2E800EB0EFC /* Gzip */; };
 		D08DA66525DEA2E800EB0EFC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92024B9B328001A04DF /* WebKit.framework */; };
-		D08DA66625DEA2E800EB0EFC /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C91E24B9B2BF001A04DF /* AdSupport.framework */; };
 		D08DA66725DEA2E800EB0EFC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; platformFilter = ios; };
 		D096B3E825F0F027009BE7B3 /* LeapArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D096B3E725F0F027009BE7B3 /* LeapArrowButton.swift */; };
 		D0B603BD25DFB6BA0092F735 /* Leap.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* Leap.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -170,7 +169,6 @@
 		D0B603E825DFB6BA0092F735 /* LeapIconOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01BD31F25D528940078324B /* LeapIconOptions.swift */; };
 		D0B603E925DFB6BA0092F735 /* LeapInViewAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931E2543186D00DB94DD /* LeapInViewAssist.swift */; };
 		D0B603EA25DFB6BA0092F735 /* LeapPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45162423AAAA00A43FEA /* LeapPointer.swift */; };
-		D0B603EC25DFB6BA0092F735 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C91E24B9B2BF001A04DF /* AdSupport.framework */; };
 		D0B603ED25DFB6BA0092F735 /* LeapCoreSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; };
 		D0B603EF25DFB6BA0092F735 /* jiny_option_language.png in Resources */ = {isa = PBXBuildFile; fileRef = D01BD32825D529AD0078324B /* jiny_option_language.png */; };
 		D0B603F025DFB6BA0092F735 /* jiny_option_cross.png in Resources */ = {isa = PBXBuildFile; fileRef = D01BD33125D529C50078324B /* jiny_option_cross.png */; };
@@ -424,7 +422,6 @@
 				D08DA66325DEA2E800EB0EFC /* AVFoundation.framework in Frameworks */,
 				D08DA66425DEA2E800EB0EFC /* Gzip in Frameworks */,
 				D08DA66525DEA2E800EB0EFC /* WebKit.framework in Frameworks */,
-				D08DA66625DEA2E800EB0EFC /* AdSupport.framework in Frameworks */,
 				D08DA66725DEA2E800EB0EFC /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,7 +430,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0B603EC25DFB6BA0092F735 /* AdSupport.framework in Frameworks */,
 				D0B603ED25DFB6BA0092F735 /* LeapCoreSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1412,6 +1408,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1443,6 +1440,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1473,6 +1471,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1596,6 +1595,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1627,6 +1627,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1657,6 +1658,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1774,6 +1776,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1803,6 +1806,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1832,6 +1836,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1948,6 +1953,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1977,6 +1983,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2006,6 +2013,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2128,6 +2136,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2159,6 +2168,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.aui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2189,6 +2199,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2306,6 +2317,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2335,6 +2347,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.aui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2364,6 +2377,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2582,6 +2596,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2613,6 +2628,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2643,6 +2659,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2784,6 +2801,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2813,6 +2831,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2842,6 +2861,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = "1.0.0-alpha";
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

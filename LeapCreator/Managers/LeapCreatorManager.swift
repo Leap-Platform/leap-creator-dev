@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import AdSupport
 
 protocol LeapCreatorManagerDelegate: class {
     func fetchConfigSuccess()
@@ -30,7 +29,6 @@ class LeapCreatorManager {
         req.httpMethod = "GET"
         guard let apiKey = apiKey else { return }
         req.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
-        req.addValue(ASIdentifierManager.shared().advertisingIdentifier.uuidString, forHTTPHeaderField: "x-apple-ad-id")
         req.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
