@@ -39,11 +39,8 @@ class LeapSharedInformation {
 extension LeapSharedInformation {
     
     func setAPIKey(_ token:String) {
-        guard apiKey == nil else {
-            if self.apiKey == token { return }
-            fatalError("Token already set")
-        }
         guard !token.isEmpty else { fatalError("Empty Token") }
+        if self.apiKey == token { return }
         apiKey = token
     }
     
