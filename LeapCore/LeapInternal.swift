@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import AdSupport
 
 class LeapInternal:NSObject {
     var contextManager:LeapContextManager

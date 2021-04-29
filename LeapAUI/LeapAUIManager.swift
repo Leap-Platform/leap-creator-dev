@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 import LeapCoreSDK
 import AVFoundation
-import AdSupport
 import WebKit
 
 protocol LeapAUIManagerDelegate: NSObjectProtocol {
@@ -834,24 +833,31 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         }
         autoDismissTimer?.invalidate()
         autoDismissTimer = nil
-        let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
-            if success, let code = languageCode {
-                if let userLanguage = LeapPreferences.shared.getUserLanguage() {
-                   self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
-                }
-                LeapPreferences.shared.setUserLanguage(code)
-            } else { self.startAutoDismissTimer() }
-            if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
-                webAssist.changeLanguage(locale: code)
-                self.playAudio()
-            }
-            self.startDiscoverySoundDownload()
-            self.startStageSoundDownload()
-            self.auiManagerCallBack?.optionPanelClosed()
-            
-        }
-        leapLanguageOptions.showBottomSheet()
         
+        let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: htmlUrl)
+        guard let _ = auiContent.url else { return }
+        self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh) { (success) in
+            guard success else { return }
+            DispatchQueue.main.async {
+                let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
+                    if success, let code = languageCode {
+                        if let userLanguage = LeapPreferences.shared.getUserLanguage() {
+                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
+                        }
+                        LeapPreferences.shared.setUserLanguage(code)
+                    } else { self.startAutoDismissTimer() }
+                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
+                        webAssist.changeLanguage(locale: code)
+                        self.playAudio()
+                    }
+                    self.startDiscoverySoundDownload()
+                    self.startStageSoundDownload()
+                    self.auiManagerCallBack?.optionPanelClosed()
+                    
+                }
+                leapLanguageOptions.showBottomSheet()
+            }
+        }
     }
     
     func iconOptionsClosed() {
