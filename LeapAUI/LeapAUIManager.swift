@@ -46,6 +46,8 @@ class LeapAUIManager: NSObject {
     var autoDismissTimer: Timer?
     private var baseUrl = String()
     
+    private var isLanguageOptionsOpen = false
+    
     let soundManager = LeapSoundManager()
     
     func addIdentifier(identifier: String, value: Any) {
@@ -346,8 +348,6 @@ extension LeapAUIManager: LeapTappableDelegate {
             auiManagerCallBack?.leapTapped()
             return
         }
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
         auiManagerCallBack?.optionPanelOpened()
         guard let button = leapButton else { return }
         guard let optionsText = auiManagerCallBack?.getCurrentLanguageOptionsTexts() else { return }
@@ -383,8 +383,7 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     
     func didPresentDisableAssistance() {
         guard let _ = autoDismissTimer else { return }
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
+        self.stopAutoDismissTimer()
     }
     
     func shouldDisableAssistance() {
@@ -494,16 +493,12 @@ extension LeapAUIManager {
     }
     
     func stopAudio() {
-        
         self.audioPlayer?.stop()
-        
-        if self.audioPlayer != nil && !(self.audioPlayer?.isPlaying ?? false) {
-            self.audioPlayer = nil
-            leapButton?.iconState = .rest
-            startAutoDismissTimer()
-        }
+        self.audioPlayer = nil
         
         self.synthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
+        
+        leapButton?.iconState = .rest
     }
 }
 
@@ -516,7 +511,9 @@ extension LeapAUIManager {
             let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
             if auiContent.url != nil { self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
                 DispatchQueue.main.async {
+                    self.isLanguageOptionsOpen = true
                     let languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
+                        self.isLanguageOptionsOpen = false
                         if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
                         if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
                             webAssist.changeLanguage(locale: code)
@@ -566,8 +563,7 @@ extension LeapAUIManager {
         currentTargetView = view
         currentTargetRect = rect
         currentWebView = webview
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
+        self.stopAutoDismissTimer()
     }
     
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
@@ -762,27 +758,19 @@ extension LeapAUIManager: AVSpeechSynthesizerDelegate {
 extension LeapAUIManager {
     
     func startAutoDismissTimer() {
+        guard !isLanguageOptionsOpen else { return }
         DispatchQueue.main.async {
-            let languagePanelView:LeapLanguageOptions? = {
-                let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
-                guard let keyWindow = kw else { return nil }
-                let langPanel = keyWindow.subviews.first { $0.isKind(of: LeapLanguageOptions.self) } as? LeapLanguageOptions
-                return langPanel
-            }()
-            guard languagePanelView == nil else { return }
             guard let instruction = self.currentInstruction else { return }
             let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>
             let timer: Double? = (assistInfo == nil) ? 2000.0 : assistInfo![constant_autoDismissDelay] as? Double
             guard let dismissTimer = timer else { return }
             if self.autoDismissTimer != nil {
-                self.autoDismissTimer?.invalidate()
-                self.autoDismissTimer = nil
+                self.stopAutoDismissTimer()
             }
             self.autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
                 self.currentInstruction = nil
                 self.dismissLeapButton()
-                self.autoDismissTimer?.invalidate()
-                self.autoDismissTimer = nil
+                self.stopAutoDismissTimer()
                 guard let assist = self.currentAssist else {
                     self.auiManagerCallBack?.didDismissView(byUser: false, autoDismissed: true, panelOpen: false, action: nil)
                     return
@@ -793,6 +781,11 @@ extension LeapAUIManager {
             guard let autoDismissTimer = self.autoDismissTimer else { return }
             RunLoop.main.add(autoDismissTimer, forMode: .default)
         }
+    }
+    
+    func stopAutoDismissTimer() {
+        self.autoDismissTimer?.invalidate()
+        self.autoDismissTimer = nil
     }
 }
 
@@ -807,8 +800,7 @@ extension LeapAUIManager: LeapAssistDelegate {
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
     func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
+        self.stopAutoDismissTimer()
         currentAssist = nil
         currentInstruction = nil
         stopAudio()
@@ -840,15 +832,16 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             auiManagerCallBack?.optionPanelOpened()
             return
         }
-        autoDismissTimer?.invalidate()
-        autoDismissTimer = nil
-        
+        self.stopAutoDismissTimer()
+        self.stopAudio()
         let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: htmlUrl)
         guard let _ = auiContent.url else { return }
         self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh) { (success) in
             guard success else { return }
             DispatchQueue.main.async {
+                self.isLanguageOptionsOpen = true
                 let leapLanguageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
+                    self.isLanguageOptionsOpen = false
                     if success, let code = languageCode {
                         if let userLanguage = LeapPreferences.shared.getUserLanguage() {
                            self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
