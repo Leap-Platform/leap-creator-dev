@@ -31,9 +31,6 @@ class LeapToolTip: LeapTipView {
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
     
-    /// corner radius for the highlight area/frame.
-    var highlightCornerRadius = 5.0
-    
     /// presents pointer after setup, configure and show() webview content method is called and when the delegate is called for the webView.
     func presentPointer() {
         
@@ -479,85 +476,6 @@ class LeapToolTip: LeapTipView {
     func canCompletelyHoldPointer(_ view: UIView) -> Bool {
     
         return (view.bounds.height > 120 && view.bounds.width > 260)
-    }
-    
-    /// Highlights the toView to which the tooltipView is pointed to.
-    private func highlightAnchor() {
-        
-        manipulatedHighlightSpacing = highlightSpacing
-        
-        let globalToView = getGlobalToViewFrame()
-
-        let origin = globalToView.origin
-        
-        let size = globalToView.size
-        
-        guard let inView = self.inView else { return }
-        
-        let path = UIBezierPath(rect: inView.bounds)
-                
-        var transparentPath = UIBezierPath()
-        
-        if let highlightType = assistInfo?.extraProps?.props[constant_highlightType] as? String {
-            
-            self.highlightType = LeapHighlightType(rawValue: highlightType) ?? .rect
-        }
-        
-        switch self.highlightType {
-            
-        case .rect:
-            
-            if let highlightCornerRadius = assistInfo?.extraProps?.props[constant_highlightCornerRadius] as? String {
-                
-                self.highlightCornerRadius = Double(highlightCornerRadius) ?? self.highlightCornerRadius
-            }
-        
-            transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: highlightCornerRadius, height: highlightCornerRadius))
-
-        case .capsule:
-            
-            transparentPath = UIBezierPath(roundedRect: CGRect(x: Double(origin.x) - highlightSpacing, y: Double(origin.y) - highlightSpacing, width: Double(size.width) + (highlightSpacing*2), height: Double(size.height) + (highlightSpacing*2)), byRoundingCorners: .allCorners, cornerRadii: CGSize(width: (Double(size.height) + (highlightSpacing*2))/2, height: (Double(size.height) + (highlightSpacing*2))/2))
-            
-        case .circle:
-            
-            var radius = size.width
-            
-            var x = Double(origin.x) - highlightSpacing
-            
-            var diameter = Double(radius) + (highlightSpacing*2)
-            
-            var totalRadius = diameter/2
-            
-            var y = (Double(origin.y) + Double(size.height)/2) - totalRadius
-            
-            manipulatedHighlightSpacing = abs(-(totalRadius) + (Double(size.height)/2))
-                        
-            if size.height > size.width {
-                
-                radius = size.height
-                
-                diameter = Double(radius) + (highlightSpacing*2)
-                
-                totalRadius = diameter/2
-                
-                x = (Double(origin.x) + Double(size.width)/2) - totalRadius
-                
-                y = Double(origin.y) - highlightSpacing
-                
-                manipulatedHighlightSpacing = highlightSpacing
-            }
-            
-            transparentPath = UIBezierPath(ovalIn: CGRect(x: x, y: y, width: diameter, height: diameter))
-        }
-        
-        path.append(transparentPath)
-        path.usesEvenOddFillRule = true
-
-        let fillLayer = CAShapeLayer()
-        fillLayer.path = path.cgPath
-        fillLayer.fillRule = .evenOdd
-        fillLayer.opacity = 1.0
-        self.layer.mask = fillLayer
     }
     
     /// sets toolTip size based on the webview's callback.

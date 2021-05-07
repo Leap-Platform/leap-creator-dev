@@ -28,9 +28,6 @@ class LeapSpot: LeapTipView {
     /// half width for the arrow.
     private let halfWidthForArrow: CGFloat = 10
     
-    /// corner radius for the highlight area/frame.
-    var highlightCornerRadius = 5.0
-    
     /// the bridge line between highlight and tooltip which is of the type ConnectorType
     var connectorType: LeapHighlightConnectorType = .none
     
@@ -524,8 +521,9 @@ class LeapSpot: LeapTipView {
         return (view.bounds.height > 120 && view.bounds.width > 260)
     }
     
+    // if spot highlight requires animation, just remove the below method. The super class method takes care of the animation.
     /// Highlights the toView to which the tooltipView is pointed to.
-    private func highlightAnchor() {
+    override func highlightAnchor() {
         
         manipulatedHighlightSpacing = highlightSpacing
         
