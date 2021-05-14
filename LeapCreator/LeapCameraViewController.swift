@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 protocol LeapCameraViewControllerDelegate: class {
-    func configFetched(type: NotificationType, config:Dictionary<String,Any>, projectName:String)
+    func configFetched(type: NotificationType, config:Dictionary<String,Any>)
     func closed(type: NotificationType)
 }
 
@@ -22,7 +22,6 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     weak var delegate:LeapCameraViewControllerDelegate?
     weak var sampleAppDelegate: SampleAppDelegate?
-    var notificationType: NotificationType = .preview
     let cameraImage = UIImageView()
     let openCamera = UIButton()
     let closeButton = UIButton()
@@ -55,33 +54,18 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
         
-        if let infoDict = (UserDefaults.standard.object(forKey: "sampleAppInfoDict") as? Dictionary<String,Any>), let rescan = (UserDefaults.standard.object(forKey: "sampleAppRescan") as? Bool) {
+        setupView()
+    }
+    
+    func configureSampleApp() {
+        if let infoDict = (UserDefaults.standard.object(forKey: "sampleAppInfoDict") as? Dictionary<String,Any>) {
             
-            if rescan {
-                
-               notificationType = .sampleApp
-                
-               setupView()
-            
-            } else {
-            
-               configureSampleApp(infoDict: infoDict)
+            if let rescan = (UserDefaults.standard.object(forKey: "sampleAppRescan") as? Bool), !rescan {
+                configureConnectedSampleApp(infoDict: infoDict)
             }
-
+        
         } else {
-            
-            if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
-                
-                notificationType = .sampleApp
-                
-                closeButton.isHidden = true
-            
-            } else {
-                
-                closeButton.isHidden = false
-            }
-            
-            setupView()
+            closeButton.isHidden = true
         }
     }
     
@@ -136,7 +120,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         if UIApplication.shared.canOpenURL(settingsUrl) {
 
             goAction = UIAlertAction(title: goButton, style: .default, handler: {(alert: UIAlertAction!) -> Void in
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
             })
         }
 
@@ -170,18 +154,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     private func setupDescLabel() {
-        if notificationType == .preview {
-            descLabel1.text = "To preview projects on device"
-            descLabel1.textColor = .white
-            descLabel1.textAlignment = .center
-            descLabel1.numberOfLines = 0
-            descLabel1.font = UIFont(name: "Helvetica Neue", size: 15)
-            view.addSubview(descLabel1)
-            descLabel1.translatesAutoresizingMaskIntoConstraints = false
-            descLabel1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
-            descLabel1.centerXAnchor.constraint(equalTo: qrCodeImage.centerXAnchor).isActive = true
-            descLabel1.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 50).isActive = true
-        } else {
+        if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
             descLabel1.text = "1. To connect Sample app"
             descLabel1.textColor = .white
             descLabel1.textAlignment = .center
@@ -202,20 +175,22 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             descLabel2.translatesAutoresizingMaskIntoConstraints = false
             descLabel2.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 60).isActive = true
             descLabel2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIScreen.main.bounds.size.width*0.07).isActive = true
+        } else {
+            descLabel1.text = "To preview projects on device"
+            descLabel1.textColor = .white
+            descLabel1.textAlignment = .center
+            descLabel1.numberOfLines = 0
+            descLabel1.font = UIFont(name: "Helvetica Neue", size: 15)
+            view.addSubview(descLabel1)
+            descLabel1.translatesAutoresizingMaskIntoConstraints = false
+            descLabel1.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
+            descLabel1.centerXAnchor.constraint(equalTo: qrCodeImage.centerXAnchor).isActive = true
+            descLabel1.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 50).isActive = true
         }
     }
     
     private func setupLearnMoreButton() {
-        if notificationType == .preview {
-            learnMoreButton1.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
-            learnMoreButton1.setTitle("Learn More", for: .normal)
-            learnMoreButton1.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
-            learnMoreButton1.addTarget(self, action: #selector(learnMore1Clicked), for: .touchUpInside)
-            view.addSubview(learnMoreButton1)
-            learnMoreButton1.translatesAutoresizingMaskIntoConstraints = false
-            learnMoreButton1.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            learnMoreButton1.topAnchor.constraint(equalTo: descLabel1.bottomAnchor, constant: 16).isActive = true
-        } else {
+        if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
             learnMoreButton1.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
             learnMoreButton1.setTitle("Learn More", for: .normal)
             learnMoreButton1.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
@@ -237,6 +212,15 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             learnMoreButton2.translatesAutoresizingMaskIntoConstraints = false
             learnMoreButton2.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 54).isActive = true
             learnMoreButton2.leadingAnchor.constraint(equalTo: descLabel2.trailingAnchor, constant: UIScreen.main.bounds.width*0.015).isActive = true
+        } else {
+            learnMoreButton1.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
+            learnMoreButton1.setTitle("Learn More", for: .normal)
+            learnMoreButton1.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
+            learnMoreButton1.addTarget(self, action: #selector(learnMore1Clicked), for: .touchUpInside)
+            view.addSubview(learnMoreButton1)
+            learnMoreButton1.translatesAutoresizingMaskIntoConstraints = false
+            learnMoreButton1.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            learnMoreButton1.topAnchor.constraint(equalTo: descLabel1.bottomAnchor, constant: 16).isActive = true
         }
     }
     
@@ -367,14 +351,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Check if is of type PREVIEW
         if let id = infoDict["id"] as? String, infoDict["type"] as? String == "PREVIEW" {
-           notificationType = .preview
            let projectName = infoDict["projectName"] as? String ?? ""
-           fetchPreviewConfig(previewId: id, projectName:projectName)
-        
+           fetchPreviewConfig(previewId: id, projectName: projectName)
         } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP", Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
-            
-            configureSampleApp(infoDict: infoDict)
-            
+            configureConnectedSampleApp(infoDict: infoDict)
         } else {
             presentWarning(constant_invalidQRCodeWarning)
         }
@@ -431,17 +411,16 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 }
                 self.previewLayer.removeFromSuperlayer()
                 self.scannerView?.removeFromSuperview()
-                self.delegate?.configFetched(type: .preview, config: previewDict, projectName: projectName)
+                UserDefaults.standard.setValue(projectName, forKey: constant_previewProjectName)
+                self.delegate?.configFetched(type: .preview, config: previewDict)
                 self.dismiss(animated: true, completion: nil)
             }
         }
         task.resume()
     }
     
-    func configureSampleApp(infoDict: Dictionary<String, Any>) {
-        
-        notificationType = .sampleApp
-        self.delegate?.configFetched(type: .sampleApp, config: infoDict, projectName: "")
+    private func configureConnectedSampleApp(infoDict: Dictionary<String, Any>) {
+        self.delegate?.configFetched(type: .sampleApp, config: infoDict)
         self.sampleAppDelegate?.sendInfo(infoDict: infoDict)
     }
     
@@ -488,17 +467,17 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     @objc func closeButtonClicked() {
         dismiss(animated: true, completion: nil )
-        delegate?.closed(type: notificationType)
+        delegate?.closed(type: Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId ? .sampleApp : .genericApp)
     }
     
     @objc func learnMore1Clicked() {
-        if notificationType == .preview {
-            let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice ?? constant_previewDeviceUrl
-            guard let url = URL(string: previewDeviceUrl) else { return }
-            UIApplication.shared.open(url)
-        } else {
+        if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
             let connectSampleAppUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.connectSampleApp ?? constant_connectSampleAppUrl
             guard let url = URL(string: connectSampleAppUrl) else { return }
+            UIApplication.shared.open(url)
+        } else {
+            let previewDeviceUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.previewDevice ?? constant_previewDeviceUrl
+            guard let url = URL(string: previewDeviceUrl) else { return }
             UIApplication.shared.open(url)
         }
     }
@@ -511,6 +490,11 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     @objc func scanAgain() {
         warningView?.removeFromSuperview()
+        guard scannerView != nil else {
+            setupCaptureSession()
+            return
+        }
+        setupCloseButton(inView: scannerView!)
         captureSession.startRunning()
     }
     
