@@ -27,6 +27,7 @@ class LeapInternal:NSObject {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
         super.init()
         self.contextManager.delegate = self
+        resetSavedHeaders(for: token)
         LeapSharedInformation.shared.setAPIKey(token)
         LeapSharedInformation.shared.setSessionId()
         fetchConfig()
@@ -136,6 +137,13 @@ extension LeapInternal {
         let prefs = UserDefaults.standard
         let headers = prefs.object(forKey: "leap_saved_headers") as? Dictionary<String,String> ?? [:]
         return headers
+    }
+    
+    private func resetSavedHeaders(for token: String) {
+        if token != LeapSharedInformation.shared.getAPIKey() {
+            let prefs = UserDefaults.standard
+            prefs.setValue([:], forKey: "leap_saved_headers")
+        }
     }
     
     private func saveConfig(config:Dictionary<String,AnyHashable>) {
