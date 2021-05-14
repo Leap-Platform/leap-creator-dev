@@ -27,7 +27,6 @@ class LeapInternal:NSObject {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
         super.init()
         self.contextManager.delegate = self
-        resetSavedHeaders(for: token)
         LeapSharedInformation.shared.setAPIKey(token)
         LeapSharedInformation.shared.setSessionId()
         fetchConfig()
@@ -73,14 +72,13 @@ extension LeapInternal {
     
     private func getHeaders() -> Dictionary<String,String> {
         guard let apiKey = LeapSharedInformation.shared.getAPIKey(), let versionCode = LeapSharedInformation.shared.getVersionCode(), let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
-        var headers = [
+        let headers = [
             "x-jiny-client-id"      : apiKey,
             "x-app-version-code"    : versionCode,
             "x-app-version-name"    : versionName,
             "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
             "Content-Type"          : "application/json"
         ]
-        getSavedHeaders().forEach { headers[$0.key] = $0.value }
         return headers
     }
     
@@ -137,13 +135,6 @@ extension LeapInternal {
         let prefs = UserDefaults.standard
         let headers = prefs.object(forKey: "leap_saved_headers") as? Dictionary<String,String> ?? [:]
         return headers
-    }
-    
-    private func resetSavedHeaders(for token: String) {
-        if token != LeapSharedInformation.shared.getAPIKey() {
-            let prefs = UserDefaults.standard
-            prefs.setValue([:], forKey: "leap_saved_headers")
-        }
     }
     
     private func saveConfig(config:Dictionary<String,AnyHashable>) {
