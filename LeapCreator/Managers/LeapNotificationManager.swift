@@ -35,13 +35,16 @@ class LeapNotificationManager: NSObject {
     }
     
     func checkForAuthorisation(type: NotificationType = .genericApp) {
-        notificationCenter.getNotificationSettings { (settings) in
+        notificationCenter.getNotificationSettings { [weak self] (settings) in
             switch settings.authorizationStatus {
             case .notDetermined:
-                self.askAuthorisation(type: type)
+                self?.askAuthorisation(type: type)
             case .authorized:
-                self.triggerNotification(notificationType: type)
+                self?.triggerNotification(notificationType: type)
             case .denied:
+                DispatchQueue.main.async {
+                    UIApplication.getCurrentVC()?.showAlertForSettingsPage(with: constant_notificationPermission)
+                }
                 break
             default:
                 break
@@ -50,10 +53,10 @@ class LeapNotificationManager: NSObject {
     }
     
     func askAuthorisation(type: NotificationType) {
-        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (result, err) in
+        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] (result, err) in
             if let error = err { print(error.localizedDescription) }
             if result {
-                self.triggerNotification(notificationType: type)
+                self?.triggerNotification(notificationType: type)
             }
         }
     }

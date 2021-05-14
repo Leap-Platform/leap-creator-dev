@@ -38,13 +38,13 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     var previewLayer: AVCaptureVideoPreviewLayer!
     let previewUrl:String = {
         #if DEV
-            return "https://alfred-dev-gke.leap.is/alfred/api/v1/device/preview"
+        return "https://alfred-dev-gke.leap.is/alfred/api/v1/device/preview"
         #elseif STAGE
-            return "https://alfred-stage-gke.leap.is/alfred/api/v1/device/preview"
+        return "https://alfred-stage-gke.leap.is/alfred/api/v1/device/preview"
         #elseif PROD
-            return "https://alfred.leap.is/alfred/api/v1/device/preview"
+        return "https://alfred.leap.is/alfred/api/v1/device/preview"
         #else
-            return "https://alfred.leap.is/alfred/api/v1/device/preview"
+        return "https://alfred.leap.is/alfred/api/v1/device/preview"
         #endif
     }()
 
@@ -83,51 +83,31 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     @objc func askForCameraAccess() {
         
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-            case .authorized: // The user has previously granted access to the camera.
-                DispatchQueue.main.async {
-                   self.setupCaptureSession()
-                }
+        case .authorized: // The user has previously granted access to the camera.
+            DispatchQueue.main.async {
+                self.setupCaptureSession()
+            }
             
-            case .notDetermined: // The user has not yet been asked for camera access.
-                AVCaptureDevice.requestAccess(for: .video) { granted in
-                    if granted {
-                        DispatchQueue.main.async {
-                           self.setupCaptureSession()
-                        }
+        case .notDetermined: // The user has not yet been asked for camera access.
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    DispatchQueue.main.async {
+                        self.setupCaptureSession()
                     }
                 }
+            }
             
-            case .denied: // The user has previously denied access.
-                DispatchQueue.main.async {
-                    self.showAlertToSettings()
-                }
-                return
-
-            case .restricted: // The user can't grant access due to restrictions.
-                return
+        case .denied: // The user has previously denied access.
+            DispatchQueue.main.async {
+                self.showAlertForSettingsPage(with: constant_cameraAccess)
+            }
+            return
+            
+        case .restricted: // The user can't grant access due to restrictions.
+            return
         @unknown default:
             return
         }
-    }
-    
-    func showAlertToSettings() {
-        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-
-        let goButton = "Go"
-        var goAction = UIAlertAction(title: goButton, style: .default, handler: nil)
-        let cancelButton = "Cancel"
-        let cancelAction = UIAlertAction(title: cancelButton, style: .cancel, handler: nil)
-        if UIApplication.shared.canOpenURL(settingsUrl) {
-
-            goAction = UIAlertAction(title: goButton, style: .default, handler: {(alert: UIAlertAction!) -> Void in
-                UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
-            })
-        }
-
-        let alert = UIAlertController(title: "Permission Required", message: constant_cameraAccess, preferredStyle: .alert)
-        alert.addAction(goAction)
-        alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)
     }
     
     private func setupQRCodeImage() {
@@ -339,9 +319,9 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         //Check if is leap QR
         guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any>,
               infoDict["owner"] as? String == "LEAP"  else {
-                presentWarning(constant_invalidQRCodeWarning)
-                return
-              }
+            presentWarning(constant_invalidQRCodeWarning)
+            return
+        }
         
         // Check if is iOS Platform
         guard infoDict["platformType"] as? String == "IOS" else {
@@ -351,8 +331,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Check if is of type PREVIEW
         if let id = infoDict["id"] as? String, infoDict["type"] as? String == "PREVIEW" {
-           let projectName = infoDict["projectName"] as? String ?? ""
-           fetchPreviewConfig(previewId: id, projectName: projectName)
+            let projectName = infoDict["projectName"] as? String ?? ""
+            fetchPreviewConfig(previewId: id, projectName: projectName)
         } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP", Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
             configureConnectedSampleApp(infoDict: infoDict)
         } else {
@@ -497,16 +477,4 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         setupCloseButton(inView: scannerView!)
         captureSession.startRunning()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
