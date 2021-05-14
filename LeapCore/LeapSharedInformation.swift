@@ -30,7 +30,6 @@ enum LeapDownloadStatus {
 class LeapSharedInformation {
     static let shared = LeapSharedInformation()
     private let prefs = UserDefaults.standard
-    private var apiKey:String?
     private var sessionId:String?
 }
 
@@ -38,14 +37,12 @@ class LeapSharedInformation {
 // MARK: - API KEY GETTER AND SETTER
 extension LeapSharedInformation {
     
-    func setAPIKey(_ token:String) {
+    func setAPIKey(_ token: String) {
         guard !token.isEmpty else { fatalError("Empty Token") }
-        if self.apiKey == token { return }
-        apiKey = token
+        prefs.setValue(token, forKey: constant_LeapAPIKey)
     }
     
-    func getAPIKey() -> String? { return apiKey }
-    
+    func getAPIKey() -> String? { return prefs.object(forKey: constant_LeapAPIKey) as? String }
 }
 
 // MARK: - SESSION ID GENERATOR, GETTER AND SETTER
