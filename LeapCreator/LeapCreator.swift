@@ -33,6 +33,7 @@ import UIKit
         let leapCameraViewController = LeapCameraViewController()
         leapCameraViewController.sampleAppDelegate = delegate
         leapCameraViewController.delegate = LeapNotificationManager.shared
+        leapCameraViewController.configureSampleApp()
         return leapCameraViewController
     }
 }
