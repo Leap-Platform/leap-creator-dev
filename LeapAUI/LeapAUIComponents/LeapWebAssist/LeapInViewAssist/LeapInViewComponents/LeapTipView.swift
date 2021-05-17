@@ -70,6 +70,24 @@ class LeapTipView: LeapInViewAssist {
         case fade = "fade"
     }
     
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
+        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func appWillEnterForeground() {
+        pulseLayer.removeAllAnimations()
+        opacityLayer.removeAllAnimations()
+        
+        animateHighlight()
+    }
+    
     /// method called to auto focus on the target view of the aui component.
     func setupAutoFocus() {
         
