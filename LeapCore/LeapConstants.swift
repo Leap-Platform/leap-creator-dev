@@ -9,6 +9,7 @@
 import Foundation
 
 let constant_leap = "Leap"
+let constant_LeapAPIKey = "LeapAPIKey"
 let constant_assistInfo = "assistInfo"
 let constant_assist_info = "assist_info"
 let constant_layoutInfo = "layoutInfo"

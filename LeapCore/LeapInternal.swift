@@ -13,13 +13,13 @@ class LeapInternal:NSObject {
     var contextManager:LeapContextManager
     private let configUrl:String = {
         #if DEV
-            return "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch"
+        return "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch"
         #elseif STAGE
-            return "https://odin-stage-gke.leap.is/odin/api/v1/config/fetch"
+        return "https://odin-stage-gke.leap.is/odin/api/v1/config/fetch"
         #elseif PROD
-            return "https://odin.leap.is/odin/api/v1/config/fetch"
+        return "https://odin.leap.is/odin/api/v1/config/fetch"
         #else
-            return "https://odin.leap.is/odin/api/v1/config/fetch"
+        return "https://odin.leap.is/odin/api/v1/config/fetch"
         #endif
     }()
     
@@ -27,6 +27,7 @@ class LeapInternal:NSObject {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
         super.init()
         self.contextManager.delegate = self
+        resetSavedHeaders(for: token)
         LeapSharedInformation.shared.setAPIKey(token)
         LeapSharedInformation.shared.setSessionId()
         fetchConfig()
@@ -129,7 +130,6 @@ extension LeapInternal {
         }
         let prefs = UserDefaults.standard
         prefs.set(toSaveHeaders, forKey: "leap_saved_headers")
-        prefs.synchronize()
     }
     
     private func getSavedHeaders() -> Dictionary<String,String> {
@@ -138,12 +138,18 @@ extension LeapInternal {
         return headers
     }
     
+    private func resetSavedHeaders(for token: String) {
+        if token != LeapSharedInformation.shared.getAPIKey() {
+            let prefs = UserDefaults.standard
+            prefs.setValue([:], forKey: "leap_saved_headers")
+        }
+    }
+    
     private func saveConfig(config:Dictionary<String,AnyHashable>) {
         guard let configData = try? JSONSerialization.data(withJSONObject: config, options: .prettyPrinted),
               let configString = String(data: configData, encoding: .utf8) else { return }
         let prefs = UserDefaults.standard
         prefs.setValue(configString, forKey: "leap_config")
-        prefs.synchronize()
     }
     
     private func getSavedConfig() -> Dictionary<String,AnyHashable> {
