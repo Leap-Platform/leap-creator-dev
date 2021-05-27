@@ -49,6 +49,7 @@
 		2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */; };
 		2DACA43D261E2863007293AC /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DACA43C261E2863007293AC /* Leap+String.swift */; };
 		2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */; };
+		2DC5FF11265F774700826FEB /* LeapDelight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC5FF10265F774700826FEB /* LeapDelight.swift */; };
 		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
 		D017401625F75D17002C051E /* scroll_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D017401525F75D17002C051E /* scroll_arrow.png */; };
 		D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* LeapCreatorInternal.swift */; };
@@ -272,6 +273,7 @@
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
 		2DACA43C261E2863007293AC /* Leap+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+String.swift"; sourceTree = "<group>"; };
 		2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConstants.swift; sourceTree = "<group>"; };
+		2DC5FF10265F774700826FEB /* LeapDelight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDelight.swift; sourceTree = "<group>"; };
 		2DD0E35225B6D7E700EBB9B8 /* LeapReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachability.swift; sourceTree = "<group>"; };
 		2DD0E35B25B7159400EBB9B8 /* LeapReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachabilityManager.swift; sourceTree = "<group>"; };
 		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
@@ -468,13 +470,22 @@
 			path = SupportedFiles;
 			sourceTree = "<group>";
 		};
-		2D74C2B925CAA88D005B59EB /* JinyBottomSheet */ = {
+		2D74C2B925CAA88D005B59EB /* LeapBottomSheet */ = {
 			isa = PBXGroup;
 			children = (
 				D0B793262543186D00DB94DD /* LeapBottomSheet.swift */,
 				2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */,
 			);
-			path = JinyBottomSheet;
+			path = LeapBottomSheet;
+			sourceTree = "<group>";
+		};
+		2DC5FF0F265F771900826FEB /* LeapFullScreen */ = {
+			isa = PBXGroup;
+			children = (
+				D0B793232543186D00DB94DD /* LeapFullScreen.swift */,
+				2DC5FF10265F774700826FEB /* LeapDelight.swift */,
+			);
+			path = LeapFullScreen;
 			sourceTree = "<group>";
 		};
 		B69D8E30258A6C57004D858D /* Managers */ = {
@@ -816,9 +827,9 @@
 		D0B793212543186D00DB94DD /* LeapKeyWindowComponents */ = {
 			isa = PBXGroup;
 			children = (
-				2D74C2B925CAA88D005B59EB /* JinyBottomSheet */,
+				2DC5FF0F265F771900826FEB /* LeapFullScreen */,
+				2D74C2B925CAA88D005B59EB /* LeapBottomSheet */,
 				D0B793222543186D00DB94DD /* LeapDrawer.swift */,
-				D0B793232543186D00DB94DD /* LeapFullScreen.swift */,
 				D0B793242543186D00DB94DD /* LeapNotification.swift */,
 				D0B793252543186D00DB94DD /* LeapPopup.swift */,
 				D0B793272543186D00DB94DD /* LeapSlideIn.swift */,
@@ -1228,6 +1239,7 @@
 				D0B603D325DFB6BA0092F735 /* LeapIconInfo.swift in Sources */,
 				D0B603D425DFB6BA0092F735 /* LeapDisableAssistanceDialog.swift in Sources */,
 				D0B603D525DFB6BA0092F735 /* LeapMediaManager.swift in Sources */,
+				2DC5FF11265F774700826FEB /* LeapDelight.swift in Sources */,
 				D0B603D625DFB6BA0092F735 /* LeapPing.swift in Sources */,
 				D0B603D725DFB6BA0092F735 /* LeapConstants.swift in Sources */,
 				D0B603D825DFB6BA0092F735 /* LeapAUIConstants.swift in Sources */,
