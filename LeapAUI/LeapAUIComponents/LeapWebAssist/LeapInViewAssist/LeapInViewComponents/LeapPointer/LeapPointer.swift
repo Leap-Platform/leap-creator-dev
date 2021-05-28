@@ -104,6 +104,7 @@ class LeapFingerPointer: LeapPointer {
     let pulse = CAAnimationGroup()
     let clickAnimation = CAAnimationGroup()
     
+    /// random unique id generated to send certain events only once if tap is recognized twice by the system
     private var id = String.generateUUIDString()
         
     override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {

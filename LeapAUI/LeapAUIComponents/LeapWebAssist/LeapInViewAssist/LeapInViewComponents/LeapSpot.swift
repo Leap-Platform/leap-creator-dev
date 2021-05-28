@@ -674,9 +674,5 @@ class LeapSpot: LeapTipView {
         if (assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false) && !tappedOnToView {
            performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_close: true]])
         }
-        
-        if tappedOnToView && !(assistInfo?.highlightAnchor ?? false) {
-            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true]])
-        }
     }
 }

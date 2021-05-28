@@ -62,6 +62,9 @@ class LeapTipView: LeapInViewAssist {
     /// layer for the outer ripple
     private let opacityLayer = CAShapeLayer()
     
+    /// random unique id generated to send certain events only once if tap is recognized twice by the system
+    private var id = String.generateUUIDString()
+    
     /// enum type for path
     enum LeapPathType: String {
         
@@ -170,6 +173,12 @@ class LeapTipView: LeapInViewAssist {
                 return viewToCheck
             
             } else if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) {
+                                
+                return viewToCheck
+            
+            } else if (assistInfo?.highlightClickable ?? false) {
+                
+                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
                                 
                 return viewToCheck
             
