@@ -10,7 +10,8 @@ import UIKit
 import AVFoundation
 
 protocol LeapCameraViewControllerDelegate: class {
-    func configFetched(type: NotificationType, config:Dictionary<String,Any>)
+    func configFetched(type: NotificationType, config: Dictionary<String,Any>)
+    func paired(type: NotificationType, infoDict: Dictionary<String, Any>)
     func closed(type: NotificationType)
 }
 
@@ -36,6 +37,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     var scannerView:UIView?
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
+    var roomManager = LeapRoomManager()
     let previewUrl:String = {
         #if DEV
         return "https://alfred-dev-gke.leap.is/alfred/api/v1/device/preview"
@@ -330,13 +332,30 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         }
         
         // Check if is of type PREVIEW
-        if let id = infoDict["id"] as? String, infoDict["type"] as? String == "PREVIEW" {
-            let projectName = infoDict["projectName"] as? String ?? ""
+        if let id = infoDict[constant_id] as? String, infoDict[constant_type] as? String == constant_PREVIEW {
+            let projectName = infoDict[constant_projectName] as? String ?? ""
             fetchPreviewConfig(previewId: id, projectName: projectName)
-        } else if infoDict["platformType"] as? String == "IOS", infoDict["type"] as? String == "SAMPLE_APP", Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
+        } else if infoDict[constant_type] as? String == constant_SAMPLE_APP, Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
             configureConnectedSampleApp(infoDict: infoDict)
+        } else if infoDict[constant_type] as? String == constant_PAIRING {
+            startValidationForPairing(infoDict: infoDict)
         } else {
             presentWarning(constant_invalidQRCodeWarning)
+        }
+    }
+    
+    func startValidationForPairing(infoDict: Dictionary<String, Any>) {
+        guard let roomId = infoDict[constant_roomId] as? String else { return }
+        presentLoader()
+        roomManager.validateRoomId(roomId: roomId) { [weak self] (success) in
+            if success {
+                let projectName = infoDict[constant_projectName] as? String ?? ""
+                UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
+                self?.delegate?.paired(type: .pairing, infoDict: infoDict)
+                DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }
+            } else {
+                DispatchQueue.main.async { self?.presentWarning(constant_somethingWrong) }
+            }
         }
     }
     
@@ -374,26 +393,26 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         presentLoader()
         req.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
         
-        let task = URLSession.shared.dataTask(with: req) { (data, respsonse, error) in
+        let task = URLSession.shared.dataTask(with: req) { [weak self] (data, respsonse, error) in
             DispatchQueue.main.async {
-                self.fetchView?.removeFromSuperview()
+                self?.fetchView?.removeFromSuperview()
                 guard let httpresponse = respsonse as? HTTPURLResponse, httpresponse.statusCode == 200 else {
-                    self.presentWarning(constant_incorrectAppOrVersionWarning)
+                    self?.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
                 guard error == nil, let data = data else {
-                    self.presentWarning(constant_incorrectAppOrVersionWarning)
+                    self?.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
                 guard let previewDict = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any> else {
-                    self.presentWarning(constant_incorrectAppOrVersionWarning)
+                    self?.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
-                self.previewLayer.removeFromSuperlayer()
-                self.scannerView?.removeFromSuperview()
-                UserDefaults.standard.setValue(projectName, forKey: constant_previewProjectName)
-                self.delegate?.configFetched(type: .preview, config: previewDict)
-                self.dismiss(animated: true, completion: nil)
+                self?.previewLayer.removeFromSuperlayer()
+                self?.scannerView?.removeFromSuperview()
+                UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
+                self?.delegate?.configFetched(type: .preview, config: previewDict)
+                self?.dismiss(animated: true, completion: nil)
             }
         }
         task.resume()

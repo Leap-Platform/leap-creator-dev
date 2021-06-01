@@ -32,4 +32,5 @@ class LeapCreatorShared {
     
     /// End Point
     let CREATOR_CONFIG_ENDPOINT: String = "/alfred/api/v1/apps/creator"
+    let VALIDATE_ROOMID_ENDPOINT: String = "/alfred/api/v1/apps/device-rooms/"
 }

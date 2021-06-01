@@ -13,7 +13,7 @@ import Starscream
 class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthCheckListener, LeapFinishListener {
     
     func onSessionClosed() {
-        self.streamingManager?.stop()
+        stopStreaming()
         self.captureManager?.stop()
         self.healthMonitor?.stop()
         self.protocolListener.onSessionClosed()
@@ -151,7 +151,10 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     }
     
     @objc func stopStreaming() {
-        streamingManager?.stop()
+        let payload = "{\"room\":\"\(roomId ?? "")\",\"message\": {\"commandType\":\"DISCONNECT\"},\"action\": \"message\",\"source\": \"android\"}"
+        webSocketTask?.write(string: payload, completion: {
+            self.streamingManager?.stop()
+        })
     }
 }
 

@@ -116,7 +116,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     }
     
     func stop(){
-        
+        task?.cancel()
     }
 }
 

@@ -25,23 +25,26 @@ class LeapMasterManager: LeapProtocolListener,
     //Beacon Listeners
     func onBeaconSuccess(roomId: String, status: Any) {
 
-        let roomStatus = String(describing: status)
-        // contains needs to change, it should be equals
-        if roomStatus.contains(PERMISSION_NEEDED) {
-            beaconManager?.stop()
-            permissionManager?.start()
-        }
+//        let roomStatus = String(describing: status)
+//        // contains needs to change, it should be equals
+//        if roomStatus.contains(PERMISSION_NEEDED) {
+//            beaconManager?.stop()
+//            permissionManager?.start()
+//        }
+    }
+    
+    func onBeaconFailure() {
     }
     
     // Permission Listeners
     func onPermissionStatusUpdation(permission: String) {
-        if permission == PERMISSION_GRANTED {
-            guard let roomId = self.beaconManager?.roomId else { return }
-            self.protocolManager?.start(roomId: roomId)
-        } else {
-            guard let appId = self.appId else { return }
-            self.beaconManager?.start(appId: appId)
-        }
+//        if permission == PERMISSION_GRANTED {
+//            guard let roomId = self.beaconManager?.roomId else { return }
+//            self.protocolManager?.start(roomId: roomId)
+//        } else {
+//            guard let appId = self.appId else { return }
+//            self.beaconManager?.start(appId: appId)
+//        }
     }
     
    //Beacon Listeners
@@ -54,11 +57,7 @@ class LeapMasterManager: LeapProtocolListener,
         guard let appId = self.appId else { return }
         self.permissionManager?.updatePermissionStatus(permission: PERMISSION_REJECTED, appId: appId)
     }
-    
-    func onBeaconFailure() {
-    }
-    
-    
+
     // App ID fetch Listeners
     func onIdFound() -> String? {
         return appIdManager?.appStoreId
@@ -96,10 +95,16 @@ class LeapMasterManager: LeapProtocolListener,
         beaconManager?.start(appId: appId)
     }
     
-    @objc func stop() {
-        beaconManager?.stop()
+    @objc func onPaired(notification: NSNotification) {
+        NotificationCenter.default.post(name: .init(rawValue: "leap_creator_live"), object: nil)
+        guard let roomDict = notification.object as? Dictionary<String, Any> else { return }
+        guard let roomId = roomDict[constant_roomId] as? String else { return }
+        self.protocolManager?.start(roomId: roomId)
     }
     
+    @objc func disconnect() {
+        self.protocolManager?.onSessionClosed()
+    }
 }
 
 extension LeapMasterManager{
@@ -110,9 +115,9 @@ extension LeapMasterManager{
         nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         nc.addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         nc.addObserver(self, selector: #selector(appWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
-        nc.addObserver(self, selector: #selector(stop), name: .init("leap_preview_config"), object: nil)
         nc.addObserver(self, selector: #selector(start), name: .init("leap_end_preview"), object: nil)
-        
+        nc.addObserver(self, selector: #selector(onPaired(notification:)), name: .init("onPaired"), object: nil)
+        nc.addObserver(self, selector: #selector(disconnect), name: .init("Creator_Disconnect"), object: nil)
     }
     
     @objc private func appLaunched(){
