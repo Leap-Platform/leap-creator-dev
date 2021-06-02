@@ -26,6 +26,7 @@ class LeapNotificationManager: NSObject {
         super.init()
         self.notificationCenter.removeAllDeliveredNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate(notification:)), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetNotification), name: .init("Reset_Notification"), object: nil)
         notificationCenter.delegate = self
     }
     
@@ -134,18 +135,10 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
             if #available(iOS 13.0, *) { camVC.isModalInPresentation = false }
             viewc.present(camVC, animated: true)
         case constant_Preview:
-            if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
-                self.checkForAuthorisation(type: .sampleApp)
-            } else {
-                self.checkForAuthorisation(type: .genericApp)
-            }
+            resetNotification()
             NotificationCenter.default.post(name: NSNotification.Name("leap_end_preview"), object:  nil)
         case constant_Pairing:
-            if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
-                self.checkForAuthorisation(type: .sampleApp)
-            } else {
-                self.checkForAuthorisation(type: .genericApp)
-            }
+            resetNotification()
             NotificationCenter.default.post(name: NSNotification.Name("Creator_Disconnect"), object:  nil)
         case constant_SampleAppScan:
             NotificationCenter.default.post(name: NSNotification.Name("rescan"), object: nil)
@@ -153,6 +146,14 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
             checkForAuthorisation(type: NotificationType(rawValue: response.notification.request.content.categoryIdentifier) ?? .genericApp)
         }
         completionHandler()
+    }
+    
+    @objc func resetNotification() {
+        if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
+            self.checkForAuthorisation(type: .sampleApp)
+        } else {
+            self.checkForAuthorisation(type: .genericApp)
+        }
     }
 }
 

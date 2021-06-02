@@ -103,7 +103,7 @@ class LeapMasterManager: LeapProtocolListener,
     }
     
     @objc func disconnect() {
-        self.protocolManager?.onSessionClosed()
+        self.protocolManager?.onStartSessionClose()
     }
 }
 
