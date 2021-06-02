@@ -35,8 +35,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     let learnMoreButton2 = UIButton()
     var fetchView: UIView?
     var scannerView:UIView?
-    var captureSession: AVCaptureSession!
-    var previewLayer: AVCaptureVideoPreviewLayer!
+    var captureSession: AVCaptureSession?
+    var previewLayer: AVCaptureVideoPreviewLayer?
     var roomManager = LeapRoomManager()
     let previewUrl:String = {
         #if DEV
@@ -320,8 +320,17 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         captureSession?.stopRunning()
         
         //Check if is leap QR
-        guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any>,
-              infoDict["owner"] as? String == "LEAP"  else {
+        guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any>  else {
+            presentWarning(constant_invalidQRCodeWarning)
+            return
+        }
+        
+        validateScannedInfo(infoDict: infoDict)
+    }
+    
+    func validateScannedInfo(infoDict: Dictionary<String, Any>) {
+        //Check if is owner Leap
+        guard infoDict["owner"] as? String == "LEAP"  else {
             presentWarning(constant_invalidQRCodeWarning)
             return
         }
@@ -353,7 +362,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 let projectName = infoDict[constant_projectName] as? String ?? ""
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.delegate?.paired(type: .pairing, infoDict: infoDict)
-                DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }                
+                DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }
             } else {
                 DispatchQueue.main.async { self?.presentWarning(constant_somethingWrong) }
             }
@@ -409,7 +418,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                     self?.presentWarning(constant_incorrectAppOrVersionWarning)
                     return
                 }
-                self?.previewLayer.removeFromSuperlayer()
+                self?.previewLayer?.removeFromSuperlayer()
                 self?.scannerView?.removeFromSuperview()
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.delegate?.configFetched(type: .preview, config: previewDict)
@@ -466,7 +475,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     @objc func closeButtonClicked() {
-        dismiss(animated: true, completion: nil )
+        dismiss(animated: true, completion: nil)
         delegate?.closed(type: Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId ? .sampleApp : .genericApp)
     }
     
@@ -495,6 +504,6 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             return
         }
         setupCloseButton(inView: scannerView!)
-        captureSession.startRunning()
+        captureSession?.startRunning()
     }
 }
