@@ -57,6 +57,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         view.backgroundColor = .black
         
         setupView()
+        #endif
     }
     
     func configureSampleApp() {
@@ -265,8 +266,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             return
         }
 
-        if (captureSession.canAddInput(videoInput)) {
-            captureSession.addInput(videoInput)
+        if (captureSession?.canAddInput(videoInput) ?? false) {
+            captureSession?.addInput(videoInput)
         } else {
             failed()
             return
@@ -274,8 +275,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
 
         let metadataOutput = AVCaptureMetadataOutput()
 
-        if (captureSession.canAddOutput(metadataOutput)) {
-            captureSession.addOutput(metadataOutput)
+        if (captureSession?.canAddOutput(metadataOutput) ?? false) {
+            captureSession?.addOutput(metadataOutput)
 
             metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
             metadataOutput.metadataObjectTypes = [.qr]
@@ -283,14 +284,15 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             failed()
             return
         }
-
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y, width: self.view.frame.width, height: self.view.frame.height * 0.5)
-        previewLayer.videoGravity = .resizeAspectFill
-        scannerView?.layer.addSublayer(previewLayer)
+        guard captureSession != nil else { return }
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+        previewLayer?.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y, width: self.view.frame.width, height: self.view.frame.height * 0.5)
+        previewLayer?.videoGravity = .resizeAspectFill
+        guard previewLayer != nil else { return }
+        scannerView?.layer.addSublayer(previewLayer!)
         guard scannerView != nil else { return }
         setupCloseButton(inView: scannerView!)
-        captureSession.startRunning()
+        captureSession?.startRunning()
     }
     
     private func setupScannerView() {
@@ -316,7 +318,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
               let readableObj = metaDataObj as? AVMetadataMachineReadableCodeObject,
               let stringValue = readableObj.stringValue else { return }
         let data = Data(stringValue.utf8)
-        captureSession.stopRunning()
+        captureSession?.stopRunning()
         
         //Check if is leap QR
         guard let infoDict =  try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String,Any>,
@@ -353,6 +355,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.delegate?.paired(type: .pairing, infoDict: infoDict)
                 DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }
+                #endif
+                
             } else {
                 DispatchQueue.main.async { self?.presentWarning(constant_somethingWrong) }
             }
