@@ -57,7 +57,6 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         view.backgroundColor = .black
         
         setupView()
-        #endif
     }
     
     func configureSampleApp() {
@@ -354,9 +353,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 let projectName = infoDict[constant_projectName] as? String ?? ""
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.delegate?.paired(type: .pairing, infoDict: infoDict)
-                DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }
-                #endif
-                
+                DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }                
             } else {
                 DispatchQueue.main.async { self?.presentWarning(constant_somethingWrong) }
             }
