@@ -261,24 +261,24 @@ extension LeapIconOptions {
     }
     
     @objc func languageClicked() {
-        dismiss(true) { (_) in
+        dismiss(withAnimation: true) { (_) in
            self.delegate?.languageClicked()
         }
     }
     
     @objc func stopClicked() {
-        dismiss(true) { (_) in
+        dismiss(withAnimation: true) { (_) in
            self.delegate?.stopClicked()
         }
     }
     
     @objc func remove() {
-        dismiss(true) { (_) in
+        dismiss(withAnimation: true) { (_) in
            self.delegate?.iconOptionsClosed()
         }
     }
     
-    func dismiss(_ animated: Bool, _ completion: SuccessCallBack? = nil) {
+    func dismiss(withAnimation animated: Bool, _ completion: SuccessCallBack? = nil) {
         
         self.delegate?.iconOptionsDismissed()
         
