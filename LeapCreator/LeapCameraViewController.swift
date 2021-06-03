@@ -361,8 +361,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             if success {
                 let projectName = infoDict[constant_projectName] as? String ?? ""
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
-                self?.delegate?.paired(type: .pairing, infoDict: infoDict)
-                DispatchQueue.main.async { self?.dismiss(animated: true, completion: nil) }
+                DispatchQueue.main.async {
+                    self?.delegate?.paired(type: .pairing, infoDict: infoDict)
+                    self?.dismiss(animated: true, completion: nil)
+                }
             } else {
                 DispatchQueue.main.async { self?.presentWarning(constant_somethingWrong) }
             }
