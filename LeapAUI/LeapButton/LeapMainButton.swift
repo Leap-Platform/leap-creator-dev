@@ -138,13 +138,10 @@ extension LeapMainButton: LeapDraggableDelegate {
         self.layoutIfNeeded()
         
         var duration = 0.3
-        
-        if self.isDismissible && self.closeTransparentView != nil {
+                    
+        self.closeTransparentView?.removeFromSuperview()
             
-            self.closeTransparentView?.removeFromSuperview()
-            
-            self.closeTransparentView = nil
-        }
+        self.closeTransparentView = nil
         
         if CGRect(x: location.x, y: location.y, width: self.frame.width, height: self.frame.height).contains(self.closeIcon.center) && isDismissible {
         
