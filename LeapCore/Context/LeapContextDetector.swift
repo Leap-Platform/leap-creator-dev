@@ -65,7 +65,6 @@ class LeapContextDetector:NSObject {
             state = .Discovery
         }
     }
-    
 }
 
 // MARK: - TIMER HANDLER

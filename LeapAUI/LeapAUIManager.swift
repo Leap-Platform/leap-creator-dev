@@ -60,7 +60,6 @@ extension LeapAUIManager {
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("leap_creator_live"), object: nil)
     }
     
     @objc func keyboardDidShow(_ notification: NSNotification) {
@@ -81,12 +80,7 @@ extension LeapAUIManager {
             leapButton?.updateConstraints()
         }
     }
-    
-    @objc func authLiveNotification(_ notification:Notification) {
-        removeAllViews()
-    }
 }
-
 
 // MARK: - AUIHANDLER METHODS
 extension LeapAUIManager: LeapAUIHandler {
@@ -280,7 +274,7 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func removeAllViews() {
         removeCurrentAssist()
-        leapIconOptions?.dismiss(false)
+        leapIconOptions?.dismiss(withAnimation: false)
         dismissLeapButton()
     }
     

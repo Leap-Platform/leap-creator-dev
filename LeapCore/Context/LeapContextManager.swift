@@ -84,6 +84,7 @@ class LeapContextManager:NSObject {
     
     @objc func authLiveNotification(_ notification:NSNotification) {
         contextDetector?.stop()
+        self.auiHandler?.removeAllViews()
         assistManager?.resetAssistManager()
         discoveryManager?.resetDiscovery()
         flowManager?.resetFlowsArray()
@@ -672,7 +673,6 @@ extension LeapContextManager:LeapAUICallback {
         stageManager?.resetStageManager()
         discoveryManager?.resetDiscoveryManager()
         if let state = contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
-        contextDetector?.start()
     }
     
     func optionPanelOpened() {
