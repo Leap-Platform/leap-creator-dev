@@ -20,6 +20,7 @@ class LeapBeacon: LeapNativeAssist {
     
     private var webRect: CGRect?
     
+    /// random unique id generated to send certain events only once if tap is recognized twice by the system
     private var id = String.generateUUIDString()
     
     private var lastLocation = CGPoint.zero
