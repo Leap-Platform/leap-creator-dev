@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 @objc protocol LeapAnalyticsManagerDelegate {
     func getHeaders() -> Dictionary<String,String>
@@ -25,8 +26,17 @@ class LeapAnalyticsManager {
     init(_ analyticsDelegate: LeapAnalyticsManagerDelegate) {
         delegate = analyticsDelegate
         session = URLSession.shared
-        let pref = UserDefaults.standard
-        let eventsToFlush = pref.object(forKey: "leap_flush_events") as? Array<Dictionary<String, String>> ?? []
+        NotificationCenter.default.addObserver(self, selector: #selector(flushPendingEvents), name: UIApplication.willResignActiveNotification, object: nil)
+        flushPendingEvents()
+    }
+    
+    @objc private func flushPendingEvents() {
+        let prefs = UserDefaults.standard
+        let savedEvents = prefs.object(forKey: "leap_saved_events") as? Array<Dictionary<String, String>> ?? []
+        var eventsToFlush = prefs.object(forKey: "leap_flush_events") as? Array<Dictionary<String, String>> ?? []
+        eventsToFlush += savedEvents
+        prefs.set(eventsToFlush, forKey: "leap_flush_events")
+        prefs.removeObject(forKey: "leap_saved_events")
         flushEvents(eventsToFlush)
     }
     
@@ -60,7 +70,6 @@ class LeapAnalyticsManager {
             var eventsToFlush = prefs.object(forKey: "leap_flush_events") as? Array<Dictionary<String, String>> ?? []
             eventsToFlush += savedEvents
             prefs.set(eventsToFlush, forKey: "leap_flush_events")
-            prefs.synchronize()
             prefs.removeObject(forKey: "leap_saved_events")
             flushEvents(eventsToFlush)
         }
