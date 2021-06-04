@@ -14,6 +14,7 @@ enum NotificationType: String {
     case genericApp
     case sampleApp
     case preview
+    case pairing
 }
 
 class LeapNotificationManager: NSObject {
@@ -25,6 +26,7 @@ class LeapNotificationManager: NSObject {
         super.init()
         self.notificationCenter.removeAllDeliveredNotifications()
         NotificationCenter.default.addObserver(self, selector: #selector(appWillTerminate(notification:)), name: UIApplication.willTerminateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(resetNotification), name: .init("Reset_Notification"), object: nil)
         notificationCenter.delegate = self
     }
     
@@ -88,13 +90,21 @@ class LeapNotificationManager: NSObject {
             category = UNNotificationCategory(identifier: NotificationType.preview.rawValue, actions: [scanAction], intentIdentifiers: [], options: [])
             content.categoryIdentifier = NotificationType.preview.rawValue
             content.title = "✅ Previewing..."
-            content.body = UserDefaults.standard.object(forKey: constant_previewProjectName) as? String ?? ""
+            content.body = UserDefaults.standard.object(forKey: constant_currentProjectName) as? String ?? ""
+        } else if notificationType == .pairing {
+            scanAction = UNNotificationAction(identifier: constant_Pairing, title: constant_Disconnect, options: UNNotificationActionOptions(rawValue: 0))
+            category = UNNotificationCategory(identifier: NotificationType.pairing.rawValue, actions: [scanAction], intentIdentifiers: [], options: [])
+            content.categoryIdentifier = NotificationType.pairing.rawValue
+            content.title = "🟢 Connected"
+            content.body = UserDefaults.standard.object(forKey: constant_currentProjectName) as? String ?? ""
         }
         
         self.notificationCenter.setNotificationCategories([category])
         
         if notificationType == .preview {
             request = UNNotificationRequest(identifier: "LeapPreviewNotification", content: content, trigger: nil)
+        } else if notificationType == .pairing {
+            request = UNNotificationRequest(identifier: "LeapPairingNotification", content: content, trigger: nil)
         } else {
             request = UNNotificationRequest(identifier: "LeapScanNotification", content: content, trigger: nil)
         }
@@ -125,18 +135,25 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
             if #available(iOS 13.0, *) { camVC.isModalInPresentation = false }
             viewc.present(camVC, animated: true)
         case constant_Preview:
-            if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
-                self.checkForAuthorisation(type: .sampleApp)
-            } else {
-                self.checkForAuthorisation(type: .genericApp)
-            }
+            resetNotification()
             NotificationCenter.default.post(name: NSNotification.Name("leap_end_preview"), object:  nil)
+        case constant_Pairing:
+            resetNotification()
+            NotificationCenter.default.post(name: NSNotification.Name("Creator_Disconnect"), object:  nil)
         case constant_SampleAppScan:
             NotificationCenter.default.post(name: NSNotification.Name("rescan"), object: nil)
         default:
             checkForAuthorisation(type: NotificationType(rawValue: response.notification.request.content.categoryIdentifier) ?? .genericApp)
         }
         completionHandler()
+    }
+    
+    @objc func resetNotification() {
+        if Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId {
+            self.checkForAuthorisation(type: .sampleApp)
+        } else {
+            self.checkForAuthorisation(type: .genericApp)
+        }
     }
 }
 
@@ -149,6 +166,13 @@ extension LeapNotificationManager: LeapCameraViewControllerDelegate {
         if type == .preview {
             NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
         }
+    }
+    
+    func paired(type: NotificationType, infoDict: Dictionary<String, Any>) {
+        
+        checkForAuthorisation(type: type)
+        
+        NotificationCenter.default.post(name: NSNotification.Name("onPaired"), object: infoDict)
     }
     
     func closed(type: NotificationType) {

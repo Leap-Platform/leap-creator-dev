@@ -46,7 +46,7 @@ class LeapHealthMonitorManager {
                 print("PING has been sent! ")
             })
         } else {
-            self.healthListener.onSessionClosed()
+            self.healthListener.onStartSessionClose()
         }
         guard let pingTask = self.pingTask else { return }
         DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: pingTask)
@@ -76,6 +76,6 @@ class LeapHealthMonitorManager {
 }
 
 protocol LeapHealthCheckListener {
-    func onSessionClosed()->Void
+    func onStartSessionClose()->Void
     
 }

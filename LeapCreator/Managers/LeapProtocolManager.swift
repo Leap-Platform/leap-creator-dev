@@ -12,11 +12,8 @@ import Starscream
 
 class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthCheckListener, LeapFinishListener {
     
-    func onSessionClosed() {
-        self.streamingManager?.stop()
-        self.captureManager?.stop()
-        self.healthMonitor?.stop()
-        self.protocolListener.onSessionClosed()
+    func onStartSessionClose() {
+        closeSession()
     }
     
     func onCompleteHierarchyFetch() {
@@ -68,14 +65,13 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
             healthMonitor?.receivePong()
             break
         case CASE_STOP_OPERATIONS:
-            streamingManager?.stop()
-            captureManager?.stop()
+            closeSession()
+            NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
             break
         case CASE_DEVICE_INFO:
             //self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_KILL_CREATOR:
-            onSessionClosed()
             break
         default:
          print("Default command - DO NOTHING !")
@@ -151,7 +147,17 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     }
     
     @objc func stopStreaming() {
-        streamingManager?.stop()
+        let payload = "{\"room\":\"\(roomId ?? "")\",\"message\": {\"commandType\":\"DISCONNECT\"},\"action\": \"message\",\"source\": \"android\"}"
+        webSocketTask?.write(string: payload, completion: {
+            self.streamingManager?.stop()
+        })
+    }
+    
+    func closeSession() {
+        stopStreaming()
+        self.captureManager?.stop()
+        self.healthMonitor?.stop()
+        self.protocolListener.onSessionClosed()
     }
 }
 

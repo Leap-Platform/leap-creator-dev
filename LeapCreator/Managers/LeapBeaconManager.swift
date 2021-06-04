@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+protocol LeapBeaconListener: class {
+    func onBeaconSuccess(roomId: String, status: Any)
+    func onBeaconFailure()
+}
+
 class LeapBeaconManager {
     
     let json: String? = {
@@ -33,35 +38,20 @@ class LeapBeaconManager {
         return json
     }()
     
-    var beaconListener: LeapBeaconListener
+    weak var beaconListener: LeapBeaconListener?
     var appId: String?
-    var roomId: String
     var status: String?
-    var task: DispatchWorkItem?
     let interval: TimeInterval = (LeapCreatorShared.shared.creatorConfig?.beacon?.interval ?? 3000)/1000
     
     private var sendFirstBeacon: Bool?
-        
-    var roomID: String? {
-        get{
-            return roomId
-        }
-    }
     
     init(beaconListener: LeapBeaconListener) {
         self.beaconListener = beaconListener
-        self.roomId = ""
         NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
-    }
-    
-    deinit {
-        
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
     func start(appId: String){
         self.appId = appId
-        self.task = DispatchWorkItem{self.sendSubsequentBeacons()}
         startBeacons()
     }
     
@@ -84,49 +74,13 @@ class LeapBeaconManager {
         let jsonData = Data(json.utf8)
         urlRequest.httpBody = jsonData
         sendFirstBeacon = false
-        let discoveryTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+        let discoveryTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
             if let data = data {
                 _ = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                self.sendFirstBeacon = true
-                self.sendSubsequentBeacons()
+                self?.sendFirstBeacon = true
             }
         }
         discoveryTask.resume()
-    }
-    
-    func sendSubsequentBeacons() {
-        guard let beaconDiscoveryUrl: URL = URL(string: "\(LeapCreatorShared.shared.ALFRED_URL)/alfred/api/v1/device/beacon") else { return }
-        var urlRequest: URLRequest = URLRequest(url: beaconDiscoveryUrl)
-        guard let apiKey = LeapCreatorShared.shared.apiKey else { return }
-        urlRequest.addValue(apiKey , forHTTPHeaderField: "x-auth-id")
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.httpMethod = "PUT"
-        guard let json = json else { return }
-        let jsonData = Data(json.utf8)
-        urlRequest.httpBody = jsonData
-    
-        let discoveryTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            if let data = data {
-                let jsonData = try? JSONSerialization.jsonObject(with: data,  options: []) as? [String: Any]
-                //fetch the status and room info from the json
-                guard let roomId = (jsonData?[constant_roomId]) as? String else { return }
-                self.roomId = roomId
-                guard let status = jsonData?[constant_status] else { return }
-                self.beaconListener.onBeaconSuccess(roomId: self.roomId, status: status as Any)
-                //repeat this api call every 'm' seconds
-                guard let task = self.task else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + self.interval, execute: task)
-            }
-        }
-        discoveryTask.resume()
-    }
-
-    /*
-     Stop the beacon manager to stop sending the beacons once the connection is active
-     */
-    func stop()->Void {
-        self.task?.cancel()
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
     @objc func internetConnected() {
@@ -136,18 +90,32 @@ class LeapBeaconManager {
             return
         }
         
-        if (sendFirstBeacon ?? false) {
-            
-            sendSubsequentBeacons()
-        
-        } else {
+        if !(sendFirstBeacon ?? false) {
             guard let appId = self.appId else { return }
             start(appId: appId)
         }
     }
 }
 
-protocol LeapBeaconListener{
-    func onBeaconSuccess(roomId: String, status: Any)->Void
-    func onBeaconFailure()->Void
+class LeapRoomManager {
+                
+    func validateRoomId(roomId: String, completion: @escaping SuccessCallBack) {
+        guard let validateRoomID: URL = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.VALIDATE_ROOMID_ENDPOINT+roomId) else { return }
+        var urlRequest: URLRequest = URLRequest(url: validateRoomID)
+        guard let apiKey = LeapCreatorShared.shared.apiKey else { return }
+        urlRequest.addValue(apiKey , forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpMethod = "GET"
+    
+        let validateTask = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                let status = httpResponse.statusCode
+                switch status {
+                case 200: completion(true)
+                default: completion(false)
+                }
+            }
+        }
+        validateTask.resume()
+    }
 }
