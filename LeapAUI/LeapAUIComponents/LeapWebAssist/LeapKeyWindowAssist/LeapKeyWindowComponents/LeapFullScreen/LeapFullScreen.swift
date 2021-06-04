@@ -31,7 +31,7 @@ class LeapFullScreen: LeapKeyWindowAssist {
     }
     
     /// This is a custom configuration of constraints for the FullScreen component.
-    private func configureWebViewForFullScreen() {
+    func configureWebViewForFullScreen() {
       
         // Setting Constraints to WebView
         

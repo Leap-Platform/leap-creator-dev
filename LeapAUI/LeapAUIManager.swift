@@ -689,6 +689,10 @@ extension LeapAUIManager {
                 let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = fullScreen
                 fullScreen.showFullScreen()
+            case DELIGHT:
+                let delight = LeapDelight(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+                currentAssist = delight
+                delight.showFullScreen()
             case BOTTOMUP:
                 let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
                 currentAssist = bottomSheet
