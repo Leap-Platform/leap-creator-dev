@@ -24,6 +24,15 @@ class LeapViewBounds:Codable {
         let rect = view.superview?.convert(view.frame, to: nil)
         left = ((rect?.origin.x ?? 0) < 0 ? 0 : Float(rect?.origin.x ?? 0)) * Float(UIScreen.main.scale)
         top = Float(rect?.origin.y ?? 0) * Float(UIScreen.main.scale)
+        if let webView = view as? WKWebView {
+            if #available(iOS 11.0, *) {
+                let safeAreaInsetsTop = webView.safeAreaInsets.top
+                if (rect?.origin.y ?? 0) < safeAreaInsetsTop {
+                    let topDifference = safeAreaInsetsTop - ((rect?.origin.y ?? 0) < 0 ? 0 : (rect?.origin.y ?? 0))
+                    top = Float(topDifference + (rect?.origin.y ?? 0)) * Float(UIScreen.main.scale)
+                }
+            }
+        }
         right = left + ((view.bounds.size.width > UIScreen.main.bounds.width ? Float(UIScreen.main.bounds.width) : Float(view.bounds.size.width)) * Float(UIScreen.main.scale))
         bottom = top + Float(view.bounds.size.height * UIScreen.main.scale)
     }
