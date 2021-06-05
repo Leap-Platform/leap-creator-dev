@@ -698,7 +698,13 @@ extension LeapContextDetector {
                 let resultArray = result.components(separatedBy: ",").compactMap({ CGFloat(($0 as NSString).doubleValue) })
                 if resultArray.count != 4 { completed(nil) }
                 else {
-                    let rect = CGRect(x: resultArray[0], y: resultArray[1], width: resultArray[2], height: resultArray[3])
+                    var rect = CGRect(x: resultArray[0], y: resultArray[1], width: resultArray[2], height: resultArray[3])
+                    if #available(iOS 11.0, *) {
+                        let safeAreaInsetsTop = (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0)
+                        if let _ = webview as? WKWebView, webview.frame.origin.y < safeAreaInsetsTop {
+                            rect.origin.y += safeAreaInsetsTop
+                        }
+                    }
                     completed(rect)
                 }
             } else { (completed(nil)) }
