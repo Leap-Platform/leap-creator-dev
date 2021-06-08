@@ -447,32 +447,36 @@ extension LeapContextManager {
     func sendAUIActionTrackingEvent(action: Dictionary<String,Any>?) -> LeapAnalyticsEvent? {
         guard let projectParameter = getProjectParameter() else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.actionTrackingEvent, withParams: projectParameter)
-        if let body = action?[constant_body] as? Dictionary<String, Any> {
+        
+        guard let body = action?[constant_body] as? Dictionary<String, Any> else { return nil }
+        
+        if let id = body[constant_id] as? String {
             
-            if let id = body[constant_id] as? String {
-                
-                if lastEventId == id { return nil }
-                
-                lastEventId = id
-            }
+            if lastEventId == id { return nil }
             
-            if let labelValue = body[constant_buttonLabel] as? String {
-                event.actionEventValue = labelValue
-            }
-            // cases for actionEventType
-            if let _ = body[constant_external_link] as? Bool {
-                event.actionEventType = constant_external_link
-            } else if let _ = body[constant_deep_link] as? Bool {
-                event.actionEventType = constant_deep_link
-            } else if let _ = body[constant_end_flow] as? Bool {
-                event.actionEventType = constant_end_flow
-            } else if let _ = body[constant_close] as? Bool {
-                event.actionEventType = constant_close
-            } else if let _ = body[constant_anchor_click] as? Bool {
-                event.actionEventType = constant_anchor_click
-                event.actionEventValue = nil
-            }
+            lastEventId = id
         }
+        
+        if let labelValue = body[constant_buttonLabel] as? String {
+            event.actionEventValue = labelValue
+        }
+        // cases for actionEventType
+        if let _ = body[constant_external_link] as? Bool {
+            event.actionEventType = constant_external_link
+        } else if let _ = body[constant_deep_link] as? Bool {
+            event.actionEventType = constant_deep_link
+        } else if let _ = body[constant_end_flow] as? Bool {
+            event.actionEventType = constant_end_flow
+        } else if let _ = body[constant_close] as? Bool {
+            event.actionEventType = constant_close
+        } else if let _ = body[constant_anchor_click] as? Bool {
+            event.actionEventType = constant_anchor_click
+            event.actionEventValue = nil
+        }
+        
+        event.elementName = stageManager?.getCurrentStage()?.name ?? assistManager?.getCurrentAssist()?.name
+        event.pageName = pageManager?.getCurrentPage()?.name
+        
         print("AUI action tracking")
         return event
     }
@@ -503,7 +507,7 @@ extension LeapContextManager: LeapAnalyticsManagerDelegate {
     }
     
     func sendEvents(payload: Array<Dictionary<String, Any>>) {
-        
+        print("\(payload.count) events sent - \(payload)")
     }
     
     func sendPayload(_ payload: Dictionary<String, Any>) {
@@ -590,12 +594,12 @@ extension LeapContextManager:LeapAUICallback {
             }
             else if let dm = discoveryManager, let discovery = dm.getCurrentDiscovery() {
                 dm.discoveryPresented()
-               // start screen event
+                // start screen event
                 guard let instruction = discovery.instruction else { return }
                 analyticsManager?.saveEvent(event: sendStartScreenEvent(instructionId: instruction.id))
             }
         case .Stage:
-             // stage instruction
+            // stage instruction
             // TODO: triggered multiple times
             // TODO: Instruction should be triggered once, check id (UUID) and if there is a change in language, can send event again.
             // TODO: - above scenario for start screen and element seen
@@ -766,7 +770,7 @@ extension LeapContextManager {
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
             if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-            auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
             }
             return
         }
@@ -774,11 +778,11 @@ extension LeapContextManager {
         contextDetector?.getViewOrRect(allView: cd.fetchViewHierarchy(), id: identifier, isWeb: isWeb, targetCheckCompleted: { (view, rect, webview) in
             if let anchorRect = rect {
                 if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                    self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
                 }
             } else {
                 if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                    self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
                 }
             }
         })

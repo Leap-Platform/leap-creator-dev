@@ -20,8 +20,8 @@ import UIKit
 class LeapAnalyticsManager {
     
     let MAX_COUNT = 5
-    var delegate:LeapAnalyticsManagerDelegate
-    var session:URLSession
+    weak var delegate: LeapAnalyticsManagerDelegate?
+    var session: URLSession
     
     init(_ analyticsDelegate: LeapAnalyticsManagerDelegate) {
         delegate = analyticsDelegate
@@ -64,7 +64,7 @@ class LeapAnalyticsManager {
         clientCallbackEvent.deploymentId = nil
         
         guard let clientPayload = generatePayload(clientCallbackEvent) else { return }
-        delegate.sendPayload(clientPayload)
+        delegate?.sendPayload(clientPayload)
         
         if savedEvents.count >= MAX_COUNT {
             var eventsToFlush = prefs.object(forKey: "leap_flush_events") as? Array<Dictionary<String, String>> ?? []
@@ -78,22 +78,22 @@ class LeapAnalyticsManager {
     func flushEvents(_ events: Array<Dictionary<String, String>>) {
         guard events.count > 0 else { return }
         guard var req = createURLRequest(urlString: Constants.Networking.analyticsEndPoint) else {
-            delegate.failedToSendEvents(payload: events)
+            delegate?.failedToSendEvents(payload: events)
             return
         }
         guard let jsonData = try? JSONSerialization.data(withJSONObject: events, options: .prettyPrinted) else {
-            delegate.failedToSendEvents(payload: events)
+            delegate?.failedToSendEvents(payload: events)
             return
         }
         req.httpBody = jsonData
         let analyticsTask = session.dataTask(with: req) { (data, response, error) in
-            if error != nil { self.delegate.failedToSendEvents(payload: events) }
+            if error != nil { self.delegate?.failedToSendEvents(payload: events) }
             else if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
-                    self.delegate.sendEvents(payload: events)
+                    self.delegate?.sendEvents(payload: events)
                     let prefs = UserDefaults.standard
                     prefs.removeObject(forKey: "leap_flush_events")
-                } else { self.delegate.failedToSendEvents(payload: events) }
+                } else { self.delegate?.failedToSendEvents(payload: events) }
             }
         }
         analyticsTask.resume()
@@ -103,8 +103,8 @@ class LeapAnalyticsManager {
         guard let url = URL(string: urlString) else { return nil }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
-        let headers = delegate.getHeaders()
-        headers.forEach { (key, value) in
+        let headers = delegate?.getHeaders()
+        headers?.forEach { (key, value) in
             req.addValue(value, forHTTPHeaderField: key)
         }
         return req
