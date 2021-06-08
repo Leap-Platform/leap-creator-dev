@@ -177,13 +177,16 @@ class LeapToolTip: LeapTipView {
         }
     
         let globalToViewFrame = getGlobalToViewFrame()
-
-        let toViewTop = globalToViewFrame.origin.y
         
-        let toViewBottom = toViewTop + globalToViewFrame.size.height
-
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
+
+        var toViewTopSpacing = globalToViewFrame.origin.y
         
+        if assistInfo?.highlightAnchor ?? false {
+            
+            toViewTopSpacing = toViewTopSpacing - CGFloat(manipulatedHighlightSpacing)
+        }
+                
         var iconSpacing: CGFloat = 0
         
         if iconInfo?.isEnabled ?? false {
@@ -191,13 +194,15 @@ class LeapToolTip: LeapTipView {
             iconSpacing = self.leapIconView.iconSize + self.leapIconView.iconGap
         }
         
-        if (toViewBottom + CGFloat(manipulatedHighlightSpacing) + toolTipView.frame.size.height) + iconSpacing <= inViewFrame.size.height {
+        let calculatedY = (toViewTopSpacing - toolTipView.frame.size.height) - iconSpacing
+        
+        if calculatedY >= inViewFrame.origin.y {
             
-            return .top
+            return .bottom
         
         } else {
             
-            return .bottom
+            return .top
         }
     }
         
