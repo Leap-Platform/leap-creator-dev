@@ -109,6 +109,7 @@ class LeapToolTip: LeapTipView {
         
        // set webView to max width of the screen
        let maxWidth = CGFloat(assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)
+        
        webView.frame.size.width =  maxWidth * UIScreen.main.bounds.width
     
        cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
@@ -515,7 +516,6 @@ class LeapToolTip: LeapTipView {
         if dict["type"] as? String == "resize" { DispatchQueue.main.async {
             
             self.placePointer()
-            self.performEnterAnimation(animation: self.assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
         } }
     }
     
@@ -523,22 +523,30 @@ class LeapToolTip: LeapTipView {
         
         let arrowDirection = getArrowDirection()
         guard let direction = arrowDirection else { return }
-    
+        
+        self.alpha = 0
+        UIView.animate(withDuration: 0.12) {
+            self.alpha = 1
+        }
+        
         self.toolTipView.alpha = 0
-        self.leapIconView.alpha = 0
+        UIView.animate(withDuration: 0.04, delay: 0.08, options: .beginFromCurrentState, animations: {
+            self.toolTipView.alpha = 1
+        }, completion: nil)
+        
         let yPosition = toolTipView.frame.origin.y
         
         if direction == .top { toolTipView.frame.origin.y = toolTipView.frame.origin.y + 20 }
         else { toolTipView.frame.origin.y = toolTipView.frame.origin.y - 20 }
-    
-        UIView.animate(withDuration: 0.16, animations: {
-            self.toolTipView.alpha = 1
+        
+        UIView.animate(withDuration: 0.16) {
             self.toolTipView.frame.origin.y = yPosition
-        }) { (_) in
-            UIView.animate(withDuration: 0.2) {
-                self.leapIconView.alpha = 1
-            }
         }
+        
+        self.leapIconView.alpha = 0
+        UIView.animate(withDuration: 0.08, delay: 0.24, options: .beginFromCurrentState, animations: {
+            self.leapIconView.alpha = 1
+        }, completion: nil)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
