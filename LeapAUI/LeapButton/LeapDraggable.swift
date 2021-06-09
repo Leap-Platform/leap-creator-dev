@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol LeapDraggableDelegate: class {
+protocol LeapDraggableDelegate: AnyObject {
     
     func iconDidDrag()
     func iconDidRelease(atLocation location: CGPoint)
@@ -33,8 +33,7 @@ class LeapDraggable: UIPanGestureRecognizer {
         if sender.state == .began {
             
             if let viewToDrag = sender.view {
-            
-               lastLocation = viewToDrag.center
+                lastLocation = viewToDrag.center
             }
             
         } else if sender.state == .changed {
@@ -44,16 +43,13 @@ class LeapDraggable: UIPanGestureRecognizer {
                 guard let superView = viewToDrag.superview else { return }
                 
                 if (viewToDrag.frame.origin.y + translation.y) > mainIconBottomConstant && (viewToDrag.frame.origin.y + translation.y) <= (superView.frame.maxY - mainIconBottomConstant - viewToDrag.frame.height)  {
-                
-                viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
-                    y: viewToDrag.center.y + translation.y)
-                sender.setTranslation(CGPoint(x: 0, y: 0), in: viewToDrag)
-                
-                  DispatchQueue.main.async {
-                
-                     self.draggableDelegate?.iconDidDrag()
-                  }
-               }
+                    
+                    viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
+                                                y: viewToDrag.center.y + translation.y)
+                    sender.setTranslation(CGPoint(x: 0, y: 0), in: viewToDrag)
+                    
+                    self.draggableDelegate?.iconDidDrag()
+                }
             }
         
         } else if sender.state == .ended {

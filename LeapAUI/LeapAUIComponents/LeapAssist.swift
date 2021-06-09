@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // The type that has methods which is used by the developer when certain action gets called.
-protocol LeapAssistDelegate: class {
+protocol LeapAssistDelegate: AnyObject {
     
     /// AUIComponent is successfully presented.
     func didPresentAssist()

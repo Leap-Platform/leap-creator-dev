@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol LeapCreatorManagerDelegate: class {
+protocol LeapCreatorManagerDelegate: AnyObject {
     func fetchConfigSuccess()
     func fetchConfigFailure()
 }

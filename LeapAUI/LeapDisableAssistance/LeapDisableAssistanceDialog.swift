@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol LeapDisableAssistanceDelegate: class {
+protocol LeapDisableAssistanceDelegate: AnyObject {
     
     func didPresentDisableAssistance()
     func shouldDisableAssistance()

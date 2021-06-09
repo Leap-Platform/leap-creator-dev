@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol LeapTappableDelegate: class {
+protocol LeapTappableDelegate: AnyObject {
     
     func iconDidTap()
 }
