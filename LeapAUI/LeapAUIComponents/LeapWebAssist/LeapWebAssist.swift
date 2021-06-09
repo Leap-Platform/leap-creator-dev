@@ -42,6 +42,8 @@ class LeapWebAssist: UIView, LeapAssist {
         configuration.userContentController.addUserScript(userScript)
         if #available(iOS 11.0, *) {
             configuration.setURLSchemeHandler(self, forURLScheme: "leap-scheme")
+            configuration.setURLSchemeHandler(self, forURLScheme: "leap-https-scheme")
+            configuration.setURLSchemeHandler(self, forURLScheme: "leap-http-scheme")
         } else {
             // Fallback on earlier versions
         }
@@ -97,8 +99,31 @@ class LeapWebAssist: UIView, LeapAssist {
             webView.loadHTML(withUrl: filePath)
             return
         }
-        if #available(iOS 11.0, *) { string = string.replacingOccurrences(of: baseUrl, with: "leap-scheme://") }
+        if #available(iOS 11.0, *) {
+            string = string.replacingOccurrences(of: baseUrl, with: "leap-scheme://")
+            let downloadedContents = getDownloadedContents()
+            for content in downloadedContents {
+                if string.contains(content) && content.hasPrefix("https") {
+                    let schemeString = content.replacingOccurrences(of: "https://", with: "leap-https-scheme://")
+                    string = string.replacingOccurrences(of: content, with: schemeString)
+                } else if string.contains(content) && content.hasPrefix("http") {
+                    let schemeString = content.replacingOccurrences(of: "http://", with: "leap-http-scheme://")
+                    string = string.replacingOccurrences(of: content, with: schemeString)
+                }
+            }
+        }
         webView.loadHTMLString(string, baseURL: nil)
+    }
+    
+    func getDownloadedContents() -> Array<String> {
+        let auiContentFolderPath = LeapSharedAUI.shared.getAUIContentFolderPath()
+        guard let files = try? FileManager.default.contentsOfDirectory(at: auiContentFolderPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) else { return [] }
+        let fileNames = files.compactMap { (url) -> String? in
+            let path  = url.path
+            let fileNmae = path.components(separatedBy: "/").last
+            return fileNmae?.replacingOccurrences(of: "$", with: "/")
+        }
+        return fileNames
     }
     
     func updateLayout(alignment: String, anchorBounds: CGRect?) {
@@ -485,6 +510,9 @@ extension LeapWebAssist:WKURLSchemeHandler {
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         guard let url = urlSchemeTask.request.url?.relativeString else { return }
         let fileUrl = url.replacingOccurrences(of: "leap-scheme://", with: "")
+            .replacingOccurrences(of: "leap-https-scheme://", with: "https://")
+            .replacingOccurrences(of: "leap-http-scheme://", with: "http://")
+        
         let fileName = fileUrl.replacingOccurrences(of: "/", with: "$")
         let filePath = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask)[0].appendingPathComponent("Leap").appendingPathComponent("aui_component").appendingPathComponent(fileName)
         if FileManager.default.fileExists(atPath: filePath.path), let fileData = try? Data(contentsOf: filePath) {

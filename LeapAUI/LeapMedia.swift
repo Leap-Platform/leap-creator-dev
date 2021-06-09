@@ -15,7 +15,10 @@ class LeapMedia {
     var filename:String
     
     init(baseUrl:String, location:String?) {
-        if location != nil { url = URL(string:baseUrl + location!)!  }
+        if location != nil {
+            if location!.hasPrefix("http") { url = URL(string: location!) }
+            else { url = URL(string:baseUrl + location!)! }
+        }
         else { url = nil }
         filename = location?.replacingOccurrences(of: "/", with: "$") ?? ""
     }
