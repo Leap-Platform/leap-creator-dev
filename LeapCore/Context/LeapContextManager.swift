@@ -615,7 +615,9 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func failedToPerform() {
-        
+        assistManager?.resetCurrentAssist()
+        stageManager?.resetCurrentStage()
+        discoveryManager?.resetDiscovery()
     }
     
     func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action: Dictionary<String,Any>?) {
