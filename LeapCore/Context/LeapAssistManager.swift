@@ -103,10 +103,14 @@ class LeapAssistManager {
     }
     
     func resetManagerSession() {
+        resetCurrentAssist()
+        assistsCompletedInSession = []
+    }
+    
+    func resetCurrentAssist() {
         assistTimer?.invalidate()
         assistTimer = nil
         currentAssist = nil
-        assistsCompletedInSession = []
     }
     
     func assistPresented() {

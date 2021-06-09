@@ -566,6 +566,11 @@ extension LeapAUIManager {
         //Set autofocus
         inView.becomeFirstResponder()
         
+        guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        
         // Present Assist
         switch type {
         case FINGER_RIPPLE:
@@ -619,6 +624,11 @@ extension LeapAUIManager {
             if let wkweb = inWebview as? WKWebView { wkweb.evaluateJavaScript(focusScript,completionHandler: nil) }
         }
         
+        guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
+        
         switch type {
         case FINGER_RIPPLE:
             let pointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: nil)
@@ -664,12 +674,12 @@ extension LeapAUIManager {
     
     private func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
         
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else {
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String, Any>, let type = assistInfo[constant_type] as? String, isReadyToPresent(type: type, assistInfo: assistInfo) else {
+
             auiManagerCallBack?.failedToPerform()
             return
         }
         
-        if let type = assistInfo[constant_type] as? String {
             switch type {
             case POPUP:
                 let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
@@ -717,6 +727,20 @@ extension LeapAUIManager {
                 
             default:
                 break
+            }
+    }
+    
+    func isReadyToPresent(type: String, assistInfo: Dictionary<String, Any>) -> Bool {
+        switch type {
+        case FINGER_RIPPLE, SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN, BEACON:  return true
+        default:
+            guard let htmlUrl = assistInfo[constant_htmlUrl] as? String else { return false }
+            let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
+            let filePath = LeapSharedAUI.shared.getAUIContentFolderPath().appendingPathComponent(fileName)
+            if FileManager.default.fileExists(atPath: filePath.path) {
+                return true
+            } else {
+                return false
             }
         }
     }
