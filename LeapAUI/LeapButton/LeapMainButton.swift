@@ -136,21 +136,21 @@ extension LeapMainButton: LeapDraggableDelegate {
         self.transform = .identity
         
         self.layoutIfNeeded()
-        
-        var duration = 0.3
                     
         self.closeTransparentView?.removeFromSuperview()
             
         self.closeTransparentView = nil
         
+        var animationDuration = 0.3
+        
         if CGRect(x: location.x, y: location.y, width: self.frame.width, height: self.frame.height).contains(self.closeIcon.center) && isDismissible {
         
             disableDialog.showBottomDialog()
             
-            duration = 1.5
+            animationDuration = 1.5
         }
         
-        UIView.animate(withDuration: duration) {
+        UIView.animate(withDuration: animationDuration) {
             self.center = CGPoint(x: self.leapDraggable.lastLocation.x, y: self.center.y)
             self.leapDraggable.setTranslation(.zero, in: self)
         }

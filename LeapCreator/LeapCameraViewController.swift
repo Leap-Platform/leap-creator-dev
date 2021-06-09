@@ -9,13 +9,13 @@
 import UIKit
 import AVFoundation
 
-protocol LeapCameraViewControllerDelegate: class {
+protocol LeapCameraViewControllerDelegate: AnyObject {
     func configFetched(type: NotificationType, config: Dictionary<String,Any>)
     func paired(type: NotificationType, infoDict: Dictionary<String, Any>)
     func closed(type: NotificationType)
 }
 
-public protocol SampleAppDelegate: class {
+public protocol SampleAppDelegate: AnyObject {
     func sendInfo(infoDict: Dictionary<String,Any>)
 }
 

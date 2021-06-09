@@ -17,7 +17,7 @@ enum LeapIconState: String {
 }
 
 /// Type to notify icon state change
-protocol LeapIconStateDelegate: class {
+protocol LeapIconStateDelegate: AnyObject {
     func iconDidChange(state: LeapIconState)
 }
 

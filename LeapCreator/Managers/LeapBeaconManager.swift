@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol LeapBeaconListener: class {
+protocol LeapBeaconListener: AnyObject {
     func onBeaconSuccess(roomId: String, status: Any)
     func onBeaconFailure()
 }
