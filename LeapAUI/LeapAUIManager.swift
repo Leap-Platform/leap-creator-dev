@@ -173,6 +173,10 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
         showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
             if languageChose {
@@ -192,6 +196,10 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+        guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
         showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             if languageChose {
                 self.setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
@@ -312,6 +320,10 @@ extension LeapAUIManager: LeapAUIHandler {
             return
         }
         LeapSharedAUI.shared.iconSetting = iconSetting
+        guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
+            auiManagerCallBack?.failedToPerform()
+            return
+        }
         leapButton = LeapMainButton(withThemeColor: UIColor.init(hex: iconSetting.bgColor ?? "#00000000") ?? .black, dismissible: iconSetting.dismissible ?? false)
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         keyWindow.addSubview(leapButton!)
