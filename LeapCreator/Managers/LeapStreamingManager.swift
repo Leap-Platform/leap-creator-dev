@@ -60,13 +60,16 @@ class LeapStreamingManager: LeapAppStateProtocol {
         
         if self.isAppInForeground, let captureScreenShot = LeapScreenHelper.captureScreenshot() {
             self.image = self.resizeImage(image: captureScreenShot)
-            if self.image != self.previousImage, let image = self.image {
+            if let image = self.image, image.pngData() != self.previousImage?.pngData() {
             encodedImage = self.getBase64EncodedImage(image: image, compression: 0.8)
             }
         }else{
             encodedImage = APP_IN_BACKGROUND_BASE64_IMAGE
         }
-        guard let encodeImage = encodedImage else { return }
+        guard let encodeImage = encodedImage else {
+            enableNextIteration()
+            return
+        }
         self.streamHandler(encode: encodeImage)
     }
     
@@ -77,7 +80,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
     }
     
     private func getBase64EncodedImage(image: UIImage, compression: Float) -> String? {
-        let imageEncode: String? = self.image?.jpegData(compressionQuality: CGFloat(compression))?.base64EncodedString()
+        let imageEncode: String? = image.jpegData(compressionQuality: CGFloat(compression))?.base64EncodedString()
         return imageEncode
     }
  
