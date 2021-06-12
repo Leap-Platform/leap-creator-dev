@@ -148,6 +148,7 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         let payload = "{\"room\":\"\(roomId ?? "")\",\"message\": {\"commandType\":\"DISCONNECT\"},\"action\": \"message\",\"source\": \"android\"}"
         webSocketTask?.write(string: payload, completion: {
             print("Disconnect command sent")
+            self.webSocketTask?.disconnect()
         })
     }
     
