@@ -23,6 +23,7 @@ class LeapSoundManager {
     }()
     
     var discoverySoundsJson: Dictionary<String,Array<LeapSound>> = [:]
+    var previewSoundsJson: Dictionary<String, Array<LeapSound>> = [:]
     var stageSoundsJson: Dictionary<String,Array<LeapSound>> = [:]
     
     func fetchSoundConfig(_ completion: @escaping SuccessCallBack) {
