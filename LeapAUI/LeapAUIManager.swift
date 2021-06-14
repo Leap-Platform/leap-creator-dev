@@ -96,6 +96,10 @@ extension LeapAUIManager: LeapAUIHandler {
                 self?.soundManager.discoverySoundsJson = self?.soundManager.processSoundConfigs(configs:discoverySoundsDicts) ?? [:]
                 self?.startDiscoverySoundDownload()
             }
+            if let previewSoundsDict = initialSounds[constant_previewSounds] as? Array<Dictionary<String,Any>> {
+                self?.soundManager.previewSoundsJson = self?.soundManager.processSoundConfigs(configs: previewSoundsDict) ?? [:]
+                self?.startDiscoverySoundDownload()
+            }
             
             var htmlBaseUrl:String?
             if let auiContentDicts = initialSounds[constant_auiContent]  as? Array<Dictionary<String,Any>> {
@@ -418,6 +422,13 @@ extension LeapAUIManager {
         let code = auiManagerCallBack!.getLanguageCode()
         let discoverySoundsForCode = soundManager.discoverySoundsJson[code] ?? []
         for sound in discoverySoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
+    }
+    
+    func startPreviewSoundDownload() {
+        guard auiManagerCallBack != nil else { return }
+        let code = auiManagerCallBack!.getLanguageCode()
+        let previewSoundsForCode = soundManager.previewSoundsJson[code] ?? []
+        for sound in  previewSoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
     }
     
     func startStageSoundDownload() {
