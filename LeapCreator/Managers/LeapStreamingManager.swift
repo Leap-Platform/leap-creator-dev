@@ -25,7 +25,6 @@ class LeapStreamingManager: LeapAppStateProtocol {
         stop()
     }
     
-    
     let ONE_SECOND: Double = 1.0
     let FRAME_RATE: Double = LeapCreatorShared.shared.creatorConfig?.streaming?.frameRate ?? 24
     
@@ -40,14 +39,14 @@ class LeapStreamingManager: LeapAppStateProtocol {
     var isAppInForeground: Bool
     let APP_IN_BACKGROUND_BASE64_IMAGE: String = "APP_IN_BACKGROUND"
 
-    
-    init(){
+    init() {
         self.context = UIApplication.shared
         isAppInForeground = true
     }
     
-    func start(webSocket: WebSocket, roomId: String){
+    func start(webSocket: WebSocket, roomId: String) {
         self.roomId = roomId
+        self.previousImage = nil // make sure previous image is nil when new session streaming starts
         self.webSocket = webSocket
         self.streamingTask = DispatchWorkItem {
             self.startStreaming()
@@ -73,7 +72,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
         self.streamHandler(encode: encodeImage)
     }
     
-    private func streamHandler(encode: String){
+    private func streamHandler(encode: String) {
         DispatchQueue.global(qos: .userInitiated).async {
             self.sendStreamingData(imageEncode: encode)
         }
@@ -84,8 +83,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
         return imageEncode
     }
  
-    
-    func sendStreamingData(imageEncode: String){
+    func sendStreamingData(imageEncode: String) {
         let splittedString = imageEncode.components(withMaxLength: 10000)
         let room = self.roomId as String?
         for sub in splittedString {
@@ -106,7 +104,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
         }
     }
     
-    func enableNextIteration(){
+    func enableNextIteration() {
         guard let streamingTask = self.streamingTask else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND/self.FRAME_RATE), execute: streamingTask)
     }
@@ -149,7 +147,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
         return UIImage(data: imageData)
     }
     
-    func stop(){
+    func stop() {
         streamingTask?.cancel()
     }
 }

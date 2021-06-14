@@ -20,7 +20,6 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         
     }
     
-    
     func onApplicationInForeground() {
         streamingManager?.onApplicationInForeground()
         captureManager?.onApplicationInForeground()
@@ -34,7 +33,6 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     func onApplicationInTermination() {
         streamingManager?.stop()
     }
-    
     
     func onConnectionEstablished() {
         //write the command to join the room
@@ -65,13 +63,15 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
             healthMonitor?.receivePong()
             break
         case CASE_STOP_OPERATIONS:
-            closeSession()
-            NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
+            self.streamingManager?.stop()
+            self.captureManager?.stop()
             break
         case CASE_DEVICE_INFO:
             //self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_KILL_CREATOR:
+            sessionClosed()
+            NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
             break
         default:
          print("Default command - DO NOTHING !")
@@ -79,7 +79,6 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         }
     }
     
-
     // variables used 
     let CASE_SCREENSHOT: String? = "SCREENSHOT"
     let CASE_SCREENSTREAM: String? = "SCREENSTREAM"
@@ -114,7 +113,6 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     init(protocolListener: LeapProtocolListener) {
         self.protocolListener = protocolListener
         self.applicationInstance = UIApplication.shared
-        NotificationCenter.default.addObserver(self, selector: #selector(stopStreaming), name: .init("leap_preview_config"), object: nil)
     }
     
     func setup(){
@@ -146,15 +144,26 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         })
     }
     
-    @objc func stopStreaming() {
+    @objc func sendDisconnectCommand() {
         let payload = "{\"room\":\"\(roomId ?? "")\",\"message\": {\"commandType\":\"DISCONNECT\"},\"action\": \"message\",\"source\": \"android\"}"
         webSocketTask?.write(string: payload, completion: {
-            self.streamingManager?.stop()
+            print("Disconnect command sent")
+            self.webSocketTask?.disconnect()
         })
     }
     
+    // session to be closed by client
     func closeSession() {
-        stopStreaming()
+        self.streamingManager?.stop()
+        self.captureManager?.stop()
+        self.sendDisconnectCommand()
+        self.healthMonitor?.stop()
+        self.protocolListener.onSessionClosed()
+    }
+    
+    // session closed by server
+    func sessionClosed() {
+        self.streamingManager?.stop()
         self.captureManager?.stop()
         self.healthMonitor?.stop()
         self.protocolListener.onSessionClosed()
