@@ -98,7 +98,7 @@ extension LeapAUIManager: LeapAUIHandler {
             }
             if let previewSoundsDict = initialSounds[constant_previewSounds] as? Array<Dictionary<String,Any>> {
                 self?.soundManager.previewSoundsJson = self?.soundManager.processSoundConfigs(configs: previewSoundsDict) ?? [:]
-                self?.startDiscoverySoundDownload()
+                self?.startPreviewSoundDownload()
             }
             
             var htmlBaseUrl:String?
