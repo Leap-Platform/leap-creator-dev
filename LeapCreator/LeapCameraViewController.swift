@@ -356,17 +356,23 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     func startValidationForPairing(infoDict: Dictionary<String, Any>) {
         guard let roomId = infoDict[constant_roomId] as? String else { return }
+        guard let _ = LeapCreatorShared.shared.apiKey else {
+            self.presentWarning(constant_connectSampleAppWarningForPairing)
+            return
+        }
         presentLoader()
         roomManager.validateRoomId(roomId: roomId) { [weak self] (success) in
-            if success {
-                let projectName = infoDict[constant_projectName] as? String ?? ""
-                UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self?.fetchView?.removeFromSuperview()
+                if success {
+                    let projectName = infoDict[constant_projectName] as? String ?? ""
+                    UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                     self?.delegate?.paired(type: .pairing, infoDict: infoDict)
                     self?.dismiss(animated: true, completion: nil)
+                    
+                } else {
+                    self?.presentWarning(constant_somethingWrong)
                 }
-            } else {
-                DispatchQueue.main.async { self?.presentWarning(constant_somethingWrong) }
             }
         }
     }
@@ -399,7 +405,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         req.addValue(bundleShortVersionString, forHTTPHeaderField: "x-app-version-name")
         req.addValue(previewId, forHTTPHeaderField: "x-preview-id")
         guard let apiKey = LeapCreatorShared.shared.apiKey else {
-            self.presentWarning(constant_connectSampleAppWarning)
+            self.presentWarning(constant_connectSampleAppWarningForPreview)
             return
         }
         presentLoader()

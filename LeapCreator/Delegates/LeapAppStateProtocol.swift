@@ -9,10 +9,9 @@
 import Foundation
 import UIKit
 
-protocol LeapAppStateProtocol {
-    
-    func onApplicationInForeground()->Void
-    func onApplicationInBackground()->Void
-    func onApplicationInTermination()->Void
+protocol LeapAppStateProtocol: AnyObject {
+    func onApplicationInForeground()
+    func onApplicationInBackground()
+    func onApplicationInTermination()
     
 }

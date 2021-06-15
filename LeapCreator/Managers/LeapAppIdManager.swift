@@ -11,7 +11,7 @@ import UIKit
 class LeapAppIdManager{
     
     var appStoreId: String?
-    var appIdFetchListener: LeapAppIdListener
+    weak var appIdFetchListener: LeapAppIdListener?
     
     init(appIdListener: LeapAppIdListener){
         self.appIdFetchListener = appIdListener
@@ -19,10 +19,9 @@ class LeapAppIdManager{
     
     @objc func findAppStoreId()->Void{
 
-
     }
 }
 
-protocol LeapAppIdListener {
+protocol LeapAppIdListener: AnyObject {
     func onIdFound() -> String?
 }

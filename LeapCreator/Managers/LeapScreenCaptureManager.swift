@@ -24,12 +24,11 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         
     }
     
-    
     var applicationInstance: UIApplication
     var roomId: String?
     var socket: WebSocket?
     var task: DispatchWorkItem?
-    var completeListener: LeapFinishListener
+    weak var completeListener: LeapFinishListener?
     
     init(completeHierarchyFinishListener: LeapFinishListener){
         self.applicationInstance = UIApplication.shared
@@ -40,7 +39,8 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         self.socket = webSocket
         self.roomId = room
         guard let screenShotImage = getScreenCapture() else { return }
-        getHierarchy(finishListener: self.completeListener) { [weak self] (hierarchy) in
+        guard let completeListener = self.completeListener else { return }
+        getHierarchy(finishListener: completeListener) { [weak self] (hierarchy) in
            self?.sendData(screenCapture: screenShotImage,hierarchy: hierarchy)
         }
     }
@@ -55,7 +55,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
             self.postMessage(payload: payload)
         }
         guard let task = self.task else { return }
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0, execute: task)
+        DispatchQueue.global().async(execute: task)
     }
     
     func postMessage(payload: Dictionary<String, Any>) {
@@ -97,7 +97,8 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
                         
             self.socket?.write(string: splitString, completion: {
                 if end == "true"{
-                    //  print("Captured payload End :: \(end)")
+                    print("Captured payload End :: \(end)")
+                    self.stop()
                 }
             })
         }
@@ -120,6 +121,6 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     }
 }
 
-protocol LeapFinishListener{
-    func onCompleteHierarchyFetch()->Void
+protocol LeapFinishListener: AnyObject {
+    func onCompleteHierarchyFetch()
 }

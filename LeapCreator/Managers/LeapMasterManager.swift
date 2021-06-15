@@ -103,11 +103,11 @@ class LeapMasterManager: LeapProtocolListener,
     }
     
     @objc func disconnect() {
-        self.protocolManager?.onStartSessionClose()
+        self.protocolManager?.onCloseSession()
     }
 }
 
-extension LeapMasterManager{
+extension LeapMasterManager {
     
     private func addObservers() {
         let nc = NotificationCenter.default
