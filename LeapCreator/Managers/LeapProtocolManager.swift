@@ -12,8 +12,12 @@ import Starscream
 
 class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthCheckListener, LeapFinishListener {
     
-    func onStartSessionClose() {
+    func onCloseSession() {
         closeSession()
+    }
+    
+    func onSessionClosed() {
+        sessionClosed()
     }
     
     func onCompleteHierarchyFetch() {
@@ -28,6 +32,14 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     func onApplicationInBackground() {
         streamingManager?.onApplicationInBackground()
         captureManager?.onApplicationInBackground()
+        if (self.captureManager?.task?.isCancelled ?? false) && (self.streamingManager?.streamingTask?.isCancelled ?? false) {
+            if self.webSocketTask != nil {
+                closeSession()
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
+                }
+            }
+        }
     }
     
     func onApplicationInTermination() {
@@ -55,7 +67,6 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
             guard let roomId = self.roomId, let webSocketTask = self.webSocketTask else { return }
             self.streamingManager?.start(webSocket: webSocketTask, roomId: roomId)
             break
-            
         case CASE_PING:
             healthMonitor?.sendPong()
             break
@@ -70,8 +81,13 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
             //self.deviceManager?.sendInfo(webSocket: self.webSocketTask!, room: self.roomId!)
             break
         case CASE_KILL_CREATOR:
-            sessionClosed()
-            NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
+            print(CASE_KILL_CREATOR)
+            if webSocketTask != nil {
+                sessionClosed()
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
+                }
+            }
             break
         default:
          print("Default command - DO NOTHING !")
@@ -100,7 +116,7 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         #endif
     }()
     
-    var protocolListener: LeapProtocolListener
+    weak var protocolListener: LeapProtocolListener?
     var applicationInstance: UIApplication
     var roomId: String?
     var captureManager: LeapScreenCaptureManager?
@@ -148,7 +164,9 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         let payload = "{\"room\":\"\(roomId ?? "")\",\"message\": {\"commandType\":\"DISCONNECT\"},\"action\": \"message\",\"source\": \"android\"}"
         webSocketTask?.write(string: payload, completion: {
             print("Disconnect command sent")
-            self.webSocketTask?.disconnect()
+            DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+                self.closeWebSocket()
+            }
         })
     }
     
@@ -158,7 +176,7 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         self.captureManager?.stop()
         self.sendDisconnectCommand()
         self.healthMonitor?.stop()
-        self.protocolListener.onSessionClosed()
+        self.protocolListener?.onSessionClosed()
     }
     
     // session closed by server
@@ -166,11 +184,17 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
         self.streamingManager?.stop()
         self.captureManager?.stop()
         self.healthMonitor?.stop()
-        self.protocolListener.onSessionClosed()
+        closeWebSocket()
+        self.protocolListener?.onSessionClosed()
+    }
+    
+    private func closeWebSocket() {
+        self.webSocketTask?.disconnect()
+        self.webSocketTask = nil
     }
 }
 
-protocol LeapProtocolListener{
-    func onSessionClosed()->Void
+protocol LeapProtocolListener: AnyObject {
+    func onSessionClosed()
 }
 

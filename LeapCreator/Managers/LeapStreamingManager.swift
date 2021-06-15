@@ -14,6 +14,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
     
     // Application state managers
     func onApplicationInForeground() {
+        previousImage = nil
         isAppInForeground = true
     }
     
@@ -62,7 +63,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
             if let image = self.image, image.pngData() != self.previousImage?.pngData() {
             encodedImage = self.getBase64EncodedImage(image: image, compression: 0.8)
             }
-        }else{
+        } else {
             encodedImage = APP_IN_BACKGROUND_BASE64_IMAGE
         }
         guard let encodeImage = encodedImage else {
@@ -98,6 +99,9 @@ class LeapStreamingManager: LeapAppStateProtocol {
           //print("End :: \(end)")
             if end == "true" {
                 self.previousImage = self.image
+                if !self.isAppInForeground {
+                    print(imageEncode)
+                }
                 self.enableNextIteration()
             }
             })
@@ -106,7 +110,11 @@ class LeapStreamingManager: LeapAppStateProtocol {
     
     func enableNextIteration() {
         guard let streamingTask = self.streamingTask else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND/self.FRAME_RATE), execute: streamingTask)
+        if self.isAppInForeground {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND/self.FRAME_RATE), execute: streamingTask)
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (self.ONE_SECOND), execute: streamingTask)
+        }
     }
     
     func resizeImage(image: UIImage) -> UIImage? {

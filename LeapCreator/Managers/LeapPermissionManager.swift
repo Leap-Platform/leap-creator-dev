@@ -23,7 +23,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
         
     }
     
-    var permissionListener: LeapPermissionListener
+    weak var permissionListener: LeapPermissionListener?
     var application: UIApplication
     let permissionGranted: String = "PERMISSION_GRANTED"
     let permissionRejected: String = "PERMISSION_REJECTED"
@@ -63,7 +63,6 @@ class LeapPermissionManager: LeapAppStateProtocol{
                 self.permissionDenied()
             }))
 
-            
            // UIApplication.shared.keyWindow!.rootViewController?.present(alert, animated: true)
             guard self.permissionAlert != nil else { return }
             UIApplication.getCurrentVC()?.present(self.permissionAlert!, animated: true)
@@ -98,7 +97,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
             }
             
             if data != nil {
-                self.permissionListener.onPermissionStatusUpdation(permission: permission)
+                self.permissionListener?.onPermissionStatusUpdation(permission: permission)
                 self.permissionTimer?.invalidate()
                 self.permissionTimer = nil
                 self.decisionTaken = nil
@@ -107,7 +106,8 @@ class LeapPermissionManager: LeapAppStateProtocol{
         }.resume()
         
     }
-    func stop()->Void{
+    
+    func stop() {
         
     }
     
@@ -138,7 +138,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
         let notification = Notification(name: .init(rawValue: "leap_creator_live"))
         NotificationCenter.default.post(notification)
         // update the Alfred server that permission has been granted
-        self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
+        self.permissionListener?.onPermissionGranted(permission: self.permissionGranted, status: true)
     }
     
     @objc private func permissionDenied() {
@@ -152,7 +152,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
         
         self.decisionTaken = false
         self.permissionAlert?.dismiss(animated: true, completion: nil)
-        self.permissionListener.onPermissionRejected(permnission: self.permissionRejected)
+        self.permissionListener?.onPermissionRejected(permnission: self.permissionRejected)
     }
     
     @objc private func timedout() {
@@ -166,7 +166,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
         }
         
         self.permissionAlert?.dismiss(animated: true, completion: nil)
-        self.permissionListener.onPermissionStatusUpdation(permission: "")
+        self.permissionListener?.onPermissionStatusUpdation(permission: "")
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
@@ -177,7 +177,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
      
         guard let decision = self.decisionTaken else {
             
-            self.permissionListener.onPermissionStatusUpdation(permission: "")
+            self.permissionListener?.onPermissionStatusUpdation(permission: "")
             
             return
         }
@@ -194,7 +194,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
         if decision {
             
             // update the Alfred server that permission has been granted
-            self.permissionListener.onPermissionGranted(permission: self.permissionGranted, status: true)
+            self.permissionListener?.onPermissionGranted(permission: self.permissionGranted, status: true)
         
         } else {
             
@@ -203,7 +203,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
     }
 }
 
-protocol LeapPermissionListener{
+protocol LeapPermissionListener: AnyObject {
     func onPermissionGranted(permission: String, status: Bool)
     func onPermissionRejected(permnission: String)
     func onPermissionStatusUpdation(permission: String)

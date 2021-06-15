@@ -12,7 +12,7 @@ import Starscream
 
 class LeapHealthMonitorManager {
     
-    var healthListener: LeapHealthCheckListener
+    weak var healthListener: LeapHealthCheckListener?
     var roomId: String?
     var webSocket: WebSocket?
     var lastPongTime: Double?
@@ -46,7 +46,12 @@ class LeapHealthMonitorManager {
                 print("PING has been sent! ")
             })
         } else {
-            self.healthListener.onStartSessionClose()
+            if self.webSocket != nil {
+                self.healthListener?.onSessionClosed()
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .init(rawValue: "Reset_Notification"), object: nil)
+                }
+            }
         }
         guard let pingTask = self.pingTask else { return }
         DispatchQueue.global().asyncAfter(deadline: .now() + PING_INTERVAL, execute: pingTask)
@@ -75,7 +80,7 @@ class LeapHealthMonitorManager {
     }
 }
 
-protocol LeapHealthCheckListener {
-    func onStartSessionClose()->Void
-    
+protocol LeapHealthCheckListener: AnyObject {
+    func onCloseSession()
+    func onSessionClosed()
 }
