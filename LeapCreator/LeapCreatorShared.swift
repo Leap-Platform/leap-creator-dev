@@ -33,4 +33,5 @@ class LeapCreatorShared {
     /// End Point
     let CREATOR_CONFIG_ENDPOINT: String = "/alfred/api/v1/apps/creator"
     let VALIDATE_ROOMID_ENDPOINT: String = "/alfred/api/v1/apps/device-rooms/"
+    let CREATOR_DEVICE_SPEEDCHECK_API: String = "/alfred/api/v1/device/speedCheck"
 }
