@@ -26,9 +26,15 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     let cameraImage = UIImageView()
     let openCamera = UIButton()
     let closeButton = UIButton()
+    let modeButton = UIButton()
     let qrCodeImage = UIImageView()
-    let headingLabel = UILabel()
+    var headingLabel = UILabel()
     var warningView:UIView?
+    let simulatorDescriptionLabel = UILabel()
+    let simulatorLearnMore = UIButton()
+    let codeTextField = UITextField()
+    let errorLabel = UILabel()
+    let submitButton = UIButton()
     let descLabel1 = UILabel()
     let descLabel2 = UILabel()
     let learnMoreButton1 = UIButton()
@@ -38,6 +44,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var roomManager = LeapRoomManager()
+    let qrManager = LeapQRCodeManager()
+    var isSimulator = false
     let previewUrl:String = {
         #if DEV
         return "https://alfred-dev-gke.leap.is/alfred/api/v1/device/preview"
@@ -49,6 +57,9 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         return "https://alfred.leap.is/alfred/api/v1/device/preview"
         #endif
     }()
+    
+    private var modeWidthConstraint: NSLayoutConstraint?
+    private var modeHeightConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +89,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         setupCameraIcon()
         setupCameraButton()
         setupCloseButton(inView: self.view)
+        setupModeButton(inView: self.view)
         setupLearnMoreButton()
         askForCameraAccess()
     }
@@ -126,6 +138,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     private func setupHeadingLabel() {
+        headingLabel = UILabel()
         headingLabel.text = "Scan QR Code"
         headingLabel.textColor = .white
         headingLabel.font = UIFont(name: "Helvetica Neue Bold", size: 20)
@@ -235,6 +248,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraImage.heightAnchor.constraint(equalTo: cameraImage.widthAnchor, multiplier: icon.size.height/icon.size.width).isActive = true
         
     }
+    
     private func setupCloseButton(inView:UIView) {
         closeButton.backgroundColor = UIColor(white: 0, alpha: 0.8)
         closeButton.layer.cornerRadius = 16
@@ -246,7 +260,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         inView.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant:30).isActive = true
-        closeButton.trailingAnchor.constraint(equalTo: inView.trailingAnchor, constant: -16).isActive = true
+        closeButton.leadingAnchor.constraint(equalTo: inView.leadingAnchor, constant: 16).isActive = true
         closeButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
         closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
     }
@@ -291,6 +305,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         scannerView?.layer.addSublayer(previewLayer!)
         guard scannerView != nil else { return }
         setupCloseButton(inView: scannerView!)
+        setupModeButton(inView: scannerView!)
         captureSession?.startRunning()
     }
     
@@ -480,6 +495,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraButton.widthAnchor.constraint(equalTo: scannerView!.widthAnchor, multiplier: 0.33).isActive = true
         
         setupCloseButton(inView: warningView!)
+        setupModeButton(inView: warningView!)
     }
     
     @objc func closeButtonClicked() {
@@ -512,6 +528,195 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             return
         }
         setupCloseButton(inView: scannerView!)
+        setupModeButton(inView: scannerView!)
         captureSession?.startRunning()
+    }
+}
+
+// For Simulator
+extension LeapCameraViewController {
+    
+    func setupSimulatorViews() {
+        setupCloseButton(inView: self.view)
+        setupModeButton(inView: self.view)
+        setupSimulatorHeadingLabel()
+        setupSimulatorDescriptionLabel()
+        setupSimulatorLearnMoreButton()
+        setupCodeTextField()
+        setupSubmitButton()
+    }
+    
+    private func setupModeButton(inView: UIView) {
+        modeButton.backgroundColor = UIColor(white: 0, alpha: 0.8)
+        modeButton.layer.cornerRadius = 16
+        modeButton.layer.masksToBounds = true
+        modeButton.addTarget(self, action: #selector(modeButtonTapped), for: .touchUpInside)
+        modeButton.setTitle("Using Simulator?", for: .normal)
+        inView.addSubview(modeButton)
+        modeButton.translatesAutoresizingMaskIntoConstraints = false
+        modeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 30).isActive = true
+        modeButton.trailingAnchor.constraint(equalTo: inView.trailingAnchor, constant: -16).isActive = true
+        modeWidthConstraint = NSLayoutConstraint(item: modeButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 135)
+        modeHeightConstraint = NSLayoutConstraint(item: modeButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 36)
+        NSLayoutConstraint.activate([modeWidthConstraint!, modeHeightConstraint!])
+    }
+    
+    @objc func modeButtonTapped() {
+        isSimulator = !isSimulator
+        
+        if isSimulator {
+            removeScanViews()
+            setupSimulatorViews()
+            
+            modeButton.setTitle(nil, for: .normal)
+            modeButton.layer.cornerRadius = 5
+            guard let image = UIImage(named: "QR", in: Bundle(for: LeapCreator.self), compatibleWith: nil) else { return }
+            modeButton.setImage(image, for: .normal)
+            modeButton.imageView?.contentMode = .scaleAspectFill
+            modeWidthConstraint?.constant = 25
+            modeHeightConstraint?.constant = 25
+            modeButton.updateConstraints()
+            modeButton.layoutIfNeeded()
+        } else {
+            removeSimulatorViews()
+            setupView()
+            
+            modeButton.setImage(nil, for: .normal)
+            modeButton.layer.cornerRadius = 16
+            modeButton.setTitle("Using Simulator?", for: .normal)
+            modeWidthConstraint?.constant = 135
+            modeHeightConstraint?.constant = 36
+            modeButton.updateConstraints()
+            modeButton.layoutIfNeeded()
+        }
+    }
+    
+    func removeScanViews() {
+        openCamera.removeFromSuperview()
+        cameraImage.removeFromSuperview()
+        qrCodeImage.removeFromSuperview()
+        headingLabel.removeFromSuperview()
+        warningView?.removeFromSuperview()
+        descLabel1.removeFromSuperview()
+        descLabel2.removeFromSuperview()
+        learnMoreButton1.removeFromSuperview()
+        learnMoreButton2.removeFromSuperview()
+        fetchView?.removeFromSuperview()
+        scannerView?.removeFromSuperview()
+        previewLayer?.removeFromSuperlayer()
+    }
+    
+    func removeSimulatorViews() {
+        headingLabel.removeFromSuperview()
+        simulatorDescriptionLabel.removeFromSuperview()
+        simulatorLearnMore.removeFromSuperview()
+        codeTextField.removeFromSuperview()
+        errorLabel.removeFromSuperview()
+        submitButton.removeFromSuperview()
+    }
+    
+    func setupSimulatorHeadingLabel() {
+        headingLabel = UILabel()
+        headingLabel.text = "Enter Code"
+        headingLabel.textColor = .white
+        headingLabel.font = UIFont(name: "Helvetica Neue Bold", size: 20)
+        view.addSubview(headingLabel)
+        headingLabel.translatesAutoresizingMaskIntoConstraints = false
+        headingLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 74).isActive = true
+        headingLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+    }
+    
+    func setupSimulatorDescriptionLabel() {
+        simulatorDescriptionLabel.text = "Generate the code on the Leap \nweb app"
+        simulatorDescriptionLabel.textColor = .white
+        simulatorDescriptionLabel.textAlignment = .center
+        simulatorDescriptionLabel.numberOfLines = 2
+        simulatorDescriptionLabel.font = UIFont(name: "Helvetica Neue", size: 15)
+        simulatorDescriptionLabel.adjustsFontSizeToFitWidth = true
+        view.addSubview(simulatorDescriptionLabel)
+        simulatorDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        simulatorDescriptionLabel.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 20).isActive = true
+        simulatorDescriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
+    func setupSimulatorLearnMoreButton() {
+        simulatorLearnMore.setTitleColor(UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1), for: .normal)
+        simulatorLearnMore.setTitle("Learn More", for: .normal)
+        simulatorLearnMore.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 15)
+        simulatorLearnMore.addTarget(self, action: #selector(simulatorLearnMoreTapped), for: .touchUpInside)
+        simulatorLearnMore.titleLabel?.adjustsFontSizeToFitWidth = true
+        simulatorLearnMore.sizeToFit()
+        view.addSubview(simulatorLearnMore)
+        simulatorLearnMore.translatesAutoresizingMaskIntoConstraints = false
+        simulatorLearnMore.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 32).isActive = true
+        simulatorLearnMore.leadingAnchor.constraint(equalTo: simulatorDescriptionLabel.trailingAnchor, constant: -70).isActive = true
+    }
+    
+    @objc func simulatorLearnMoreTapped() {
+        
+    }
+    
+    func setupCodeTextField() {
+        let dashBorder = CAShapeLayer()
+        dashBorder.strokeColor = UIColor.white.cgColor
+        dashBorder.fillColor = nil
+        dashBorder.lineDashPattern = [4, 2]
+        codeTextField.layer.borderWidth = 1.0
+        codeTextField.layer.borderColor = UIColor.white.cgColor
+        codeTextField.layer.addSublayer(dashBorder)
+        view.addSubview(codeTextField)
+        codeTextField.backgroundColor = .clear
+        codeTextField.textColor = .white
+        codeTextField.borderStyle = .roundedRect
+        codeTextField.translatesAutoresizingMaskIntoConstraints = false
+        codeTextField.topAnchor.constraint(equalTo: simulatorDescriptionLabel.bottomAnchor, constant: 20).isActive = true
+        codeTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        codeTextField.widthAnchor.constraint(equalToConstant: 190).isActive = true
+        codeTextField.heightAnchor.constraint(equalToConstant: 58).isActive = true
+        let bounds = codeTextField.bounds
+        dashBorder.path = UIBezierPath(roundedRect: bounds, cornerRadius: 5).cgPath
+        dashBorder.frame = bounds
+    }
+    
+    func setupCodeErrorLabel() {
+        errorLabel.text = "Incorrect code or app version"
+        errorLabel.textColor = UIColor(red: 0.882, green: 0.439, blue: 0.439, alpha: 1)
+        errorLabel.textAlignment = .center
+        errorLabel.numberOfLines = 0
+        errorLabel.font = UIFont(name: "Helvetica Neue", size: 15)
+        errorLabel.adjustsFontSizeToFitWidth = true
+        view.addSubview(errorLabel)
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        errorLabel.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 5).isActive = true
+        errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
+    func setupSubmitButton() {
+        submitButton.backgroundColor = UIColor(red: 78/255, green: 79/255, blue: 1, alpha: 1)
+        submitButton.layer.cornerRadius = 20
+        submitButton.layer.masksToBounds = true
+        submitButton.setTitle("Submit", for: .normal)
+        submitButton.setTitleColor(.white, for: .normal)
+        submitButton.titleLabel?.font = UIFont(name: "Helvetica Neue Bold", size: 15)
+        submitButton.addTarget(self, action: #selector(submitCode), for: .touchUpInside)
+        view.addSubview(submitButton)
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        submitButton.topAnchor.constraint(equalTo: codeTextField.bottomAnchor, constant: 50).isActive = true
+        submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        submitButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        submitButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+    }
+    
+    @objc func submitCode() {
+        qrManager.valideCode(with: codeTextField.text ?? "") { [weak self] success in
+            DispatchQueue.main.async {
+                if success {
+                    print(self?.qrManager.qrCodeDict ?? [:])
+                    self?.validateScannedInfo(infoDict: self?.qrManager.qrCodeDict ?? [:])
+                } else {
+                    self?.setupCodeErrorLabel()
+                }
+            }
+        }
     }
 }
