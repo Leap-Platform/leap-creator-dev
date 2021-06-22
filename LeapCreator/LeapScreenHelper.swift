@@ -111,4 +111,58 @@ class LeapScreenHelper {
             return "nil"
         }
     }
+    
+    
+    static func getSamplePayload()->String{
+        var parcel:String = UUID.init().uuidString
+        for index in 0...300 {
+            parcel.append(UUID.init().uuidString)
+        }
+        return parcel
+    }
+    
+    static func speedCheckUploadingPacket(success:@escaping (_ packetSize: Float, _ timeTaken: Int)->Void, failure:@escaping ()->Void) {
+        var currentTimeBeforeMakingRequest : Int = Int(Date().timeIntervalSince1970)
+        
+        guard let url = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.CREATOR_DEVICE_SPEEDCHECK_API) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        guard let apiKey = LeapCreatorShared.shared.apiKey else {
+            failure()
+            return
+        }
+        
+        request.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let requestBody: String = getSamplePayload()
+        request.httpBody = requestBody.data(using: .utf8)
+
+        _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
+
+            if let httpResponse = response as? HTTPURLResponse {
+                let status = httpResponse.statusCode
+                switch status {
+                case 200:
+                    guard let resultData = data,
+                          let responseData = try? JSONSerialization.jsonObject(with: resultData, options:.mutableLeaves) as? Dictionary<String, Int>,
+                          let timeStamp = responseData["requestTimeStamp"] else {
+                     
+                        failure()
+                        return
+                    }
+                    
+                    let totalTimeStamp = timeStamp - currentTimeBeforeMakingRequest
+                    let packetSize:Float = Float(requestBody.count / 1024)
+                    success(packetSize, totalTimeStamp)
+                    break
+                default: break
+                }
+
+            }
+
+        }
+        }
+        
+      
 }
+    
