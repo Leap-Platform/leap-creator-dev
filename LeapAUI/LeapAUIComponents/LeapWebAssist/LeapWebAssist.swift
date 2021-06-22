@@ -465,25 +465,6 @@ extension LeapWebAssist: WKNavigationDelegate {
            changeLanguage(locale: language)
         }
         
-        var userProps:Dictionary<String,String> = [:]
-        
-        LeapPropertiesHandler.shared.getCustomIntProperties().forEach { (key, value) in
-            userProps[key] = "\(value)"
-        }
-
-        LeapPropertiesHandler.shared.getCustomLongProperties().forEach { (key, value) in
-            userProps[key] = "\(value)"
-        }
-
-        LeapPropertiesHandler.shared.getCustomStringProperties().forEach { (key, value) in
-            userProps[key] = value
-        }
-
-        if let userPropsData = try? JSONSerialization.data(withJSONObject: userProps, options: .fragmentsAllowed),
-           let userPropsString = String(data: userPropsData, encoding: .utf8) {
-            webView.evaluateJavaScript("personalize('\(userPropsString)')", completionHandler: nil)
-        }
-        
         didFinish(webView, didFinish: navigation)
                 
         performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
@@ -527,7 +508,10 @@ extension LeapWebAssist: WKScriptMessageHandler {
 
             if let userPropsData = try? JSONSerialization.data(withJSONObject: userProps, options: .fragmentsAllowed),
                let userPropsString = String(data: userPropsData, encoding: .utf8) {
-                webView.evaluateJavaScript("personalize('\(userPropsString)')", completionHandler: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self.webView.evaluateJavaScript("personalize('\(userPropsString)')", completionHandler: nil)
+                }
+                
             }
             return
         }
