@@ -33,6 +33,18 @@ class LeapInternal:NSObject {
         fetchConfig()
     }
     
+    init(_ token:String, projectId:String, uiManager:LeapAUIHandler?) {
+        self.contextManager = LeapContextManager(withUIHandler: uiManager)
+        super.init()
+        self.contextManager.delegate = self
+        resetSavedHeaders(for: token)
+        LeapSharedInformation.shared.setAPIKey(token)
+        LeapSharedInformation.shared.setSessionId()
+        fetchProjectConfig(projectId: projectId)
+    }
+    
+    
+    
     func auiCallback() -> LeapAUICallback? {
         return self.contextManager
     }
@@ -69,6 +81,13 @@ extension LeapInternal {
             self.startContextDetection(config: configDict)
         }
         configTask.resume()
+    }
+    
+    public func fetchProjectConfig(projectId:String) {
+        //Make API call
+        
+        //On success
+//        contextManager.appendProjectConfig(withConfig: <#T##LeapConfig#>)
     }
     
     private func getHeaders() -> Dictionary<String,String> {

@@ -49,6 +49,26 @@ class LeapContextManager:NSObject {
         self.start()
     }
     
+    func appendProjectConfig(withConfig:LeapConfig) {
+        contextDetector?.stop()
+        auiHandler?.removeAllViews()
+        assistManager?.resetAssistManager()
+        discoveryManager?.resetDiscoveryManager()
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
+        if let state = contextDetector?.getState() {
+            switch state {
+            case .Stage: contextDetector?.switchState()
+            default: break
+            }
+        }
+        //Append config
+        
+        contextDetector?.start()
+        
+    }
+    
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery
     func start() {
         startSoundDownload()
@@ -308,7 +328,7 @@ extension LeapContextManager:LeapFlowManagerDelegate {
 // MARK: - PAGE MANAGER DELEGATE METHODS
 extension LeapContextManager:LeapPageManagerDelegate {
     func newPageIdentified() {
-//        sendContextInfoEvent(eventTag: "leapPageEvent")
+        //        sendContextInfoEvent(eventTag: "leapPageEvent")
     }
 }
 
@@ -384,7 +404,7 @@ extension LeapContextManager {
         print("Opt out")
         return event
     }
-        
+    
     func sendInstructionEvent(instructionId: String) -> LeapAnalyticsEvent? {
         guard let projectParameter = getProjectParameter() else { return nil }
         if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
