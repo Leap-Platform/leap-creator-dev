@@ -98,7 +98,8 @@ import LeapCoreSDK
         LeapPreferences.shared.apiKey = token
         LeapPropertiesHandler.shared.start()
         guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
-        
+        auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: apiKey, projectId: projectId, uiManager: auiManager)
+        isStarted = true
     }
     
     @objc public func startProject(_ projectId:String) {

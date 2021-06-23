@@ -64,9 +64,34 @@ class LeapContextManager:NSObject {
             }
         }
         //Append config
-        
+        if configuration == nil { configuration = withConfig }
+        else { appendNewProjectConfig(projectConfig: withConfig) }
         contextDetector?.start()
         
+    }
+    
+    private func appendNewProjectConfig(projectConfig:LeapConfig) {
+        
+        configuration?.projectParameters.append(contentsOf: projectConfig.projectParameters)
+        
+        projectConfig.nativeIdentifiers.forEach { (key, value) in
+            configuration?.nativeIdentifiers[key] = value
+        }
+        
+        projectConfig.webIdentifiers.forEach { (key, value) in
+            configuration?.webIdentifiers[key] = value
+        }
+        configuration?.assists += projectConfig.assists
+        configuration?.discoveries += projectConfig.discoveries
+        configuration?.flows += projectConfig.flows
+        configuration?.supportedAppLocales = Array(Set(configuration?.supportedAppLocales ?? [] + projectConfig.supportedAppLocales))
+        configuration?.discoverySounds += projectConfig.discoverySounds
+        configuration?.auiContent += projectConfig.auiContent
+        configuration?.languages += projectConfig.languages.compactMap({ lang -> LeapLanguage? in
+            guard let presentLanguages = configuration?.languages,
+                  !presentLanguages.contains(lang) else { return lang }
+            return nil
+        })
     }
     
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery

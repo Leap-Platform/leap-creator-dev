@@ -86,8 +86,31 @@ extension LeapInternal {
     public func fetchProjectConfig(projectId:String) {
         //Make API call
         
-        //On success
-//        contextManager.appendProjectConfig(withConfig: <#T##LeapConfig#>)
+        let payload = getPayload()
+        let payloadData:Data = {
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
+            return payloadData
+        }()
+        guard let url = URL(string: configUrl) else { return }
+        var req = URLRequest(url: url)
+        req.httpMethod = "PUT"
+        req.httpBody = payloadData
+        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+        req.addValue(projectId, forHTTPHeaderField: "x-jiny-deployment-id")
+        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode != 304,
+                  let resultData = data,
+                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
+            }
+            let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
+            self.contextManager.appendProjectConfig(withConfig: projectConfig)
+        }
+        configTask.resume()
     }
     
     private func getHeaders() -> Dictionary<String,String> {
