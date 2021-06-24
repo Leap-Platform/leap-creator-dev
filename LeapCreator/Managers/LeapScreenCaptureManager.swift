@@ -55,12 +55,12 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
         
         // Check the payload size
-        let originalPayloadSize: Int = Int(ceil(Double(payloadString.count / 1024)))
+        let originalPayloadSize: Float = Float(Float(payloadString.count) / 1024)
         
         self.task = DispatchWorkItem {
             LeapScreenHelper.speedCheckUploadingPacket { (packetSize, timeTaken) in
                  // Check speed and manipulate quality
-                let internetSpeed = Int(packetSize) / timeTaken
+                let internetSpeed:Float = packetSize / timeTaken
                 let originalPayloadTimeRequired = originalPayloadSize / internetSpeed
                 
                 //if original payload sending time > dashboard timeout then we need to
@@ -93,8 +93,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
 
 
         }
-    
-     
+        self.task?.perform()
     }
     
     func sendScreenPayload(completePayload: String){
@@ -102,7 +101,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
             self.postMessage(payload: completePayload)
         }
         guard let task = self.task else { return }
-        DispatchQueue.global().async(execute: task)
+        task.perform()
     }
     
     func postMessage(payload: String) {
