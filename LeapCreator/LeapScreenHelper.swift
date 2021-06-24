@@ -121,8 +121,8 @@ class LeapScreenHelper {
         return parcel
     }
     
-    static func speedCheckUploadingPacket(success:@escaping (_ packetSize: Float, _ timeTaken: Int)->Void, failure:@escaping ()->Void) {
-        var currentTimeBeforeMakingRequest : Int = Int(Date().timeIntervalSince1970)
+    static func speedCheckUploadingPacket(success:@escaping (_ packetSize: Float, _ timeTaken: Float)->Void, failure:@escaping ()->Void) {
+        var currentTimeBeforeMakingRequest : Int = Int(Date().timeIntervalSince1970) * 1000
         
         guard let url = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.CREATOR_DEVICE_SPEEDCHECK_API) else { return }
         var request = URLRequest(url: url)
@@ -137,21 +137,21 @@ class LeapScreenHelper {
         let requestBody: String = getSamplePayload()
         request.httpBody = requestBody.data(using: .utf8)
 
-        _ = URLSession.shared.dataTask(with: request) { (data, response, error) in
+         URLSession.shared.dataTask(with: request) { (data, response, error) in
 
             if let httpResponse = response as? HTTPURLResponse {
                 let status = httpResponse.statusCode
                 switch status {
                 case 200:
                     guard let resultData = data,
-                          let responseData = try? JSONSerialization.jsonObject(with: resultData, options:.mutableLeaves) as? Dictionary<String, Int>,
-                          let timeStamp = responseData["requestTimeStamp"] else {
+                          let responseData = try? JSONSerialization.jsonObject(with: resultData, options:.mutableLeaves) as? Dictionary<String, String>,
+                          let timeStampString = responseData["requestTimeStamp"],
+                          let timeStamp = Int(timeStampString) else {
                      
                         failure()
                         return
                     }
-                    
-                    let totalTimeStamp = timeStamp - currentTimeBeforeMakingRequest
+                    let totalTimeStamp = Float(timeStamp - currentTimeBeforeMakingRequest)/1000.0
                     let packetSize:Float = Float(requestBody.count / 1024)
                     success(packetSize, totalTimeStamp)
                     break
@@ -160,7 +160,7 @@ class LeapScreenHelper {
 
             }
 
-        }
+         }.resume()
         }
         
       
