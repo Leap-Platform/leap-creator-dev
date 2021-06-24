@@ -31,6 +31,7 @@ class LeapContextManager:NSObject {
     private var taggedEvents:Dictionary<String,Any> = [:]
     private var lastEventId: String?
     private var lastEventLanguage: String?
+    private var isInitialized:Bool = false
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {
         auiHandler = uiHandler
@@ -38,6 +39,7 @@ class LeapContextManager:NSObject {
     
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
     func initialize(withConfig:LeapConfig) {
+        isInitialized = true
         configuration = withConfig
         contextDetector = LeapContextDetector(withDelegate: self)
         assistManager = LeapAssistManager(self)
@@ -50,23 +52,28 @@ class LeapContextManager:NSObject {
     }
     
     func appendProjectConfig(withConfig:LeapConfig) {
-        contextDetector?.stop()
-        auiHandler?.removeAllViews()
-        assistManager?.resetAssistManager()
-        discoveryManager?.resetDiscoveryManager()
-        flowManager?.resetFlowsArray()
-        pageManager?.resetPageManager()
-        stageManager?.resetStageManager()
-        if let state = contextDetector?.getState() {
-            switch state {
-            case .Stage: contextDetector?.switchState()
-            default: break
+        if isInitialized {
+            contextDetector?.stop()
+            auiHandler?.removeAllViews()
+            assistManager?.resetAssistManager()
+            discoveryManager?.resetDiscoveryManager()
+            flowManager?.resetFlowsArray()
+            pageManager?.resetPageManager()
+            stageManager?.resetStageManager()
+            if let state = contextDetector?.getState() {
+                switch state {
+                case .Stage: contextDetector?.switchState()
+                default: break
+                }
             }
+            //Append config
+            if configuration == nil { configuration = withConfig }
+            else { appendNewProjectConfig(projectConfig: withConfig) }
+            contextDetector?.start()
+        } else {
+            initialize(withConfig: withConfig)
         }
-        //Append config
-        if configuration == nil { configuration = withConfig }
-        else { appendNewProjectConfig(projectConfig: withConfig) }
-        contextDetector?.start()
+       
         
     }
     

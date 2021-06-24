@@ -95,8 +95,9 @@ extension LeapInternal {
         var req = URLRequest(url: url)
         req.httpMethod = "PUT"
         req.httpBody = payloadData
-        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
-        req.addValue(projectId, forHTTPHeaderField: "x-jiny-deployment-id")
+        getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+
+        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-id")
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode != 304,
@@ -107,22 +108,31 @@ extension LeapInternal {
                 self.startContextDetection(config: savedConfig)
                 return
             }
-            let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
-            self.contextManager.appendProjectConfig(withConfig: projectConfig)
+            DispatchQueue.main.async {
+                let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
+                self.contextManager.appendProjectConfig(withConfig: projectConfig)
+            }
+            
         }
         configTask.resume()
     }
     
     private func getHeaders() -> Dictionary<String,String> {
+        guard let _ = LeapSharedInformation.shared.getAPIKey() else { return [:] }
+        var headers = getCommonHeaders()
+        getSavedHeaders().forEach { headers[$0.key] = $0.value }
+        return headers
+    }
+    
+    private func getCommonHeaders() -> Dictionary<String,String> {
         guard let apiKey = LeapSharedInformation.shared.getAPIKey(), let versionCode = LeapSharedInformation.shared.getVersionCode(), let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
-        var headers = [
+        let headers = [
             "x-jiny-client-id"      : apiKey,
             "x-app-version-code"    : versionCode,
             "x-app-version-name"    : versionName,
             "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
             "Content-Type"          : "application/json"
         ]
-        getSavedHeaders().forEach { headers[$0.key] = $0.value }
         return headers
     }
     
