@@ -86,4 +86,19 @@ import UIKit
         self.leapInternal = LeapInternal.init(apiKey, uiManager: uiManager)
         return self.leapInternal?.auiCallback()
     }
+    
+    public func initialize(withToken token:String, projectId:String, uiManager:LeapAUIHandler?) -> LeapAUICallback? {
+        
+        assert(token != "", "Incorrect token")
+        let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
+        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return nil}
+        self.apiKey = token
+        guard let apiKey = self.apiKey else { return nil }
+        self.leapInternal = LeapInternal(apiKey, projectId: projectId, uiManager: uiManager)
+        return self.leapInternal?.auiCallback()
+    }
+    
+    public func startProject(projectId:String) {
+        self.leapInternal?.fetchProjectConfig(projectId: projectId)
+    }
 }

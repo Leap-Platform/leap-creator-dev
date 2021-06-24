@@ -31,6 +31,7 @@ class LeapContextManager:NSObject {
     private var taggedEvents:Dictionary<String,Any> = [:]
     private var lastEventId: String?
     private var lastEventLanguage: String?
+    private var isInitialized:Bool = false
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {
         auiHandler = uiHandler
@@ -38,6 +39,7 @@ class LeapContextManager:NSObject {
     
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
     func initialize(withConfig:LeapConfig) {
+        isInitialized = true
         configuration = withConfig
         contextDetector = LeapContextDetector(withDelegate: self)
         assistManager = LeapAssistManager(self)
@@ -47,6 +49,56 @@ class LeapContextManager:NSObject {
         stageManager = LeapStageManager(self)
         analyticsManager = LeapAnalyticsManager(self)
         self.start()
+    }
+    
+    func appendProjectConfig(withConfig:LeapConfig) {
+        if isInitialized {
+            contextDetector?.stop()
+            auiHandler?.removeAllViews()
+            assistManager?.resetAssistManager()
+            discoveryManager?.resetDiscoveryManager()
+            flowManager?.resetFlowsArray()
+            pageManager?.resetPageManager()
+            stageManager?.resetStageManager()
+            if let state = contextDetector?.getState() {
+                switch state {
+                case .Stage: contextDetector?.switchState()
+                default: break
+                }
+            }
+            //Append config
+            if configuration == nil { configuration = withConfig }
+            else { appendNewProjectConfig(projectConfig: withConfig) }
+            contextDetector?.start()
+        } else {
+            initialize(withConfig: withConfig)
+        }
+       
+        
+    }
+    
+    private func appendNewProjectConfig(projectConfig:LeapConfig) {
+        
+        configuration?.projectParameters.append(contentsOf: projectConfig.projectParameters)
+        
+        projectConfig.nativeIdentifiers.forEach { (key, value) in
+            configuration?.nativeIdentifiers[key] = value
+        }
+        
+        projectConfig.webIdentifiers.forEach { (key, value) in
+            configuration?.webIdentifiers[key] = value
+        }
+        configuration?.assists += projectConfig.assists
+        configuration?.discoveries += projectConfig.discoveries
+        configuration?.flows += projectConfig.flows
+        configuration?.supportedAppLocales = Array(Set(configuration?.supportedAppLocales ?? [] + projectConfig.supportedAppLocales))
+        configuration?.discoverySounds += projectConfig.discoverySounds
+        configuration?.auiContent += projectConfig.auiContent
+        configuration?.languages += projectConfig.languages.compactMap({ lang -> LeapLanguage? in
+            guard let presentLanguages = configuration?.languages,
+                  !presentLanguages.contains(lang) else { return lang }
+            return nil
+        })
     }
     
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery
@@ -308,7 +360,7 @@ extension LeapContextManager:LeapFlowManagerDelegate {
 // MARK: - PAGE MANAGER DELEGATE METHODS
 extension LeapContextManager:LeapPageManagerDelegate {
     func newPageIdentified() {
-//        sendContextInfoEvent(eventTag: "leapPageEvent")
+        //        sendContextInfoEvent(eventTag: "leapPageEvent")
     }
 }
 
@@ -384,7 +436,7 @@ extension LeapContextManager {
         print("Opt out")
         return event
     }
-        
+    
     func sendInstructionEvent(instructionId: String) -> LeapAnalyticsEvent? {
         guard let projectParameter = getProjectParameter() else { return nil }
         if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
