@@ -29,8 +29,7 @@ class LeapQRCodeManager {
     func valideCode(with code: String, completion: @escaping SuccessCallBack) {
         guard let codeUrl: URL = URL(string: codeUrl) else { return }
         var urlRequest: URLRequest = URLRequest(url: codeUrl)
-        guard let apiKey = LeapCreatorShared.shared.apiKey else { return }
-        urlRequest.addValue(apiKey, forHTTPHeaderField: "x-auth-id")
+        urlRequest.addValue(LeapCreatorShared.shared.apiKey ?? "NA", forHTTPHeaderField: "x-auth-id")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.httpMethod = "POST"
         let info = ["qrSecret": code]
@@ -38,9 +37,7 @@ class LeapQRCodeManager {
         urlRequest.httpBody = data
         let codeTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
             if let resultData = data {
-                guard let qrDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any> else { return }
-                
-                if error != nil {
+                guard let qrDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,Any>, error == nil else {
                     completion(false)
                     return
                 }
@@ -56,7 +53,7 @@ class LeapQRCodeManager {
                     
                 } catch let error {
                     
-                    print(error)
+                    print(error.localizedDescription)
                     completion(false)
                 }
             }
