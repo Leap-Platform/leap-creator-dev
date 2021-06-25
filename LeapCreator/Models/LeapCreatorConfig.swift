@@ -116,12 +116,15 @@ class Documentation: Codable {
     
     var connectSampleApp: String?
     
+    var generateQrHelp: String?
+    
     var mirrorApp: String?
     
     var previewDevice: String?
     
     enum CodingKeys: String, CodingKey {
         case connectSampleApp = "connectSampleApp"
+        case generateQrHelp = "generateQrHelp"
         case mirrorApp = "mirrorApp"
         case previewDevice = "previewDevice"
     }
@@ -137,6 +140,8 @@ class Documentation: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
                 
         self.connectSampleApp = try container.decode(String.self, forKey: .connectSampleApp)
+        
+        self.generateQrHelp = try container.decode(String.self, forKey: .generateQrHelp)
         
         self.mirrorApp = try container.decode(String.self, forKey: .mirrorApp)
         
