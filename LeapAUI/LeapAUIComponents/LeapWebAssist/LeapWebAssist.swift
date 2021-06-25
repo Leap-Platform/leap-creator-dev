@@ -487,6 +487,34 @@ extension LeapWebAssist: WKScriptMessageHandler {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
+        
+        
+        if let type = dict[constant_type] as? String, type == constant_COMMAND,
+           let commandBody = dict[constant_body] as? Dictionary<String,String>,
+           let command = commandBody[constant_command], command == constant_getPersonalizedTags {
+            var userProps:Dictionary<String,String> = [:]
+
+            LeapPropertiesHandler.shared.getCustomIntProperties().forEach { (key, value) in
+                userProps[key] = "\(value)"
+            }
+
+            LeapPropertiesHandler.shared.getCustomLongProperties().forEach { (key, value) in
+                userProps[key] = "\(value)"
+            }
+
+            LeapPropertiesHandler.shared.getCustomStringProperties().forEach { (key, value) in
+                userProps[key] = value
+            }
+
+            if let userPropsData = try? JSONSerialization.data(withJSONObject: userProps, options: .fragmentsAllowed),
+               let userPropsString = String(data: userPropsData, encoding: .utf8) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self.webView.evaluateJavaScript("personalize('\(userPropsString)')", completionHandler: nil)
+                }
+                
+            }
+            return
+        }
         guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
         guard let close = dictBody[constant_close] as? Bool else {return}
         

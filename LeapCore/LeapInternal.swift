@@ -33,6 +33,18 @@ class LeapInternal:NSObject {
         fetchConfig()
     }
     
+    init(_ token:String, projectId:String, uiManager:LeapAUIHandler?) {
+        self.contextManager = LeapContextManager(withUIHandler: uiManager)
+        super.init()
+        self.contextManager.delegate = self
+        resetSavedHeaders(for: token)
+        LeapSharedInformation.shared.setAPIKey(token)
+        LeapSharedInformation.shared.setSessionId()
+        fetchProjectConfig(projectId: projectId)
+    }
+    
+    
+    
     func auiCallback() -> LeapAUICallback? {
         return self.contextManager
     }
@@ -71,16 +83,56 @@ extension LeapInternal {
         configTask.resume()
     }
     
+    public func fetchProjectConfig(projectId:String) {
+        //Make API call
+        
+        let payload = getPayload()
+        let payloadData:Data = {
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
+            return payloadData
+        }()
+        guard let url = URL(string: configUrl) else { return }
+        var req = URLRequest(url: url)
+        req.httpMethod = "PUT"
+        req.httpBody = payloadData
+        getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+
+        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-id")
+        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode != 304,
+                  let resultData = data,
+                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
+            }
+            DispatchQueue.main.async {
+                let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
+                self.contextManager.appendProjectConfig(withConfig: projectConfig)
+            }
+            
+        }
+        configTask.resume()
+    }
+    
     private func getHeaders() -> Dictionary<String,String> {
+        guard let _ = LeapSharedInformation.shared.getAPIKey() else { return [:] }
+        var headers = getCommonHeaders()
+        getSavedHeaders().forEach { headers[$0.key] = $0.value }
+        return headers
+    }
+    
+    private func getCommonHeaders() -> Dictionary<String,String> {
         guard let apiKey = LeapSharedInformation.shared.getAPIKey(), let versionCode = LeapSharedInformation.shared.getVersionCode(), let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
-        var headers = [
+        let headers = [
             "x-jiny-client-id"      : apiKey,
             "x-app-version-code"    : versionCode,
             "x-app-version-name"    : versionName,
             "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
             "Content-Type"          : "application/json"
         ]
-        getSavedHeaders().forEach { headers[$0.key] = $0.value }
         return headers
     }
     

@@ -38,7 +38,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     func capture(webSocket: WebSocket, room: String) {
         self.socket = webSocket
         self.roomId = room
-        guard let screenShotImage = getScreenCapture() else { return }
+        guard let screenShotImage = getScreenCapture(compressionQuality: 0.3) else { return }
         guard let completeListener = self.completeListener else { return }
         getHierarchy(finishListener: completeListener) { [weak self] (hierarchy) in
            self?.sendData(screenCapture: screenShotImage,hierarchy: hierarchy)
@@ -51,17 +51,62 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         payload[constant_image] = screenCapture
         payload[constant_hierarchy] = hierarchy
         
-        self.task = DispatchWorkItem {
-            self.postMessage(payload: payload)
-        }
-        guard let task = self.task else { return }
-        DispatchQueue.global().async(execute: task)
-    }
-    
-    func postMessage(payload: Dictionary<String, Any>) {
         guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
         guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
-        let splittedString = payloadString.components(withMaxLength: 10000)
+        
+        // Check the payload size
+        let originalPayloadSize: Float = Float(Float(payloadString.count) / 1024)
+        
+        self.task = DispatchWorkItem {
+            LeapScreenHelper.speedCheckUploadingPacket { (packetSize, timeTaken) in
+                 // Check speed and manipulate quality
+                let internetSpeed:Float = packetSize / timeTaken
+                let originalPayloadTimeRequired = originalPayloadSize / internetSpeed
+                
+                //if original payload sending time > dashboard timeout then we need to
+                // reduce quality of image thereby increasing compression
+                // 0(most compressed) ..... 1(least compressed)
+                
+                if (originalPayloadTimeRequired > 55 - timeTaken) {
+                    let modifiedScreenshotQuality: Float = Float((1.0 * (Double(55 - timeTaken))/Double(originalPayloadTimeRequired)))
+                   
+                    guard let screenShotImage = self.getScreenCapture(compressionQuality: modifiedScreenshotQuality) else {
+                        
+                        self.sendScreenPayload(completePayload: payloadString)
+                        return
+                    }
+                    
+                    payload[constant_image] = screenShotImage
+                    
+                    guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
+                    guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
+                    
+                    self.sendScreenPayload(completePayload: payloadString)
+                    return
+                }
+                
+                self.sendScreenPayload(completePayload: payloadString)
+
+            } failure: {
+                self.sendScreenPayload(completePayload: payloadString)
+            }
+
+
+        }
+        self.task?.perform()
+    }
+    
+    func sendScreenPayload(completePayload: String){
+        self.task = DispatchWorkItem {
+            self.postMessage(payload: completePayload)
+        }
+        guard let task = self.task else { return }
+        task.perform()
+    }
+    
+    func postMessage(payload: String) {
+        
+        let splittedString = payload.components(withMaxLength: 10000)
         let length = splittedString.count
         let room = self.roomId as String?
         var index: Int = -1
@@ -104,9 +149,9 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         }
     }
     
-    func getScreenCapture() ->String? {
+    func getScreenCapture(compressionQuality: Float) ->String? {
         guard let image: UIImage = LeapScreenHelper.captureScreenshot() else { return nil }
-        let encodedImageBase64: String? = image.jpegData(compressionQuality: 0.3)?.base64EncodedString()
+        let encodedImageBase64: String? = image.jpegData(compressionQuality: CGFloat(compressionQuality))?.base64EncodedString()
         return encodedImageBase64
     }
     
