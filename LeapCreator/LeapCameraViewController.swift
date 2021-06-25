@@ -667,7 +667,8 @@ extension LeapCameraViewController: UITextFieldDelegate {
     }
     
     @objc func simulatorLearnMoreTapped() {
-        guard let url = URL(string: constant_QRSecretUrl) else { return }
+        let qrSecretUrl = LeapCreatorShared.shared.creatorConfig?.documentation?.generateQrHelp ?? constant_QRSecretUrl
+        guard let url = URL(string: qrSecretUrl) else { return }
         UIApplication.shared.open(url)
     }
     
