@@ -8,9 +8,8 @@
 
 import Foundation
 import UIKit
-import Starscream
 
-class LeapSocketMessageDelegate: WebSocketDelegate{
+class LeapSocketMessageDelegate: WebSocketDelegate {
     
     let NORMAL_CLOSURE_STATUS: Int = 1000
     weak var leapSocketListener: LeapSocketListener?

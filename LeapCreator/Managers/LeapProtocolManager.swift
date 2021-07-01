@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import Starscream
 
 class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthCheckListener, LeapFinishListener {
     

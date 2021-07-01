@@ -80,7 +80,6 @@
 		D02C130D25DFC6B000C80E28 /* LeapMasterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6153A50253E9A59008CA08F /* LeapMasterManager.swift */; };
 		D02C130F25DFC6B000C80E28 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92024B9B328001A04DF /* WebKit.framework */; };
 		D02C131025DFC6B000C80E28 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; };
-		D02C131125DFC6B000C80E28 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = D02C12F325DFC6B000C80E28 /* Starscream */; };
 		D02E95FE261A4641001A2AA2 /* LeapPropertiesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E95FD261A4640001A2AA2 /* LeapPropertiesHandler.swift */; };
 		D02E9607261A503E001A2AA2 /* LeapPropertiesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E95FD261A4640001A2AA2 /* LeapPropertiesHandler.swift */; };
 		D051F1F825E3D29500A2D81B /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
@@ -128,6 +127,26 @@
 		D08DA66425DEA2E800EB0EFC /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = D08DA63325DEA2E800EB0EFC /* Gzip */; };
 		D08DA66525DEA2E800EB0EFC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92024B9B328001A04DF /* WebKit.framework */; };
 		D08DA66725DEA2E800EB0EFC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0592E94241FAD99007782A8 /* UIKit.framework */; platformFilter = ios; };
+		D0963BA1268C9F7800986181 /* WSCompression.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B78268C9EEC00986181 /* WSCompression.swift */; };
+		D0963BA2268C9F7800986181 /* Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B77268C9EEC00986181 /* Compression.swift */; };
+		D0963BA3268C9F7E00986181 /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B7A268C9EEC00986181 /* Data+Extensions.swift */; };
+		D0963BA4268C9F8400986181 /* NativeEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B8A268C9EEC00986181 /* NativeEngine.swift */; };
+		D0963BA5268C9F8400986181 /* WSEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B8B268C9EEC00986181 /* WSEngine.swift */; };
+		D0963BA6268C9F8400986181 /* Engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B89268C9EEC00986181 /* Engine.swift */; };
+		D0963BA7268C9F8A00986181 /* HTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B80268C9EEC00986181 /* HTTPHandler.swift */; };
+		D0963BA8268C9F8A00986181 /* FoundationHTTPServerHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B83268C9EEC00986181 /* FoundationHTTPServerHandler.swift */; };
+		D0963BA9268C9F8A00986181 /* FoundationHTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B7F268C9EEC00986181 /* FoundationHTTPHandler.swift */; };
+		D0963BAA268C9F8A00986181 /* StringHTTPHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B82268C9EEC00986181 /* StringHTTPHandler.swift */; };
+		D0963BAB268C9F8A00986181 /* FrameCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B81268C9EEC00986181 /* FrameCollector.swift */; };
+		D0963BAC268C9F8A00986181 /* Framer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B84268C9EEC00986181 /* Framer.swift */; };
+		D0963BAD268C9F9100986181 /* FoundationSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B87268C9EEC00986181 /* FoundationSecurity.swift */; };
+		D0963BAE268C9F9100986181 /* Security.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B86268C9EEC00986181 /* Security.swift */; };
+		D0963BAF268C9F9700986181 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B7C268C9EEC00986181 /* Server.swift */; };
+		D0963BB0268C9F9700986181 /* WebSocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B7D268C9EEC00986181 /* WebSocketServer.swift */; };
+		D0963BB1268C9F9B00986181 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B71268C9EEC00986181 /* WebSocket.swift */; };
+		D0963BB2268C9FA200986181 /* FoundationTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B74268C9EEC00986181 /* FoundationTransport.swift */; };
+		D0963BB3268C9FA200986181 /* TCPTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B75268C9EEC00986181 /* TCPTransport.swift */; };
+		D0963BB4268C9FA200986181 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B73268C9EEC00986181 /* Transport.swift */; };
 		D096B3E825F0F027009BE7B3 /* LeapArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D096B3E725F0F027009BE7B3 /* LeapArrowButton.swift */; };
 		D0B603BD25DFB6BA0092F735 /* Leap.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* Leap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B603BF25DFB6BA0092F735 /* LeapHighlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931C2543186D00DB94DD /* LeapHighlight.swift */; };
@@ -348,6 +367,26 @@
 		D0938E0D251DD67000FD462E /* LeapMediaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaManager.swift; sourceTree = "<group>"; };
 		D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapNetworking.swift; sourceTree = "<group>"; };
 		D0938E11251DD8E900FD462E /* LeapMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMedia.swift; sourceTree = "<group>"; };
+		D0963B71268C9EEC00986181 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
+		D0963B73268C9EEC00986181 /* Transport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
+		D0963B74268C9EEC00986181 /* FoundationTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationTransport.swift; sourceTree = "<group>"; };
+		D0963B75268C9EEC00986181 /* TCPTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPTransport.swift; sourceTree = "<group>"; };
+		D0963B77268C9EEC00986181 /* Compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Compression.swift; sourceTree = "<group>"; };
+		D0963B78268C9EEC00986181 /* WSCompression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WSCompression.swift; sourceTree = "<group>"; };
+		D0963B7A268C9EEC00986181 /* Data+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
+		D0963B7C268C9EEC00986181 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		D0963B7D268C9EEC00986181 /* WebSocketServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketServer.swift; sourceTree = "<group>"; };
+		D0963B7F268C9EEC00986181 /* FoundationHTTPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationHTTPHandler.swift; sourceTree = "<group>"; };
+		D0963B80268C9EEC00986181 /* HTTPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHandler.swift; sourceTree = "<group>"; };
+		D0963B81268C9EEC00986181 /* FrameCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameCollector.swift; sourceTree = "<group>"; };
+		D0963B82268C9EEC00986181 /* StringHTTPHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringHTTPHandler.swift; sourceTree = "<group>"; };
+		D0963B83268C9EEC00986181 /* FoundationHTTPServerHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationHTTPServerHandler.swift; sourceTree = "<group>"; };
+		D0963B84268C9EEC00986181 /* Framer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Framer.swift; sourceTree = "<group>"; };
+		D0963B86268C9EEC00986181 /* Security.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Security.swift; sourceTree = "<group>"; };
+		D0963B87268C9EEC00986181 /* FoundationSecurity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationSecurity.swift; sourceTree = "<group>"; };
+		D0963B89268C9EEC00986181 /* Engine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Engine.swift; sourceTree = "<group>"; };
+		D0963B8A268C9EEC00986181 /* NativeEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeEngine.swift; sourceTree = "<group>"; };
+		D0963B8B268C9EEC00986181 /* WSEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WSEngine.swift; sourceTree = "<group>"; };
 		D096B3E725F0F027009BE7B3 /* LeapArrowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapArrowButton.swift; sourceTree = "<group>"; };
 		D09C722D246A987A0060E054 /* LeapFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapFlowManager.swift; sourceTree = "<group>"; };
 		D09C722F246A98860060E054 /* LeapStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStageManager.swift; sourceTree = "<group>"; };
@@ -415,7 +454,6 @@
 			files = (
 				D02C130F25DFC6B000C80E28 /* WebKit.framework in Frameworks */,
 				D02C131025DFC6B000C80E28 /* UIKit.framework in Frameworks */,
-				D02C131125DFC6B000C80E28 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +585,7 @@
 		D00B8F57249B2988006F4CA1 /* LeapCreator */ = {
 			isa = PBXGroup;
 			children = (
+				D0963B6F268C9EC600986181 /* Starscream */,
 				2DBCDA192684871600985C51 /* Extensions */,
 				2D08593D25A33908002D7993 /* Models */,
 				B69D8E31258A6C89004D858D /* Delegates */,
@@ -720,6 +759,97 @@
 				2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */,
 			);
 			path = LeapDisableAssistance;
+			sourceTree = "<group>";
+		};
+		D0963B6F268C9EC600986181 /* Starscream */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B76268C9EEC00986181 /* Compression */,
+				D0963B79268C9EEC00986181 /* DataBytes */,
+				D0963B88268C9EEC00986181 /* Engine */,
+				D0963B7E268C9EEC00986181 /* Framer */,
+				D0963B85268C9EEC00986181 /* Security */,
+				D0963B7B268C9EEC00986181 /* Server */,
+				D0963B70268C9EEC00986181 /* Starscream */,
+				D0963B72268C9EEC00986181 /* Transport */,
+			);
+			path = Starscream;
+			sourceTree = "<group>";
+		};
+		D0963B70268C9EEC00986181 /* Starscream */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B71268C9EEC00986181 /* WebSocket.swift */,
+			);
+			path = Starscream;
+			sourceTree = "<group>";
+		};
+		D0963B72268C9EEC00986181 /* Transport */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B73268C9EEC00986181 /* Transport.swift */,
+				D0963B74268C9EEC00986181 /* FoundationTransport.swift */,
+				D0963B75268C9EEC00986181 /* TCPTransport.swift */,
+			);
+			path = Transport;
+			sourceTree = "<group>";
+		};
+		D0963B76268C9EEC00986181 /* Compression */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B77268C9EEC00986181 /* Compression.swift */,
+				D0963B78268C9EEC00986181 /* WSCompression.swift */,
+			);
+			path = Compression;
+			sourceTree = "<group>";
+		};
+		D0963B79268C9EEC00986181 /* DataBytes */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B7A268C9EEC00986181 /* Data+Extensions.swift */,
+			);
+			path = DataBytes;
+			sourceTree = "<group>";
+		};
+		D0963B7B268C9EEC00986181 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B7C268C9EEC00986181 /* Server.swift */,
+				D0963B7D268C9EEC00986181 /* WebSocketServer.swift */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
+		D0963B7E268C9EEC00986181 /* Framer */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B7F268C9EEC00986181 /* FoundationHTTPHandler.swift */,
+				D0963B80268C9EEC00986181 /* HTTPHandler.swift */,
+				D0963B81268C9EEC00986181 /* FrameCollector.swift */,
+				D0963B82268C9EEC00986181 /* StringHTTPHandler.swift */,
+				D0963B83268C9EEC00986181 /* FoundationHTTPServerHandler.swift */,
+				D0963B84268C9EEC00986181 /* Framer.swift */,
+			);
+			path = Framer;
+			sourceTree = "<group>";
+		};
+		D0963B85268C9EEC00986181 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B86268C9EEC00986181 /* Security.swift */,
+				D0963B87268C9EEC00986181 /* FoundationSecurity.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		D0963B88268C9EEC00986181 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				D0963B89268C9EEC00986181 /* Engine.swift */,
+				D0963B8A268C9EEC00986181 /* NativeEngine.swift */,
+				D0963B8B268C9EEC00986181 /* WSEngine.swift */,
+			);
+			path = Engine;
 			sourceTree = "<group>";
 		};
 		D0ABD0042481154C0069FA67 /* Analytics */ = {
@@ -918,7 +1048,6 @@
 			);
 			name = LeapCreatorSDK;
 			packageProductDependencies = (
-				D02C12F325DFC6B000C80E28 /* Starscream */,
 			);
 			productName = JinyAuthSDK;
 			productReference = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */;
@@ -1011,7 +1140,6 @@
 			);
 			mainGroup = D0592E6D241FA6E3007782A8;
 			packageReferences = (
-				B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */,
 				D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = D0592E78241FA6E3007782A8 /* Products */;
@@ -1130,34 +1258,54 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0963BA2268C9F7800986181 /* Compression.swift in Sources */,
 				2DBCDA1C2684884800985C51 /* Leap+UILabel.swift in Sources */,
+				D0963BB2268C9FA200986181 /* FoundationTransport.swift in Sources */,
 				D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */,
 				D02C12F825DFC6B000C80E28 /* LeapCreatorConfig.swift in Sources */,
 				D0C1345E2613210100D599B3 /* LeapNotificationManager.swift in Sources */,
+				D0963BA7268C9F8A00986181 /* HTTPHandler.swift in Sources */,
+				D0963BB4268C9FA200986181 /* Transport.swift in Sources */,
 				D02C12F925DFC6B000C80E28 /* LeapConstants.swift in Sources */,
 				D02C12FA25DFC6B000C80E28 /* LeapProtocolManager.swift in Sources */,
+				D0963BAF268C9F9700986181 /* Server.swift in Sources */,
+				D0963BA6268C9F8400986181 /* Engine.swift in Sources */,
 				D02C12FB25DFC6B000C80E28 /* LeapSocketMessageDelegate.swift in Sources */,
 				D0C1346826133CB100D599B3 /* LeapCameraViewController.swift in Sources */,
 				D02C12FC25DFC6B000C80E28 /* LeapScreenHelper.swift in Sources */,
+				D0963BAC268C9F8A00986181 /* Framer.swift in Sources */,
+				D0963BA4268C9F8400986181 /* NativeEngine.swift in Sources */,
 				D02C12FD25DFC6B000C80E28 /* LeapPermissionManager.swift in Sources */,
 				D02C12FE25DFC6B000C80E28 /* LeapCreatorManager.swift in Sources */,
 				D02C12FF25DFC6B000C80E28 /* LeapAppStateProtocol.swift in Sources */,
 				D02C130025DFC6B000C80E28 /* LeapCreatorShared.swift in Sources */,
+				D0963BA1268C9F7800986181 /* WSCompression.swift in Sources */,
+				D0963BAD268C9F9100986181 /* FoundationSecurity.swift in Sources */,
 				D02C130125DFC6B000C80E28 /* LeapDeviceManager.swift in Sources */,
 				2DB75EFB2680ECCE00F558DD /* LeapQRCodeManager.swift in Sources */,
+				D0963BA8268C9F8A00986181 /* FoundationHTTPServerHandler.swift in Sources */,
 				D02C130225DFC6B000C80E28 /* LeapReachabilityManager.swift in Sources */,
+				D0963BA3268C9F7E00986181 /* Data+Extensions.swift in Sources */,
 				D02C130325DFC6B000C80E28 /* LeapUtils.swift in Sources */,
+				D0963BAB268C9F8A00986181 /* FrameCollector.swift in Sources */,
 				2D578485264EA80A0040D04E /* LeapMessageController.swift in Sources */,
 				D02C130425DFC6B000C80E28 /* LeapScreenCaptureManager.swift in Sources */,
 				D02C130525DFC6B000C80E28 /* LeapBeaconManager.swift in Sources */,
 				D02C130625DFC6B000C80E28 /* LeapHealthMonitorManager.swift in Sources */,
 				D02C130725DFC6B000C80E28 /* LeapViewProps.swift in Sources */,
 				D02C130825DFC6B000C80E28 /* LeapCreator.swift in Sources */,
+				D0963BB1268C9F9B00986181 /* WebSocket.swift in Sources */,
 				D02C130925DFC6B000C80E28 /* LeapTopViewController.swift in Sources */,
+				D0963BAA268C9F8A00986181 /* StringHTTPHandler.swift in Sources */,
+				D0963BA9268C9F8A00986181 /* FoundationHTTPHandler.swift in Sources */,
+				D0963BB3268C9FA200986181 /* TCPTransport.swift in Sources */,
 				D02C130A25DFC6B000C80E28 /* LeapReachability.swift in Sources */,
 				D02C130B25DFC6B000C80E28 /* LeapAppIdManager.swift in Sources */,
 				D02C130C25DFC6B000C80E28 /* LeapStreamingManager.swift in Sources */,
+				D0963BA5268C9F8400986181 /* WSEngine.swift in Sources */,
 				D02C130D25DFC6B000C80E28 /* LeapMasterManager.swift in Sources */,
+				D0963BB0268C9F9700986181 /* WebSocketServer.swift in Sources */,
+				D0963BAE268C9F9100986181 /* Security.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2678,22 +2826,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B64FCB362541D45F008BB342 /* XCRemoteSwiftPackageReference "Starscream" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/daltoniam/Starscream.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.4;
-			};
-		};
-		D02C12F425DFC6B000C80E28 /* XCRemoteSwiftPackageReference "Starscream" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/daltoniam/Starscream.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.4;
-			};
-		};
 		D07EA68625D174BE00DC0F36 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/1024jp/GzipSwift.git";
@@ -2713,11 +2845,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D02C12F325DFC6B000C80E28 /* Starscream */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D02C12F425DFC6B000C80E28 /* XCRemoteSwiftPackageReference "Starscream" */;
-			productName = Starscream;
-		};
 		D08DA63325DEA2E800EB0EFC /* Gzip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D08DA63425DEA2E800EB0EFC /* XCRemoteSwiftPackageReference "GzipSwift" */;
