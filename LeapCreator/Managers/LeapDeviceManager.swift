@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Starscream
 
 class LeapDeviceManager {
     

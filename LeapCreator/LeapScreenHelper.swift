@@ -115,14 +115,14 @@ class LeapScreenHelper {
     
     static func getSamplePayload()->String{
         var parcel:String = UUID.init().uuidString
-        for index in 0...300 {
+        for _ in 0...300 {
             parcel.append(UUID.init().uuidString)
         }
         return parcel
     }
     
     static func speedCheckUploadingPacket(success:@escaping (_ packetSize: Float, _ timeTaken: Float)->Void, failure:@escaping ()->Void) {
-        var currentTimeBeforeMakingRequest : Int = Int(Date().timeIntervalSince1970) * 1000
+        let currentTimeBeforeMakingRequest : Int = Int(Date().timeIntervalSince1970) * 1000
         
         guard let url = URL(string: LeapCreatorShared.shared.ALFRED_URL+LeapCreatorShared.shared.CREATOR_DEVICE_SPEEDCHECK_API) else { return }
         var request = URLRequest(url: url)
