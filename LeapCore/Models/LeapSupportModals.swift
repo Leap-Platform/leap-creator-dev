@@ -71,6 +71,7 @@ class LeapAssistInfo {
     var type:String?
     var identifier:String?
     var isWeb:Bool
+    var accessibilityText:String?
     
     init(withDict infoDict:Dictionary<String,Any>) {
 
@@ -86,6 +87,7 @@ class LeapAssistInfo {
             autoDismissDelay = (delay/1000)
         }
         isWeb = infoDict[constant_isWeb] as? Bool ?? false
+        accessibilityText = infoDict[constant_accessibilityText] as? String
     }
 }
 

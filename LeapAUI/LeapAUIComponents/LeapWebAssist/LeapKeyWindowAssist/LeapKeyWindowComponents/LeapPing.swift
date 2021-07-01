@@ -37,7 +37,7 @@ class LeapPing: LeapKeyWindowAssist {
         
         configureWebView()
         
-        configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .bottom)
+        configureLeapIconView(superView: self, toItemView: self.webviewContainer, alignmentType: .bottom)
         
         configureWebViewForPing()
                     
@@ -67,15 +67,15 @@ class LeapPing: LeapKeyWindowAssist {
             distance = -mainIconCornerConstant
         }
         
-        webView.translatesAutoresizingMaskIntoConstraints = false
+        webviewContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: leapIconView, attribute: .top, multiplier: 1, constant: -leapIconView.iconGap))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .bottom, relatedBy: .equal, toItem: leapIconView, attribute: .top, multiplier: 1, constant: -leapIconView.iconGap))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: attribute1, relatedBy: .equal, toItem: self, attribute: attribute1, multiplier: 1, constant: CGFloat(distance)))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: attribute1, relatedBy: .equal, toItem: self, attribute: attribute1, multiplier: 1, constant: CGFloat(distance)))
         
-        widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
+        widthConstraint = NSLayoutConstraint(item: webviewContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
         
-        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
+        heightConstraint = NSLayoutConstraint(item: webviewContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
         
         NSLayoutConstraint.activate([widthConstraint!, heightConstraint!])
     }
@@ -224,7 +224,7 @@ class LeapPing: LeapKeyWindowAssist {
             
             UIView.animate(withDuration: 0.08) {
                 
-                self.webView.frame.origin.y = self.webView.frame.origin.y + 15
+                self.webviewContainer.frame.origin.y = self.webviewContainer.frame.origin.y + 15
                 
                 self.webView.alpha = 0
                 

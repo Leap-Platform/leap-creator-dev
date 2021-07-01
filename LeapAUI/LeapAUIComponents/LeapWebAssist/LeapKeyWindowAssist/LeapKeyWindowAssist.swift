@@ -78,7 +78,14 @@ class LeapKeyWindowAssist: LeapWebAssist {
         
         self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
         
-        self.addSubview(webView)
+        webviewContainer.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
+        self.addSubview(webviewContainer)
     }
     
     /// Method to configure WebView

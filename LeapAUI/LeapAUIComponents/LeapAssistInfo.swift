@@ -29,6 +29,8 @@ class LeapAssistInfo {
 
     /// A extraProps property for the type ExtraProps
     var extraProps: ExtraProps?
+    
+    var accessibilityText:String?
 
     /// - Parameters:
     ///   - assistDict: A dictionary for the type AssistInfo.
@@ -59,5 +61,7 @@ class LeapAssistInfo {
         }
         
         self.htmlUrl = assistDict[constant_htmlUrl] as? String
+        
+        self.accessibilityText = assistDict[constant_accessibilityText] as? String
     }
 }

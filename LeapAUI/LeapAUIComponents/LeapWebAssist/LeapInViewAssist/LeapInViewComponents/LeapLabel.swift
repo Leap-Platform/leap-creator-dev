@@ -153,17 +153,17 @@ class LeapLabel: LeapInViewAssist {
         guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
         guard let width = rect[constant_width] else { return }
         guard let height = rect[constant_height] else { return }
-        webView.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
+        webviewContainer.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
         self.frame.size = CGSize(width: CGFloat(width), height: CGFloat(height))
     }
     
     override func performEnterAnimation(animation: String) {
         
-        self.webView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        self.webviewContainer.transform = CGAffineTransform(scaleX: 0, y: 0)
         
         UIView.animate(withDuration: 0.04) {
             
-            self.webView.transform = CGAffineTransform.identity
+            self.webviewContainer.transform = CGAffineTransform.identity
         }
     }
 }

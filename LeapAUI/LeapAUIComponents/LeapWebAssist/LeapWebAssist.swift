@@ -16,6 +16,14 @@ class LeapWebAssist: UIView, LeapAssist {
     /// webView to load html content.
     var webView = WKWebView()
     
+    var webviewContainer:UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.clipsToBounds = false
+        view.layer.masksToBounds = false
+        return view
+    } ()
+    
     var leapIconView = LeapIconView()
     
     /// preferences property for webview of type WKPreferences.
@@ -90,7 +98,10 @@ class LeapWebAssist: UIView, LeapAssist {
             
             return
         }
-        
+        if let accessibilityText = assistInfo?.accessibilityText {
+            self.webviewContainer.isAccessibilityElement = true
+            self.webviewContainer.accessibilityLabel = accessibilityText
+        }
         // Loading the html from documents directory
         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Leap").appendingPathComponent("aui_component")
         let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
@@ -145,9 +156,9 @@ class LeapWebAssist: UIView, LeapAssist {
                 
             case LeapLayoutAnimationType.slideRight.rawValue:
                 
-                let xPosition = webView.frame.origin.x
+                let xPosition = webviewContainer.frame.origin.x
                 
-                   webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                   webviewContainer.frame.origin.x = -(UIScreen.main.bounds.width)
                 
                    self.leapIconView.alpha = 0
                 
@@ -159,7 +170,7 @@ class LeapWebAssist: UIView, LeapAssist {
                     
                       self.alpha = alpha
                    
-                      self.webView.frame.origin.x = xPosition
+                      self.webviewContainer.frame.origin.x = xPosition
                     
                    }) { (_) in
                     
@@ -171,9 +182,9 @@ class LeapWebAssist: UIView, LeapAssist {
                 
             case LeapLayoutAnimationType.slideLeft.rawValue:
                 
-                let xPosition = webView.frame.origin.x
+                let xPosition = webviewContainer.frame.origin.x
                 
-                   webView.frame.origin.x = (UIScreen.main.bounds.width)
+                   webviewContainer.frame.origin.x = (UIScreen.main.bounds.width)
                 
                    leapIconView.alpha = 0
                 
@@ -185,7 +196,7 @@ class LeapWebAssist: UIView, LeapAssist {
                     
                       self.alpha = alpha
                    
-                      self.webView.frame.origin.x = xPosition
+                      self.webviewContainer.frame.origin.x = xPosition
                     
                    }) { (_) in
                     
@@ -197,15 +208,15 @@ class LeapWebAssist: UIView, LeapAssist {
                 
             case LeapLayoutAnimationType.slideTop.rawValue:
                 
-                let yPosition = webView.frame.origin.y
+                let yPosition = webviewContainer.frame.origin.y
                 
-                webView.frame.origin.y = (UIScreen.main.bounds.height) + (UIScreen.main.bounds.height/2)
+                webviewContainer.frame.origin.y = (UIScreen.main.bounds.height) + (UIScreen.main.bounds.height/2)
                 
                 leapIconView.alpha = 0
                 
                 UIView.animate(withDuration: 0.2, animations: {
                     
-                   self.webView.frame.origin.y = yPosition
+                   self.webviewContainer.frame.origin.y = yPosition
                                         
                 }) { (_) in
                     
@@ -217,15 +228,15 @@ class LeapWebAssist: UIView, LeapAssist {
                 
             case LeapLayoutAnimationType.slideBottom.rawValue:
                 
-                let yPosition = webView.frame.origin.y
+                let yPosition = webviewContainer.frame.origin.y
                 
-                webView.frame.origin.y = -(UIScreen.main.bounds.height)
+                webviewContainer.frame.origin.y = -(UIScreen.main.bounds.height)
                 
                 leapIconView.alpha = 0
                 
                 UIView.animate(withDuration: 0.2, animations: {
                     
-                    self.webView.frame.origin.y = yPosition
+                    self.webviewContainer.frame.origin.y = yPosition
                     
                 }) { (_) in
                     
@@ -245,7 +256,7 @@ class LeapWebAssist: UIView, LeapAssist {
                 
                 self.webView.alpha = 0
                 
-                self.webView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                self.webviewContainer.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
                 
                 UIView.animate(withDuration: 0.08, animations: {
                     
@@ -257,7 +268,7 @@ class LeapWebAssist: UIView, LeapAssist {
                         
                         self.webView.alpha = 1
                         
-                        self.webView.transform = CGAffineTransform.identity
+                        self.webviewContainer.transform = CGAffineTransform.identity
                         
                         self.leapIconView.alpha = 1
                     }
@@ -282,7 +293,7 @@ class LeapWebAssist: UIView, LeapAssist {
                     
                     self.leapIconView.alpha = 0
                                         
-                    self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                    self.webviewContainer.frame.origin.x = -(UIScreen.main.bounds.width)
                     
                 }) { (_) in
                     
@@ -302,7 +313,7 @@ class LeapWebAssist: UIView, LeapAssist {
                     
                     self.leapIconView.alpha = 0
                                         
-                    self.webView.frame.origin.x = (UIScreen.main.bounds.width)
+                    self.webviewContainer.frame.origin.x = (UIScreen.main.bounds.width)
                     
                 }) { (_) in
                     
@@ -322,7 +333,7 @@ class LeapWebAssist: UIView, LeapAssist {
                     
                     self.leapIconView.alpha = 0
                     
-                    self.webView.frame.origin.y = (UIScreen.main.bounds.height)
+                    self.webviewContainer.frame.origin.y = (UIScreen.main.bounds.height)
                     
                 }) { (_) in
                     

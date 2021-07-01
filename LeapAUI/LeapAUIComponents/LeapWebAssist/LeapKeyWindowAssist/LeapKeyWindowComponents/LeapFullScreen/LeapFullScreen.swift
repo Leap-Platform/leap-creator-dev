@@ -35,15 +35,15 @@ class LeapFullScreen: LeapKeyWindowAssist {
       
         // Setting Constraints to WebView
         
-        webView.translatesAutoresizingMaskIntoConstraints = false
+        webviewContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
         
         if #available(iOS 11.0, *) {
             self.webView.scrollView.contentInsetAdjustmentBehavior = .never
@@ -89,7 +89,7 @@ class LeapFullScreen: LeapKeyWindowAssist {
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
-        configureLeapIconView(superView: webView, toItemView: webView, alignmentType: .top)
+        configureLeapIconView(superView: webView, toItemView: webviewContainer, alignmentType: .top)
     }
     
     override func performEnterAnimation(animation: String) {
@@ -100,11 +100,11 @@ class LeapFullScreen: LeapKeyWindowAssist {
         
         self.webView.alpha = 0
         
-        self.webView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.webviewContainer.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         
         UIView.animate(withDuration: 0.1, animations: {
             
-            self.webView.transform = CGAffineTransform.identity
+            self.webviewContainer.transform = CGAffineTransform.identity
             
             UIView.animate(withDuration: 0.05) {
                 
