@@ -105,19 +105,26 @@ class LeapSlideIn: LeapKeyWindowAssist {
         
         inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: inView, attribute: .bottom, multiplier: 1, constant: -((inView?.frame.height)! * 0.2)))
         
-        self.addSubview(webView)
+        self.addSubview(webviewContainer)
+        webviewContainer.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
         
         // Setting Constraints to webView
         
-        webView.translatesAutoresizingMaskIntoConstraints = false
+        webviewContainer.translatesAutoresizingMaskIntoConstraints = false
 
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
 
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
 
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
 
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
     }
     
     /// Set width and height constraint for SlideIn.
@@ -198,24 +205,24 @@ class LeapSlideIn: LeapKeyWindowAssist {
                                 
                 UIView.animate(withDuration: 0.15, animations: {
                     
-                  self.webView.frame.origin.x = UIScreen.main.bounds.width
+                  self.webviewContainer.frame.origin.x = UIScreen.main.bounds.width
                     
                     
                 }) { (success) in
                     
-                    self.webView.removeFromSuperview()
+                    self.webviewContainer.removeFromSuperview()
                 }
                 
             case (.left, .left):
                 
                 UIView.animate(withDuration: 0.15, animations: {
                     
-                  self.webView.frame.origin.x = -(UIScreen.main.bounds.width)
+                  self.webviewContainer.frame.origin.x = -(UIScreen.main.bounds.width)
                     
                     
                 }) { (success) in
                     
-                    self.webView.removeFromSuperview()
+                    self.webviewContainer.removeFromSuperview()
                 }
                 
             default:

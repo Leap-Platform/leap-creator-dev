@@ -86,7 +86,14 @@ class LeapInViewAssist: LeapWebAssist {
     /// Method to configure WebView
     func configureWebView() {
         
-        self.addSubview(webView)
+        webviewContainer.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
+        self.addSubview(webviewContainer)
         
         webView.clipsToBounds = true
         webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)

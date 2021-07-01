@@ -120,19 +120,26 @@ class LeapNotification: LeapKeyWindowAssist {
         
         NSLayoutConstraint.activate([heightConstraint!])
         
-        self.addSubview(webView)
+        self.addSubview(webviewContainer)
+        webviewContainer.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
                                 
         // Setting Constraints to WebView
         
-        webView.translatesAutoresizingMaskIntoConstraints = false
+        webviewContainer.translatesAutoresizingMaskIntoConstraints = false
                         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
     }
     
     /// Set height constraint for the Notification.
@@ -154,11 +161,11 @@ class LeapNotification: LeapKeyWindowAssist {
                                                 
         if self.alignment == .top {
                     
-            self.configureLeapIconView(superView: self.inView!, toItemView: webView, alignmentType: .bottom)
+            self.configureLeapIconView(superView: self.inView!, toItemView: webviewContainer, alignmentType: .bottom)
                 
         } else {
                     
-            self.configureLeapIconView(superView: self.inView!, toItemView: webView, alignmentType: .top)
+            self.configureLeapIconView(superView: self.inView!, toItemView: webviewContainer, alignmentType: .top)
         }
     }
     

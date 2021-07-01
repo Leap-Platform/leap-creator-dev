@@ -38,15 +38,23 @@ class LeapPopup: LeapKeyWindowAssist {
         
         // Setting Constraints to WebView
         
+        webviewContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        webviewContainer.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -24))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 24))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -24))
         
-        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 24))
+        
+        heightConstraint = NSLayoutConstraint(item: webviewContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
         
         NSLayoutConstraint.activate([heightConstraint!])
     }
@@ -61,7 +69,7 @@ class LeapPopup: LeapKeyWindowAssist {
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
-        self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .bottom)
+        self.configureLeapIconView(superView: self, toItemView: self.webviewContainer, alignmentType: .bottom)
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

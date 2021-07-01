@@ -38,13 +38,21 @@ class LeapCarousel: LeapKeyWindowAssist {
         
         // Setting Constraints to WebView
         
+        webviewContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        webviewContainer.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
+        
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
 
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
 
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
                 
         if let type = self.assistInfo?.extraProps?.props[constant_carouselType] as? String {
             
@@ -55,7 +63,7 @@ class LeapCarousel: LeapKeyWindowAssist {
             
             self.webView.isOpaque = false
             
-            heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
+            heightConstraint = NSLayoutConstraint(item: webviewContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
             
             NSLayoutConstraint.activate([heightConstraint!])
             
@@ -132,7 +140,7 @@ class LeapCarousel: LeapKeyWindowAssist {
     /// This is a custom configuration of constraints for the Carousel type.
     private func configureWebViewForFullScreenCarousel() {
       
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: webviewContainer, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
     }
     
     /// This is a custom configuration of constraints for the Carousel type.
@@ -145,11 +153,11 @@ class LeapCarousel: LeapKeyWindowAssist {
         
         if type == .fullScreen {
         
-           configureLeapIconView(superView: webView, toItemView: webView, alignmentType: .top)
+           configureLeapIconView(superView: webView, toItemView: webviewContainer, alignmentType: .top)
             
         } else {
             
-           configureLeapIconView(superView: self, toItemView: webView, alignmentType: .top)
+           configureLeapIconView(superView: self, toItemView: webviewContainer, alignmentType: .top)
         }
     }
     
@@ -176,11 +184,11 @@ class LeapCarousel: LeapKeyWindowAssist {
         
         self.webView.alpha = 0
         
-        self.webView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.webviewContainer.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         
         UIView.animate(withDuration: 0.1, animations: {
             
-            self.webView.transform = CGAffineTransform.identity
+            self.webviewContainer.transform = CGAffineTransform.identity
             
             UIView.animate(withDuration: 0.05) {
                 

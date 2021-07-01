@@ -107,7 +107,14 @@ class LeapHighlight: LeapTipView {
                    
         self.addSubview(toolTipView)
     
-        toolTipView.addSubview(webView)
+        webviewContainer.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        webView.leadingAnchor.constraint(equalTo: webviewContainer.leadingAnchor).isActive = true
+        webView.topAnchor.constraint(equalTo: webviewContainer.topAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webviewContainer.trailingAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webviewContainer.bottomAnchor).isActive = true
+        toolTipView.addSubview(webviewContainer)
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
@@ -558,7 +565,7 @@ class LeapHighlight: LeapTipView {
             sizeWidth = sizeWidth ?? Double(width) - 24
         }
                             
-        self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
+        self.webviewContainer.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
             
         self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
     }
