@@ -508,7 +508,7 @@ extension LeapWebAssist: WKScriptMessageHandler {
 
             if let userPropsData = try? JSONSerialization.data(withJSONObject: userProps, options: .fragmentsAllowed),
                let userPropsString = String(data: userPropsData, encoding: .utf8) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.webView.evaluateJavaScript("personalize('\(userPropsString)')", completionHandler: nil)
                 }
                 
