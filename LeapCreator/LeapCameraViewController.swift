@@ -242,11 +242,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraImage.contentMode = .scaleAspectFit
         view.addSubview(cameraImage)
         cameraImage.translatesAutoresizingMaskIntoConstraints = false
-        cameraImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 94).isActive = true
+        cameraImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 149).isActive = true
         cameraImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         cameraImage.widthAnchor.constraint(equalToConstant: 60).isActive = true
         cameraImage.heightAnchor.constraint(equalTo: cameraImage.widthAnchor, multiplier: icon.size.height/icon.size.width).isActive = true
-        
     }
     
     private func setupCloseButton(inView:UIView) {
@@ -636,7 +635,7 @@ extension LeapCameraViewController: UITextFieldDelegate {
         headingLabel.font = UIFont(name: "Helvetica Neue Bold", size: 20)
         view.addSubview(headingLabel)
         headingLabel.translatesAutoresizingMaskIntoConstraints = false
-        headingLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 74).isActive = true
+        headingLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 112).isActive = true
         headingLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
     }
     
