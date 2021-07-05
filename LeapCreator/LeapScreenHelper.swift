@@ -157,12 +157,9 @@ class LeapScreenHelper {
                     break
                 default: break
                 }
-
             }
 
          }.resume()
         }
-        
-      
 }
     
