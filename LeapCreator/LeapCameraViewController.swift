@@ -687,6 +687,7 @@ extension LeapCameraViewController: UITextFieldDelegate {
         codeTextField?.borderStyle = .roundedRect
         codeTextField?.returnKeyType = .done
         codeTextField?.delegate = self
+        codeTextField?.addTarget(self, action: #selector(setPrefix), for: .editingChanged)
         codeTextField?.translatesAutoresizingMaskIntoConstraints = false
         codeTextField?.topAnchor.constraint(equalTo: simulatorDescriptionLabel.bottomAnchor, constant: 30).isActive = true
         codeTextField?.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -697,6 +698,10 @@ extension LeapCameraViewController: UITextFieldDelegate {
         dashBorder.path = UIBezierPath(roundedRect: bounds ?? CGRect(x: 0, y: 0, width: 190, height: 58), cornerRadius: 10).cgPath
         dashBorder.frame = bounds ?? CGRect(x: 0, y: 0, width: 190, height: 58)
         codeTextField?.layer.addSublayer(dashBorder)
+    }
+    
+    @objc func setPrefix() {
+        codeTextField?.text = String(codeTextField?.text?.prefix(6) ?? "")
     }
     
     // UITextField Delegate Method
