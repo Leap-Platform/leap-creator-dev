@@ -27,6 +27,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     var roomId: String?
     var socket: WebSocket?
     var task: DispatchWorkItem?
+    var optimisedTask:DispatchWorkItem?
     weak var completeListener: LeapFinishListener?
     
     init(completeHierarchyFinishListener: LeapFinishListener){
@@ -56,35 +57,38 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         // Check the payload size
         let originalPayloadSize: Float = Float(Float(payloadString.count) / 1024)
         
-        self.task = DispatchWorkItem {
+        self.optimisedTask = DispatchWorkItem {
             LeapScreenHelper.speedCheckUploadingPacket { (packetSize, timeTaken) in
-                 // Check speed and manipulate quality
-                let internetSpeed:Float = packetSize / timeTaken
-                let originalPayloadTimeRequired = originalPayloadSize / internetSpeed
                 
-                //if original payload sending time > dashboard timeout then we need to
-                // reduce quality of image thereby increasing compression
-                // 0(most compressed) ..... 1(least compressed)
-                
-                if (originalPayloadTimeRequired > 55 - timeTaken) {
-                    let modifiedScreenshotQuality: Float = Float((1.0 * (Double(55 - timeTaken))/Double(originalPayloadTimeRequired)))
+                DispatchQueue.main.async {
+                    // Check speed and manipulate quality
+                   let internetSpeed:Float = packetSize / timeTaken
+                   let originalPayloadTimeRequired = originalPayloadSize / internetSpeed
                    
-                    guard let screenShotImage = self.getScreenCapture(compressionQuality: modifiedScreenshotQuality) else {
-                        
-                        self.sendScreenPayload(completePayload: payloadString)
-                        return
-                    }
-                    
-                    payload[constant_image] = screenShotImage
-                    
-                    guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
-                    guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
-                    
-                    self.sendScreenPayload(completePayload: payloadString)
-                    return
+                   //if original payload sending time > dashboard timeout then we need to
+                   // reduce quality of image thereby increasing compression
+                   // 0(most compressed) ..... 1(least compressed)
+                   
+                   if (originalPayloadTimeRequired > 55 - timeTaken) {
+                       let modifiedScreenshotQuality: Float = Float((1.0 * (Double(55 - timeTaken))/Double(originalPayloadTimeRequired)))
+                      
+                       guard let screenShotImage = self.getScreenCapture(compressionQuality: modifiedScreenshotQuality) else {
+                           
+                           self.sendScreenPayload(completePayload: payloadString)
+                           return
+                       }
+                       
+                       payload[constant_image] = screenShotImage
+                       
+                       guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
+                       guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
+                       
+                       self.sendScreenPayload(completePayload: payloadString)
+                       return
+                   }
+                   
+                   self.sendScreenPayload(completePayload: payloadString)
                 }
-                
-                self.sendScreenPayload(completePayload: payloadString)
 
             } failure: {
                 self.sendScreenPayload(completePayload: payloadString)
@@ -92,7 +96,8 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
 
 
         }
-        self.task?.perform()
+        guard let optimisedTask = optimisedTask else { return }
+        DispatchQueue.global().async(execute: optimisedTask)
     }
     
     func sendScreenPayload(completePayload: String){
@@ -100,7 +105,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
             self.postMessage(payload: completePayload)
         }
         guard let task = self.task else { return }
-        task.perform()
+        DispatchQueue.global().async(execute: task)
     }
     
     func postMessage(payload: String) {
