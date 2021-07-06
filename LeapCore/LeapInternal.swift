@@ -97,7 +97,7 @@ extension LeapInternal {
         req.httpBody = payloadData
         getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
 
-        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-id")
+        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-ids")
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode != 304,

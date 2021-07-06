@@ -39,16 +39,21 @@ class LeapContextManager:NSObject {
     
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
     func initialize(withConfig:LeapConfig) {
-        isInitialized = true
-        configuration = withConfig
-        contextDetector = LeapContextDetector(withDelegate: self)
-        assistManager = LeapAssistManager(self)
-        discoveryManager = LeapDiscoveryManager(self)
-        flowManager = LeapFlowManager(self)
-        pageManager = LeapPageManager(self)
-        stageManager = LeapStageManager(self)
-        analyticsManager = LeapAnalyticsManager(self)
-        self.start()
+        if isInitialized {
+            appendProjectConfig(withConfig: withConfig)
+        } else {
+            isInitialized = true
+            configuration = withConfig
+            contextDetector = LeapContextDetector(withDelegate: self)
+            assistManager = LeapAssistManager(self)
+            discoveryManager = LeapDiscoveryManager(self)
+            flowManager = LeapFlowManager(self)
+            pageManager = LeapPageManager(self)
+            stageManager = LeapStageManager(self)
+            analyticsManager = LeapAnalyticsManager(self)
+            self.start()
+        }
+        
     }
     
     func appendProjectConfig(withConfig:LeapConfig) {
@@ -94,11 +99,15 @@ class LeapContextManager:NSObject {
         configuration?.supportedAppLocales = Array(Set(configuration?.supportedAppLocales ?? [] + projectConfig.supportedAppLocales))
         configuration?.discoverySounds += projectConfig.discoverySounds
         configuration?.auiContent += projectConfig.auiContent
+        projectConfig.iconSetting.forEach { (key, value) in
+            configuration?.iconSetting[key] = value
+        }
         configuration?.languages += projectConfig.languages.compactMap({ lang -> LeapLanguage? in
             guard let presentLanguages = configuration?.languages,
-                  !presentLanguages.contains(lang) else { return lang }
-            return nil
+                  !presentLanguages.contains(lang) else { return nil }
+            return lang
         })
+        auiHandler?.startMediaFetch()
     }
     
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery
