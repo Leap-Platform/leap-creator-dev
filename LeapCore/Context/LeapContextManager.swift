@@ -72,7 +72,15 @@ class LeapContextManager:NSObject {
                 }
             }
             //Append config
-            if configuration == nil { configuration = withConfig }
+            if configuration == nil {
+                for assist in withConfig.assists {
+                    LeapSharedInformation.shared.resetAssist(assist.id)
+                }
+                for discovery in withConfig.discoveries {
+                    LeapSharedInformation.shared.resetDiscovery(discovery.id)
+                }
+                configuration = withConfig
+            }
             else { appendNewProjectConfig(projectConfig: withConfig) }
             contextDetector?.start()
         } else {
