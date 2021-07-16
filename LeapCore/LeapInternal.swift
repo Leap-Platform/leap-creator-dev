@@ -34,14 +34,14 @@ class LeapInternal:NSObject {
         fetchConfig()
     }
     
-    init(_ token:String, projectId:String, uiManager:LeapAUIHandler?) {
+    init(_ token:String, projectId:String, uiManager:LeapAUIHandler?, resetProject:Bool) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
         super.init()
         self.contextManager.delegate = self
         resetSavedHeaders(for: token)
         LeapSharedInformation.shared.setAPIKey(token)
         LeapSharedInformation.shared.setSessionId()
-        fetchProjectConfig(projectId: projectId)
+        fetchProjectConfig(projectId: projectId, resetProject:resetProject)
     }
     
     
@@ -84,9 +84,12 @@ extension LeapInternal {
         configTask.resume()
     }
     
-    public func fetchProjectConfig(projectId:String) {
+    public func fetchProjectConfig(projectId:String, resetProject:Bool) {
         //Make API call
-        guard !fetchedProjectIds.contains(projectId) else { return }
+        guard !fetchedProjectIds.contains(projectId) else {
+            if resetProject { contextManager.resetForProjectId(projectId) }
+            return
+        }
         let payload = getPayload()
         let payloadData:Data = {
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
@@ -112,7 +115,7 @@ extension LeapInternal {
             DispatchQueue.main.async {
                 self.fetchedProjectIds.append(projectId)
                 let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
-                self.contextManager.appendProjectConfig(withConfig: projectConfig)
+                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
             }
             
         }

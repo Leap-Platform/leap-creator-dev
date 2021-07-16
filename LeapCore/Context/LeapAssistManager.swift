@@ -113,6 +113,10 @@ class LeapAssistManager {
         currentAssist = nil
     }
     
+    func removeAssistFromCompletedInSession(assistId: Int) {
+        assistsCompletedInSession = assistsCompletedInSession.filter{ $0 != assistId }
+    }
+    
     func assistPresented() {
         guard let assist = currentAssist else { return }
         LeapSharedInformation.shared.assistPresented(assistId: assist.id)

@@ -40,7 +40,7 @@ class LeapContextManager:NSObject {
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
     func initialize(withConfig:LeapConfig) {
         if isInitialized {
-            appendProjectConfig(withConfig: withConfig)
+            appendProjectConfig(withConfig: withConfig, resetProject: false)
         } else {
             isInitialized = true
             configuration = withConfig
@@ -56,7 +56,15 @@ class LeapContextManager:NSObject {
         
     }
     
-    func appendProjectConfig(withConfig:LeapConfig) {
+    func appendProjectConfig(withConfig:LeapConfig, resetProject:Bool) {
+        if resetProject {
+            for assist in withConfig.assists {
+                LeapSharedInformation.shared.resetAssist(assist.id)
+            }
+            for discovery in withConfig.discoveries {
+                LeapSharedInformation.shared.resetDiscovery(discovery.id)
+            }
+        }
         if isInitialized {
             contextDetector?.stop()
             auiHandler?.removeAllViews()
@@ -72,15 +80,7 @@ class LeapContextManager:NSObject {
                 }
             }
             //Append config
-            if configuration == nil {
-                for assist in withConfig.assists {
-                    LeapSharedInformation.shared.resetAssist(assist.id)
-                }
-                for discovery in withConfig.discoveries {
-                    LeapSharedInformation.shared.resetDiscovery(discovery.id)
-                }
-                configuration = withConfig
-            }
+            if configuration == nil { configuration = withConfig }
             else { appendNewProjectConfig(projectConfig: withConfig) }
             contextDetector?.start()
         } else {
@@ -103,12 +103,10 @@ class LeapContextManager:NSObject {
         }
         for assist in projectConfig.assists {
             if !(configuration?.assists.contains(assist))! { configuration?.assists.append(assist) }
-            LeapSharedInformation.shared.resetAssist(assist.id)
         }
         
         for discovery in projectConfig.discoveries {
             if !(configuration?.discoveries.contains(discovery))! { configuration?.discoveries.append(discovery) }
-            LeapSharedInformation.shared.resetDiscovery(discovery.id)
         }
         
         for flow in projectConfig.flows {
@@ -127,6 +125,15 @@ class LeapContextManager:NSObject {
             return lang
         })
         auiHandler?.startMediaFetch()
+    }
+    
+    func resetForProjectId(_ projectId:String) {
+        let params = configuration?.projectParameters.first { $0.deploymentId == projectId }
+        guard let projParams = params, let id = projParams.id else { return }
+        LeapSharedInformation.shared.resetAssist(id)
+        assistManager?.removeAssistFromCompletedInSession(assistId: id)
+        LeapSharedInformation.shared.resetDiscovery(id)
+        discoveryManager?.removeDiscoveryFromCompletedInSession(disId: id)
     }
     
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery
@@ -397,6 +404,12 @@ extension LeapContextManager:LeapStageManagerDelegate {
     
     func getCurrentPage() -> LeapPage? {
         return pageManager?.getCurrentPage()
+    }
+    
+    func getProjectParams() -> LeapProjectParameters? {
+        guard let disId = flowManager?.getDiscoveryId() else { return nil }
+        let params = configuration?.projectParameters.first{ $0.id == disId }
+        return params
     }
     
     func newStageFound(_ stage: LeapStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
