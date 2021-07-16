@@ -127,6 +127,15 @@ class LeapContextManager:NSObject {
         auiHandler?.startMediaFetch()
     }
     
+    func resetForProjectId(_ projectId:String) {
+        let params = configuration?.projectParameters.first { $0.deploymentId == projectId }
+        guard let projParams = params, let id = projParams.id else { return }
+        LeapSharedInformation.shared.resetAssist(id)
+        assistManager?.removeAssistFromCompletedInSession(assistId: id)
+        LeapSharedInformation.shared.resetDiscovery(id)
+        discoveryManager?.removeDiscoveryFromCompletedInSession(disId: id)
+    }
+    
     /// Sets all triggers in trigger manager and starts context detection. By default context detection is in Discovery mode, hence checks all the relevant triggers first to start discovery
     func start() {
         startSoundDownload()
@@ -395,6 +404,12 @@ extension LeapContextManager:LeapStageManagerDelegate {
     
     func getCurrentPage() -> LeapPage? {
         return pageManager?.getCurrentPage()
+    }
+    
+    func getProjectParams() -> LeapProjectParameters? {
+        guard let disId = flowManager?.getDiscoveryId() else { return nil }
+        let params = configuration?.projectParameters.first{ $0.id == disId }
+        return params
     }
     
     func newStageFound(_ stage: LeapStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {

@@ -11,6 +11,7 @@ import UIKit
 
 protocol LeapStageManagerDelegate:NSObjectProtocol {
     func getCurrentPage() -> LeapPage?
+    func getProjectParams() -> LeapProjectParameters?
     func newStageFound(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
     func sameStageFound(_ stage:LeapStage, view:UIView?, newRect:CGRect?, webviewForRect:UIView?)
     func dismissStage()
@@ -23,6 +24,7 @@ class LeapStageManager {
     private var currentStage:LeapStage?
     private var stageTracker:Dictionary<String,Int> = [:]
     private var stageTimer:Timer?
+    private var actionTakenStages:Array<Int> = []
     
     init(_ stageDelegate:LeapStageManagerDelegate) {
         delegate = stageDelegate
@@ -31,11 +33,19 @@ class LeapStageManager {
     func getStagesToCheck() -> Array<LeapStage> {
         guard let page = delegate?.getCurrentPage(), page.stages.count > 0 else { return [] }
         let stagesToCheck = page.stages.filter { (tempStage) -> Bool in
+            
+            if isStaticFlow() { return !actionTakenStages.contains(tempStage.id)}
             guard let freq = tempStage.terminationFrequency, let perFlow = freq.perFlow, perFlow != -1 else { return true }
             let stagePlayedCount = stageTracker[tempStage.name] ?? 0
             return stagePlayedCount < perFlow
         }
         return stagesToCheck
+    }
+    
+    func isStaticFlow() -> Bool {
+        let params = delegate?.getProjectParams()
+        let projectType = params?.projectType ?? "DYNAMIC_FLOW"
+        return projectType == "STATIC_FLOW"
     }
     
     func setCurrentStage(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
@@ -106,6 +116,7 @@ class LeapStageManager {
     func stageDismissed(byUser:Bool, autoDismissed:Bool) {
         guard byUser || autoDismissed else { return }
         guard let stage = currentStage else { return }
+        if isStaticFlow() { actionTakenStages.append(stage.id)}
         delegate?.removeStage(stage)
         stagePerformed()
         currentStage = nil

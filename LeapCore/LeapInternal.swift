@@ -86,7 +86,10 @@ extension LeapInternal {
     
     public func fetchProjectConfig(projectId:String, resetProject:Bool) {
         //Make API call
-        guard !fetchedProjectIds.contains(projectId) else { return }
+        guard !fetchedProjectIds.contains(projectId) else {
+            if resetProject { contextManager.resetForProjectId(projectId) }
+            return
+        }
         let payload = getPayload()
         let payloadData:Data = {
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }

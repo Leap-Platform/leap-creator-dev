@@ -140,6 +140,10 @@ class LeapDiscoveryManager {
         currentDiscovery = nil
     }
     
+    func removeDiscoveryFromCompletedInSession(disId: Int) {
+         completedDiscoveriesInSession = completedDiscoveriesInSession.filter{ $0 != disId}
+    }
+    
     func resetManagerSession() {
         discoveryTimer?.invalidate()
         discoveryTimer = nil
