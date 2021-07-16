@@ -198,6 +198,51 @@ extension LeapSharedInformation {
     
 }
 
+// MARK: - RESET LEAP CONTEXT
+
+extension LeapSharedInformation {
+    
+    func resetAssist(_ assistId: Int) {
+        
+        var assistPresented = self.getAssistsPresentedInfo()
+        if let _ = assistPresented[String(assistId)] {
+            assistPresented[String(assistId)] = 0
+        }
+        prefs.setValue(assistPresented, forKey: LeapSharedInformationConstants.assistsPresented)
+        
+        var assistDismissed = self.getDismissedAssistInfo()
+        if assistDismissed.contains(assistId) { assistDismissed = assistDismissed.filter{ $0 != assistId} }
+        prefs.setValue(assistDismissed, forKey: LeapSharedInformationConstants.assistsDismissedByUser)
+        
+    }
+    
+    func resetDiscovery(_ discoveryId: Int) {
+        
+        var presentedDiscoveries = self.getDiscoveriesPresentedInfo()
+        if let _ = presentedDiscoveries[String(discoveryId)] {
+            presentedDiscoveries[String(discoveryId)] = 0
+        }
+        prefs.setValue(presentedDiscoveries, forKey: LeapSharedInformationConstants.discoveryPresented)
+        
+        var dismissedDiscoveries = self.getDismissedDiscoveryInfo()
+        if dismissedDiscoveries.contains(discoveryId) { dismissedDiscoveries = dismissedDiscoveries.filter { $0 != discoveryId} }
+        prefs.setValue(dismissedDiscoveries, forKey: LeapSharedInformationConstants.discoveryDismissedByUser)
+        
+        var flowCompletedInfo = self.getDiscoveryFlowCompletedInfo()
+        if let _ = flowCompletedInfo[String(discoveryId)] {
+            flowCompletedInfo[String(discoveryId)] = 0
+        }
+        prefs.setValue(flowCompletedInfo, forKey: LeapSharedInformationConstants.discoveryFlowCompleted)
+        
+        self.unmuteDiscovery(discoveryId)
+        
+        var terminatedDiscoveries = getTerminatedDiscoveries()
+        if terminatedDiscoveries.contains(discoveryId) { terminatedDiscoveries = terminatedDiscoveries.filter{ $0 != discoveryId} }
+        prefs.setValue(terminatedDiscoveries, forKey: LeapSharedInformationConstants.terminatedDiscoveries)
+    }
+    
+}
+
 // MARK: - MUTE HANDLING
 extension LeapSharedInformation {
     
