@@ -72,7 +72,15 @@ class LeapContextManager:NSObject {
                 }
             }
             //Append config
-            if configuration == nil { configuration = withConfig }
+            if configuration == nil {
+                for assist in withConfig.assists {
+                    LeapSharedInformation.shared.resetAssist(assist.id)
+                }
+                for discovery in withConfig.discoveries {
+                    LeapSharedInformation.shared.resetDiscovery(discovery.id)
+                }
+                configuration = withConfig
+            }
             else { appendNewProjectConfig(projectConfig: withConfig) }
             contextDetector?.start()
         } else {
@@ -93,9 +101,20 @@ class LeapContextManager:NSObject {
         projectConfig.webIdentifiers.forEach { (key, value) in
             configuration?.webIdentifiers[key] = value
         }
-        configuration?.assists += projectConfig.assists
-        configuration?.discoveries += projectConfig.discoveries
-        configuration?.flows += projectConfig.flows
+        for assist in projectConfig.assists {
+            if !(configuration?.assists.contains(assist))! { configuration?.assists.append(assist) }
+            LeapSharedInformation.shared.resetAssist(assist.id)
+        }
+        
+        for discovery in projectConfig.discoveries {
+            if !(configuration?.discoveries.contains(discovery))! { configuration?.discoveries.append(discovery) }
+            LeapSharedInformation.shared.resetDiscovery(discovery.id)
+        }
+        
+        for flow in projectConfig.flows {
+            if !(configuration?.flows.contains(flow))! { configuration?.flows.append(flow) }
+        }
+        
         configuration?.supportedAppLocales = Array(Set(configuration?.supportedAppLocales ?? [] + projectConfig.supportedAppLocales))
         configuration?.discoverySounds += projectConfig.discoverySounds
         configuration?.auiContent += projectConfig.auiContent

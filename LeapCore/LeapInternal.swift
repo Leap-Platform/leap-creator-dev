@@ -22,6 +22,7 @@ class LeapInternal:NSObject {
         return "https://odin.leap.is/odin/api/v1/config/fetch"
         #endif
     }()
+    var fetchedProjectIds:Array<String> = []
     
     init(_ token : String, uiManager:LeapAUIHandler?) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
@@ -85,7 +86,7 @@ extension LeapInternal {
     
     public func fetchProjectConfig(projectId:String) {
         //Make API call
-        
+        guard !fetchedProjectIds.contains(projectId) else { return }
         let payload = getPayload()
         let payloadData:Data = {
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
@@ -109,6 +110,7 @@ extension LeapInternal {
                 return
             }
             DispatchQueue.main.async {
+                self.fetchedProjectIds.append(projectId)
                 let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
                 self.contextManager.appendProjectConfig(withConfig: projectConfig)
             }
