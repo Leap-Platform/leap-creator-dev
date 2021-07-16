@@ -83,7 +83,7 @@ class LeapStageManager {
             stageTimer = nil
         } else {
             delegate?.dismissStage()
-            stagePerformed()
+//            stagePerformed()
         }
         currentStage = nil
     }
