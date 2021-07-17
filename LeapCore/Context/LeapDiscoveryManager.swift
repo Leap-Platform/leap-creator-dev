@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 
-protocol LeapDiscoveryManagerDelegate:AnyObject {
+protocol LeapDiscoveryManagerDelegate: AnyObject {
     
     func getAllDiscoveries() -> Array<LeapDiscovery>
     func newDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func sameDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func dismissDiscovery()
-    
+    func sendDiscoveryTerminationEvent(with id: Int, for rule: String)
 }
 
 class LeapDiscoveryManager {
@@ -27,7 +27,20 @@ class LeapDiscoveryManager {
     private weak var currentDiscovery:LeapDiscovery?
     private var discoveryTimer:Timer?
     
-    init(_ withDelegate:LeapDiscoveryManagerDelegate) { delegate = withDelegate }
+    init(_ withDelegate:LeapDiscoveryManagerDelegate) {
+        delegate = withDelegate
+        let discoveries = delegate?.getAllDiscoveries() ?? []
+        let discoveriesPresentedCount = LeapSharedInformation.shared.getDiscoveriesPresentedInfo()
+        for discovery in discoveries {
+            let presentedCount = (discoveriesPresentedCount["\(discovery.id)"] ?? 0)
+            let nSession = (discovery.terminationfrequency?.nSession ?? -1)
+            let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveriesEvents()
+            if presentedCount >= nSession && nSession != -1 && !terminatedDiscoveries.contains(discovery.id) {
+                delegate?.sendDiscoveryTerminationEvent(with: discovery.id, for: "After \(nSession) sessions")
+                LeapSharedInformation.shared.terminationEventSent(discoveryId: discovery.id, assistId: nil)
+            }
+        }
+    }
         
     func getCurrentDiscovery() -> LeapDiscovery? { return currentDiscovery }
     
@@ -44,7 +57,9 @@ class LeapDiscoveryManager {
             let discoveryFlowCompletedCount = discoveryFlowInfo[String(discovery.id)] ?? 0
             if let terminationFreq = discovery.terminationfrequency {
                 if let nSessionCount = terminationFreq.nSession, nSessionCount != -1 {
-                    if presentedCount >= nSessionCount { return false }
+                    if presentedCount >= nSessionCount && !identifiedDiscoveriesInSession.contains(discovery.id) {
+                        return false
+                    }
                 }
                 if let perAppCount = terminationFreq.perApp, perAppCount != -1 {
                     if discoveryFlowCompletedCount >= perAppCount { return false }
@@ -91,8 +106,11 @@ class LeapDiscoveryManager {
         } else  {
             delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
         }
-        if !identifiedDiscoveriesInSession.contains(discovery.id) { identifiedDiscoveriesInSession.append(discovery.id) }
-        
+        if !identifiedDiscoveriesInSession.contains(discovery.id) {
+            LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: discovery.id, assistId: nil)
+            LeapSharedInformation.shared.discoveryPresentedInSession(discoveryId: discovery.id)
+            identifiedDiscoveriesInSession.append(discovery.id)
+        }
     }
     
     func isManualTrigger() -> Bool {
@@ -117,8 +135,6 @@ class LeapDiscoveryManager {
     }
     
     func discoveryPresented() {
-        guard let discovery = currentDiscovery else { return }
-        LeapSharedInformation.shared.discoveryPresent(discoveryId: discovery.id)
     }
     
     func resetDiscovery() {
@@ -154,7 +170,13 @@ class LeapDiscoveryManager {
     
     func discoveryDismissed(byUser:Bool, optIn:Bool) {
         guard let discovery = currentDiscovery, byUser || optIn else { return }
-        if byUser && !optIn { LeapSharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id) }
+        if byUser && !optIn {
+            LeapSharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id)
+            let discoveriesDismissed = LeapSharedInformation.shared.getDismissedDiscoveryInfo()
+            if discoveriesDismissed.contains(discovery.id), let nDismissed = discovery.terminationfrequency?.nDismissByUser, nDismissed != -1 {
+                delegate?.sendDiscoveryTerminationEvent(with: discovery.id, for: "At discovery dismiss by user")
+            }
+        }
         markCurrentDiscoveryComplete()
     }
     

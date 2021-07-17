@@ -48,7 +48,7 @@ class LeapAnalyticsManager {
         return payload
     }
     
-    func saveEvent(event: LeapAnalyticsEvent?) {
+    func saveEvent(event: LeapAnalyticsEvent?, deploymentType: String?) {
         guard let event = event, let payload = generatePayload(event) else { return }
         print("\(payload)")
         let prefs = UserDefaults.standard
@@ -59,9 +59,16 @@ class LeapAnalyticsManager {
         
         // client callback
         let clientCallbackEvent = event
-        clientCallbackEvent.sessionId = nil
-        clientCallbackEvent.projectId = nil
-        clientCallbackEvent.deploymentId = nil
+        
+        if deploymentType == constant_LINK {
+            clientCallbackEvent.projectId = event.deploymentId
+            clientCallbackEvent.sessionId = nil
+            clientCallbackEvent.deploymentId = nil
+        } else {
+            clientCallbackEvent.sessionId = nil
+            clientCallbackEvent.projectId = nil
+            clientCallbackEvent.deploymentId = nil
+        }
         
         guard let clientPayload = generatePayload(clientCallbackEvent) else { return }
         delegate?.sendPayload(clientPayload)

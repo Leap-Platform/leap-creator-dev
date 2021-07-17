@@ -45,12 +45,12 @@ class LeapContextManager:NSObject {
             isInitialized = true
             configuration = withConfig
             contextDetector = LeapContextDetector(withDelegate: self)
+            analyticsManager = LeapAnalyticsManager(self)
             assistManager = LeapAssistManager(self)
             discoveryManager = LeapDiscoveryManager(self)
             flowManager = LeapFlowManager(self)
             pageManager = LeapPageManager(self)
             stageManager = LeapStageManager(self)
-            analyticsManager = LeapAnalyticsManager(self)
             self.start()
         }
         
@@ -314,7 +314,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
 }
 
 // MARK: - ASSIST MANAGER DELEGATE METHODS
-extension LeapContextManager:LeapAssistManagerDelegate {
+extension LeapContextManager: LeapAssistManagerDelegate {
     
     func getAllAssists() -> Array<LeapAssist> {
         if let preview = previewConfig {
@@ -340,10 +340,14 @@ extension LeapContextManager:LeapAssistManagerDelegate {
     
     func dismissAssist() { auiHandler?.removeAllViews() }
     
+    func sendAssistTerminationEvent(with id: Int, for rule: String) {
+        let projectParams = self.currentConfiguration()?.projectParameters.first { $0.id == id }
+        analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: projectParams, for: rule), deploymentType: projectParams?.deploymentType)
+    }
 }
 
 // MARK: - DISCOVERY MANAGER DELEGATE METHODS
-extension LeapContextManager:LeapDiscoveryManagerDelegate {
+extension LeapContextManager: LeapDiscoveryManagerDelegate {
     
     func getAllDiscoveries() -> Array<LeapDiscovery> {
         if let preview = previewConfig {
@@ -379,28 +383,32 @@ extension LeapContextManager:LeapDiscoveryManagerDelegate {
     
     func dismissDiscovery() { auiHandler?.removeAllViews() }
     
+    func sendDiscoveryTerminationEvent(with id: Int, for rule: String) {
+        let projectParams = self.currentConfiguration()?.projectParameters.first { $0.id == id }
+        analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: projectParams, for: rule), deploymentType: projectParams?.deploymentType)
+    }
 }
 
 // MARK: - FLOW MANAGER DELEGATE METHODS
-extension LeapContextManager:LeapFlowManagerDelegate {
+extension LeapContextManager: LeapFlowManagerDelegate {
     
     func noActiveFlows() {
         pageManager?.resetPageManager()
         stageManager?.resetStageManager()
+        guard let state = contextDetector?.getState(), state == .Stage else { return }
         contextDetector?.switchState()
     }
-    
 }
 
 // MARK: - PAGE MANAGER DELEGATE METHODS
-extension LeapContextManager:LeapPageManagerDelegate {
+extension LeapContextManager: LeapPageManagerDelegate {
     func newPageIdentified() {
         //        sendContextInfoEvent(eventTag: "leapPageEvent")
     }
 }
 
 // MARK: - STAGE MANAGER DELEGATE METHODS
-extension LeapContextManager:LeapStageManagerDelegate {
+extension LeapContextManager: LeapStageManagerDelegate {
     
     func getCurrentPage() -> LeapPage? {
         return pageManager?.getCurrentPage()
@@ -441,6 +449,14 @@ extension LeapContextManager:LeapStageManagerDelegate {
     func isSuccessStagePerformed() {
         if let discoveryId = flowManager?.getDiscoveryId() {
             LeapSharedInformation.shared.discoveryFlowCompleted(discoveryId: discoveryId)
+            let projectParams = getProjectParameter()
+            let flowsCompletedCount = LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo()
+            let discovery = currentConfiguration()?.discoveries.first { $0.id == discoveryId }
+            if let currentFlowCompletedCount = flowsCompletedCount["\(discoveryId)"], let perApp = discovery?.terminationfrequency?.perApp, perApp != -1 {
+                if currentFlowCompletedCount >= perApp {
+                    analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: projectParams, for: "After \(perApp) flow completion"), deploymentType: projectParams?.deploymentType)
+                }
+            }
         }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
@@ -451,8 +467,8 @@ extension LeapContextManager:LeapStageManagerDelegate {
 // MARK: - CREATE AND SEND ANALYTICS EVENT
 extension LeapContextManager {
     
-    func sendStartScreenEvent(instructionId: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getStartScreenEvent(with projectParameter: LeapProjectParameters?, instructionId: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
             return nil
         }
@@ -463,23 +479,23 @@ extension LeapContextManager {
         return event
     }
     
-    func sendOptInEvent() -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getOptInEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.optInEvent, withParams: projectParameter)
         print("Opt in")
         return event
     }
     
-    func sendOptOutEvent() -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getOptOutEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.optOutEvent, withParams: projectParameter)
         lastEventId = nil
         print("Opt out")
         return event
     }
     
-    func sendInstructionEvent(instructionId: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getInstructionEvent(with projectParameter: LeapProjectParameters?, instructionId: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
             return nil
         }
@@ -492,8 +508,8 @@ extension LeapContextManager {
         return event
     }
     
-    func sendAssistInstructionEvent(instructionId: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getAssistInstructionEvent(with projectParameter: LeapProjectParameters?, instructionId: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
             return nil
         }
@@ -505,15 +521,15 @@ extension LeapContextManager {
         return event
     }
     
-    func sendFlowSuccessEvent() -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getFlowSuccessEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowSuccessEvent, withParams: projectParameter)
         print("flow success")
         return event
     }
     
-    func sendFlowStopEvent() -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getFlowStopEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowStopEvent, withParams: projectParameter)
         event.elementName = stageManager?.getCurrentStage()?.name
         event.pageName = pageManager?.getCurrentPage()?.name
@@ -521,15 +537,15 @@ extension LeapContextManager {
         return event
     }
     
-    func sendFlowDisableEvent() -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getFlowDisableEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowDisableEvent, withParams: projectParameter)
         print("flow disable")
         return event
     }
     
-    func sendLanguageChangeEvent(from previousLanguage: String, to currentLanguage: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getLanguageChangeEvent(with projectParameter: LeapProjectParameters?, from previousLanguage: String, to currentLanguage: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.languageChangeEvent, withParams: projectParameter)
         event.language = currentLanguage
         event.previousLanguage = previousLanguage
@@ -537,8 +553,8 @@ extension LeapContextManager {
         return event
     }
     
-    func sendAUIActionTrackingEvent(action: Dictionary<String,Any>?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getAUIActionTrackingEvent(with projectParameter: LeapProjectParameters?, action: Dictionary<String,Any>?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.actionTrackingEvent, withParams: projectParameter)
         
         guard let body = action?[constant_body] as? Dictionary<String, Any> else { return nil }
@@ -574,11 +590,19 @@ extension LeapContextManager {
         return event
     }
     
-    func sendLeapSDKDisableEvent() -> LeapAnalyticsEvent? {
-        guard let projectParameter = getProjectParameter() else { return nil }
+    func getLeapSDKDisableEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.leapSdkDisableEvent, withParams: projectParameter)
         event.language = nil
         print("Leap SDK disable")
+        return event
+    }
+    
+    func getProjectTerminationEvent(with projectParameter: LeapProjectParameters?, for terminationRule: String) -> LeapAnalyticsEvent? {
+        guard let projectParameter = projectParameter, projectParameter.deploymentType == constant_LINK else { return nil }
+        let event = LeapAnalyticsEvent(withEvent: EventName.projectTerminationEvent, withParams: projectParameter)
+        event.terminationRule = terminationRule
+        print("Project Termination")
         return event
     }
 }
@@ -678,19 +702,20 @@ extension LeapContextManager:LeapAUICallback {
     
     func didPresentAssist() {
         guard let state = contextDetector?.getState() else { return }
+        let projectParams = getProjectParameter()
         switch state {
         case .Discovery:
             if let am = assistManager, let assist = am.getCurrentAssist() {
                 // assist Instriuction
                 am.assistPresented()
                 guard let instruction = assist.instruction else { return }
-                analyticsManager?.saveEvent(event: sendAssistInstructionEvent(instructionId: instruction.id))
+                analyticsManager?.saveEvent(event: getAssistInstructionEvent(with: projectParams, instructionId: instruction.id), deploymentType: projectParams?.deploymentType)
             }
             else if let dm = discoveryManager, let discovery = dm.getCurrentDiscovery() {
                 dm.discoveryPresented()
                 // start screen event
                 guard let instruction = discovery.instruction else { return }
-                analyticsManager?.saveEvent(event: sendStartScreenEvent(instructionId: instruction.id))
+                analyticsManager?.saveEvent(event: getStartScreenEvent(with: projectParams, instructionId: instruction.id), deploymentType: projectParams?.deploymentType)
             }
         case .Stage:
             // stage instruction
@@ -699,10 +724,10 @@ extension LeapContextManager:LeapAUICallback {
             // TODO: - above scenario for start screen and element seen
             guard let sm = stageManager, let stage = sm.getCurrentStage(), let instruction = stage.instruction else { return }
             // Element seen Event
-            analyticsManager?.saveEvent(event: sendInstructionEvent(instructionId: instruction.id))
+            analyticsManager?.saveEvent(event: getInstructionEvent(with: projectParams, instructionId: instruction.id), deploymentType: projectParams?.deploymentType)
             // Flow success Event
             if stage.isSuccess {
-                analyticsManager?.saveEvent(event: sendFlowSuccessEvent())
+                analyticsManager?.saveEvent(event: getFlowSuccessEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
             }
             break
         }
@@ -716,12 +741,13 @@ extension LeapContextManager:LeapAUICallback {
     
     func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action: Dictionary<String,Any>?) {
         guard let state = contextDetector?.getState() else { return }
+        let projectParams = getProjectParameter()
         switch state {
         case .Discovery:
             if let am = assistManager, let _ = am.getCurrentAssist() {
                 // aui action tracking
                 if let action = action {
-                    analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
+                    analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: projectParams, action: action), deploymentType: projectParams?.deploymentType)
                 }
             }
             guard let liveContext = getLiveContext() else { return }
@@ -731,21 +757,22 @@ extension LeapContextManager:LeapAUICallback {
         case .Stage:
             // aui action tracking
             if let action = action {
-                analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
+                analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: projectParams, action: action), deploymentType: projectParams?.deploymentType)
             }
             guard let sm = stageManager, let _ = sm.getCurrentStage() else { return }
             
             var endFlow = false
             if let body = action?[constant_body] as? Dictionary<String, Any> { endFlow = body["endFlow"] as? Bool ?? false }
+            sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
             if endFlow {  // Flow Stop event
-                analyticsManager?.saveEvent(event: sendFlowStopEvent())
+                analyticsManager?.saveEvent(event: getFlowStopEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
                 if let disId = flowManager?.getDiscoveryId() { LeapSharedInformation.shared.muteDisovery(disId) }
                 flowManager?.resetFlowsArray()
                 pageManager?.resetPageManager()
                 stageManager?.resetStageManager()
+                guard let state = contextDetector?.getState(), state == .Stage else { return }
                 contextDetector?.switchState()
             }
-            sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
         }
     }
     
@@ -761,8 +788,9 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func optionPanelStopClicked() {
+        let projectParams = getProjectParameter()
         // Flow Stop event
-        analyticsManager?.saveEvent(event: sendFlowStopEvent())
+        analyticsManager?.saveEvent(event: getFlowStopEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
         guard let dis = getLiveDiscovery() else {
             contextDetector?.start()
             return
@@ -783,8 +811,9 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func disableAssistance() {
+        let projectParams = getProjectParameter()
         // send flow disable event
-        analyticsManager?.saveEvent(event: sendFlowDisableEvent())
+        analyticsManager?.saveEvent(event: getFlowDisableEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
         
         guard let state = contextDetector?.getState(), state == .Stage else { return }
         contextDetector?.switchState()
@@ -794,17 +823,20 @@ extension LeapContextManager:LeapAUICallback {
     
     func disableLeapSDK() {
         contextDetector?.stop()
-        analyticsManager?.saveEvent(event: sendLeapSDKDisableEvent())
+        let projectParams = getProjectParameter()
+        analyticsManager?.saveEvent(event: getLeapSDKDisableEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
     }
     
     func didLanguageChange(from previousLanguage: String, to currentLanguage: String) {
+        let projectParams = getProjectParameter()
         if previousLanguage != currentLanguage {
-            analyticsManager?.saveEvent(event: sendLanguageChangeEvent(from: previousLanguage, to: currentLanguage))
+            analyticsManager?.saveEvent(event: getLanguageChangeEvent(with: projectParams, from: previousLanguage, to: currentLanguage), deploymentType: projectParams?.deploymentType)
         }
     }
     
     func receiveAUIEvent(action: Dictionary<String, Any>) {
-        analyticsManager?.saveEvent(event: sendAUIActionTrackingEvent(action: action))
+        let projectParams = getProjectParameter()
+        analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: projectParams, action: action), deploymentType: projectParams?.deploymentType)
     }
     
     func flush() {
@@ -885,25 +917,26 @@ extension LeapContextManager {
     }
     
     func handleDiscoveryDismiss(byUser:Bool, action:Dictionary<String,Any>?) {
+        let projectParams = getProjectParameter()
         guard let body = action?["body"] as? Dictionary<String,Any>,
               let optIn = body["optIn"] as? Bool, optIn,
               let dm = discoveryManager,
               let discovery = dm.getCurrentDiscovery(),
               let flowId = discovery.flowId else {
             // optOut
-            analyticsManager?.saveEvent(event: sendOptOutEvent())
+            analyticsManager?.saveEvent(event: getOptOutEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
         }
         // optIn
-        analyticsManager?.saveEvent(event: sendOptInEvent())
+        analyticsManager?.saveEvent(event: getOptInEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
         let flowSelected = self.currentConfiguration()?.flows.first { $0.id == flowId }
         guard let flow = flowSelected, let fm = flowManager else {
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
         }
-        //sendDiscoveryInfoEvent(eventTag: "discoveryOptInEvent")
         fm.addNewFlow(flow, false, discovery.id)
+        // intended to switch from discovery to stage
         contextDetector?.switchState()
         discoveryManager?.discoveryDismissed(byUser: true, optIn: true)
     }
