@@ -37,7 +37,6 @@ class LeapAssistManager {
             let terminatedAssists = LeapSharedInformation.shared.getTerminatedAssistsEvents()
             if presentedCount >= nSession && nSession != -1 && !terminatedAssists.contains(assist.id) {
                 delegate?.sendAssistTerminationEvent(with: assist.id, for: "After \(nSession) sessions")
-                LeapSharedInformation.shared.terminationEventSent(discoveryId: nil, assistId: assist.id)
             }
         }
     }
