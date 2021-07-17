@@ -244,3 +244,9 @@ let constant_SAMPLE_APP = "SAMPLE_APP"
 let constant_PAIRING = "PAIRING"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
+
+func print(_ object: Any) {
+    #if DEBUG
+        Swift.print(object)
+    #endif
+}
