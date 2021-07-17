@@ -215,7 +215,7 @@ extension LeapSharedInformation {
         var assistDismissed = self.getDismissedAssistInfo()
         if assistDismissed.contains(assistId) { assistDismissed = assistDismissed.filter{ $0 != assistId} }
         prefs.setValue(assistDismissed, forKey: LeapSharedInformationConstants.assistsDismissedByUser)
-        
+        removeTerminationEventSent(discoveryId: nil, assistId: assistId)
     }
     
     func resetDiscovery(_ discoveryId: Int) {
@@ -241,6 +241,7 @@ extension LeapSharedInformation {
         var terminatedDiscoveries = getTerminatedDiscoveries()
         if terminatedDiscoveries.contains(discoveryId) { terminatedDiscoveries = terminatedDiscoveries.filter{ $0 != discoveryId} }
         prefs.setValue(terminatedDiscoveries, forKey: LeapSharedInformationConstants.terminatedDiscoveries)
+        removeTerminationEventSent(discoveryId: discoveryId, assistId: nil)
     }
     
 }

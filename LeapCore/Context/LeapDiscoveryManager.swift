@@ -37,7 +37,6 @@ class LeapDiscoveryManager {
             let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveriesEvents()
             if presentedCount >= nSession && nSession != -1 && !terminatedDiscoveries.contains(discovery.id) {
                 delegate?.sendDiscoveryTerminationEvent(with: discovery.id, for: "After \(nSession) sessions")
-                LeapSharedInformation.shared.terminationEventSent(discoveryId: discovery.id, assistId: nil)
             }
         }
     }

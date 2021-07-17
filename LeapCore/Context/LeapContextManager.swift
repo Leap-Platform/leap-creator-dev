@@ -342,7 +342,9 @@ extension LeapContextManager: LeapAssistManagerDelegate {
     
     func sendAssistTerminationEvent(with id: Int, for rule: String) {
         let projectParams = self.currentConfiguration()?.projectParameters.first { $0.id == id }
-        analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: projectParams, for: rule), deploymentType: projectParams?.deploymentType)
+        guard let event = getProjectTerminationEvent(with: projectParams, for: rule) else { return }
+        analyticsManager?.saveEvent(event: event, deploymentType: projectParams?.deploymentType)
+        LeapSharedInformation.shared.terminationEventSent(discoveryId: nil, assistId: id)
     }
 }
 
@@ -385,7 +387,9 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
     
     func sendDiscoveryTerminationEvent(with id: Int, for rule: String) {
         let projectParams = self.currentConfiguration()?.projectParameters.first { $0.id == id }
-        analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: projectParams, for: rule), deploymentType: projectParams?.deploymentType)
+        guard let event = getProjectTerminationEvent(with: projectParams, for: rule) else { return }
+        analyticsManager?.saveEvent(event: event, deploymentType: projectParams?.deploymentType)
+        LeapSharedInformation.shared.terminationEventSent(discoveryId: id, assistId: nil)
     }
 }
 
