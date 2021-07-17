@@ -20,6 +20,7 @@ enum EventName: String {
     case languageChangeEvent = "flow_language_change"
     case actionTrackingEvent = "element_action"
     case leapSdkDisableEvent = "leap_sdk_disable"
+    case projectTerminationEvent = "project_termination"
 }
 
 class LeapAnalyticsEvent: Codable {
@@ -39,6 +40,7 @@ class LeapAnalyticsEvent: Codable {
     var elementName: String?
     var actionEventType: String?
     var actionEventValue: String?
+    var terminationRule: String?
     
     init(withEvent eventName: EventName, withParams projectParams: LeapProjectParameters) {
         self.id = String.generateUUIDString()

@@ -11,14 +11,16 @@ import Foundation
 /// LeapSharedInformation class is responsible for storing and retrieving data that can be accessed through LeapCore functionality. It  stores api key,  session id, language code and mute status of the SDK
 
 struct LeapSharedInformationConstants {
-    static let assistsPresented = "leap_assists_presented"
+    static let assistsPresentedInSession = "leap_assists_presented"
     static let assistsDismissedByUser = "leap_assists_dismissed"
-    static let discoveryPresented = "leap_discovery_presented"
+    static let discoveryPresentedInSession = "leap_discovery_presented"
     static let discoveryDismissedByUser = "leap_discovery_dismissed"
     static let discoveryFlowCompleted = "leap_discovery_flow_completed"
     static let terminatedDiscoveries = "leap_terminated_discoveries"
     static let mutedDiscoveries = "leap_muted_discoveries"
     static let muted = "leap_muted"
+    static let discoveryTerminationSent = "leap_discovery_termination_sent"
+    static let assistTerminationSent = "leap_assist_termination_sent"
 }
 
 enum LeapDownloadStatus {
@@ -104,11 +106,11 @@ extension LeapSharedInformation {
 // MARK: - ASSIST HANDLING
 extension LeapSharedInformation {
     
-    func assistPresented(assistId:Int) {
-        var assistsPresent = prefs.value(forKey: LeapSharedInformationConstants.assistsPresented) as? Dictionary<String,Int> ?? [:]
+    func assistPresentedInSession(assistId:Int) {
+        var assistsPresent = prefs.value(forKey: LeapSharedInformationConstants.assistsPresentedInSession) as? Dictionary<String,Int> ?? [:]
         let currentAssistCount = assistsPresent[String(assistId)] ?? 0
         assistsPresent[String(assistId)] = currentAssistCount + 1
-        prefs.setValue(assistsPresent, forKey: LeapSharedInformationConstants.assistsPresented)
+        prefs.setValue(assistsPresent, forKey: LeapSharedInformationConstants.assistsPresentedInSession)
         prefs.synchronize()
     }
     
@@ -120,7 +122,7 @@ extension LeapSharedInformation {
     }
     
     func getAssistsPresentedInfo() -> Dictionary<String, Int>{
-        return (prefs.value(forKey: LeapSharedInformationConstants.assistsPresented) as? Dictionary<String,Int>) ?? [:]
+        return (prefs.value(forKey: LeapSharedInformationConstants.assistsPresentedInSession) as? Dictionary<String,Int>) ?? [:]
     }
     
     func getDismissedAssistInfo() -> Array<Int> {
@@ -131,11 +133,11 @@ extension LeapSharedInformation {
 // MARK: - DISCOVERY HANDLING {
 extension LeapSharedInformation {
     
-    func discoveryPresent(discoveryId:Int) {
-        var discoveryPresent = prefs.value(forKey: LeapSharedInformationConstants.discoveryPresented) as? Dictionary<String,Int> ?? [:]
+    func discoveryPresentedInSession(discoveryId:Int) {
+        var discoveryPresent = prefs.value(forKey: LeapSharedInformationConstants.discoveryPresentedInSession) as? Dictionary<String,Int> ?? [:]
         let currentDiscoveryCount = discoveryPresent[String(discoveryId)] ?? 0
         discoveryPresent[String(discoveryId)] = currentDiscoveryCount + 1
-        prefs.setValue(discoveryPresent, forKey: LeapSharedInformationConstants.discoveryPresented)
+        prefs.setValue(discoveryPresent, forKey: LeapSharedInformationConstants.discoveryPresentedInSession)
         prefs.synchronize()
     }
     
@@ -180,7 +182,7 @@ extension LeapSharedInformation {
     }
     
     func getDiscoveriesPresentedInfo() -> Dictionary<String,Int> {
-        return (prefs.value(forKey: LeapSharedInformationConstants.discoveryPresented) as? Dictionary<String,Int>) ?? [:]
+        return (prefs.value(forKey: LeapSharedInformationConstants.discoveryPresentedInSession) as? Dictionary<String,Int>) ?? [:]
     }
     
     func getDismissedDiscoveryInfo() -> Array<Int> {
@@ -208,7 +210,7 @@ extension LeapSharedInformation {
         if let _ = assistPresented[String(assistId)] {
             assistPresented[String(assistId)] = 0
         }
-        prefs.setValue(assistPresented, forKey: LeapSharedInformationConstants.assistsPresented)
+        prefs.setValue(assistPresented, forKey: LeapSharedInformationConstants.assistsPresentedInSession)
         
         var assistDismissed = self.getDismissedAssistInfo()
         if assistDismissed.contains(assistId) { assistDismissed = assistDismissed.filter{ $0 != assistId} }
@@ -222,7 +224,7 @@ extension LeapSharedInformation {
         if let _ = presentedDiscoveries[String(discoveryId)] {
             presentedDiscoveries[String(discoveryId)] = 0
         }
-        prefs.setValue(presentedDiscoveries, forKey: LeapSharedInformationConstants.discoveryPresented)
+        prefs.setValue(presentedDiscoveries, forKey: LeapSharedInformationConstants.discoveryPresentedInSession)
         
         var dismissedDiscoveries = self.getDismissedDiscoveryInfo()
         if dismissedDiscoveries.contains(discoveryId) { dismissedDiscoveries = dismissedDiscoveries.filter { $0 != discoveryId} }
@@ -260,4 +262,43 @@ extension LeapSharedInformation {
         prefs.synchronize()
     }
     
+}
+
+extension LeapSharedInformation {
+    
+    func terminationEventSent(discoveryId: Int?, assistId: Int?) {
+        if let discoveryId = discoveryId {
+            var terminatedDiscoveries = prefs.object(forKey: LeapSharedInformationConstants.discoveryTerminationSent) as? Array<Int> ?? []
+            if !terminatedDiscoveries.contains(discoveryId) {
+                terminatedDiscoveries.append(discoveryId)
+                prefs.setValue(terminatedDiscoveries, forKey: LeapSharedInformationConstants.discoveryTerminationSent)
+            }
+        } else if let assistId = assistId {
+            var terminatedDiscoveries = prefs.object(forKey: LeapSharedInformationConstants.assistTerminationSent) as? Array<Int> ?? []
+            if !terminatedDiscoveries.contains(assistId) {
+                terminatedDiscoveries.append(assistId)
+                prefs.setValue(terminatedDiscoveries, forKey: LeapSharedInformationConstants.assistTerminationSent)
+            }
+        }
+    }
+    
+    func removeTerminationEventSent(discoveryId: Int?, assistId: Int?) {
+        if let discoveryId = discoveryId {
+            var terminatedDiscoveries = prefs.object(forKey: LeapSharedInformationConstants.discoveryTerminationSent) as? Array<Int> ?? []
+            terminatedDiscoveries = terminatedDiscoveries.filter { $0 != discoveryId }
+            prefs.setValue(terminatedDiscoveries, forKey: LeapSharedInformationConstants.discoveryTerminationSent)
+        } else if let assistId = assistId {
+            var terminatedAssists = prefs.object(forKey: LeapSharedInformationConstants.assistTerminationSent) as? Array<Int> ?? []
+            terminatedAssists = terminatedAssists.filter { $0 != assistId }
+            prefs.setValue(terminatedAssists, forKey: LeapSharedInformationConstants.assistTerminationSent)
+        }
+    }
+    
+    func getTerminatedDiscoveriesEvents() -> [Int] {
+        return prefs.object(forKey: LeapSharedInformationConstants.discoveryTerminationSent) as? Array<Int> ?? []
+    }
+    
+    func getTerminatedAssistsEvents() -> [Int] {
+        return prefs.object(forKey: LeapSharedInformationConstants.assistTerminationSent) as? Array<Int> ?? []
+    }
 }
