@@ -64,6 +64,7 @@ class LeapStageManager {
                 if stage.isSuccess {
                     currentStage = nil
                     stageTracker = [:]
+                    actionTakenStages = []
                     return
                 }
             }
@@ -102,6 +103,7 @@ class LeapStageManager {
         currentStage = nil
         stageTimer = nil
         stageTracker = [:]
+        actionTakenStages = []
     }
     
     // Called in case to reidentify same stage as new stage next time
@@ -133,6 +135,7 @@ class LeapStageManager {
         if stage.isSuccess {
             delegate?.isSuccessStagePerformed()
             stageTracker = [:]
+            actionTakenStages = []
         }
     }
 
