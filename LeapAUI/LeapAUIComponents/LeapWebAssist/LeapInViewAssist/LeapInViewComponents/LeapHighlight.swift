@@ -22,7 +22,7 @@ enum LeapHighlightConnectorType: String {
 
 /// LeapHighlight - A Web InViewAssist AUI Component class to show a tip with a connector on the screen and highlights the source view.
 class LeapHighlight: LeapTipView {
-      
+    
     /// maskLayer for the tooltip.
     private var maskLayer = CAShapeLayer()
     
@@ -62,7 +62,7 @@ class LeapHighlight: LeapTipView {
     func presentHighlight(toRect: CGRect, inView: UIView?) {
         
         webRect = toRect
-                
+        
         presentHighlight()
     }
     
@@ -71,11 +71,6 @@ class LeapHighlight: LeapTipView {
         guard let previousFrame = previousFrame else { return }
         
         if previousFrame.origin == getGlobalToViewFrame().origin { return }
-        
-        if assistInfo?.highlightAnchor ?? true {
-            
-           highlightAnchor()
-        }
         
         placePointer()
     }
@@ -88,56 +83,46 @@ class LeapHighlight: LeapTipView {
         
         if previousFrame.origin == getGlobalToViewFrame().origin { return }
         
-        if assistInfo?.highlightAnchor ?? true {
-            
-           highlightAnchor()
-        }
-        
         placePointer()
     }
-        
+    
     /// setup toView, inView, toolTipView and webView
     func setupView() {
         
         inView = toView?.window
         
         inView?.addSubview(self)
-           
+        
         configureOverlayView()
-                   
+        
         self.addSubview(toolTipView)
-    
+        
         toolTipView.addSubview(webView)
     }
     
     /// configures webView, toolTipView and highlights anchor method called.
     func configureTooltipView() {
         
-       // comment this if you want value from config
-       assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
-         
-       // comment this if you want value from config
-       assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
-         
-       self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
-                                
-       maskLayer.bounds = self.webView.bounds
-    
-       cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
-
-       webView.layer.cornerRadius = cornerRadius
-    
-       webView.layer.masksToBounds = true
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.elevation = 8 // Hardcoded value
         
-       if assistInfo?.highlightAnchor ?? true {
-           
-          highlightAnchor()
-       }
+        // comment this if you want value from config
+        assistInfo?.layoutInfo?.style.cornerRadius = 8 // Hardcoded value
+        
+        self.toolTipView.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
+        
+        maskLayer.bounds = self.webView.bounds
+        
+        cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
+        
+        webView.layer.cornerRadius = cornerRadius
+        
+        webView.layer.masksToBounds = true
         
         if assistInfo?.layoutInfo?.style.isContentTransparent ?? false {
             
             self.webView.isOpaque = false
-        
+            
         } else {
             
             self.webView.isOpaque = true
@@ -163,10 +148,10 @@ class LeapHighlight: LeapTipView {
         }
         
         let arrowDirection = getArrowDirection()
-             
+        
         guard let direction = arrowDirection else {
-                 
-          return
+            
+            return
         }
         
         let globalToView = getGlobalToViewFrame()
@@ -178,7 +163,7 @@ class LeapHighlight: LeapTipView {
         var toMidY: CGFloat = 0.0
         
         switch direction {
-            
+        
         case .top:
             
             midY = (globalToView.origin.y) + (globalToView.size.height)
@@ -205,15 +190,15 @@ class LeapHighlight: LeapTipView {
         for layer in (self.layer.sublayers ?? []) {
             
             if let leapLayer = layer as? LeapLayer {
-            
+                
                 leapLayer.removeFromSuperlayer()
             }
         }
         
         let leapLayer = LeapLayer()
-                
+        
         switch connectorType {
-            
+        
         case .solid:
             
             leapLayer.addSolidLine(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor)
@@ -221,7 +206,7 @@ class LeapHighlight: LeapTipView {
             self.layer.addSublayer(leapLayer)
             
         case .solidWithCircle:
-                        
+            
             leapLayer.addSolidLineWithCircle(fromPoint: CGPoint(x: midX, y: midY), toPoint: CGPoint(x: midX, y: toMidY), withColor: connectorColor.cgColor, withCircleRadius: connectorCircleRadius)
             
             self.layer.addSublayer(leapLayer)
@@ -243,26 +228,31 @@ class LeapHighlight: LeapTipView {
             print("No Connector")
         }
     }
-      
+    
     /// sets the pointer direction, origin and path for the toolTipView layer.
     func placePointer() {
         
-       previousFrame = getGlobalToViewFrame()
+        previousFrame = getGlobalToViewFrame()
         
-       configureConnector()
-    
-       let arrowDirection = getArrowDirection()
+        configureConnector()
+        
+        let arrowDirection = getArrowDirection()
+        
+        guard let direction = arrowDirection, inView != nil else {
             
-       guard let direction = arrowDirection, inView != nil else {
-                
-         return
-       }
+            return
+        }
         
-       configureLeapIconViewForHighlight(direction: direction)
+        configureLeapIconViewForHighlight(direction: direction)
+        
+        setOriginForDirection(direction: direction)
+        
+        drawMaskLayerFor(direction)
+        
+        if assistInfo?.highlightAnchor ?? true {
             
-       setOriginForDirection(direction: direction)
-        
-       drawMaskLayerFor(direction)
+            highlightAnchor()
+        }
     }
     
     func configureLeapIconViewForHighlight(direction: LeapTooltipArrowDirection) {
@@ -272,24 +262,24 @@ class LeapHighlight: LeapTipView {
         toolTipView.removeConstraints(toolTipView.constraints)
         
         if direction == .top {
-             
-             configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: minimalSpacing)
-         
-         } else {
-             
-             configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: minimalSpacing)
-         }
+            
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: minimalSpacing)
+            
+        } else {
+            
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: minimalSpacing)
+        }
     }
     
     /// Observes the toolTipView's Origin, gets called when there is a change in position.
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-            
+        
         if keyPath == "position" {
-                
-           placePointer()
+            
+            placePointer()
         }
     }
-        
+    
     /// gets the arrow direction - top or bottom.
     func getArrowDirection() -> LeapTooltipArrowDirection? {
         
@@ -297,13 +287,13 @@ class LeapHighlight: LeapTipView {
             
             return .none
         }
-    
+        
         let globalToViewFrame = getGlobalToViewFrame()
         
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
-
+        
         var toViewTopSpacing = globalToViewFrame.origin.y
-                
+        
         if assistInfo?.highlightAnchor ?? true {
             
             toViewTopSpacing = toViewTopSpacing - CGFloat(manipulatedHighlightSpacing)
@@ -321,18 +311,18 @@ class LeapHighlight: LeapTipView {
         if calculatedY >= inViewFrame.origin.y {
             
             return .bottom
-        
+            
         } else {
             
             return .top
         }
     }
-        
+    
     /// sets the origin for arrow direction
     /// - Parameters:
     ///   - direction: ToolTip arrow direction.
     func setOriginForDirection(direction: LeapTooltipArrowDirection) {
-            
+        
         let globalToViewFrame = getGlobalToViewFrame()
         
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
@@ -352,7 +342,7 @@ class LeapHighlight: LeapTipView {
             
             if x < 0 {
                 
-               x = 0
+                x = 0
             }
             
             y = globalToViewFrame.origin.y + globalToViewFrame.size.height
@@ -375,7 +365,7 @@ class LeapHighlight: LeapTipView {
             
             if x < 0 {
                 
-               x = 0
+                x = 0
             }
             
             y = (globalToViewFrame.origin.y - toolTipView.frame.size.height)
@@ -395,25 +385,25 @@ class LeapHighlight: LeapTipView {
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
     }
-        
+    
     /// draws mask layer based on direction.
     /// - Parameters:
     ///   - direction: ToolTip arrow direction.
     func drawMaskLayerFor(_ direction:LeapTooltipArrowDirection) {
-    
+        
         var path: UIBezierPath
-
+        
         switch direction {
         
         case .top:
-        
+            
             path = drawPathForTopTooltip()
-        
+            
         case .bottom:
             
             path = drawPathForBottomTooltip()
         }
-            
+        
         let contentPath = UIBezierPath(rect: self.webView.bounds)
         
         contentPath.append(path)
@@ -423,7 +413,7 @@ class LeapHighlight: LeapTipView {
         maskLayer.path = contentPath.cgPath
         
         self.webView.layer.mask = maskLayer
-       
+        
         // To set stroke color and width
         
         let borderLayer = CAShapeLayer()
@@ -441,35 +431,35 @@ class LeapHighlight: LeapTipView {
         assistInfo?.layoutInfo?.style.strokeWidth = 0 // hardcoded value
         
         if let colorString = self.assistInfo?.layoutInfo?.style.strokeColor {
-        
+            
             borderLayer.strokeColor = UIColor.init(hex: colorString)?.cgColor
         }
         
         if let strokeWidth = self.assistInfo?.layoutInfo?.style.strokeWidth {
             
             borderLayer.lineWidth = CGFloat(strokeWidth)
-        
+            
         } else {
             
             borderLayer.lineWidth = 0.0
         }
-            
+        
         self.webView.layer.addSublayer(borderLayer)
     }
-        
+    
     /// draws mask layer path for top arrow direction.
     func drawPathForTopTooltip() -> UIBezierPath {
-    
+        
         let path = UIBezierPath()
-
+        
         path.move(to: CGPoint(x: 0, y: 0))
         
         path.addArc(withCenter: CGPoint(x: 0, y: 0), radius: cornerRadius, startAngle: .pi, endAngle: 3 * .pi/2, clockwise: true)
-                    
+        
         path.addLine(to: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: 0))
         
         path.addArc(withCenter: CGPoint(x: self.webView.frame.size.width-cornerRadius, y: cornerRadius), radius: cornerRadius, startAngle: 3 * .pi/2, endAngle: 0, clockwise: true)
-            
+        
         path.addLine(to: CGPoint(x: self.webView.frame.size.width, y: 0))
         
         path.addLine(to: CGPoint(x: 0, y: 0))
@@ -481,9 +471,9 @@ class LeapHighlight: LeapTipView {
     
     /// draws mask layer path for bottom arrow direction.
     func drawPathForBottomTooltip() -> UIBezierPath {
-    
+        
         let contentSize = self.webView.frame.size
-
+        
         let path = UIBezierPath()
         
         path.move(to: CGPoint(x: 0, y: contentSize.height))
@@ -493,44 +483,44 @@ class LeapHighlight: LeapTipView {
         path.addLine(to: CGPoint(x: contentSize.width, y: contentSize.height-cornerRadius))
         
         path.addArc(withCenter: CGPoint(x: contentSize.width-cornerRadius, y: contentSize.height-cornerRadius), radius: cornerRadius, startAngle: 0, endAngle: .pi/2, clockwise: true)
-                    
+        
         path.addLine(to: CGPoint(x: cornerRadius, y: contentSize.height))
         
         path.addArc(withCenter: CGPoint(x: cornerRadius, y: contentSize.height-cornerRadius), radius: cornerRadius, startAngle: .pi/2, endAngle: .pi, clockwise: true)
         
         path.close()
-            
+        
         return path
     }
-        
+    
     /// finds eligible parent view.
     /// - Parameters:
     ///   - view: Takes a non-optional view to check for eligible view or it's parent view.
     func findEligibleInView(view: UIView) -> UIView {
-    
+        
         let eligibleView = view
-
+        
         if canCompletelyHoldPointer(eligibleView) { return eligibleView }
         
         guard let superView = eligibleView.superview else { return eligibleView }
         
         if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
-        
+            
             if canCompletelyHoldPointer(superView) { return eligibleView }
             
             else { return findEligibleInView(view: superView) }
             
         } else {
-        
+            
             return findEligibleInView(view: superView)
         }
     }
-        
+    
     /// checks whether a view's size is greater than the tooltipView's size.
     /// - Parameters:
     ///   - view: A non-optional to check it's size against the tooltipView's size.
     func canCompletelyHoldPointer(_ view: UIView) -> Bool {
-    
+        
         return (view.bounds.height > 120 && view.bounds.width > 260)
     }
     
@@ -547,7 +537,7 @@ class LeapHighlight: LeapTipView {
         if width <= 0 || width > Float(proportionalWidth) {
             
             sizeWidth = proportionalWidth
-        
+            
         } else if width < Float(proportionalWidth) {
             
             sizeWidth = Double(width)
@@ -557,9 +547,9 @@ class LeapHighlight: LeapTipView {
             
             sizeWidth = sizeWidth ?? Double(width) - 24
         }
-                            
+        
         self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
-            
+        
         self.toolTipView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))
     }
     
@@ -574,7 +564,7 @@ class LeapHighlight: LeapTipView {
         guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
         DispatchQueue.main.async {
-           self.placePointer()
+            self.placePointer()
         }
         //toView?.layer.addObserver(toolTipView, forKeyPath: "position", options: .new, context: nil)
     }
