@@ -19,8 +19,9 @@ class LeapTTSInfo{
 }
 
 enum LeapTriggerMode:String {
-    case Single =   "SINGLE_FLOW_TRIGGER"
-    case Multi  =   "MULTI_FLOW_TRIGGER"
+    case Single     =   "SINGLE_FLOW_TRIGGER"
+    case Multi      =   "MULTI_FLOW_TRIGGER"
+    case FlowMenu   =   "FLOW_MENU_TRIGGER"
 }
 
 class LeapTaggedEventCondition {
