@@ -77,6 +77,7 @@ class LeapDiscovery:LeapContext {
     var autoStart:Bool
     var terminationfrequency:LeapFlowTerminationFrequency?
     var flowId:Int?
+    var flowProjectIds:Array<String>?
     var triggerFrequency: LeapTriggerFrequency?
     var localeCodes: Array<String>?
     var languageOption: Dictionary<String,String>?
@@ -86,6 +87,7 @@ class LeapDiscovery:LeapContext {
         enableIcon = discoveryDict[constant_enableIcon] as? Bool ?? false
         autoStart = discoveryDict[constant_autoStart] as? Bool ?? false
         flowId = discoveryDict[constant_flowId] as? Int
+        flowProjectIds = discoveryDict[constant_flowProjectIds] as? Array<String>
         
         if !isPreview {
             if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Int> {
