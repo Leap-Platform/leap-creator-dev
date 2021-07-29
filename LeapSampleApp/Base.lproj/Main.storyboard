@@ -149,7 +149,7 @@
         <!--Place View Controller-->
         <scene sceneID="mOy-WD-saw">
             <objects>
-                <viewController id="MMf-1P-3yQ" customClass="PlaceViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlaceViewController" id="MMf-1P-3yQ" customClass="PlaceViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GyH-Wx-pEa">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -419,7 +419,7 @@
         <!--Single Webview View Controller-->
         <scene sceneID="RZw-yX-WFV">
             <objects>
-                <viewController id="taj-rf-WnA" customClass="SingleWebviewViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleWebviewViewController" id="taj-rf-WnA" customClass="SingleWebviewViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Gv7-9M-2g1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -696,10 +696,10 @@
             </objects>
             <point key="canvasLocation" x="2228" y="-627"/>
         </scene>
-        <!--View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="Y9A-ru-qUi">
             <objects>
-                <viewController id="4Ix-eZ-QZn" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" id="4Ix-eZ-QZn" customClass="MainViewController" customModule="LeapSampleApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EeB-8A-2V0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -727,6 +727,9 @@
                                 <state key="normal" title="Hybrid Views">
                                     <color key="titleColor" red="0.95686274510000002" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="hybridViewsButtonTapped:" destination="4Ix-eZ-QZn" eventType="touchUpInside" id="rUX-Eo-mKs"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4hp-Lw-mM1">
                                 <rect key="frame" x="111.5" y="308" width="191" height="40"/>
