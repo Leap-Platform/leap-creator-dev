@@ -257,17 +257,13 @@ class LeapHighlight: LeapTipView {
     
     func configureLeapIconViewForHighlight(direction: LeapTooltipArrowDirection) {
         
-        self.removeConstraints(self.constraints)
-        
-        toolTipView.removeConstraints(toolTipView.constraints)
-        
         if direction == .top {
             
-            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: minimalSpacing)
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: minimalSpacing, heightDistance: 0)
             
         } else {
             
-            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: minimalSpacing)
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: minimalSpacing, heightDistance: 0)
         }
     }
     

@@ -135,17 +135,13 @@ class LeapToolTip: LeapTipView {
     
     func configureLeapIconViewForTooltip(direction: LeapTooltipArrowDirection) {
         
-        self.removeConstraints(self.constraints)
-        
-        toolTipView.removeConstraints(toolTipView.constraints)
-        
         if direction == .top {
             
-            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: halfWidthForArrow)
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .bottom, cornerDistance: halfWidthForArrow, heightDistance: 0)
             
         } else {
             
-            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: halfWidthForArrow)
+            configureLeapIconView(superView: self, toItemView: toolTipView, alignmentType: .top, cornerDistance: halfWidthForArrow, heightDistance: 0)
         }
     }
     
