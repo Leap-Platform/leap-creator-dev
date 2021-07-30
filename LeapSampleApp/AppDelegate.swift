@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    var mainController: MainViewController?
+    
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         if #available(iOS 13.0, *) {
             // In iOS 13 setup is done in SceneDelegate
@@ -25,6 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let navigationController = mainstoryboard.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
             self.window?.rootViewController = navigationController
             self.window?.makeKeyAndVisible()
+            
+            mainController = navigationController.viewControllers.first as? MainViewController
         }
         return true
     }
@@ -56,6 +60,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true), let host = components.host else {
+            return false
+        }
+        
+        guard let deeplink = DeepLink(rawValue: host) else {
+            return false
+        }
+        
+        mainController?.handleDeeplink(deeplink)
+        
+        return true
     }
 }
 
