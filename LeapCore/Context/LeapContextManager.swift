@@ -52,6 +52,7 @@ class LeapContextManager:NSObject {
             pageManager = LeapPageManager(self)
             stageManager = LeapStageManager(self)
             self.start()
+            print("[Leap]Context Detection started")
         }
         
     }
@@ -83,6 +84,7 @@ class LeapContextManager:NSObject {
             if configuration == nil { configuration = withConfig }
             else { appendNewProjectConfig(projectConfig: withConfig) }
             contextDetector?.start()
+            print("[Leap]Context Detection started for project config")
         } else {
             initialize(withConfig: withConfig)
         }
@@ -150,6 +152,7 @@ class LeapContextManager:NSObject {
         guard let previewDict = notification.object as? Dictionary<String,Any> else { return }
         let tempConfig = previewDict["config"] as? Dictionary<String,Any>
         let configDict = ["data":[tempConfig]]
+        print("[Leap] Preview config received")
         assistManager?.resetManagerSession()
         discoveryManager?.resetManagerSession()
         flowManager?.resetFlowsArray()
@@ -259,6 +262,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func contextDetected(context: LeapContext, view: UIView?, rect: CGRect?, webview: UIView?) {
+        print("[Leap] Context Detected")
         if let assist = context as? LeapAssist {
             discoveryManager?.resetDiscoveryManager()
             assistManager?.triggerAssist(assist, view, rect, webview)
@@ -270,6 +274,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func noContextDetected() {
+        print("[Leap] No Context Detected")
         assistManager?.resetAssistManager()
         discoveryManager?.resetDiscoveryManager()
     }
@@ -285,11 +290,13 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     
     // MARK: - Page Methods
     func pageIdentified(_ page: LeapPage) {
+        print("[Leap] Page Detected \t page native identifiers = \(page.nativeIdentifiers) \t page web identifiers = \(page.webIdentifiers)")
         pageManager?.setCurrentPage(page)
         flowManager?.updateFlowArrayAndResetCounter()
     }
     
     func pageNotIdentified() {
+        print("[Leap] No Page Detected")
         pageManager?.setCurrentPage(nil)
         stageManager?.noStageFound()
     }
@@ -305,10 +312,12 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func stageIdentified(_ stage: LeapStage, pointerView: UIView?, pointerRect: CGRect?, webviewForRect:UIView?) {
+        print("[Leap] Stage Detected \t stage native ids = \(stage.nativeIdentifiers) \t web ids = \(stage.webIdentifiers)")
         stageManager?.setCurrentStage(stage, view: pointerView, rect: pointerRect, webviewForRect: webviewForRect)
     }
     
     func stageNotIdentified() {
+        print("[Leap] No Stage Detected")
         stageManager?.noStageFound()
     }
 }

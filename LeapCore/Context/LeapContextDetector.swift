@@ -163,6 +163,7 @@ extension LeapContextDetector {
     private func findIdentifiableAssistsAndDiscoveries(in hierarchy:Array<UIView>) {
         let contextsToCheck:Array<LeapContext> =  delegate?.getContextsToCheck() ?? []
         getPassingIdentifiers(for: contextsToCheck, in: hierarchy) { (passedNativeIds, passedWebIds) in
+            print("[Leap] Passing native ids = \(passedNativeIds) \n Passed web ids = \(passedWebIds)")
             let contextsIdentified = self.getPassingContexts(contextsToCheck, passedNativeIds, passedWebIds)
             guard contextsIdentified.count > 0 else {
                 self.delegate?.noContextDetected()
@@ -362,6 +363,7 @@ extension LeapContextDetector {
             }
             return Array(Set(webIdsArray+context.webIdentifiers))
         }
+        print("[Leap]Checking native identifiers = \(toCheckNativeIds) \n Checking web identifier = \(toCheckWebIds)")
         let passingNativeIds = getNativeIdentifiersPassing(toCheckNativeIds, inHierarchy: hierarchy)
         let webviews = hierarchy.filter{ $0.isKind(of: WKWebView.self) }
         guard webviews.count > 0, toCheckWebIds.count > 0 else {

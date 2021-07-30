@@ -50,7 +50,7 @@ class LeapFullScreen: LeapKeyWindowAssist {
         }
     }
     
-    override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0) {
+    override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0, heightDistance:CGFloat? = nil) {
         
         guard let enabled = iconInfo?.isEnabled, enabled else {
             

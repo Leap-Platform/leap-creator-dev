@@ -72,6 +72,7 @@ import LeapCoreSDK
         guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
         isStarted = true
+        print("[Leap]SDK is initialised")
     }
     
     @objc public func flush() {
