@@ -72,11 +72,13 @@ extension LeapInternal {
                   httpResponse.statusCode != 304,
                   let resultData = data,
                   let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                print("[Leap]Config fetched failed")
                 if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
                 let savedConfig = self.getSavedConfig()
                 self.startContextDetection(config: savedConfig)
                 return
             }
+            print("[Leap]Config fetched successfully")
             self.saveHeaders(headers: httpResponse.allHeaderFields)
             self.saveConfig(config: configDict)
             self.startContextDetection(config: configDict)
@@ -107,12 +109,14 @@ extension LeapInternal {
                   httpResponse.statusCode != 304,
                   let resultData = data,
                   let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                print("[Leap]Project config fetched failed")
                 if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
                 let savedConfig = self.getSavedConfig()
                 self.startContextDetection(config: savedConfig)
                 return
             }
             DispatchQueue.main.async {
+                print("[Leap]Project config fetched successfully")
                 self.fetchedProjectIds.append(projectId)
                 let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
                 self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)

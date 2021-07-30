@@ -118,6 +118,7 @@ class LeapDownloadOperation: LeapOperation {
             }
             self.copyFileToLeapFolder(tempLocation)
             self.statusUpdate(false, true, true, filePath)
+            print("[Leap]File downloaded = \(filePath.path)")
         }
         dlTask.resume()
     }
