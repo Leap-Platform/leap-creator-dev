@@ -164,6 +164,17 @@ class LeapKeyWindowAssist: LeapWebAssist {
         }
     }
     
+    override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let body = message.body as? String else { return }
+        guard let data = body.data(using: .utf8) else { return }
+        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
+        
+        if let type = dict[constant_type] as? String, type == constant_action_taken, let body = dict[constant_body] as? [String : Any], let clickType = body[constant_clickType] as? String, clickType == constant_flow, let deeplink = body[constant_deepLink] as? String {
+            guard let url = URL(string: deeplink) else { return }
+            UIApplication.shared.open(url)
+        }
+    }
+    
     /// - Parameters:
     ///   - dictionary: A dictionary that needs to be stringified.
     func dictionaryToStringifiedJson(dictionary: [String : Any]) -> String {
