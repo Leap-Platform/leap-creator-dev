@@ -301,7 +301,13 @@ class LeapSpot: LeapTipView {
         
         let calculatedY = (toViewTopSpacing - CGFloat(connectorLength) - toolTipView.frame.size.height) - iconSpacing
         
-        if calculatedY >= inViewFrame.origin.y {
+        var safeArea: CGFloat = 0.0
+        
+        if #available(iOS 11.0, *) {
+            safeArea = inView?.safeAreaInsets.top ?? UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0
+        }
+        
+        if calculatedY >= (inViewFrame.origin.y + CGFloat(safeArea)) {
             
             return .bottom
             
