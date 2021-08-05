@@ -102,10 +102,10 @@ class LeapBottomSheet: LeapKeyWindowAssist {
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        super.didReceive(userContentController, didReceive: message)
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else { return }
-        super.didReceive(userContentController, didReceive: message)
         guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
         guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
         guard let height = rect[constant_height] else { return }

@@ -164,6 +164,7 @@ class LeapKeyWindowAssist: LeapWebAssist {
         }
     }
     
+    /// Any KeyWindowAssist element class should call this method if multiple flow is implemented.
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }

@@ -867,7 +867,7 @@ extension LeapAUIManager: LeapAssistDelegate {
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
     func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
-        if let type = action?[constant_type] as? String, type == constant_action_taken, let body = action?[constant_body] as? [String : Any], let clickType = body[constant_clickType] as? String, clickType == "languageButton" {
+        if let type = action?[constant_type] as? String, type == constant_action_taken, let body = action?[constant_body] as? [String : Any], let clickType = body[constant_clickType] as? String, clickType == constant_languageButton {
             guard let localeCodes = auiManagerCallBack?.getLanguagesForCurrentInstruction(),
                   let iconInfo = auiManagerCallBack?.getIconInfoForCurrentInstruction(),
                   let htmlUrl = auiManagerCallBack?.getLanguageHtmlUrl() else {
