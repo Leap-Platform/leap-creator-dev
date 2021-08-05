@@ -262,7 +262,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func contextDetected(context: LeapContext, view: UIView?, rect: CGRect?, webview: UIView?) {
-        print("[Leap] Context Detected")
+        //print("[Leap] Context Detected")
         if let assist = context as? LeapAssist {
             discoveryManager?.resetDiscoveryManager()
             assistManager?.triggerAssist(assist, view, rect, webview)
@@ -274,7 +274,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func noContextDetected() {
-        print("[Leap] No Context Detected")
+        //print("[Leap] No Context Detected")
         assistManager?.resetAssistManager()
         discoveryManager?.resetDiscoveryManager()
     }
@@ -290,13 +290,13 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     
     // MARK: - Page Methods
     func pageIdentified(_ page: LeapPage) {
-        print("[Leap] Page Detected \t page native identifiers = \(page.nativeIdentifiers) \t page web identifiers = \(page.webIdentifiers)")
+        //print("[Leap] Page Detected \t page native identifiers = \(page.nativeIdentifiers) \t page web identifiers = \(page.webIdentifiers)")
         pageManager?.setCurrentPage(page)
         flowManager?.updateFlowArrayAndResetCounter()
     }
     
     func pageNotIdentified() {
-        print("[Leap] No Page Detected")
+        //print("[Leap] No Page Detected")
         pageManager?.setCurrentPage(nil)
         stageManager?.noStageFound()
     }
@@ -312,12 +312,12 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func stageIdentified(_ stage: LeapStage, pointerView: UIView?, pointerRect: CGRect?, webviewForRect:UIView?) {
-        print("[Leap] Stage Detected \t stage native ids = \(stage.nativeIdentifiers) \t web ids = \(stage.webIdentifiers)")
+        //print("[Leap] Stage Detected \t stage native ids = \(stage.nativeIdentifiers) \t web ids = \(stage.webIdentifiers)")
         stageManager?.setCurrentStage(stage, view: pointerView, rect: pointerRect, webviewForRect: webviewForRect)
     }
     
     func stageNotIdentified() {
-        print("[Leap] No Stage Detected")
+        //print("[Leap] No Stage Detected")
         stageManager?.noStageFound()
     }
 }
@@ -495,6 +495,10 @@ extension LeapContextManager {
     func getOptInEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
         guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.optInEvent, withParams: projectParameter)
+        if let flowMenuProjectParams = getProjectParameterOfFlowMenu() {
+            event.selectedProjectId = projectParameter.projectId
+            event.projectId = flowMenuProjectParams.projectId
+        }
         print("Opt in")
         return event
     }
@@ -517,6 +521,10 @@ extension LeapContextManager {
         lastEventLanguage = event.language
         event.elementName = stageManager?.getCurrentStage()?.name
         event.pageName = pageManager?.getCurrentPage()?.name
+        if let flowMenuProjectParams = getProjectParameterOfFlowMenu() {
+            event.selectedProjectId = projectParameter.projectId
+            event.projectId = flowMenuProjectParams.projectId
+        }
         print("element seen")
         return event
     }
@@ -537,6 +545,10 @@ extension LeapContextManager {
     func getFlowSuccessEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
         guard let projectParameter = projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowSuccessEvent, withParams: projectParameter)
+        if let flowMenuProjectParams = getProjectParameterOfFlowMenu() {
+            event.selectedProjectId = projectParameter.projectId
+            event.projectId = flowMenuProjectParams.projectId
+        }
         print("flow success")
         return event
     }
@@ -599,6 +611,11 @@ extension LeapContextManager {
         event.elementName = stageManager?.getCurrentStage()?.name ?? assistManager?.getCurrentAssist()?.name
         event.pageName = pageManager?.getCurrentPage()?.name
         
+        if let flowMenuProjectParams = getProjectParameterOfFlowMenu() {
+            event.selectedProjectId = projectParameter.projectId
+            event.projectId = flowMenuProjectParams.projectId
+        }
+        
         print("AUI action tracking")
         return event
     }
@@ -617,6 +634,17 @@ extension LeapContextManager {
         event.terminationRule = terminationRule
         print("Project Termination")
         return event
+    }
+    
+    func getProjectParameterOfFlowMenu() -> LeapProjectParameters? {
+        if let discoveryId = flowManager?.getDiscoveryId(), let projectParams = currentConfiguration()?.contextProjectParametersDict["discovery_\(discoveryId)"] {
+            if projectParams.projectType == constant_FLOW_MENU {
+                return projectParams
+            } else {
+                return nil
+            }
+        }
+        return nil
     }
 }
 
@@ -931,8 +959,8 @@ extension LeapContextManager {
     
     func handleDiscoveryDismiss(byUser:Bool, action:Dictionary<String,Any>?) {
         let projectParams = getProjectParameter()
-        guard let body = action?["body"] as? Dictionary<String,Any>,
-              let optIn = body["optIn"] as? Bool, optIn,
+        guard let body = action?[constant_body] as? Dictionary<String,Any>,
+              let optIn = body[constant_optIn] as? Bool, optIn,
               let dm = discoveryManager,
               let discovery = dm.getCurrentDiscovery(),
               let flowId = discovery.flowId else {

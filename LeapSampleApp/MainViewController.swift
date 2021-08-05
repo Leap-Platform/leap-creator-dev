@@ -30,7 +30,8 @@ extension MainViewController {
     func handleDeeplink(_ deeplink: DeepLink) {
         switch deeplink {
         case .booking:
-            print("booking")
+            let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "HomeViewController") as? HomeViewController
+            self.navigationController?.pushViewController(vc!, animated: true)
         case .flipkart:
             let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "SingleWebviewViewController") as? SingleWebviewViewController
             self.navigationController?.pushViewController(vc!, animated: true)
