@@ -518,11 +518,9 @@ extension LeapWebAssist: WKScriptMessageHandler {
         guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
         guard let close = dictBody[constant_close] as? Bool else {return}
         
-        if let urlString = dictBody[constant_external_url] as? String, let url = URL(string: urlString) {
+        if let urlString = dictBody[constant_externalLink] as? String, let url = URL(string: urlString) {
 
            UIApplication.shared.open(url)
-
-           return
         }
         
         if close {
