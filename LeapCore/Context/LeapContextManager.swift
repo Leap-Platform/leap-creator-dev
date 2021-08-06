@@ -962,9 +962,18 @@ extension LeapContextManager {
         guard let body = action?[constant_body] as? Dictionary<String,Any>,
               let optIn = body[constant_optIn] as? Bool, optIn,
               let dm = discoveryManager,
-              let discovery = dm.getCurrentDiscovery(),
-              let flowId = discovery.flowId else {
+              let discovery = dm.getCurrentDiscovery() else {
             // optOut
+            analyticsManager?.saveEvent(event: getOptOutEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
+            discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
+            return
+        }
+        
+        let flowId:Int? = {
+            if let projId = body["projectId"] as? String { return currentConfiguration()?.projectContextDict["flow_\(projId)"] }
+            else { return discovery.flowId }
+        }()
+        guard let flowId = flowId else {
             analyticsManager?.saveEvent(event: getOptOutEvent(with: projectParams), deploymentType: projectParams?.deploymentType)
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
