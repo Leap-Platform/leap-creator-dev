@@ -31,12 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        Leap.shared.withBuilder(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)?
-            .addProperty("username", stringValue: "Aravind")
-            .addProperty("name", stringValue: "Aravind")
-            .addProperty("age", intValue: 30)
-            .addProperty("payment_amount", intValue: 125)
-            .addProperty("ts", dateValue: Date()).start()
+        Leap.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         Leap.shared.callback = self
         LeapCreator.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         return true
