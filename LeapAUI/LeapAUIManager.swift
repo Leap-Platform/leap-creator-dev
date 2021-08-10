@@ -62,6 +62,7 @@ extension LeapAUIManager {
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     @objc func keyboardDidShow(_ notification: NSNotification) {
@@ -81,6 +82,11 @@ extension LeapAUIManager {
             leapButtonBottomConstraint?.constant = mainIconBottomConstant
             leapButton?.updateConstraints()
         }
+    }
+    
+    @objc func appDidBecomeActive() {
+        guard currentAssist != nil else { return }
+        playAudio()
     }
 }
 
