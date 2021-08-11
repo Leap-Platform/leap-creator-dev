@@ -73,8 +73,8 @@ class LeapTipView: LeapInViewAssist {
         case fade = "fade"
     }
     
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
-        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?, projectParametersInfo: [String : Any]? = nil) {
+        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl, projectParametersInfo: projectParametersInfo)
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -178,8 +178,17 @@ class LeapTipView: LeapInViewAssist {
             
             } else if (assistInfo?.highlightClickable ?? false) {
                 
-                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
-                                
+                if self.projectParameters?.projectType == constant_STATIC_FLOW {
+                    
+                    performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_anchor_click: true]])
+                    
+                    self.removeFromSuperview()
+                    
+                } else {
+                    
+                    self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
+                }
+                
                 return viewToCheck
             
             } else {

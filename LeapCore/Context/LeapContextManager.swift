@@ -897,6 +897,10 @@ extension LeapContextManager:LeapAUICallback {
             }
         })
     }
+    
+    func getProjectParameters() -> [String : Any]? {
+        return self.getProjectParameter()?.dictionary
+    }
 }
 
 // MARK: - ADDITIONAL METHODS

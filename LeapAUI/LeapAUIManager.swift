@@ -615,7 +615,7 @@ extension LeapAUIManager {
             fingerPointer.presentPointer(view: inView)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer()
             
@@ -679,7 +679,7 @@ extension LeapAUIManager {
             swipePointer.presentPointer(toRect: rect, inView: inWebview)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer(toRect: rect, inView: inWebview)
             
