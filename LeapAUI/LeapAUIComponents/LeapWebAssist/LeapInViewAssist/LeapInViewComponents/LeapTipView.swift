@@ -116,28 +116,17 @@ class LeapTipView: LeapInViewAssist {
             targetView = toViewParent
         }
         
+        if targetView == nil {
+            
+            targetView = toView
+        }
+        
         guard let focusView = targetView else {
             
             return
         }
         
-        var isEditableView = false
-        
-        switch focusView {
-        
-        case is UITextField: isEditableView = true
-        case is UITextView:
-            if let view = toView as? UITextView {
-                
-                if view.isEditable {
-                    
-                    isEditableView = true
-                }
-            }
-        default: isEditableView = false
-        }
-        
-        if isEditableView && (assistInfo?.autoFocus ?? false) {
+        if (assistInfo?.focus ?? false) {
             
             focusView.becomeFirstResponder()
         }
@@ -164,30 +153,24 @@ class LeapTipView: LeapInViewAssist {
             
             tappedOnToView = true 
             
-            if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
+            if (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
+                
+                var action: [String : Any] = [:]
+                
+                if (assistInfo?.highlightClickable ?? false) {
+                    
+                    action = [constant_body: [constant_anchor_click: true]]
+                }
                                 
-                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_anchor_click: true]])
+                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: action)
                 
                 self.removeFromSuperview()
                                 
                 return viewToCheck
             
-            } else if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) {
-                                
-                return viewToCheck
-            
             } else if (assistInfo?.highlightClickable ?? false) {
                 
-                if self.projectParameters?.projectType == constant_STATIC_FLOW {
-                    
-                    performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_anchor_click: true]])
-                    
-                    self.removeFromSuperview()
-                    
-                } else {
-                    
-                    self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
-                }
+                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
                 
                 return viewToCheck
             

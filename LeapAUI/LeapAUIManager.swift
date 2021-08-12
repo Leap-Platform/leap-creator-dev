@@ -605,8 +605,6 @@ extension LeapAUIManager {
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         scrollArrowButton.setView(view: inView)
-        //Set autofocus
-        inView.becomeFirstResponder()
         
         guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
             auiManagerCallBack?.failedToPerform()
