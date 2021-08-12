@@ -300,11 +300,38 @@ class LeapFingerPointer: LeapPointer {
         
         let frameForToView = getGlobalToViewFrame()
         
-        if frameForToView.contains(point) {
-    
-            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
+        guard let viewToCheck = toView else {
             
             return hitTestView
+        }
+        
+        if frameForToView.contains(point) {
+            
+            if (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
+                
+                var action: [String : Any] = [:]
+                
+                if (assistInfo?.highlightClickable ?? false) {
+                    
+                    action = [constant_body: [constant_anchor_click: true]]
+                }
+                                
+                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: action)
+                
+                self.removeFromSuperview()
+                                
+                return viewToCheck
+            
+            } else if (assistInfo?.highlightClickable ?? false) {
+                
+                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
+                
+                return viewToCheck
+            
+            } else {
+                
+                return hitTestView
+            }
         
         } else {
             
