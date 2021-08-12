@@ -42,6 +42,7 @@ class LeapAnalyticsEvent: Codable {
     var actionEventValue: String?
     var terminationRule: String?
     var selectedProjectId: String?
+    var selectedFlow: String? // name of the selected flow
     
     init(withEvent eventName: EventName, withParams projectParams: LeapProjectParameters) {
         self.id = String.generateUUIDString()
