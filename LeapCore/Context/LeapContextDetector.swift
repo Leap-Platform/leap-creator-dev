@@ -21,16 +21,18 @@ protocol LeapContextDetectorDelegate:NSObjectProtocol {
     func contextDetected(context:LeapContext, view:UIView?, rect: CGRect?, webview:UIView?)
     func noContextDetected()
     
+    func isDiscoveryFlowMenu() -> Bool
+    func getFlowMenuDiscovery() -> LeapDiscovery?
     func getCurrentFlow() -> LeapFlow?
     func getParentFlow() -> LeapFlow?
     
     func pageIdentified(_ page:LeapPage)
-    func pageNotIdentified()
+    func pageNotIdentified(flowMenuIconNeeded:Bool?)
     
     func getStagesToCheck() -> Array<LeapStage>
     func getCurrentStage() -> LeapStage?
-    func stageIdentified(_ stage:LeapStage, pointerView:UIView?, pointerRect:CGRect?, webviewForRect:UIView?)
-    func stageNotIdentified()
+    func stageIdentified(_ stage:LeapStage, pointerView:UIView?, pointerRect:CGRect?, webviewForRect:UIView?,flowMenuIconNeeded:Bool?)
+    func stageNotIdentified(flowMenuIconNeeded:Bool?)
 }
 
 enum LeapContextDetectionState {
@@ -189,7 +191,9 @@ extension LeapContextDetector {
     private func findIdentifiablePage(in hierarchy:Array<UIView>, forFlow flowToCheck:LeapFlow?) {
         guard let flow = flowToCheck else {
             // No flow. Hence no stage can be identified
-            delegate?.pageNotIdentified()
+            flowMenuButtonToBeShown(hierarchy: hierarchy) { show in
+                self.delegate?.pageNotIdentified(flowMenuIconNeeded: show)
+            }
             return
         }
         getPassingIdentifiers(for: flow.pages, in: hierarchy) { (passingNativeIds, passingWebIds) in
@@ -215,22 +219,30 @@ extension LeapContextDetector {
     /// - Parameter hierarchy: views to check for eligibilty
     private func findIdentifiableStage(in hierarchy:Array<UIView>) {
         guard let stages = delegate?.getStagesToCheck(), stages.count > 0 else {
-            delegate?.stageNotIdentified()
+            flowMenuButtonToBeShown(hierarchy: hierarchy) { show in
+                self.delegate?.stageNotIdentified(flowMenuIconNeeded: show)
+            }
             return
         }
         getPassingIdentifiers(for: stages, in: hierarchy) { (passedNativeIds, passedWebIds) in
             guard let passingStages = self.getPassingContexts(stages, passedNativeIds, passedWebIds) as? Array<LeapStage> else {
-                self.delegate?.stageNotIdentified()
+                self.flowMenuButtonToBeShown(hierarchy: hierarchy) { show in
+                    self.delegate?.stageNotIdentified(flowMenuIconNeeded: show)
+                }
                 return
             }
             guard passingStages.count > 0 else {
-                self.delegate?.stageNotIdentified()
+                self.flowMenuButtonToBeShown(hierarchy: hierarchy) { show in
+                    self.delegate?.stageNotIdentified(flowMenuIconNeeded: show)
+                }
                 return
             }
             if let liveStage = self.delegate?.getCurrentStage(), passingStages.contains(liveStage) {
                 let assistInfo = liveStage.instruction?.assistInfo
                 self.getViewOrRect(allView: hierarchy, id: assistInfo?.identifier, isWeb: assistInfo?.isWeb ?? false) { (anchorView, anchorRect, webview) in
-                    self.delegate?.stageIdentified(liveStage, pointerView: anchorView, pointerRect: anchorRect, webviewForRect: webview)
+                    self.flowMenuButtonToBeShown(hierarchy: hierarchy) { show in
+                        self.delegate?.stageIdentified(liveStage, pointerView: anchorView, pointerRect: anchorRect, webviewForRect: webview, flowMenuIconNeeded: show)
+                    }
                 }
             } else { self.findContextToTrigger(passingStages, allViews: hierarchy) }
         }
@@ -266,7 +278,9 @@ extension LeapContextDetector {
                     self.delegate?.contextDetected(context: toTriggerContext, view: anchorview, rect: anchorRect, webview: anchorWebview)
                 } else {
                     guard let stage = toTriggerContext as? LeapStage else { return }
-                    self.delegate?.stageIdentified(stage, pointerView: anchorview, pointerRect: anchorRect, webviewForRect: anchorWebview)
+                    self.flowMenuButtonToBeShown(hierarchy: allViews) { show in
+                        self.delegate?.stageIdentified(stage, pointerView: anchorview, pointerRect: anchorRect, webviewForRect: anchorWebview,flowMenuIconNeeded: show)
+                    }
                 }
             }
         } else {
@@ -754,7 +768,7 @@ extension LeapContextDetector:LeapClickHandlerDelegate {
             self.delegate?.contextDetected(context: triggerContext, view: onView, rect: nil, webview: nil)
         case .Stage:
             guard let stage = triggerContext as? LeapStage else { return }
-            self.delegate?.stageIdentified(stage, pointerView: onView, pointerRect: nil, webviewForRect: nil)
+            self.delegate?.stageIdentified(stage, pointerView: onView, pointerRect: nil, webviewForRect: nil, flowMenuIconNeeded: false)
         }
         start()
     }
@@ -774,9 +788,31 @@ extension LeapContextDetector:LeapClickHandlerDelegate {
                 self.delegate?.contextDetected(context: triggerContext, view: nil, rect: rect, webview: webview)
             case .Stage:
                 guard let stage = triggerContext as? LeapStage else { return }
-                self.delegate?.stageIdentified(stage, pointerView: nil, pointerRect: rect, webviewForRect: webview)
+                self.delegate?.stageIdentified(stage, pointerView: nil, pointerRect: rect, webviewForRect: webview, flowMenuIconNeeded: false)
             }
             self.start()
         }
+    }
+    
+    func flowMenuButtonToBeShown(hierarchy:Array<UIView>, completion:@escaping (_ :Bool?)->Void) {
+        guard delegate?.isDiscoveryFlowMenu() ?? false,
+              let discovery = delegate?.getFlowMenuDiscovery() else {
+            completion(nil)
+            return
+        }
+        getPassingIdentifiers(for: [discovery], in: hierarchy) { passingNativeIds, passingWebIds in
+            guard let passingDiscovery = self.getPassingContexts([discovery], passingNativeIds, passingWebIds) as? Array<LeapDiscovery> else {
+                completion(false)
+                return
+            }
+            guard passingDiscovery.count > 0 else {
+                // No passing pages in current flow, hence checking in parent flow
+                completion(false)
+                return
+            }
+            completion(true)
+        }
+        
+        
     }
 }

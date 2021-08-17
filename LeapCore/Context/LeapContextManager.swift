@@ -253,7 +253,6 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func contextDetected(context: LeapContext, view: UIView?, rect: CGRect?, webview: UIView?) {
-        //print("[Leap] Context Detected")
         if let assist = context as? LeapAssist {
             discoveryManager?.resetDiscoveryManager()
             assistManager?.triggerAssist(assist, view, rect, webview)
@@ -265,12 +264,26 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func noContextDetected() {
-        //print("[Leap] No Context Detected")
         assistManager?.resetAssistManager()
         discoveryManager?.resetDiscoveryManager()
     }
     
     // MARK: - Flow Methods
+    
+    func isDiscoveryFlowMenu() -> Bool {
+        guard let fm = flowManager, let disId = fm.getDiscoveryId(),
+              let projParams = configuration?.contextProjectParametersDict["discovery_\(disId)"]
+        else { return false }
+        let type = projParams.projectType ?? ""
+        return type == constant_STATIC_FLOW_CHECKLIST || type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_MENU || type == constant_DYNAMIC_FLOW_MENU
+    }
+    
+    func getFlowMenuDiscovery() -> LeapDiscovery? {
+        guard let fm = flowManager, let disId = fm.getDiscoveryId() else { return nil }
+        let discovery = configuration?.discoveries.first { $0.id == disId }
+        return discovery
+    }
+    
     func getCurrentFlow() -> LeapFlow? {
         return flowManager?.getRelevantFlow(lookForParent: false)
     }
@@ -281,13 +294,15 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     
     // MARK: - Page Methods
     func pageIdentified(_ page: LeapPage) {
-        //print("[Leap] Page Detected \t page native identifiers = \(page.nativeIdentifiers) \t page web identifiers = \(page.webIdentifiers)")
         pageManager?.setCurrentPage(page)
         flowManager?.updateFlowArrayAndResetCounter()
     }
     
-    func pageNotIdentified() {
-        //print("[Leap] No Page Detected")
+    func pageNotIdentified(flowMenuIconNeeded:Bool?) {
+        if flowMenuIconNeeded ?? false, let discovery = getFlowMenuDiscovery() {
+            let iconInfo:Dictionary<String,AnyHashable> = getIconSettings(discovery.id)
+            auiHandler?.presentLeapButton(for: iconInfo, iconEnabled: discovery.enableIcon)
+        } else { auiHandler?.removeAllViews() }
         pageManager?.setCurrentPage(nil)
         stageManager?.noStageFound()
     }
@@ -302,13 +317,15 @@ extension LeapContextManager:LeapContextDetectorDelegate {
         return stageManager?.getCurrentStage()
     }
     
-    func stageIdentified(_ stage: LeapStage, pointerView: UIView?, pointerRect: CGRect?, webviewForRect:UIView?) {
-        //print("[Leap] Stage Detected \t stage native ids = \(stage.nativeIdentifiers) \t web ids = \(stage.webIdentifiers)")
-        stageManager?.setCurrentStage(stage, view: pointerView, rect: pointerRect, webviewForRect: webviewForRect)
+    func stageIdentified(_ stage: LeapStage, pointerView: UIView?, pointerRect: CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
+        stageManager?.setCurrentStage(stage, view: pointerView, rect: pointerRect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
     }
     
-    func stageNotIdentified() {
-        //print("[Leap] No Stage Detected")
+    func stageNotIdentified(flowMenuIconNeeded:Bool?) {
+        if flowMenuIconNeeded ?? false, let discovery = getFlowMenuDiscovery() {
+            let iconInfo:Dictionary<String,AnyHashable> = getIconSettings(discovery.id)
+            auiHandler?.presentLeapButton(for: iconInfo, iconEnabled: discovery.enableIcon)
+        } else { auiHandler?.removeAllViews() }
         stageManager?.noStageFound()
     }
 }
@@ -371,10 +388,11 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
         let iconInfo:Dictionary<String,AnyHashable> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
         let localeCode = generateLangDicts(localeCodes: discovery.localeCodes)
         let htmlUrl = discovery.languageOption?[constant_htmlUrl]
+
         if let anchorRect = rect {
-            aui.performWebDiscovery(instruction: instruction, rect: anchorRect, webview: webview, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+            aui.performWebDiscovery(instruction: instruction, rect: anchorRect, webview: webview, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: getFlowMenuInfo(discovery: discovery))
         } else {
-            aui.performNativeDiscovery(instruction: instruction, view: view, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+            aui.performNativeDiscovery(instruction: instruction, view: view, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: getFlowMenuInfo(discovery: discovery))
         }
     }
     
@@ -422,9 +440,13 @@ extension LeapContextManager: LeapStageManagerDelegate {
         return getProjectParameter()
     }
     
-    func newStageFound(_ stage: LeapStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?) {
+    func newStageFound(_ stage: LeapStage, view: UIView?, rect: CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
         let iconInfo:Dictionary<String,AnyHashable> = {
             guard let fm = flowManager, let discId = fm.getDiscoveryId() else { return [:] }
+            if isDiscoveryFlowMenu(), let iconNeeded = flowMenuIconNeeded {
+                if !iconNeeded { return [:] }
+                return getIconSettings(discId)
+            }
             let currentDiscovery = self.currentConfiguration()?.discoveries.first { $0.id == discId }
             guard let discovery = currentDiscovery, discovery.enableIcon else {return [:] }
             return getIconSettings(discId)
@@ -439,7 +461,7 @@ extension LeapContextManager: LeapStageManagerDelegate {
         //sendContextInfoEvent(eventTag: "leapInstructionEvent")
     }
     
-    func sameStageFound(_ stage: LeapStage, view:UIView?, newRect: CGRect?, webviewForRect:UIView?) {
+    func sameStageFound(_ stage: LeapStage, view:UIView?, newRect: CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
         if let rect = newRect { auiHandler?.updateRect(rect: rect, inWebView: webviewForRect) }
         else if let anchorView = view { auiHandler?.updateView(inView: anchorView) }
     }
@@ -458,6 +480,9 @@ extension LeapContextManager: LeapStageManagerDelegate {
                     analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: getProjectParameter(), for: "After \(perApp) flow completion"), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
                 }
             }
+        }
+        if let flowId = flowManager?.getArrayOfFlows().last?.id {
+            LeapSharedInformation.shared.saveCompletedFlowInfo(flowId)
         }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
@@ -680,6 +705,10 @@ extension LeapContextManager:LeapAUICallback {
         
     }
     
+    func isFlowMenu() -> Bool {
+        return isDiscoveryFlowMenu()
+    }
+    
     func getWebScript(_ identifier:String) -> String? {
         guard let webId = getWebIdentifier(identifierId: identifier) else { return nil }
         let basicElementScript = LeapJSMaker.generateBasicElementScript(id: webId)
@@ -814,7 +843,18 @@ extension LeapContextManager:LeapAUICallback {
         case .Discovery:
             manuallyTriggerCurrentDiscovery()
         case .Stage:
-            break
+            contextDetector?.stop()
+            auiHandler?.removeAllViews()
+            contextDetector?.switchState()
+            let disId = flowManager?.getDiscoveryId()
+            if let discoveryId = disId {
+                discoveryManager?.removeDiscoveryFromCompletedInSession(disId: discoveryId)
+            }
+            flowManager?.resetFlowsArray()
+            pageManager?.resetPageManager()
+            stageManager?.resetStageManager()
+            contextDetector?.start()
+            
         }
     }
     
@@ -921,10 +961,11 @@ extension LeapContextManager {
               let cd = contextDetector else { return }
         LeapSharedInformation.shared.unmuteDiscovery(liveDiscovery.id)
         let iconInfo:Dictionary<String,AnyHashable> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
+        
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
             if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: getFlowMenuInfo(discovery: liveDiscovery))
             }
             return
         }
@@ -932,11 +973,11 @@ extension LeapContextManager {
         contextDetector?.getViewOrRect(allView: cd.fetchViewHierarchy(), id: identifier, isWeb: isWeb, targetCheckCompleted: { (view, rect, webview) in
             if let anchorRect = rect {
                 if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                    self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                    self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: self.getFlowMenuInfo(discovery: liveDiscovery))
                 }
             } else {
                 if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                    self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                    self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: self.getFlowMenuInfo(discovery: liveDiscovery))
                 }
             }
         })
@@ -1007,6 +1048,26 @@ extension LeapContextManager {
         self.flowManager?.resetFlowsArray()
         self.pageManager?.resetPageManager()
         self.stageManager?.resetStageManager()
+    }
+    
+    func isDiscoveryChecklist(discovery:LeapDiscovery) -> Bool {
+        let params = configuration?.contextProjectParametersDict["discovery_\(discovery.id)"]
+        guard let parameters = params else { return false }
+        let type = parameters.projectType ?? ""
+        return type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_CHECKLIST
+    }
+    
+    func getFlowMenuInfo(discovery:LeapDiscovery) -> Dictionary<String,Bool>? {
+        guard isDiscoveryChecklist(discovery: discovery) else { return nil }
+        let completedFlowIds:Array<Int> = LeapSharedInformation.shared.getCompletedFlowInfo()
+        let completedProjectIds:Array<String> = completedFlowIds.compactMap { flowId in
+            return configuration?.contextProjectParametersDict["flow_\(flowId)"]?.projectId
+        }
+        var completedInfo:Dictionary<String,Bool> = [:]
+        completedProjectIds.forEach { projectId in
+            completedInfo[projectId] = true
+        }
+        return completedInfo
     }
     
 }

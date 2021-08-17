@@ -12,8 +12,8 @@ import UIKit
 protocol LeapStageManagerDelegate:NSObjectProtocol {
     func getCurrentPage() -> LeapPage?
     func getProjectParams() -> LeapProjectParameters?
-    func newStageFound(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
-    func sameStageFound(_ stage:LeapStage, view:UIView?, newRect:CGRect?, webviewForRect:UIView?)
+    func newStageFound(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?,flowMenuIconNeeded:Bool?)
+    func sameStageFound(_ stage:LeapStage, view:UIView?, newRect:CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?)
     func dismissStage()
     func removeStage(_ stage:LeapStage)
     func isSuccessStagePerformed()
@@ -48,9 +48,9 @@ class LeapStageManager {
         return projectType == "STATIC_FLOW"
     }
     
-    func setCurrentStage(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
+    func setCurrentStage(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
         if currentStage == stage {
-            if stageTimer == nil { delegate?.sameStageFound(stage, view:view, newRect: rect, webviewForRect: webviewForRect) }
+            if stageTimer == nil { delegate?.sameStageFound(stage, view:view, newRect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded) }
             return
         }
         
@@ -78,12 +78,12 @@ class LeapStageManager {
             stageTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
                 self.stageTimer?.invalidate()
                 self.stageTimer = nil
-                self.delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
+                self.delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
             })
             guard let stageTimer = self.stageTimer else { return }
             RunLoop.main.add(stageTimer, forMode: .default)
         } else  {
-            delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
+            delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
         }
     }
     
@@ -109,8 +109,8 @@ class LeapStageManager {
     // Called in case to reidentify same stage as new stage next time
     func resetCurrentStage() { currentStage = nil }
     
-    func sameStage (_ newStage:LeapStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?) {
-        delegate?.sameStageFound(newStage,view: view, newRect: rect, webviewForRect: webviewForRect)
+    func sameStage (_ newStage:LeapStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
+        delegate?.sameStageFound(newStage,view: view, newRect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
     }
     
     func getCurrentStage() -> LeapStage? { return currentStage }

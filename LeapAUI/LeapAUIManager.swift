@@ -177,7 +177,7 @@ extension LeapAUIManager: LeapAUIHandler {
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
     }
     
-    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?, flowMenuInfo:Dictionary<String,Bool>?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
@@ -202,7 +202,7 @@ extension LeapAUIManager: LeapAUIHandler {
         }
     }
     
-    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?, flowMenuInfo:Dictionary<String,Bool>?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
@@ -366,6 +366,12 @@ extension LeapAUIManager: LeapAUIHandler {
 extension LeapAUIManager: LeapTappableDelegate {
     
     func iconDidTap() {
+        
+        if auiManagerCallBack?.isFlowMenu() ?? false {
+            auiManagerCallBack?.leapTapped()
+            return
+        }
+        
         guard let _ = currentInstruction, LeapPreferences.shared.getUserLanguage() != nil else {
             auiManagerCallBack?.leapTapped()
             return
