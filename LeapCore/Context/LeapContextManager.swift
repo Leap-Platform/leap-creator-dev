@@ -150,8 +150,8 @@ class LeapContextManager:NSObject {
     @objc func previewNotification(_ notification:NSNotification) {
         contextDetector?.stop()
         guard let previewDict = notification.object as? Dictionary<String,Any> else { return }
-        let tempConfig = previewDict["config"] as? Dictionary<String,Any>
-        let configDict = ["data":[tempConfig]]
+        let tempConfig = previewDict["configs"] as? Array<Dictionary<String,Any>> ?? []
+        let configDict = ["data": tempConfig ]
         print("[Leap] Preview config received")
         assistManager?.resetManagerSession()
         discoveryManager?.resetManagerSession()
