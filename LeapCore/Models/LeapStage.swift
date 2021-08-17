@@ -28,6 +28,16 @@ enum LeapSearchType {
 }
 
 
+class LeapStageTransition {
+    var prev:String?
+    var next:String?
+    
+    init(with transitionDict:Dictionary<String,Any>) {
+        prev = transitionDict[constant_prev] as? String
+        next = transitionDict[constant_next] as? String
+    }
+}
+
 class LeapStage:LeapContext {
 
     let type:LeapStageType
@@ -35,6 +45,7 @@ class LeapStage:LeapContext {
     let branchInfo:LeapBranchInfo?
     var terminationFrequency:LeapFlowTerminationFrequency?
     var page:Int
+    var transition:LeapStageTransition?
     
     init(withDict stageDict:Dictionary<String,Any>, pageId:Int) {
         
@@ -48,6 +59,9 @@ class LeapStage:LeapContext {
             terminationFrequency = LeapFlowTerminationFrequency(with: frequencyDict)
         }
         page = pageId
+        if let transitionDict = stageDict[constant_transition] as? Dictionary<String,Any> {
+            transition = LeapStageTransition(with: transitionDict)
+        }
         super.init(with: stageDict)
     }
     
@@ -66,6 +80,7 @@ class LeapStage:LeapContext {
         copy.trigger = self.trigger
         copy.terminationFrequency = self.terminationFrequency
         copy.page = self.page
+        copy.transition = self.transition
         return copy
     }
 }
