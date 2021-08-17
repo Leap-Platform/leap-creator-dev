@@ -10,8 +10,9 @@ import UIKit
 import Foundation
 
 enum DeepLink: String {
-    case booking
-    case flipkart
+    case nativeViews
+    case webView
+    case manual
 }
 
 class MainViewController: UIViewController {
@@ -29,12 +30,13 @@ class MainViewController: UIViewController {
 extension MainViewController {
     func handleDeeplink(_ deeplink: DeepLink) {
         switch deeplink {
-        case .booking:
+        case .nativeViews:
             let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "HomeViewController") as? HomeViewController
             self.navigationController?.pushViewController(vc!, animated: true)
-        case .flipkart:
+        case .webView:
             let vc = UIStoryboard.init(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: "SingleWebviewViewController") as? SingleWebviewViewController
             self.navigationController?.pushViewController(vc!, animated: true)
+        case .manual: print("")
         }
     }
 }
