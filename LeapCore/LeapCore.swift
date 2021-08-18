@@ -18,8 +18,8 @@ import UIKit
     func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String)
     func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String)
     
-    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?)
-    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?)
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?, flowMenuInfo:Dictionary<String,Bool>?)
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?, flowMenuInfo:Dictionary<String,Bool>?)
     
     func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, AnyHashable>)
     func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, AnyHashable>)
@@ -36,6 +36,8 @@ import UIKit
     func getDefaultMedia() -> Dictionary<String,Any>
     func triggerEvent(identifier:String, value:Any)
     func getWebScript(_ identifier:String) -> String?
+    
+    func isFlowMenu() -> Bool
     
     func getCurrentLanguageOptionsTexts() -> Dictionary<String,String>
     func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>>

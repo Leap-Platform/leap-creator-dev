@@ -21,6 +21,7 @@ struct LeapSharedInformationConstants {
     static let muted = "leap_muted"
     static let discoveryTerminationSent = "leap_discovery_termination_sent"
     static let assistTerminationSent = "leap_assist_termination_sent"
+    static let completedFlows = "leap_completed_flows"
 }
 
 enum LeapDownloadStatus {
@@ -301,5 +302,17 @@ extension LeapSharedInformation {
     
     func getTerminatedAssistsEvents() -> [Int] {
         return prefs.object(forKey: LeapSharedInformationConstants.assistTerminationSent) as? Array<Int> ?? []
+    }
+}
+
+extension LeapSharedInformation {
+    func saveCompletedFlowInfo(_ flowId:Int) {
+        var completedFlows = getCompletedFlowInfo()
+        if !completedFlows.contains(flowId) { completedFlows.append(flowId) }
+        prefs.setValue(completedFlows, forKey: LeapSharedInformationConstants.completedFlows)
+    }
+    
+    func getCompletedFlowInfo() -> [Int] {
+        return prefs.object(forKey: LeapSharedInformationConstants.completedFlows) as? Array<Int> ?? []
     }
 }
