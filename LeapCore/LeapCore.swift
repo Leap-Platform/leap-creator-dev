@@ -61,6 +61,7 @@ import UIKit
     func didLanguageChange(from previousLanguage: String, to currentLanguage: String)
     
     func flush()
+    func getProjectParameters() -> [String : Any]?
     
     /// receives only AUI info
     func receiveAUIEvent(action: Dictionary<String, Any>)

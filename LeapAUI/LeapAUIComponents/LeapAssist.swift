@@ -36,6 +36,9 @@ protocol LeapAssist {
     /// required AssistInfo depending on the AUIComponent
     var assistInfo: LeapAssistInfo? { get set }
     
+    /// project parameters required for AUI Component
+    var projectParameters: LeapProjectParameters? { get set }
+    
     /// call the method internally to apply style to the AUIComponent
     /// - Parameters:
     ///   - style: A property of the type Style.

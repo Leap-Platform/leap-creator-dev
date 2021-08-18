@@ -253,6 +253,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func contextDetected(context: LeapContext, view: UIView?, rect: CGRect?, webview: UIView?) {
+//        print("[Leap] Context Detected")
         if let assist = context as? LeapAssist {
             discoveryManager?.resetDiscoveryManager()
             assistManager?.triggerAssist(assist, view, rect, webview)
@@ -264,6 +265,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     }
     
     func noContextDetected() {
+//        print("[Leap] No Context Detected")
         assistManager?.resetAssistManager()
         discoveryManager?.resetDiscoveryManager()
     }
@@ -292,8 +294,15 @@ extension LeapContextManager:LeapContextDetectorDelegate {
         return flowManager?.getRelevantFlow(lookForParent: true)
     }
     
+    func isStaticFlow() -> Bool {
+        guard let params = getProjectParams() else { return false }
+        let type = params.projectType ?? "DYNAMIC_FLOW"
+        return type == "STATIC_FLOW"
+    }
+    
     // MARK: - Page Methods
     func pageIdentified(_ page: LeapPage) {
+//        print("[Leap] Page Detected \t page native identifiers = \(page.nativeIdentifiers) \t page web identifiers = \(page.webIdentifiers)")
         pageManager?.setCurrentPage(page)
         flowManager?.updateFlowArrayAndResetCounter()
     }
@@ -434,6 +443,34 @@ extension LeapContextManager: LeapStageManagerDelegate {
     
     func getCurrentPage() -> LeapPage? {
         return pageManager?.getCurrentPage()
+    }
+    
+    
+    func getStage(_ name:String) -> LeapStage? {
+        guard let fm = flowManager, let flow = fm.getArrayOfFlows().last else { return nil }
+        let nameArray = name.components(separatedBy: "_")
+        guard nameArray.count == 6 else { return nil }
+        let flowId:Int? = {
+            guard nameArray[0] == "flow" else { return nil }
+            return Int(nameArray[1])
+        }()
+        guard let flowId = flowId, flowId == flow.id else { return nil }
+
+        let pageId:Int? = {
+            guard nameArray[2] == "page" else { return nil }
+            return Int(nameArray[3])
+        }()
+        guard let pageId = pageId else { return nil }
+        let pageFound:LeapPage? = flow.pages.first{ $0.id == pageId }
+        guard let page = pageFound else { return nil }
+
+        let stageId:Int? = {
+            guard nameArray[4] == "stage" else { return nil }
+            return Int(nameArray[5])
+        }()
+        guard let stageId = stageId else { return nil }
+        let stage:LeapStage? = page.stages.first{ $0.id == stageId }
+        return stage
     }
     
     func getProjectParams() -> LeapProjectParameters? {
@@ -950,6 +987,10 @@ extension LeapContextManager:LeapAUICallback {
             }
         })
     }
+    
+    func getProjectParameters() -> [String : Any]? {
+        return self.getProjectParameter()?.dictionary
+    }
 }
 
 // MARK: - ADDITIONAL METHODS
@@ -1011,6 +1052,9 @@ extension LeapContextManager {
         fm.addNewFlow(flow, false, discovery.id)
         // intended to switch from discovery to stage
         contextDetector?.switchState()
+        if isStaticFlow(), let firstStep = flow.firstStep, let stage = getStage(firstStep) {
+            stageManager?.setFirstStage(stage)
+        }
         discoveryManager?.discoveryDismissed(byUser: true, optIn: true)
         // optIn
         analyticsManager?.saveEvent(event: getOptInEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)

@@ -73,6 +73,8 @@ class LeapWebAssist: UIView, LeapAssist {
     
     var assistInfo: LeapAssistInfo?
     
+    var projectParameters: LeapProjectParameters?
+    
     func applyStyle(style: LeapStyle) {
         
     }

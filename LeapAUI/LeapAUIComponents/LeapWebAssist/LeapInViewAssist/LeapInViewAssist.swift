@@ -23,7 +23,7 @@ class LeapInViewAssist: LeapWebAssist {
     ///   - assistDict: A dictionary value for the type LeapAssistInfo.
     ///   - toView: target view to which the tooltip is attached.
     ///   - insideView: an optional view on which overlay is diaplayed or else takes entire window.
-    init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl:String?) {
+    init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?, projectParametersInfo: [String : Any]? = nil) {
         super.init(frame: CGRect.zero, baseUrl: baseUrl)
                 
         self.assistInfo = LeapAssistInfo(withDict: assistDict)
@@ -31,6 +31,8 @@ class LeapInViewAssist: LeapWebAssist {
         self.toView = toView
         
         inView = insideView
+        
+        self.projectParameters = LeapProjectParameters(withDict: projectParametersInfo ?? [:])
         
         guard let iconDict = iconDict else {
             

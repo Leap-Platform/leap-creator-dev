@@ -62,6 +62,7 @@ extension LeapAUIManager {
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     @objc func keyboardDidShow(_ notification: NSNotification) {
@@ -81,6 +82,11 @@ extension LeapAUIManager {
             leapButtonBottomConstraint?.constant = mainIconBottomConstant
             leapButton?.updateConstraints()
         }
+    }
+    
+    @objc func appDidBecomeActive() {
+        guard currentAssist != nil else { return }
+        playAudio()
     }
 }
 
@@ -614,8 +620,6 @@ extension LeapAUIManager {
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         scrollArrowButton.setView(view: inView)
-        //Set autofocus
-        inView.becomeFirstResponder()
         
         guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
             auiManagerCallBack?.failedToPerform()
@@ -630,7 +634,7 @@ extension LeapAUIManager {
             fingerPointer.presentPointer(view: inView)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer()
             
@@ -694,7 +698,7 @@ extension LeapAUIManager {
             swipePointer.presentPointer(toRect: rect, inView: inWebview)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer(toRect: rect, inView: inWebview)
             
