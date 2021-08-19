@@ -273,8 +273,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     // MARK: - Flow Methods
     
     func isDiscoveryFlowMenu() -> Bool {
-        guard let fm = flowManager, let disId = fm.getDiscoveryId(),
-              let projParams = configuration?.contextProjectParametersDict["discovery_\(disId)"]
+        guard let discoveryId = flowManager?.getDiscoveryId() ?? discoveryManager?.getCurrentDiscovery()?.id, let projParams = configuration?.contextProjectParametersDict["discovery_\(discoveryId)"]
         else { return false }
         let type = projParams.projectType ?? ""
         return type == constant_STATIC_FLOW_CHECKLIST || type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_MENU || type == constant_DYNAMIC_FLOW_MENU
@@ -399,9 +398,9 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
         let htmlUrl = discovery.languageOption?[constant_htmlUrl]
 
         if let anchorRect = rect {
-            aui.performWebDiscovery(instruction: instruction, rect: anchorRect, webview: webview, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: getFlowMenuInfo(discovery: discovery))
+            aui.performWebDiscovery(instruction: instruction, rect: anchorRect, webview: webview, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
         } else {
-            aui.performNativeDiscovery(instruction: instruction, view: view, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: getFlowMenuInfo(discovery: discovery))
+            aui.performNativeDiscovery(instruction: instruction, view: view, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
         }
     }
     
@@ -746,6 +745,11 @@ extension LeapContextManager:LeapAUICallback {
         return isDiscoveryFlowMenu()
     }
     
+    func getFlowMenuInfo() -> Dictionary<String, Bool>? {
+        guard let currentDiscovery = discoveryManager?.getCurrentDiscovery() else { return nil }
+        return getFlowMenuInfo(discovery: currentDiscovery)
+    }
+    
     func getWebScript(_ identifier:String) -> String? {
         guard let webId = getWebIdentifier(identifierId: identifier) else { return nil }
         let basicElementScript = LeapJSMaker.generateBasicElementScript(id: webId)
@@ -1006,7 +1010,7 @@ extension LeapContextManager {
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
             if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: getFlowMenuInfo(discovery: liveDiscovery))
+                auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
             }
             return
         }
@@ -1014,11 +1018,11 @@ extension LeapContextManager {
         contextDetector?.getViewOrRect(allView: cd.fetchViewHierarchy(), id: identifier, isWeb: isWeb, targetCheckCompleted: { (view, rect, webview) in
             if let anchorRect = rect {
                 if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                    self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: self.getFlowMenuInfo(discovery: liveDiscovery))
+                    self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
                 }
             } else {
                 if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                    self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, flowMenuInfo: self.getFlowMenuInfo(discovery: liveDiscovery))
+                    self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
                 }
             }
         })
@@ -1101,17 +1105,21 @@ extension LeapContextManager {
         return type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_CHECKLIST
     }
     
-    func getFlowMenuInfo(discovery:LeapDiscovery) -> Dictionary<String,Bool>? {
+    func getFlowMenuInfo(discovery: LeapDiscovery) -> Dictionary<String, Bool>? {
         guard isDiscoveryChecklist(discovery: discovery) else { return nil }
         let completedFlowIds:Array<Int> = LeapSharedInformation.shared.getCompletedFlowInfo()
         let completedProjectIds:Array<String> = completedFlowIds.compactMap { flowId in
             return configuration?.contextProjectParametersDict["flow_\(flowId)"]?.projectId
         }
-        var completedInfo:Dictionary<String,Bool> = [:]
+        var flowInfo: Dictionary<String,Bool> = [:]
         completedProjectIds.forEach { projectId in
-            completedInfo[projectId] = true
+            flowInfo[projectId] = true
         }
-        return completedInfo
+        discovery.flowProjectIds?.forEach({ projectId in
+            if flowInfo[projectId] == nil {
+                flowInfo[projectId] = false
+            }
+        })
+        return flowInfo
     }
-    
 }
