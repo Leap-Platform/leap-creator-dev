@@ -181,6 +181,12 @@ class LeapTipView: LeapInViewAssist {
                         
         } else {
             
+            /// To make tap pass through transparent view which is self in this case. Context is when there is no overlay.
+            if !(assistInfo?.highlightAnchor ?? false) && hitTestView == self {
+                
+                return nil
+            }
+            
             return hitTestView
         }
     }
