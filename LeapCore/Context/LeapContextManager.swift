@@ -524,7 +524,7 @@ extension LeapContextManager: LeapStageManagerDelegate {
             guard let discovery = currentDiscovery, discovery.enableIcon else {return [:] }
             return getIconSettings(discId)
         }()
-        
+        if iconInfo.isEmpty { auiHandler?.removeAllViews() }
         guard !LeapSharedInformation.shared.isMuted(), let stageInstructionInfoDict = stage.instructionInfoDict else { return }
         if let anchorRect = rect {
             auiHandler?.performWebStage(instruction: stageInstructionInfoDict, rect: anchorRect, webview: webviewForRect, iconInfo: iconInfo)
