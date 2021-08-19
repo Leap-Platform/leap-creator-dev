@@ -90,6 +90,10 @@ extension LeapInternal {
     
     public func fetchProjectConfig(projectId:String, resetProject:Bool) {
         //Make API call
+        for embeddedProj in embeddedProjectIds { contextManager.removeConfigFor(projectId: embeddedProj) }
+        embeddedProjectIds = []
+        currentEmbeddedProjectId = nil
+        
         guard !fetchedProjectIds.contains(projectId) else {
             if resetProject { contextManager.resetForProjectId(projectId) }
             return
@@ -128,8 +132,8 @@ extension LeapInternal {
         configTask.resume()
     }
     
-    public func embedProject(_ projectId:String, resetProject:Bool) {
-        if resetProject { contextManager.resetForProjectId(projectId) }
+    public func embedProject(_ projectId:String) {
+        contextManager.resetForProjectId(projectId)
         if embeddedProjectIds.contains(projectId) {
             if embeddedProjectIds.last == projectId { return }
             embeddedProjectIds = embeddedProjectIds.filter { $0 != projectId }
@@ -164,7 +168,7 @@ extension LeapInternal {
                 self.currentEmbeddedProjectId = projectId
                 self.fetchedProjectIds.append(projectId)
                 let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
-                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
+                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: true)
             }
             
         }
@@ -307,5 +311,14 @@ extension LeapInternal: LeapContextManagerDelegate {
             
         }
         configTask.resume()
+    }
+    
+    func getCurrentEmbeddedProjectId() -> String? {
+        return self.currentEmbeddedProjectId
+    }
+    
+    func resetCurrentEmbeddedProjectId() {
+        self.embeddedProjectIds = self.embeddedProjectIds.filter{ $0 != self.currentEmbeddedProjectId }
+        self.currentEmbeddedProjectId = nil
     }
 }
