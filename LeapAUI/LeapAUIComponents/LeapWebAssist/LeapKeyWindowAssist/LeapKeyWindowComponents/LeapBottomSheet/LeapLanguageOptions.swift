@@ -68,10 +68,17 @@ class LeapLanguageOptions: LeapBottomSheet {
         webView.evaluateJavaScript("initIOSHtml('\(discoveryLanguagesScript)', '\(self.iconInfo?.backgroundColor ?? "#00000000")')", completionHandler: nil)
     }
     
+    private func setLanguage() {
+        guard let language = LeapPreferences.shared.getUserLanguage() else { return }
+        webView.evaluateJavaScript("setSelectedLocale('\(language)')", completionHandler: nil)
+    }
+    
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         super.didFinish(webView, didFinish: navigation)
         
         getLanguages()
+        
+        setLanguage()
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
