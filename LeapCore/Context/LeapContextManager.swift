@@ -755,7 +755,8 @@ extension LeapContextManager: LeapAnalyticsManagerDelegate {
     }
     
     func sendEvents(payload: Array<Dictionary<String, Any>>) {
-        print("\(payload.count) events sent - \(payload)")
+        //print("\(payload.count) events sent - \(payload)")
+        print("\(payload.count) events sent")
     }
     
     func sendPayload(_ payload: Dictionary<String, Any>) {
@@ -864,10 +865,6 @@ extension LeapContextManager:LeapAUICallback {
             guard let sm = stageManager, let stage = sm.getCurrentStage(), let instruction = stage.instruction else { return }
             // Element seen Event
             analyticsManager?.saveEvent(event: getInstructionEvent(with: getProjectParameter(), instructionId: instruction.id), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
-            // Flow success Event
-            if stage.isSuccess {
-                analyticsManager?.saveEvent(event: getFlowSuccessEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
-            }
             break
         }
     }
@@ -878,7 +875,7 @@ extension LeapContextManager:LeapAUICallback {
         discoveryManager?.resetDiscovery()
     }
     
-    func didDismissView(byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action: Dictionary<String,Any>?) {
+    func didDismissView(byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String,Any>?) {
         guard let state = contextDetector?.getState() else { return }
         switch state {
         case .Discovery:
@@ -897,7 +894,12 @@ extension LeapContextManager:LeapAUICallback {
             if let action = action {
                 analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: getProjectParameter(), action: action), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
             }
-            guard let sm = stageManager, let _ = sm.getCurrentStage() else { return }
+            guard let sm = stageManager, let stage = sm.getCurrentStage() else { return }
+            
+            // Flow success Event
+            if stage.isSuccess && (byUser || autoDismissed) {
+                analyticsManager?.saveEvent(event: getFlowSuccessEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+            }
             
             var endFlow = false
             if let body = action?[constant_body] as? Dictionary<String, Any> { endFlow = body["endFlow"] as? Bool ?? false }
