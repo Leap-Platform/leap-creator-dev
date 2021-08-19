@@ -103,12 +103,21 @@ class LeapContextManager:NSObject {
         projectConfig.webIdentifiers.forEach { (key, value) in
             configuration?.webIdentifiers[key] = value
         }
-        for assist in projectConfig.assists {
-            if !(configuration?.assists.contains(assist))! { configuration?.assists.append(assist) }
+        
+        if var currentAssists = configuration?.assists {
+            currentAssists = currentAssists.filter { !projectConfig.assists.contains($0) }
+            currentAssists.insert(contentsOf: projectConfig.assists, at: 0)
+            configuration?.assists = currentAssists
+        } else {
+            configuration?.assists = projectConfig.assists
         }
         
-        for discovery in projectConfig.discoveries {
-            if !(configuration?.discoveries.contains(discovery))! { configuration?.discoveries.append(discovery) }
+        if var currentDiscoveries = configuration?.discoveries {
+            currentDiscoveries = currentDiscoveries.filter { !projectConfig.discoveries.contains($0) }
+            currentDiscoveries.insert(contentsOf: projectConfig.discoveries, at: 0)
+            configuration?.discoveries = currentDiscoveries
+        } else {
+            configuration?.discoveries = projectConfig.discoveries
         }
         
         for flow in projectConfig.flows {
@@ -125,6 +134,14 @@ class LeapContextManager:NSObject {
             guard let presentLanguages = configuration?.languages,
                   !presentLanguages.contains(lang) else { return nil }
             return lang
+        })
+        
+        configuration?.contextProjectParametersDict.merge(projectConfig.contextProjectParametersDict, uniquingKeysWith: { _, newParams in
+            newParams
+        })
+        
+        configuration?.projectContextDict.merge(projectConfig.projectContextDict, uniquingKeysWith: { _, newContextId in
+            newContextId
         })
         auiHandler?.startMediaFetch()
     }
@@ -211,6 +228,26 @@ class LeapContextManager:NSObject {
             if let fm = flowManager, let flow = fm.getArrayOfFlows().last, let flowId = flow.id { return currentConfiguration()?.contextProjectParametersDict["flow_\(flowId)"] }
         }
         return nil
+    }
+    
+    func removeConfigFor(projectId:String) {
+        let params:LeapProjectParameters?  = {
+            var currentParams:LeapProjectParameters? = nil
+            configuration?.contextProjectParametersDict.forEach({ key, params in
+                if params.deploymentId == projectId { currentParams = params }
+            })
+            return currentParams
+        }()
+        guard let projId = params?.projectId else { return }
+        configuration?.projectContextDict.forEach({ projIdKey, contextId in
+            if projIdKey == "assist_\(projId)"{
+                configuration?.assists = configuration?.assists.filter{ $0.id != contextId } ?? []
+                configuration?.contextProjectParametersDict.removeValue(forKey: "assist_\(contextId)")
+            } else if projIdKey == "discovery_\(projId)" {
+                configuration?.discoveries = configuration?.discoveries.filter{ $0.id != contextId} ?? []
+                configuration?.contextProjectParametersDict.removeValue(forKey: "discovery_\(contextId)")
+            }
+        })
     }
 }
 
