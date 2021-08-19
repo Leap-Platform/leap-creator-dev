@@ -98,6 +98,10 @@ class LeapBottomSheet: LeapKeyWindowAssist {
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
+        if flowType == .multiFlow {
+            initFlowMenu()
+        }
+        
         self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .top, cornerDistance: associatedIconCornerDistance)
     }
     

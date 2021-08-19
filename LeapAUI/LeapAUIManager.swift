@@ -183,7 +183,7 @@ extension LeapAUIManager: LeapAUIHandler {
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
     }
     
-    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?, flowMenuInfo:Dictionary<String,Bool>?) {
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?, localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
@@ -208,7 +208,7 @@ extension LeapAUIManager: LeapAUIHandler {
         }
     }
     
-    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?, flowMenuInfo:Dictionary<String,Bool>?) {
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
@@ -735,54 +735,53 @@ extension LeapAUIManager {
             return
         }
         
-            switch type {
-            case POPUP:
-                let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = popup
-                popup.showPopup()
-            case DRAWER:
-                let drawer = LeapDrawer(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = drawer
-                drawer.showDrawer()
-            case FULLSCREEN:
-                let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = fullScreen
-                fullScreen.showFullScreen()
-            case DELIGHT:
-                let delight = LeapDelight(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = delight
-                delight.showFullScreen()
-            case BOTTOMUP:
-                let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = bottomSheet
-                bottomSheet.showBottomSheet()
-            case NOTIFICATION:
-                let notification = LeapNotification(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = notification
-                notification.showNotification()
-            case SLIDEIN:
-                let slideIn = LeapSlideIn(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = slideIn
-                slideIn.showSlideIn()
-            case CAROUSEL:
-                let carousel = LeapCarousel(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = carousel
-                carousel.showCarousel()
-                
-            case PING:
+        switch type {
+        case POPUP:
+            let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = popup
+            popup.showPopup()
+        case DRAWER:
+            let drawer = LeapDrawer(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = drawer
+            drawer.showDrawer()
+        case FULLSCREEN:
+            let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = fullScreen
+            fullScreen.showFullScreen()
+        case DELIGHT:
+            let delight = LeapDelight(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = delight
+            delight.showFullScreen()
+        case BOTTOMUP:
+            let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl, flowMenuDict: LeapFlowMenuInfo(with: auiManagerCallBack?.getFlowMenuInfo() ?? [:]).dictionary, flowType: (auiManagerCallBack?.isFlowMenu() ?? false) ? .multiFlow : .singleFlow)
+            currentAssist = bottomSheet
+            bottomSheet.showBottomSheet()
+        case NOTIFICATION:
+            let notification = LeapNotification(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = notification
+            notification.showNotification()
+        case SLIDEIN:
+            let slideIn = LeapSlideIn(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = slideIn
+            slideIn.showSlideIn()
+        case CAROUSEL:
+            let carousel = LeapCarousel(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = carousel
+            carousel.showCarousel()
+        case PING:
+            self.leapButton?.layoutIfNeeded()
+            UIView.animate(withDuration: 0.2) {
+                self.leapButtonBottomConstraint?.constant = mainIconBottomConstant
                 self.leapButton?.layoutIfNeeded()
-                UIView.animate(withDuration: 0.2) {
-                    self.leapButtonBottomConstraint?.constant = mainIconBottomConstant
-                    self.leapButton?.layoutIfNeeded()
-                }
-                dismissLeapButton()
-                let ping = LeapPing(withDict: assistInfo, iconDict: iconInfo, baseUrl: nil)
-                currentAssist = ping
-                ping.showPing()
-                
-            default:
-                break
             }
+            dismissLeapButton()
+            let ping = LeapPing(withDict: assistInfo, iconDict: iconInfo, baseUrl: nil)
+            currentAssist = ping
+            ping.showPing()
+            
+        default:
+            break
+        }
     }
     
     func isReadyToPresent(type: String, assistInfo: Dictionary<String, Any>) -> Bool {
