@@ -92,5 +92,12 @@ extension HomeViewController:PlacesDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         dateOfJourney.resignFirstResponder()
     }
+}
+
+extension HomeViewController: UITextFieldDelegate {
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }

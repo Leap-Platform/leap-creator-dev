@@ -19,8 +19,8 @@ class LeapAssistInfo {
     /// A boolean value to set anchor highlight
     var highlightAnchor: Bool?
     
-    /// A boolean value to set autoFocus to true only when highlightAnchor and highlightClickable are true.
-    var autoFocus: Bool = false         // default is false
+    /// A boolean value to set focus to true only when highlightAnchor and highlightClickable are true.
+    var focus: Bool = false         // default is false
     
     let autoDismissDelay:Double?
     
@@ -51,8 +51,11 @@ class LeapAssistInfo {
            self.highlightClickable = highlightClickable
         }
         
-        autoFocus = (highlightAnchor ?? false) && (highlightClickable ?? false)
-        
+        if let focus = assistDict[constant_focus] as? Bool {
+            
+            self.focus = focus
+        }
+                
         if let extraProps = assistDict[constant_extraProps] as? Dictionary<String, Any> {
             
             self.extraProps = ExtraProps(props: extraProps)

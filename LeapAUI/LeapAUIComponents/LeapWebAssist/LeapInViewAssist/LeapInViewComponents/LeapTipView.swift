@@ -73,8 +73,8 @@ class LeapTipView: LeapInViewAssist {
         case fade = "fade"
     }
     
-    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?) {
-        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl)
+    override init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, toView: UIView, insideView: UIView? = nil, baseUrl: String?, projectParametersInfo: [String : Any]? = nil) {
+        super.init(withDict: assistDict, iconDict: iconDict, toView: toView, insideView: insideView, baseUrl: baseUrl, projectParametersInfo: projectParametersInfo)
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -116,28 +116,17 @@ class LeapTipView: LeapInViewAssist {
             targetView = toViewParent
         }
         
+        if targetView == nil {
+            
+            targetView = toView
+        }
+        
         guard let focusView = targetView else {
             
             return
         }
         
-        var isEditableView = false
-        
-        switch focusView {
-        
-        case is UITextField: isEditableView = true
-        case is UITextView:
-            if let view = toView as? UITextView {
-                
-                if view.isEditable {
-                    
-                    isEditableView = true
-                }
-            }
-        default: isEditableView = false
-        }
-        
-        if isEditableView && (assistInfo?.autoFocus ?? false) {
+        if (assistInfo?.focus ?? false) {
             
             focusView.becomeFirstResponder()
         }
@@ -164,22 +153,25 @@ class LeapTipView: LeapInViewAssist {
             
             tappedOnToView = true 
             
-            if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) && (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
+            if (assistInfo?.layoutInfo?.dismissAction.dismissOnAnchorClick ?? false) {
+                
+                var action: [String : Any] = [:]
+                
+                if (assistInfo?.highlightClickable ?? false) {
+                    
+                    action = [constant_body: [constant_anchor_click: true]]
+                }
                                 
-                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_anchor_click: true]])
+                performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: action)
                 
                 self.removeFromSuperview()
-                                
-                return viewToCheck
-            
-            } else if (assistInfo?.highlightAnchor ?? false) && (assistInfo?.highlightClickable ?? false) {
                                 
                 return viewToCheck
             
             } else if (assistInfo?.highlightClickable ?? false) {
                 
                 self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
-                                
+                
                 return viewToCheck
             
             } else {
