@@ -26,7 +26,7 @@ enum LeapTriggerFrequencyType: String {
     /// Triggers every session until flow is complete. (Doesn't trigger in the next session if flow is completed)
     case everySessionUntilFlowComplete = "EVERY_SESSION_UNTIL_FLOW_COMPLETE"
     /// Triggers until all flows in a flow menu are completed
-    case untilAllFlowAreCompleted = "EVERY_SESSION_UNTIL_ALL_FLOWS_ARE_COMPLETED"
+    case everySessionUntilAllFlowsAreCompleted = "EVERY_SESSION_UNTIL_ALL_FLOWS_ARE_COMPLETED"
 }
 
 class LeapTrigger {

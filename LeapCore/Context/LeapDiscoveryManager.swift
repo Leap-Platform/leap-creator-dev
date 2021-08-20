@@ -138,7 +138,7 @@ class LeapDiscoveryManager {
                 return (LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo()[String(disc.id)] ?? 0) > 0
             case .playOnce:
                 return (LeapSharedInformation.shared.getDiscoveriesPresentedInfo()[String(disc.id)] ?? 0) > 0
-            case .untilAllFlowAreCompleted:
+            case .everySessionUntilAllFlowsAreCompleted:
                 guard let projectIds = disc.flowProjectIds else { return false }
                 let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo()
                 let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
