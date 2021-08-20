@@ -518,12 +518,12 @@ extension LeapWebAssist: WKScriptMessageHandler {
         
         guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else { return }
         
-        if let externalLink = dictBody[constant_externalLink] as? String, let url = URL(string: externalLink) {
+        if let externalLink = dictBody[constant_externalLink] as? String, let url = URL(string: externalLink.trimmingCharacters(in: .whitespacesAndNewlines)) {
             
             UIApplication.shared.open(url)
         }
         
-        if let deeplink = dictBody[constant_deepLink] as? String, let url = URL(string: deeplink) {
+        if let deeplink = dictBody[constant_deepLink] as? String, let url = URL(string: deeplink.trimmingCharacters(in: .whitespacesAndNewlines)) {
             
             UIApplication.shared.open(url)
         }
