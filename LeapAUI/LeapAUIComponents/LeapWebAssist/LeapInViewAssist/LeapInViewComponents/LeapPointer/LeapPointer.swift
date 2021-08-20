@@ -313,7 +313,7 @@ class LeapFingerPointer: LeapPointer {
                 
                 if (assistInfo?.highlightClickable ?? false) {
                     
-                    action = [constant_body: [constant_anchor_click: true]]
+                    action = [constant_body: [constant_anchorClick: true]]
                 }
                                 
                 performExitAnimation(animation: self.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: action)
@@ -324,7 +324,7 @@ class LeapFingerPointer: LeapPointer {
             
             } else if (assistInfo?.highlightClickable ?? false) {
                 
-                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
+                self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchorClick: true, constant_id: id]])
                 
                 return viewToCheck
             

@@ -718,16 +718,16 @@ extension LeapContextManager {
             event.actionEventValue = labelValue
         }
         // cases for actionEventType
-        if let _ = body[constant_external_link] as? Bool {
-            event.actionEventType = constant_external_link
-        } else if let _ = body[constant_deep_link] as? Bool {
-            event.actionEventType = constant_deep_link
-        } else if let _ = body[constant_end_flow] as? Bool {
-            event.actionEventType = constant_end_flow
+        if let _ = body[constant_externalLink] as? Bool {
+            event.actionEventType = constant_externalLink
+        } else if let _ = body[constant_deepLink] as? Bool {
+            event.actionEventType = constant_deepLink
+        } else if let _ = body[constant_endFlow] as? Bool {
+            event.actionEventType = constant_endFlow
         } else if let _ = body[constant_close] as? Bool {
             event.actionEventType = constant_close
-        } else if let _ = body[constant_anchor_click] as? Bool {
-            event.actionEventType = constant_anchor_click
+        } else if let _ = body[constant_anchorClick] as? Bool {
+            event.actionEventType = constant_anchorClick
             event.actionEventValue = nil
         }
         
@@ -936,10 +936,9 @@ extension LeapContextManager:LeapAUICallback {
             }
             
             var endFlow = false
-            if let body = action?[constant_body] as? Dictionary<String, Any> { endFlow = body["endFlow"] as? Bool ?? false }
+            if let body = action?[constant_body] as? Dictionary<String, Any> { endFlow = body[constant_endFlow] as? Bool ?? false }
             sm.stageDismissed(byUser: byUser, autoDismissed:autoDismissed)
-            if endFlow {  // Flow Stop event
-                analyticsManager?.saveEvent(event: getFlowStopEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+            if endFlow {
                 if let disId = flowManager?.getDiscoveryId() { LeapSharedInformation.shared.muteDisovery(disId) }
                 flowManager?.resetFlowsArray()
                 pageManager?.resetPageManager()
