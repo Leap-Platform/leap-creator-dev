@@ -27,7 +27,7 @@ class LeapDiscoveryInfo:Codable {
         detection_type = (dis.taggedEvents != nil) ? constant_event : constant_context
         tagged_discovery = (dis.taggedEvents != nil)
         if let instruction = dis.instructionInfoDict,
-            let assistInfo = instruction[constant_assist_info] as? Dictionary<String,Any>,
+            let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
             let assistType = assistInfo[constant_type] as? String {
             assist_type = assistType
         } else { assist_type = "" }

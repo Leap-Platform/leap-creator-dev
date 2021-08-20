@@ -150,7 +150,7 @@ class LeapBeacon: LeapNativeAssist {
 
         if frameForToView.contains(point) {
                         
-            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchor_click: true, constant_id: id]])
+            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchorClick: true, constant_id: id]])
             
             return hitTestView
 
