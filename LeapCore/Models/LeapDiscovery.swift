@@ -69,7 +69,7 @@ class LeapFlowTerminationFrequency: LeapFrequency {
     override init(with dict: Dictionary<String, Any>) {
         super.init(with: dict)
         nSession = dict[constant_nSession] as? Int
-        nDismissByUser = dict[constant_nDismissByUser] as? Int
+        nDismissByUser = dict[constant_nDismissedByUser] as? Int
         untilAllFlowsAreCompleted = dict[constant_untilAllFlowsAreCompleted] as? Bool
     }
 }
