@@ -11,6 +11,8 @@ import UIKit
 
 protocol LeapContextManagerDelegate:NSObjectProtocol {
     func fetchUpdatedConfig(config:@escaping(_ :LeapConfig?)->Void)
+    func getCurrentEmbeddedProjectId() -> String?
+    func resetCurrentEmbeddedProjectId()
 }
 
 /// LeapContextManager class acts as the central hub of the Core SDK once the config is downloaded. It invokes the LeapContextDetector class which helps in identifying the current flow, page and stage to be executed. LeapContextManager acts as the delegate to LeapContextDetector receiving information about flow, page and stage and passing it to LeapFlowManager & LeapStageManager.  LeapContextManager also acts as delegate to LeapStageManager, there by understanding if a new stage is identified or the same stage is identified and invoking the AUI SDK . LeapContextManger is also responsible for communicating with LeapAnalyticsManager
@@ -388,6 +390,20 @@ extension LeapContextManager: LeapAssistManagerDelegate {
     
     func newAssistIdentified(_ assist: LeapAssist, view: UIView?, rect: CGRect?, inWebview: UIView?) {
         guard let aui = auiHandler, let assistInstructionInfoDict = assist.instructionInfoDict else { return }
+        if let currentEmbeddedDeploymentId = delegate?.getCurrentEmbeddedProjectId() {
+            var parameters:LeapProjectParameters?
+            configuration?.contextProjectParametersDict.forEach({ key, params in
+                if params.deploymentId == currentEmbeddedDeploymentId {parameters = params }
+            })
+            if let currentParameters = parameters,
+               let projId = currentParameters.projectId,
+               let assistIdFromParams = configuration?.projectContextDict["assist_\(projId)"] {
+                if assistIdFromParams != assist.id {
+                    removeConfigFor(projectId: currentEmbeddedDeploymentId)
+                    delegate?.resetCurrentEmbeddedProjectId()
+                }
+            }
+        }
         if let anchorRect = rect {
             aui.performWebAssist(instruction: assistInstructionInfoDict, rect: anchorRect, webview: inWebview, localeCode: assist.localeCode)
         } else {
@@ -423,6 +439,20 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
     
     func newDiscoveryIdentified(discovery: LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard  let aui = auiHandler, let dm = discoveryManager else { return }
+        if let currentEmbeddedDeploymentId = delegate?.getCurrentEmbeddedProjectId() {
+            var parameters:LeapProjectParameters?
+            configuration?.contextProjectParametersDict.forEach({ key, params in
+                if params.deploymentId == currentEmbeddedDeploymentId {parameters = params }
+            })
+            if let currentParameters = parameters,
+               let projId = currentParameters.projectId,
+               let discoveryIdFromParams = configuration?.projectContextDict["discovery_\(projId)"] {
+                if discoveryIdFromParams != discovery.id {
+                    removeConfigFor(projectId: currentEmbeddedDeploymentId)
+                    delegate?.resetCurrentEmbeddedProjectId()
+                }
+            }
+        }
         guard !dm.isManualTrigger()  else {
             //present leap button
             let iconInfo:Dictionary<String,AnyHashable> = getIconSettings(discovery.id)
