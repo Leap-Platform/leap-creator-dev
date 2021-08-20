@@ -129,8 +129,8 @@ class LeapStageManager {
     func getCurrentStage() -> LeapStage? { return currentStage }
     
     func stageDismissed(byUser:Bool, autoDismissed:Bool) {
-        guard byUser || autoDismissed else { return }
         guard let stage = currentStage else { return }
+        guard byUser || autoDismissed || (stage.isSuccess && stage.terminationFrequency?.perFlow == 1) else { return }
         if delegate?.isStaticFlow() ?? false { actionTakenStages.append(stage.id)}
         delegate?.removeStage(stage)
         stagePerformed()
