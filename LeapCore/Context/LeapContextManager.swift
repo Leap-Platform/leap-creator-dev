@@ -421,6 +421,10 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
         return config.discoveries
     }
     
+    func getProjContextIdDict() -> Dictionary<String, Int> {
+        return configuration?.projectContextDict ?? [:]
+    }
+    
     func newDiscoveryIdentified(discovery: LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard  let aui = auiHandler, let dm = discoveryManager else { return }
         guard !dm.isManualTrigger()  else {
