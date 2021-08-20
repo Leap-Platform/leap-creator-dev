@@ -100,7 +100,7 @@ class LeapStageManager {
         } else {
             delegate?.dismissStage()
         }
-        if let next = currentStage?.transition?.next { nextStage = delegate?.getStage(next) }
+        if isStaticFlow() { nextStage = currentStage }
         currentStage = nil
     }
     
