@@ -13,6 +13,7 @@ import UIKit
 protocol LeapDiscoveryManagerDelegate: AnyObject {
     
     func getAllDiscoveries() -> Array<LeapDiscovery>
+    func getProjContextIdDict() -> Dictionary<String,Int>
     func newDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func sameDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func dismissDiscovery()
@@ -66,9 +67,20 @@ class LeapDiscoveryManager {
                 if let nDismissedByUser = terminationFreq.nDismissByUser, nDismissedByUser != -1 {
                     if hasBeenDismissed { return false }
                 }
+                if let projectIds = discovery.flowProjectIds, discovery.terminationfrequency?.untilAllFlowsAreCompleted ?? false {
+                    let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo()
+                    let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
+                    for projectId in projectIds {
+                        if let disId =  projectContextIdDict["flow_\(projectId)"] {
+                            if !completedFlows.contains(disId) { return true }
+                        }
+                    }
+                    return false
+                }
             }
             return true
         })
+        
         guard let liveDisc = currentDiscovery else { return discoveriesToCheck }
         if !discoveriesToCheck.contains(liveDisc) { discoveriesToCheck.append(liveDisc) }
         return discoveriesToCheck
@@ -126,6 +138,16 @@ class LeapDiscoveryManager {
                 return (LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo()[String(disc.id)] ?? 0) > 0
             case .playOnce:
                 return (LeapSharedInformation.shared.getDiscoveriesPresentedInfo()[String(disc.id)] ?? 0) > 0
+            case .everySessionUntilAllFlowsAreCompleted:
+                guard let projectIds = disc.flowProjectIds else { return false }
+                let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo()
+                let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
+                for projectId in projectIds {
+                    if let disId =  projectContextIdDict["flow_\(projectId)"] {
+                        if !completedFlows.contains(disId) { return false }
+                    }
+                }
+                return true
             case .manualTrigger:
                 return true
             }

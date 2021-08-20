@@ -96,9 +96,9 @@ class LeapFrequency {
     /// number of times a stage is shown inside a flow
     let perFlow:Int?
     
-    init(with dict:Dictionary<String,Int>) {
-        perApp = dict[constant_perApp]
-        perFlow = dict[constant_perFlow]
+    init(with dict:Dictionary<String,Any>) {
+        perApp = dict[constant_perApp] as? Int
+        perFlow = dict[constant_perFlow] as? Int
     }
     
 }
