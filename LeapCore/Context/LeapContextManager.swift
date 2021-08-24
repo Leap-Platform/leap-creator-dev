@@ -180,7 +180,7 @@ class LeapContextManager:NSObject {
         auiHandler?.removeAllViews()
         previewConfig = LeapConfig(withDict: configDict, isPreview: true)
         analyticsManager = nil
-        previewSounds = previewDict["localeSounds"] as? Dictionary<String,Any>
+        previewSounds = previewDict["sounds"] as? Dictionary<String,Any>
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         contextDetector?.start()
         auiHandler?.startMediaFetch()

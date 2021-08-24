@@ -472,8 +472,12 @@ extension LeapAUIManager {
             let soundsArrayForLanguage = self.soundManager.discoverySoundsJson[code]  ?? []
             var audio = soundsArrayForLanguage.first { $0.name == mediaName }
             if audio ==  nil {
-                let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
-                audio = stageSounds.first { $0.name == mediaName }
+                let previewSounds = self.soundManager.previewSoundsJson[code] ?? []
+                audio = previewSounds.first { $0.name == mediaName }
+                if audio == nil {
+                    let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
+                    audio = stageSounds.first { $0.name == mediaName }
+                }
             }
             guard let currentAudio = audio else {
                 self.startAutoDismissTimer()
