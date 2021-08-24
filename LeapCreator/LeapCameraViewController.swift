@@ -259,7 +259,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         closeButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         inView.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 20).isActive = true
+        closeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 35).isActive = true
         closeButton.leadingAnchor.constraint(equalTo: inView.leadingAnchor, constant: 16).isActive = true
         closeButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
         closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
@@ -331,7 +331,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraFrameView.contentMode = .scaleAspectFit
         cameraFrameView.translatesAutoresizingMaskIntoConstraints = false
         cameraFrameView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        cameraFrameView.topAnchor.constraint(equalTo: view.topAnchor, constant: 65).isActive = true
+        cameraFrameView.topAnchor.constraint(equalTo: view.topAnchor, constant: 80).isActive = true
         cameraFrameView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         cameraFrameView.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
     }
@@ -568,7 +568,7 @@ extension LeapCameraViewController: UITextFieldDelegate {
         modeButton.setTitle("Using Simulator?", for: .normal)
         inView.addSubview(modeButton)
         modeButton.translatesAutoresizingMaskIntoConstraints = false
-        modeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 20).isActive = true
+        modeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 35).isActive = true
         modeButton.trailingAnchor.constraint(equalTo: inView.trailingAnchor, constant: -16).isActive = true
         guard modeWidthConstraint == nil, modeHeightConstraint == nil else { return }
         modeWidthConstraint = NSLayoutConstraint(item: modeButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 135)
