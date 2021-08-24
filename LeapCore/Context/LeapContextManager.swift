@@ -317,7 +317,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     // MARK: - Flow Methods
     
     func isDiscoveryFlowMenu() -> Bool {
-        guard let discoveryId = flowManager?.getDiscoveryId() ?? discoveryManager?.getCurrentDiscovery()?.id, let projParams = configuration?.contextProjectParametersDict["discovery_\(discoveryId)"]
+        guard let discoveryId = flowManager?.getDiscoveryId() ?? discoveryManager?.getCurrentDiscovery()?.id, let projParams = self.currentConfiguration()?.contextProjectParametersDict["discovery_\(discoveryId)"]
         else { return false }
         let type = projParams.projectType ?? ""
         return type == constant_STATIC_FLOW_CHECKLIST || type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_MENU || type == constant_DYNAMIC_FLOW_MENU
@@ -325,7 +325,7 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     
     func getFlowMenuDiscovery() -> LeapDiscovery? {
         guard let fm = flowManager, let disId = fm.getDiscoveryId() else { return nil }
-        let discovery = configuration?.discoveries.first { $0.id == disId }
+        let discovery = self.currentConfiguration()?.discoveries.first { $0.id == disId }
         return discovery
     }
     
@@ -397,12 +397,12 @@ extension LeapContextManager: LeapAssistManagerDelegate {
         guard let aui = auiHandler, let assistInstructionInfoDict = assist.instructionInfoDict else { return }
         if let currentEmbeddedDeploymentId = delegate?.getCurrentEmbeddedProjectId() {
             var parameters:LeapProjectParameters?
-            configuration?.contextProjectParametersDict.forEach({ key, params in
+            self.currentConfiguration()?.contextProjectParametersDict.forEach({ key, params in
                 if params.deploymentId == currentEmbeddedDeploymentId {parameters = params }
             })
             if let currentParameters = parameters,
                let projId = currentParameters.projectId,
-               let assistIdFromParams = configuration?.projectContextDict["assist_\(projId)"] {
+               let assistIdFromParams = self.currentConfiguration()?.projectContextDict["assist_\(projId)"] {
                 if assistIdFromParams != assist.id {
                     removeConfigFor(projectId: currentEmbeddedDeploymentId)
                     delegate?.resetCurrentEmbeddedProjectId()
@@ -443,19 +443,19 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
     }
     
     func getProjContextIdDict() -> Dictionary<String, Int> {
-        return configuration?.projectContextDict ?? [:]
+        return self.currentConfiguration()?.projectContextDict ?? [:]
     }
     
     func newDiscoveryIdentified(discovery: LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
         guard  let aui = auiHandler, let dm = discoveryManager else { return }
         if let currentEmbeddedDeploymentId = delegate?.getCurrentEmbeddedProjectId() {
             var parameters:LeapProjectParameters?
-            configuration?.contextProjectParametersDict.forEach({ key, params in
+            self.currentConfiguration()?.contextProjectParametersDict.forEach({ key, params in
                 if params.deploymentId == currentEmbeddedDeploymentId {parameters = params }
             })
             if let currentParameters = parameters,
                let projId = currentParameters.projectId,
-               let discoveryIdFromParams = configuration?.projectContextDict["discovery_\(projId)"] {
+               let discoveryIdFromParams = self.currentConfiguration()?.projectContextDict["discovery_\(projId)"] {
                 if discoveryIdFromParams != discovery.id {
                     removeConfigFor(projectId: currentEmbeddedDeploymentId)
                     delegate?.resetCurrentEmbeddedProjectId()
@@ -1176,7 +1176,7 @@ extension LeapContextManager {
     }
     
     func isDiscoveryChecklist(discovery:LeapDiscovery) -> Bool {
-        let params = configuration?.contextProjectParametersDict["discovery_\(discovery.id)"]
+        let params = self.currentConfiguration()?.contextProjectParametersDict["discovery_\(discovery.id)"]
         guard let parameters = params else { return false }
         let type = parameters.projectType ?? ""
         return type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_CHECKLIST
@@ -1186,7 +1186,7 @@ extension LeapContextManager {
         guard isDiscoveryChecklist(discovery: discovery) else { return nil }
         let completedFlowIds:Array<Int> = LeapSharedInformation.shared.getCompletedFlowInfo()
         let completedProjectIds:Array<String> = completedFlowIds.compactMap { flowId in
-            return configuration?.contextProjectParametersDict["flow_\(flowId)"]?.projectId
+            return self.currentConfiguration()?.contextProjectParametersDict["flow_\(flowId)"]?.projectId
         }
         var flowInfo: Dictionary<String,Bool> = [:]
         completedProjectIds.forEach { projectId in
