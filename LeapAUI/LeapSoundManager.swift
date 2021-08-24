@@ -62,6 +62,7 @@ class LeapSoundManager {
         var processedSoundsDict: Dictionary<String,Array<LeapSound>> = [:]
         for config in configs {
             let singleConfigProcessed = processSingleConfig(config: config)
+            print(singleConfigProcessed)
             singleConfigProcessed.forEach { (code, leapSoundsArray) in
                 let soundsForEachCode = (processedSoundsDict[code] ?? []) + leapSoundsArray
                 processedSoundsDict[code] = soundsForEachCode
@@ -73,7 +74,7 @@ class LeapSoundManager {
     private func processSingleConfig(config: Dictionary<String,Any>) -> Dictionary<String, Array<LeapSound>> {
         var processedSounds: Dictionary<String,Array<LeapSound>> = [:]
         guard let baseUrl = config[constant_baseUrl] as? String,
-              let leapSounds = config[constant_leapSounds] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
+              let leapSounds = config[constant_leapSounds] as? Dictionary<String,Array<Dictionary<String,Any>>> ?? config["sounds"] as? Dictionary<String,Array<Dictionary<String,Any>>> else { return processedSounds }
         leapSounds.forEach { (code, soundDictsArray) in
             let processedSoundsArray = self.processLeapSounds(soundDictsArray, code: code, baseUrl: baseUrl)
             let currentCodeSounds =  (processedSounds[code] ?? []) + processedSoundsArray

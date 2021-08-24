@@ -27,7 +27,7 @@ class LeapContextManager:NSObject {
     private var analyticsManager:LeapAnalyticsManager?
     private var configuration:LeapConfig?
     private var previewConfig: LeapConfig?
-    private var previewSounds:Dictionary<String,Any>?
+    private var previewSounds:Array<Dictionary<String,Any>>?
     private weak var auiHandler:LeapAUIHandler?
     public weak var delegate:LeapContextManagerDelegate?
     private var taggedEvents:Dictionary<String,Any> = [:]
@@ -180,7 +180,12 @@ class LeapContextManager:NSObject {
         auiHandler?.removeAllViews()
         previewConfig = LeapConfig(withDict: configDict, isPreview: true)
         analyticsManager = nil
-        previewSounds = previewDict["sounds"] as? Dictionary<String,Any>
+        for config in tempConfig {
+            if let soundDict = config["localeSounds"] as? Dictionary<String,Any> {
+                if previewSounds == nil { previewSounds = [] }
+                previewSounds?.append(soundDict)
+            }
+        }
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         contextDetector?.start()
         auiHandler?.startMediaFetch()
@@ -805,7 +810,7 @@ extension LeapContextManager:LeapAUICallback {
     func getDefaultMedia() -> Dictionary<String, Any> {
         guard let config = self.currentConfiguration() else { return [:] }
         var initialMedia:Dictionary<String,Any> = [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
-        if previewSounds != nil { initialMedia[constant_previewSounds] = [previewSounds] }
+        if previewSounds != nil { initialMedia[constant_previewSounds] = previewSounds }
         return initialMedia
     }
     
