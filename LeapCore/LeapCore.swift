@@ -37,6 +37,9 @@ import UIKit
     func triggerEvent(identifier:String, value:Any)
     func getWebScript(_ identifier:String) -> String?
     
+    func isFlowMenu() -> Bool
+    func getFlowMenuInfo() -> Dictionary<String, Bool>?
+    
     func getCurrentLanguageOptionsTexts() -> Dictionary<String,String>
     func getLanguagesForCurrentInstruction() -> Array<Dictionary<String,String>>
     func getIconInfoForCurrentInstruction() -> Dictionary<String,Any>?
@@ -59,6 +62,7 @@ import UIKit
     func didLanguageChange(from previousLanguage: String, to currentLanguage: String)
     
     func flush()
+    func getProjectParameters() -> [String : Any]?
     
     /// receives only AUI info
     func receiveAUIEvent(action: Dictionary<String, Any>)
@@ -101,4 +105,9 @@ import UIKit
     public func startProject(projectId:String, resetProject:Bool) {
         self.leapInternal?.fetchProjectConfig(projectId: projectId, resetProject: resetProject)
     }
+    
+    public func embedProject(_ projectId:String) {
+        self.leapInternal?.embedProject(projectId)
+    }
+    
 }

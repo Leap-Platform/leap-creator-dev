@@ -16,6 +16,7 @@ protocol LeapAssistManagerDelegate: NSObjectProtocol {
     func sameAssistIdentified(view:UIView?, rect:CGRect?, inWebview:UIView?)
     func dismissAssist()
     func sendAssistTerminationEvent(with id: Int, for rule: String)
+    func isPreview() -> Bool
 }
 
 
@@ -30,11 +31,11 @@ class LeapAssistManager {
     init(_ assistDelegate:LeapAssistManagerDelegate) {
         delegate = assistDelegate
         let assists = delegate?.getAllAssists() ?? []
-        let assistsPresentedCount = LeapSharedInformation.shared.getAssistsPresentedInfo()
+        let assistsPresentedCount = LeapSharedInformation.shared.getAssistsPresentedInfo(isPreview: delegate?.isPreview() ?? false)
         for assist in assists {
             let presentedCount = (assistsPresentedCount["\(assist.id)"] ?? 0)
             let nSession = (assist.terminationFrequency?.nSession ?? -1)
-            let terminatedAssists = LeapSharedInformation.shared.getTerminatedAssistsEvents()
+            let terminatedAssists = LeapSharedInformation.shared.getTerminatedAssistsEvents(isPreview: delegate?.isPreview() ?? false)
             if presentedCount >= nSession && nSession != -1 && !terminatedAssists.contains(assist.id) {
                 delegate?.sendAssistTerminationEvent(with: assist.id, for: "After \(nSession) sessions")
             }
@@ -42,8 +43,8 @@ class LeapAssistManager {
     }
     
     func getAssistsToCheck() -> Array<LeapAssist> {
-        let assistSessionCount = LeapSharedInformation.shared.getAssistsPresentedInfo()
-        let assistsDismissedByUser = LeapSharedInformation.shared.getDismissedAssistInfo()
+        let assistSessionCount = LeapSharedInformation.shared.getAssistsPresentedInfo(isPreview: delegate?.isPreview() ?? false)
+        let assistsDismissedByUser = LeapSharedInformation.shared.getDismissedAssistInfo(isPreview: delegate?.isPreview() ?? false)
         guard let allAssists = delegate?.getAllAssists() else { return [] }
         var assistsToCheck = allAssists.filter { (tempAssist) -> Bool in
             /// Eliminate assists already presented in current session
@@ -133,8 +134,8 @@ class LeapAssistManager {
     func assistPresented() {
         guard let assist = currentAssist else { return }
         if !(assistsPresentedInSession.contains(assist.id)) {
-            LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: nil, assistId: assist.id)
-            LeapSharedInformation.shared.assistPresentedInSession(assistId: assist.id)
+            LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: nil, assistId: assist.id, isPreview: delegate?.isPreview() ?? false)
+            LeapSharedInformation.shared.assistPresentedInSession(assistId: assist.id, isPreview: delegate?.isPreview() ?? false)
             assistsPresentedInSession.append(assist.id)
         }
     }
@@ -142,9 +143,9 @@ class LeapAssistManager {
     func assistDismissed(byUser:Bool, autoDismissed:Bool) {
         guard let assist = currentAssist, byUser || autoDismissed  else { return }
         if byUser {
-            LeapSharedInformation.shared.assistDismissedByUser(assistId: assist.id)
+            LeapSharedInformation.shared.assistDismissedByUser(assistId: assist.id, isPreview: delegate?.isPreview() ?? false)
             //nDismissByUser
-            let assistsDismissedByUser = LeapSharedInformation.shared.getDismissedAssistInfo()
+            let assistsDismissedByUser = LeapSharedInformation.shared.getDismissedAssistInfo(isPreview: delegate?.isPreview() ?? false)
             if assistsDismissedByUser.contains(assist.id), let nDismissed = assist.terminationFrequency?.nDismissByUser, nDismissed != -1 {
                 delegate?.sendAssistTerminationEvent(with: assist.id, for: "At assist dismiss by user")
             }

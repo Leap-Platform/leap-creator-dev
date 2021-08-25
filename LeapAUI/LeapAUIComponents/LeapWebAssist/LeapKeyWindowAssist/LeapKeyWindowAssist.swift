@@ -13,14 +13,28 @@ import WebKit
 /// A super class for the LeapKeyWindowAssist AUI Components.
 class LeapKeyWindowAssist: LeapWebAssist {
     
+    /// type of the flow, the AUI is assigned
+    enum AUIFlowType: String {
+        case singleFlow
+        case multiFlow
+    }
+    
     /// height constraint to increase the constant when html resizes
     var heightConstraint: NSLayoutConstraint?
     
     /// source view of the AUIComponent that is relatively positioned.
     weak var inView: UIView?
     
+    /// property to know the flow type
+    var flowType: AUIFlowType = .singleFlow
+    
+    /// dictionary that has info about the completed flows
+    var flowMenuDict = [String : Any]()
+    
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type LeapAssistInfo.
+    ///   - iconDict: A dictionary for the type LeapIconInfo.
+    ///   - baseUrl: base url of the type string.
     init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?) {
         super.init(frame: CGRect.zero, baseUrl: baseUrl)
         
@@ -36,6 +50,18 @@ class LeapKeyWindowAssist: LeapWebAssist {
     
     required init?(coder: NSCoder) {        
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// - Parameters:
+    ///   - assistDict: A dictionary value for the type LeapAssistInfo.
+    ///   - iconDict: A dictionary for the type LeapIconInfo.
+    ///   - baseUrl: base url of the type string.
+    ///   - flowMenuDict: A dictionary to have completed flows info.
+    ///   - flowType: type of the flow.
+    convenience init(withDict assistDict: Dictionary<String, Any>, iconDict: Dictionary<String, Any>? = nil, baseUrl: String?, flowMenuDict: [String : Any] = [:], flowType: AUIFlowType) {
+        self.init(withDict: assistDict, iconDict: iconDict, baseUrl:baseUrl)
+        self.flowType = flowType
+        self.flowMenuDict = flowMenuDict
     }
     
     /// Method to configure constraints for the overlay view
@@ -125,10 +151,27 @@ class LeapKeyWindowAssist: LeapWebAssist {
         webView.layer.cornerRadius = CGFloat(self.assistInfo?.layoutInfo?.style.cornerRadius ?? 0)
     }
     
+    /// A method to initialise flowMenu with language, completed and uncompleted flows
+    func initFlowMenu() {
+        let flowMenuDictStringified = dictionaryToStringifiedJson(dictionary: self.flowMenuDict)
+        webView.evaluateJavaScript("initFlowMenu('\(flowMenuDictStringified)')", completionHandler: nil)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if assistInfo?.layoutInfo?.dismissAction.outsideDismiss ?? false {
             performExitAnimation(animation: assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: true, autoDismissed: false, byContext: false, panelOpen: false, action: [constant_body: [constant_close: true]])
+        }
+    }
+    
+    /// - Parameters:
+    ///   - dictionary: A dictionary that needs to be stringified.
+    func dictionaryToStringifiedJson(dictionary: [String : Any]) -> String {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: dictionary, options: [])
+            return String(data: data, encoding: String.Encoding.utf8) ?? ""
+        } catch {
+            return ""
         }
     }
 }

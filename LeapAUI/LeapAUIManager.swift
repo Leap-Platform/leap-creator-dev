@@ -62,6 +62,9 @@ extension LeapAUIManager {
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(startPreview), name: .init("leap_preview_config"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
     }
     
     @objc func keyboardDidShow(_ notification: NSNotification) {
@@ -81,6 +84,20 @@ extension LeapAUIManager {
             leapButtonBottomConstraint?.constant = mainIconBottomConstant
             leapButton?.updateConstraints()
         }
+    }
+    
+    @objc func appDidBecomeActive() {
+        guard currentAssist != nil else { return }
+        playAudio()
+    }
+    
+    @objc func startPreview() {
+        LeapPreferences.shared.isPreview = true
+    }
+    
+    @objc func endPreview() {
+        LeapPreferences.shared.isPreview = false
+        LeapPreferences.shared.previewUserLanguage = LeapPreferences.shared.getUserLanguage() ?? constant_ang
     }
 }
 
@@ -177,7 +194,7 @@ extension LeapAUIManager: LeapAUIHandler {
         performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type,iconInfo:nil)
     }
     
-    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
+    func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?, localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
@@ -185,7 +202,7 @@ extension LeapAUIManager: LeapAUIHandler {
                 return
             }
         }
-        showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
+        showLanguageOptionsIfApplicable(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
             if languageChose {
                 guard let anchorView = view else {
@@ -202,7 +219,7 @@ extension LeapAUIManager: LeapAUIHandler {
         }
     }
     
-    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?,  localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
+    func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
         setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
@@ -210,7 +227,7 @@ extension LeapAUIManager: LeapAUIHandler {
                 return
             }
         }
-        showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
+        showLanguageOptionsIfApplicable(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             if languageChose {
                 self.setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
                 guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
@@ -366,6 +383,12 @@ extension LeapAUIManager: LeapAUIHandler {
 extension LeapAUIManager: LeapTappableDelegate {
     
     func iconDidTap() {
+        
+        if auiManagerCallBack?.isFlowMenu() ?? false {
+            auiManagerCallBack?.leapTapped()
+            return
+        }
+        
         guard let _ = currentInstruction, LeapPreferences.shared.getUserLanguage() != nil else {
             auiManagerCallBack?.leapTapped()
             return
@@ -460,8 +483,12 @@ extension LeapAUIManager {
             let soundsArrayForLanguage = self.soundManager.discoverySoundsJson[code]  ?? []
             var audio = soundsArrayForLanguage.first { $0.name == mediaName }
             if audio ==  nil {
-                let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
-                audio = stageSounds.first { $0.name == mediaName }
+                let previewSounds = self.soundManager.previewSoundsJson[code] ?? []
+                audio = previewSounds.first { $0.name == mediaName }
+                if audio == nil {
+                    let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
+                    audio = stageSounds.first { $0.name == mediaName }
+                }
             }
             guard let currentAudio = audio else {
                 self.startAutoDismissTimer()
@@ -534,28 +561,7 @@ extension LeapAUIManager {
 // MARK: - DISCOVERY LANGUAGE OPTIONS
 extension LeapAUIManager {
     
-    func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
-        
-        func showLanguageOptions() {
-            let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
-            if auiContent.url != nil { self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
-                DispatchQueue.main.async {
-                    self.isLanguageOptionsOpen = true
-                    self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
-                        self.removeLanguageOptions()
-                        self.isLanguageOptionsOpen = false
-                        if success, let code = languageCode { LeapPreferences.shared.setUserLanguage(code) }
-                        if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
-                            webAssist.changeLanguage(locale: code)
-                        }
-                        self.startDiscoverySoundDownload()
-                        self.startStageSoundDownload()
-                        handler?(success)
-                    }
-                    self.languageOptions?.showBottomSheet()
-                }
-            }) }
-        }
+    func showLanguageOptionsIfApplicable(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
         
         if localeCodes.count == 1 {
             LeapPreferences.shared.setUserLanguage(localeCodes.first?[constant_localeId] ?? "ang")
@@ -565,18 +571,48 @@ extension LeapAUIManager {
             return
         }
         guard let userLanguage = LeapPreferences.shared.getUserLanguage() else {
-            showLanguageOptions()
+            showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { success in
+                handler?(success)
+            }
             return
         }
         let localeDict = localeCodes.first { $0[constant_localeId] == userLanguage }
         guard let alreadySelectedLanguageDict = localeDict, let langCode = alreadySelectedLanguageDict[constant_localeId] else {
-            showLanguageOptions()
+            showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { success in
+                handler?(success)
+            }
             return
         }
         LeapPreferences.shared.setUserLanguage(langCode)
         self.startDiscoverySoundDownload()
         self.startStageSoundDownload()
         handler?(true)
+    }
+    
+    func showLanguageOptions(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
+        let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
+        if auiContent.url != nil { self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
+            DispatchQueue.main.async {
+                self.isLanguageOptionsOpen = true
+                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
+                    self.removeLanguageOptions()
+                    self.isLanguageOptionsOpen = false
+                    if success, let code = languageCode {
+                        if let userLanguage = LeapPreferences.shared.getUserLanguage() {
+                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
+                        }
+                        LeapPreferences.shared.setUserLanguage(code)
+                    }
+                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
+                        webAssist.changeLanguage(locale: code)
+                    }
+                    self.startDiscoverySoundDownload()
+                    self.startStageSoundDownload()
+                    handler?(success)
+                }
+                self.languageOptions?.showBottomSheet()
+            }
+        }) }
     }
 }
 
@@ -599,8 +635,6 @@ extension LeapAUIManager {
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         scrollArrowButton.setView(view: inView)
-        //Set autofocus
-        inView.becomeFirstResponder()
         
         guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
             auiManagerCallBack?.failedToPerform()
@@ -615,7 +649,7 @@ extension LeapAUIManager {
             fingerPointer.presentPointer(view: inView)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer()
             
@@ -679,7 +713,7 @@ extension LeapAUIManager {
             swipePointer.presentPointer(toRect: rect, inView: inWebview)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer(toRect: rect, inView: inWebview)
             
@@ -716,54 +750,53 @@ extension LeapAUIManager {
             return
         }
         
-            switch type {
-            case POPUP:
-                let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = popup
-                popup.showPopup()
-            case DRAWER:
-                let drawer = LeapDrawer(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = drawer
-                drawer.showDrawer()
-            case FULLSCREEN:
-                let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = fullScreen
-                fullScreen.showFullScreen()
-            case DELIGHT:
-                let delight = LeapDelight(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = delight
-                delight.showFullScreen()
-            case BOTTOMUP:
-                let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = bottomSheet
-                bottomSheet.showBottomSheet()
-            case NOTIFICATION:
-                let notification = LeapNotification(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = notification
-                notification.showNotification()
-            case SLIDEIN:
-                let slideIn = LeapSlideIn(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = slideIn
-                slideIn.showSlideIn()
-            case CAROUSEL:
-                let carousel = LeapCarousel(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
-                currentAssist = carousel
-                carousel.showCarousel()
-                
-            case PING:
+        switch type {
+        case POPUP:
+            let popup = LeapPopup(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = popup
+            popup.showPopup()
+        case DRAWER:
+            let drawer = LeapDrawer(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = drawer
+            drawer.showDrawer()
+        case FULLSCREEN:
+            let fullScreen = LeapFullScreen(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = fullScreen
+            fullScreen.showFullScreen()
+        case DELIGHT:
+            let delight = LeapDelight(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = delight
+            delight.showFullScreen()
+        case BOTTOMUP:
+            let bottomSheet = LeapBottomSheet(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl, flowMenuDict: LeapFlowMenuInfo(with: auiManagerCallBack?.getFlowMenuInfo() ?? [:]).dictionary, flowType: (auiManagerCallBack?.isFlowMenu() ?? false) ? .multiFlow : .singleFlow)
+            currentAssist = bottomSheet
+            bottomSheet.showBottomSheet()
+        case NOTIFICATION:
+            let notification = LeapNotification(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = notification
+            notification.showNotification()
+        case SLIDEIN:
+            let slideIn = LeapSlideIn(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = slideIn
+            slideIn.showSlideIn()
+        case CAROUSEL:
+            let carousel = LeapCarousel(withDict: assistInfo, iconDict: iconInfo, baseUrl: baseUrl)
+            currentAssist = carousel
+            carousel.showCarousel()
+        case PING:
+            self.leapButton?.layoutIfNeeded()
+            UIView.animate(withDuration: 0.2) {
+                self.leapButtonBottomConstraint?.constant = mainIconBottomConstant
                 self.leapButton?.layoutIfNeeded()
-                UIView.animate(withDuration: 0.2) {
-                    self.leapButtonBottomConstraint?.constant = mainIconBottomConstant
-                    self.leapButton?.layoutIfNeeded()
-                }
-                dismissLeapButton()
-                let ping = LeapPing(withDict: assistInfo, iconDict: iconInfo, baseUrl: nil)
-                currentAssist = ping
-                ping.showPing()
-                
-            default:
-                break
             }
+            dismissLeapButton()
+            let ping = LeapPing(withDict: assistInfo, iconDict: iconInfo, baseUrl: nil)
+            currentAssist = ping
+            ping.showPing()
+            
+        default:
+            break
+        }
     }
     
     func isReadyToPresent(type: String, assistInfo: Dictionary<String, Any>) -> Bool {
@@ -858,6 +891,17 @@ extension LeapAUIManager: LeapAssistDelegate {
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }
     
     func didDismissAssist(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+        if let type = action?[constant_type] as? String, type == constant_action_taken, let body = action?[constant_body] as? [String : Any], let clickType = body[constant_clickType] as? String, clickType == constant_languageButton {
+            guard let localeCodes = auiManagerCallBack?.getLanguagesForCurrentInstruction(),
+                  let iconInfo = auiManagerCallBack?.getIconInfoForCurrentInstruction(),
+                  let htmlUrl = auiManagerCallBack?.getLanguageHtmlUrl() else {
+                return
+            }
+            showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: htmlUrl) { success in
+                self.performKeyWindowInstruction(instruction: self.currentInstruction ?? [:], iconInfo: iconInfo)
+            }
+            return
+        }
         self.stopAutoDismissTimer()
         currentAssist = nil
         currentInstruction = nil
@@ -892,33 +936,37 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         }
         self.stopAutoDismissTimer()
         self.stopAudio()
-        let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: htmlUrl)
-        guard let _ = auiContent.url else { return }
-        self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh) { (success) in
-            guard success else { return }
-            DispatchQueue.main.async {
-                self.isLanguageOptionsOpen = true
-                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
-                    self.removeLanguageOptions()
-                    self.isLanguageOptionsOpen = false
-                    if success, let code = languageCode {
-                        if let userLanguage = LeapPreferences.shared.getUserLanguage() {
-                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
-                        }
-                        LeapPreferences.shared.setUserLanguage(code)
-                    } else { self.startAutoDismissTimer() }
-                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
-                        webAssist.changeLanguage(locale: code)
-                        self.playAudio()
-                    }
-                    self.startDiscoverySoundDownload()
-                    self.startStageSoundDownload()
-                    self.auiManagerCallBack?.optionPanelClosed()
-                    
-                }
-                self.languageOptions?.showBottomSheet()
+        
+        self.showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: htmlUrl) { success in
+            
+            if !success {
+                self.startAutoDismissTimer()
             }
+            if let _ = self.currentAssist as? LeapWebAssist, let _ = LeapPreferences.shared.getUserLanguage() {
+                self.playAudio()
+            }
+            self.auiManagerCallBack?.optionPanelClosed()
         }
+        //                self.isLanguageOptionsOpen = true
+        //                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
+        //                    self.removeLanguageOptions()
+        //                    self.isLanguageOptionsOpen = false
+        //                    if success, let code = languageCode {
+        //                        if let userLanguage = LeapPreferences.shared.getUserLanguage() {
+        //                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
+        //                        }
+        //                        LeapPreferences.shared.setUserLanguage(code)
+        //                    } else { self.startAutoDismissTimer() }
+        //                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
+        //                        webAssist.changeLanguage(locale: code)
+        //                        self.playAudio()
+        //                    }
+        //                    self.startDiscoverySoundDownload()
+        //                    self.startStageSoundDownload()
+        //                    self.auiManagerCallBack?.optionPanelClosed()
+        //
+        //                }
+        //                self.languageOptions?.showBottomSheet()
     }
     
     func iconOptionsClosed() {

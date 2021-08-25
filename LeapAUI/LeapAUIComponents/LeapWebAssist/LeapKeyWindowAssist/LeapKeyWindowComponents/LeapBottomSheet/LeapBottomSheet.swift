@@ -98,13 +98,17 @@ class LeapBottomSheet: LeapKeyWindowAssist {
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
+        if flowType == .multiFlow {
+            initFlowMenu()
+        }
+        
         self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .top, cornerDistance: associatedIconCornerDistance)
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
-        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else {return}
+        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else { return }
         guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
         guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
         guard let height = rect[constant_height] else { return }

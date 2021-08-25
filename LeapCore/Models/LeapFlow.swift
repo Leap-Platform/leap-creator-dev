@@ -14,6 +14,7 @@ class LeapFlow {
     var name:String?
     var flowText:Dictionary<String,String> = [:]
     var pages:Array<LeapPage> = []
+    var firstStep:String?
     
     init(withDict flowDict:Dictionary<String,Any>) {
         id = flowDict[constant_id] as? Int
@@ -22,6 +23,7 @@ class LeapFlow {
         if let pageDictsArray = flowDict[constant_pages] as? Array<Dictionary<String,Any>> {
             for pageDict in pageDictsArray { pages.append(LeapPage(withDict: pageDict)) }
         }
+        firstStep = flowDict[constant_firstStep] as? String
     }
     
     func copy(with zone: NSZone? = nil) -> LeapFlow {
@@ -32,6 +34,7 @@ class LeapFlow {
         for page in self.pages {
             copy.pages.append(page.copy())
         }
+        copy.firstStep = self.firstStep
         return copy
     }
     

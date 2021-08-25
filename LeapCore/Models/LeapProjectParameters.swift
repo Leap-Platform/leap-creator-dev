@@ -16,7 +16,7 @@ class LeapProjectParameters: NSObject, Codable {
     var projectName: String?
     var deploymentVersion: String?
     var projectId: String?
-    var projectType:String?
+    var projectType: String?
     var id: Int?
     
     init(withDict paramDict: Dictionary<String, Any>) {

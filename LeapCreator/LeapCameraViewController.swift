@@ -40,7 +40,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     let learnMoreButton1 = UIButton()
     let learnMoreButton2 = UIButton()
     var fetchView: UIView?
-    var scannerView:UIView?
+    var scannerView: UIView?
+    var cameraFrameView: UIImageView?
     var captureSession: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var roomManager = LeapRoomManager()
@@ -131,7 +132,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         qrCodeImage.contentMode = .scaleAspectFit
         view.addSubview(qrCodeImage)
         qrCodeImage.translatesAutoresizingMaskIntoConstraints = false
-        qrCodeImage.topAnchor.constraint(equalTo: view.centerYAnchor, constant: 10).isActive = true
+        qrCodeImage.topAnchor.constraint(equalTo: view.centerYAnchor, constant: view.frame.size.height*0.06).isActive = true
         qrCodeImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         qrCodeImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 45).isActive = true
         qrCodeImage.heightAnchor.constraint(equalTo: qrCodeImage.widthAnchor, multiplier: qrImage.size.height/qrImage.size.width).isActive = true
@@ -144,7 +145,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         headingLabel.font = UIFont(name: "Helvetica Neue Bold", size: 20)
         view.addSubview(headingLabel)
         headingLabel.translatesAutoresizingMaskIntoConstraints = false
-        headingLabel.topAnchor.constraint(equalTo: qrCodeImage.bottomAnchor, constant: 58).isActive = true
+        headingLabel.topAnchor.constraint(equalTo: qrCodeImage.bottomAnchor, constant: 30).isActive = true
         headingLabel.centerXAnchor.constraint(equalTo: qrCodeImage.centerXAnchor).isActive = true
     }
     
@@ -258,7 +259,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         closeButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         inView.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 30).isActive = true
+        closeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 35).isActive = true
         closeButton.leadingAnchor.constraint(equalTo: inView.leadingAnchor, constant: 16).isActive = true
         closeButton.widthAnchor.constraint(equalToConstant: 32).isActive = true
         closeButton.heightAnchor.constraint(equalTo: closeButton.widthAnchor).isActive = true
@@ -269,6 +270,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
         
         setupScannerView()
+        setupCameraFrameView()
         captureSession = AVCaptureSession()
         
         let videoInput: AVCaptureDeviceInput
@@ -318,6 +320,20 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         scanner.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scanner.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scanner.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
+    func setupCameraFrameView() {
+        cameraFrameView = UIImageView(frame: .zero)
+        guard let cameraFrameView = cameraFrameView  else { return }
+        guard let scannerView = scannerView else { return }
+        view.insertSubview(cameraFrameView, aboveSubview: scannerView)
+        cameraFrameView.image = UIImage(named: "cameraFrame.png", in: Bundle(for: LeapCreator.self), compatibleWith: nil)
+        cameraFrameView.contentMode = .scaleAspectFit
+        cameraFrameView.translatesAutoresizingMaskIntoConstraints = false
+        cameraFrameView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        cameraFrameView.topAnchor.constraint(equalTo: view.topAnchor, constant: 80).isActive = true
+        cameraFrameView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        cameraFrameView.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
     }
     
     func failed() {
@@ -446,7 +462,9 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 }
                 self?.previewLayer?.removeFromSuperlayer()
                 self?.scannerView?.removeFromSuperview()
+                self?.cameraFrameView?.removeFromSuperview()
                 self?.scannerView = nil
+                self?.cameraFrameView = nil
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.delegate?.configFetched(type: .preview, config: previewDict)
                 self?.dismiss(animated: true, completion: nil)
@@ -550,7 +568,7 @@ extension LeapCameraViewController: UITextFieldDelegate {
         modeButton.setTitle("Using Simulator?", for: .normal)
         inView.addSubview(modeButton)
         modeButton.translatesAutoresizingMaskIntoConstraints = false
-        modeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 30).isActive = true
+        modeButton.topAnchor.constraint(equalTo: inView.topAnchor, constant: 35).isActive = true
         modeButton.trailingAnchor.constraint(equalTo: inView.trailingAnchor, constant: -16).isActive = true
         guard modeWidthConstraint == nil, modeHeightConstraint == nil else { return }
         modeWidthConstraint = NSLayoutConstraint(item: modeButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 135)
@@ -614,7 +632,9 @@ extension LeapCameraViewController: UITextFieldDelegate {
         learnMoreButton2.removeFromSuperview()
         fetchView?.removeFromSuperview()
         scannerView?.removeFromSuperview()
+        cameraFrameView?.removeFromSuperview()
         scannerView = nil
+        cameraFrameView = nil
         previewLayer?.removeFromSuperlayer()
     }
     

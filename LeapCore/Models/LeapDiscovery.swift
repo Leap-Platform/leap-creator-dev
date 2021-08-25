@@ -25,6 +25,8 @@ enum LeapTriggerFrequencyType: String {
     case everySessionUntilDismissed = "EVERY_SESSION_UNTIL_DISMISSED"
     /// Triggers every session until flow is complete. (Doesn't trigger in the next session if flow is completed)
     case everySessionUntilFlowComplete = "EVERY_SESSION_UNTIL_FLOW_COMPLETE"
+    /// Triggers until all flows in a flow menu are completed
+    case everySessionUntilAllFlowsAreCompleted = "EVERY_SESSION_UNTIL_ALL_FLOWS_ARE_COMPLETED"
 }
 
 class LeapTrigger {
@@ -61,12 +63,14 @@ class LeapFlowTerminationFrequency: LeapFrequency {
     var nSession: Int?
     /// Terminates a discovery after n dismisses by the user.
     var nDismissByUser: Int?
+    /// Terminates flow menu if all flows are completed
+    var untilAllFlowsAreCompleted: Bool?
     
-    override init(with dict: Dictionary<String, Int>) {
+    override init(with dict: Dictionary<String, Any>) {
         super.init(with: dict)
-        nSession = dict[constant_nSession]
-        nDismissByUser = dict[constant_nDismissByUser]
-        
+        nSession = dict[constant_nSession] as? Int
+        nDismissByUser = dict[constant_nDismissedByUser] as? Int
+        untilAllFlowsAreCompleted = dict[constant_untilAllFlowsAreCompleted] as? Bool
     }
 }
 
@@ -77,6 +81,7 @@ class LeapDiscovery:LeapContext {
     var autoStart:Bool
     var terminationfrequency:LeapFlowTerminationFrequency?
     var flowId:Int?
+    var flowProjectIds:Array<String>?
     var triggerFrequency: LeapTriggerFrequency?
     var localeCodes: Array<String>?
     var languageOption: Dictionary<String,String>?
@@ -86,9 +91,10 @@ class LeapDiscovery:LeapContext {
         enableIcon = discoveryDict[constant_enableIcon] as? Bool ?? false
         autoStart = discoveryDict[constant_autoStart] as? Bool ?? false
         flowId = discoveryDict[constant_flowId] as? Int
+        flowProjectIds = discoveryDict[constant_flowProjectIds] as? Array<String>
         
         if !isPreview {
-            if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Int> {
+            if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Any> {
                 terminationfrequency = LeapFlowTerminationFrequency(with: freqDict)
             }
             if let triggerFrequencyDict = discoveryDict[constant_triggerFrequency] as? Dictionary<String,String> {

@@ -19,8 +19,9 @@ class LeapTTSInfo{
 }
 
 enum LeapTriggerMode:String {
-    case Single =   "SINGLE_FLOW_TRIGGER"
-    case Multi  =   "MULTI_FLOW_TRIGGER"
+    case Single     =   "SINGLE_FLOW_TRIGGER"
+    case Multi      =   "MULTI_FLOW_TRIGGER"
+    case FlowMenu   =   "FLOW_MENU_TRIGGER"
 }
 
 class LeapTaggedEventCondition {
@@ -95,9 +96,9 @@ class LeapFrequency {
     /// number of times a stage is shown inside a flow
     let perFlow:Int?
     
-    init(with dict:Dictionary<String,Int>) {
-        perApp = dict[constant_perApp]
-        perFlow = dict[constant_perFlow]
+    init(with dict:Dictionary<String,Any>) {
+        perApp = dict[constant_perApp] as? Int
+        perFlow = dict[constant_perFlow] as? Int
     }
     
 }

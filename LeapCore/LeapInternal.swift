@@ -23,6 +23,8 @@ class LeapInternal:NSObject {
         #endif
     }()
     var fetchedProjectIds:Array<String> = []
+    var embeddedProjectIds:Array<String> = []
+    var currentEmbeddedProjectId:String?
     
     init(_ token : String, uiManager:LeapAUIHandler?) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
@@ -88,6 +90,10 @@ extension LeapInternal {
     
     public func fetchProjectConfig(projectId:String, resetProject:Bool) {
         //Make API call
+        for embeddedProj in embeddedProjectIds { contextManager.removeConfigFor(projectId: embeddedProj) }
+        embeddedProjectIds = []
+        currentEmbeddedProjectId = nil
+        
         guard !fetchedProjectIds.contains(projectId) else {
             if resetProject { contextManager.resetForProjectId(projectId) }
             return
@@ -120,6 +126,49 @@ extension LeapInternal {
                 self.fetchedProjectIds.append(projectId)
                 let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
                 self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
+            }
+            
+        }
+        configTask.resume()
+    }
+    
+    public func embedProject(_ projectId:String) {
+        contextManager.resetForProjectId(projectId)
+        if embeddedProjectIds.contains(projectId) {
+            if embeddedProjectIds.last == projectId { return }
+            embeddedProjectIds = embeddedProjectIds.filter { $0 != projectId }
+        }
+        let payload = getPayload()
+        let payloadData:Data = {
+            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
+            return payloadData
+        }()
+        guard let url = URL(string: configUrl) else { return }
+        var req = URLRequest(url: url)
+        req.httpMethod = "PUT"
+        req.httpBody = payloadData
+        getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+
+        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-ids")
+        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode != 304,
+                  let resultData = data,
+                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
+                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
+            }
+            DispatchQueue.main.async {
+                for prevProjId in self.embeddedProjectIds {
+                    self.contextManager.removeConfigFor(projectId: prevProjId)
+                }
+                self.embeddedProjectIds.append(projectId)
+                self.currentEmbeddedProjectId = projectId
+                self.fetchedProjectIds.append(projectId)
+                let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
+                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: true)
             }
             
         }
@@ -262,5 +311,14 @@ extension LeapInternal: LeapContextManagerDelegate {
             
         }
         configTask.resume()
+    }
+    
+    func getCurrentEmbeddedProjectId() -> String? {
+        return self.currentEmbeddedProjectId
+    }
+    
+    func resetCurrentEmbeddedProjectId() {
+        self.embeddedProjectIds = self.embeddedProjectIds.filter{ $0 != self.currentEmbeddedProjectId }
+        self.currentEmbeddedProjectId = nil
     }
 }

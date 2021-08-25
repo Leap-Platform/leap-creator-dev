@@ -11,9 +11,11 @@ import UIKit
 
 protocol LeapStageManagerDelegate:NSObjectProtocol {
     func getCurrentPage() -> LeapPage?
+    func getStage(_ name:String) -> LeapStage?
+    func isStaticFlow() -> Bool
     func getProjectParams() -> LeapProjectParameters?
-    func newStageFound(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?)
-    func sameStageFound(_ stage:LeapStage, view:UIView?, newRect:CGRect?, webviewForRect:UIView?)
+    func newStageFound(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?,flowMenuIconNeeded:Bool?)
+    func sameStageFound(_ stage:LeapStage, view:UIView?, newRect:CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?)
     func dismissStage()
     func removeStage(_ stage:LeapStage)
     func isSuccessStagePerformed()
@@ -25,16 +27,18 @@ class LeapStageManager {
     private var stageTracker:Dictionary<String,Int> = [:]
     private var stageTimer:Timer?
     private var actionTakenStages:Array<Int> = []
+    private var nextStage:LeapStage?
     
     init(_ stageDelegate:LeapStageManagerDelegate) {
         delegate = stageDelegate
     }
     
     func getStagesToCheck() -> Array<LeapStage> {
+        if delegate?.isStaticFlow() ?? false, let stageToCheck = nextStage { return [stageToCheck] }
         guard let page = delegate?.getCurrentPage(), page.stages.count > 0 else { return [] }
         let stagesToCheck = page.stages.filter { (tempStage) -> Bool in
             
-            if isStaticFlow() { return !actionTakenStages.contains(tempStage.id)}
+            if delegate?.isStaticFlow() ?? false { return !actionTakenStages.contains(tempStage.id)}
             guard let freq = tempStage.terminationFrequency, let perFlow = freq.perFlow, perFlow != -1 else { return true }
             let stagePlayedCount = stageTracker[tempStage.name] ?? 0
             return stagePlayedCount < perFlow
@@ -48,9 +52,9 @@ class LeapStageManager {
         return projectType == "STATIC_FLOW"
     }
     
-    func setCurrentStage(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?) {
+    func setCurrentStage(_ stage:LeapStage, view:UIView?, rect:CGRect?, webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
         if currentStage == stage {
-            if stageTimer == nil { delegate?.sameStageFound(stage, view:view, newRect: rect, webviewForRect: webviewForRect) }
+            if stageTimer == nil { delegate?.sameStageFound(stage, view:view, newRect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded) }
             return
         }
         
@@ -63,6 +67,7 @@ class LeapStageManager {
                 stagePerformed()
                 if stage.isSuccess {
                     currentStage = nil
+                    nextStage = nil
                     stageTracker = [:]
                     actionTakenStages = []
                     return
@@ -78,12 +83,12 @@ class LeapStageManager {
             stageTimer = Timer(timeInterval: TimeInterval(delay/1000), repeats: false, block: { (timer) in
                 self.stageTimer?.invalidate()
                 self.stageTimer = nil
-                self.delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
+                self.delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
             })
             guard let stageTimer = self.stageTimer else { return }
             RunLoop.main.add(stageTimer, forMode: .default)
         } else  {
-            delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect)
+            delegate?.newStageFound(stage, view: view, rect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
         }
     }
     
@@ -94,12 +99,13 @@ class LeapStageManager {
             stageTimer = nil
         } else {
             delegate?.dismissStage()
-//            stagePerformed()
         }
+        if isStaticFlow() { nextStage = currentStage }
         currentStage = nil
     }
     
     func resetStageManager() {
+        if delegate?.isStaticFlow() ?? false { nextStage = nil }
         currentStage = nil
         stageTimer = nil
         stageTracker = [:]
@@ -107,20 +113,31 @@ class LeapStageManager {
     }
     
     // Called in case to reidentify same stage as new stage next time
-    func resetCurrentStage() { currentStage = nil }
+    func resetCurrentStage() {
+        if delegate?.isStaticFlow() ?? false { nextStage = currentStage }
+        currentStage = nil
+    }
     
-    func sameStage (_ newStage:LeapStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?) {
-        delegate?.sameStageFound(newStage,view: view, newRect: rect, webviewForRect: webviewForRect)
+    func sameStage (_ newStage:LeapStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
+        delegate?.sameStageFound(newStage,view: view, newRect: rect, webviewForRect: webviewForRect, flowMenuIconNeeded: flowMenuIconNeeded)
+    }
+    
+    func setFirstStage(_ stage:LeapStage) {
+        nextStage = stage
     }
     
     func getCurrentStage() -> LeapStage? { return currentStage }
     
     func stageDismissed(byUser:Bool, autoDismissed:Bool) {
-        guard byUser || autoDismissed else { return }
         guard let stage = currentStage else { return }
-        if isStaticFlow() { actionTakenStages.append(stage.id)}
+        guard byUser || autoDismissed || (stage.isSuccess && stage.terminationFrequency?.perFlow == 1) else { return }
+        if delegate?.isStaticFlow() ?? false { actionTakenStages.append(stage.id)}
         delegate?.removeStage(stage)
         stagePerformed()
+        if let next = currentStage?.transition?.next,
+           let stage = delegate?.getStage(next) {
+            nextStage = stage
+        }
         currentStage = nil
     }
     

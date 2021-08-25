@@ -13,10 +13,12 @@ import UIKit
 protocol LeapDiscoveryManagerDelegate: AnyObject {
     
     func getAllDiscoveries() -> Array<LeapDiscovery>
+    func getProjContextIdDict() -> Dictionary<String,Int>
     func newDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func sameDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func dismissDiscovery()
     func sendDiscoveryTerminationEvent(with id: Int, for rule: String)
+    func isPreview() -> Bool
 }
 
 class LeapDiscoveryManager {
@@ -30,11 +32,11 @@ class LeapDiscoveryManager {
     init(_ withDelegate:LeapDiscoveryManagerDelegate) {
         delegate = withDelegate
         let discoveries = delegate?.getAllDiscoveries() ?? []
-        let discoveriesPresentedCount = LeapSharedInformation.shared.getDiscoveriesPresentedInfo()
+        let discoveriesPresentedCount = LeapSharedInformation.shared.getDiscoveriesPresentedInfo(isPreview: delegate?.isPreview() ?? false)
         for discovery in discoveries {
             let presentedCount = (discoveriesPresentedCount["\(discovery.id)"] ?? 0)
             let nSession = (discovery.terminationfrequency?.nSession ?? -1)
-            let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveriesEvents()
+            let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveriesEvents(isPreview: delegate?.isPreview() ?? false)
             if presentedCount >= nSession && nSession != -1 && !terminatedDiscoveries.contains(discovery.id) {
                 delegate?.sendDiscoveryTerminationEvent(with: discovery.id, for: "After \(nSession) sessions")
             }
@@ -45,10 +47,11 @@ class LeapDiscoveryManager {
     
     func getDiscoveriesToCheck() -> Array<LeapDiscovery> {
         guard var discoveriesToCheck = delegate?.getAllDiscoveries(), discoveriesToCheck.count > 0 else { return [] }
-        let discoveryPresentedCount = LeapSharedInformation.shared.getDiscoveriesPresentedInfo()
-        let discoveryDismissInfo = LeapSharedInformation.shared.getDismissedDiscoveryInfo()
-        let discoveryFlowInfo = LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo()
-        let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveries()
+        let isPreview = delegate?.isPreview() ?? false
+        let discoveryPresentedCount = LeapSharedInformation.shared.getDiscoveriesPresentedInfo(isPreview: isPreview)
+        let discoveryDismissInfo = LeapSharedInformation.shared.getDismissedDiscoveryInfo(isPreview: isPreview)
+        let discoveryFlowInfo = LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo(isPreview: isPreview)
+        let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveries(isPreview: isPreview)
         discoveriesToCheck = discoveriesToCheck.filter{ !terminatedDiscoveries.contains($0.id) }
         discoveriesToCheck = discoveriesToCheck.filter({ (discovery) -> Bool in
             let presentedCount = discoveryPresentedCount[String(discovery.id)] ?? 0
@@ -66,9 +69,20 @@ class LeapDiscoveryManager {
                 if let nDismissedByUser = terminationFreq.nDismissByUser, nDismissedByUser != -1 {
                     if hasBeenDismissed { return false }
                 }
+                if let projectIds = discovery.flowProjectIds, discovery.terminationfrequency?.untilAllFlowsAreCompleted ?? false {
+                    let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview)
+                    let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
+                    for projectId in projectIds {
+                        if let disId =  projectContextIdDict["flow_\(projectId)"] {
+                            if !completedFlows.contains(disId) { return true }
+                        }
+                    }
+                    return false
+                }
             }
             return true
         })
+        
         guard let liveDisc = currentDiscovery else { return discoveriesToCheck }
         if !discoveriesToCheck.contains(liveDisc) { discoveriesToCheck.append(liveDisc) }
         return discoveriesToCheck
@@ -105,9 +119,10 @@ class LeapDiscoveryManager {
         } else  {
             delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
         }
+        let isPreview = delegate?.isPreview() ?? false
         if !identifiedDiscoveriesInSession.contains(discovery.id) {
-            LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: discovery.id, assistId: nil)
-            LeapSharedInformation.shared.discoveryPresentedInSession(discoveryId: discovery.id)
+            LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: discovery.id, assistId: nil, isPreview: isPreview)
+            LeapSharedInformation.shared.discoveryPresentedInSession(discoveryId: discovery.id, isPreview: isPreview)
             identifiedDiscoveriesInSession.append(discovery.id)
         }
     }
@@ -115,17 +130,28 @@ class LeapDiscoveryManager {
     func isManualTrigger() -> Bool {
         guard let disc = currentDiscovery else { return false }
         if completedDiscoveriesInSession.contains(disc.id) { return true }
-        if LeapSharedInformation.shared.getMutedDiscoveries().contains(disc.id) { return true }
+        let isPreview = delegate?.isPreview() ?? false
+        if LeapSharedInformation.shared.getMutedDiscoveries(isPreview: isPreview).contains(disc.id) { return true }
         if let triggerType = disc.triggerFrequency?.type {
             switch triggerType {
             case .everySession:
                  return false
             case .everySessionUntilDismissed:
-                return LeapSharedInformation.shared.getDismissedDiscoveryInfo().contains(disc.id)
+                return LeapSharedInformation.shared.getDismissedDiscoveryInfo(isPreview: isPreview).contains(disc.id)
             case .everySessionUntilFlowComplete:
-                return (LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo()[String(disc.id)] ?? 0) > 0
+                return (LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo(isPreview: isPreview)[String(disc.id)] ?? 0) > 0
             case .playOnce:
-                return (LeapSharedInformation.shared.getDiscoveriesPresentedInfo()[String(disc.id)] ?? 0) > 0
+                return (LeapSharedInformation.shared.getDiscoveriesPresentedInfo(isPreview: isPreview)[String(disc.id)] ?? 0) > 0
+            case .everySessionUntilAllFlowsAreCompleted:
+                guard let projectIds = disc.flowProjectIds else { return false }
+                let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview)
+                let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
+                for projectId in projectIds {
+                    if let disId =  projectContextIdDict["flow_\(projectId)"] {
+                        if !completedFlows.contains(disId) { return false }
+                    }
+                }
+                return true
             case .manualTrigger:
                 return true
             }
@@ -170,8 +196,9 @@ class LeapDiscoveryManager {
     func discoveryDismissed(byUser:Bool, optIn:Bool) {
         guard let discovery = currentDiscovery, byUser || optIn else { return }
         if byUser && !optIn {
-            LeapSharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id)
-            let discoveriesDismissed = LeapSharedInformation.shared.getDismissedDiscoveryInfo()
+            let isPreview = delegate?.isPreview() ?? false
+            LeapSharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id,isPreview: isPreview)
+            let discoveriesDismissed = LeapSharedInformation.shared.getDismissedDiscoveryInfo(isPreview: isPreview)
             if discoveriesDismissed.contains(discovery.id), let nDismissed = discovery.terminationfrequency?.nDismissByUser, nDismissed != -1 {
                 delegate?.sendDiscoveryTerminationEvent(with: discovery.id, for: "At discovery dismiss by user")
             }

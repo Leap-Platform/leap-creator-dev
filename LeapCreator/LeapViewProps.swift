@@ -152,8 +152,8 @@ class LeapViewProps:Codable {
         if !is_webview {
             var childViews = view.subviews
             let kw = UIApplication.shared.windows.first { $0.isKeyWindow }
-            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains(constant_leap) }
-            childViews = childViews.filter{
+            childViews = childViews.filter{ $0.isHidden == false && $0.alpha > 0 && !String(describing: type(of: view)).contains(constant_Leap) }
+            childViews = childViews.filter {
                 guard let superview = $0.superview, let keyWindow = kw else { return true }
                 let frameToWindow = superview.convert($0.frame, to: keyWindow)
                 if frameToWindow.minX > keyWindow.frame.maxX || frameToWindow.maxX < 0 { return false }

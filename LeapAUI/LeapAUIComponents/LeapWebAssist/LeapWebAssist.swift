@@ -73,6 +73,8 @@ class LeapWebAssist: UIView, LeapAssist {
     
     var assistInfo: LeapAssistInfo?
     
+    var projectParameters: LeapProjectParameters?
+    
     func applyStyle(style: LeapStyle) {
         
     }
@@ -486,8 +488,7 @@ extension LeapWebAssist: WKScriptMessageHandler {
         
         guard let body = message.body as? String else { return }
         guard let data = body.data(using: .utf8) else { return }
-        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else {return}
-        
+        guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String, Any> else { return }
         
         if let type = dict[constant_type] as? String, type == constant_COMMAND,
            let commandBody = dict[constant_body] as? Dictionary<String,String>,
@@ -511,17 +512,23 @@ extension LeapWebAssist: WKScriptMessageHandler {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.webView.evaluateJavaScript("personalize('\(userPropsString)')", completionHandler: nil)
                 }
-                
             }
             return
         }
-        guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else {return}
-        guard let close = dictBody[constant_close] as? Bool else {return}
         
-        if let urlString = dictBody[constant_externalLink] as? String, let url = URL(string: urlString) {
-
-           UIApplication.shared.open(url)
+        guard let dictBody = dict[constant_body] as? Dictionary<String, Any> else { return }
+        
+        if let externalLink = dictBody[constant_externalLink] as? String, let url = URL(string: externalLink.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            
+            UIApplication.shared.open(url)
         }
+        
+        if let deeplink = dictBody[constant_deepLink] as? String, let url = URL(string: deeplink.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            
+            UIApplication.shared.open(url)
+        }
+        
+        guard let close = dictBody[constant_close] as? Bool else { return }
         
         if close {
             

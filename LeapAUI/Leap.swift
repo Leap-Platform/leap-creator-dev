@@ -110,6 +110,13 @@ import LeapCoreSDK
         LeapCore.shared.startProject(projectId: projectId, resetProject: resetProject)
     }
     
+    @objc public func embedProject(_ projectId:String) {
+        let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
+        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
+        guard  isStarted else { return }
+        LeapCore.shared.embedProject(projectId)
+    }
+    
     @objc public func disable() {
         // Send Leap SDK Disable Event
         auiManager.auiManagerCallBack?.disableLeapSDK()
