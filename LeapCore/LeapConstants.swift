@@ -8,7 +8,7 @@
 
 import Foundation
 
-let constant_leap = "Leap"
+let constant_Leap = "Leap"
 let constant_LeapAPIKey = "LeapAPIKey"
 let constant_assistInfo = "assistInfo"
 let constant_layoutInfo = "layoutInfo"
@@ -253,6 +253,8 @@ let constant_LeapPreview_BundleId = "is.leap.LeapPreview"
 let constant_PREVIEW = "PREVIEW"
 let constant_SAMPLE_APP = "SAMPLE_APP"
 let constant_PAIRING = "PAIRING"
+
+let constant_LeapSDK = "LeapSDK"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
 

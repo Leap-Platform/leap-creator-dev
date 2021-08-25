@@ -112,12 +112,12 @@ extension LeapContextDetector {
     /// Fetching all child views and child views of child views recursively
     /// - Parameter currentView: view to find children and subchildren for
     /// - Returns: an array of all views under `currentView`
-    private func getChildren(_ currentView:UIView) -> [UIView] {
+    private func getChildren(_ currentView: UIView) -> [UIView] {
         var subviewArray:[UIView] = []
         subviewArray.append(currentView)
-        let validChildren = currentView.subviews.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains(constant_leap) }
+        let validChildren = currentView.subviews.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains(constant_Leap) }
         var childrenToCheck = getVisibleChildren(validChildren)
-        childrenToCheck = childrenToCheck.filter{
+        childrenToCheck = childrenToCheck.filter {
             guard let superview = $0.superview else { return true }
             let frameToWindow = superview.convert($0.frame, to: UIApplication.shared.windows.first { $0.isKeyWindow })
             guard let keyWindow = UIApplication.shared.keyWindow else { return true }
