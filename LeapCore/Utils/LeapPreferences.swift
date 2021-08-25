@@ -16,14 +16,22 @@ class LeapPreferences {
     let prefs = UserDefaults.standard
     var apiKey: String?
     
+    var isPreview = false
+    
+    var previewUserLanguage = constant_ang
+    
     let languageCode = "leap_language_code"
     
     func setUserLanguage(_ language: String) {
+        guard !isPreview else {
+            previewUserLanguage = language
+            return
+        }
         prefs.setValue(language, forKey: languageCode)
         prefs.synchronize()
     }
     
     func getUserLanguage() -> String? {
-        return prefs.value(forKey: languageCode) as? String
+        return isPreview ? previewUserLanguage : prefs.value(forKey: languageCode) as? String
     }
 }

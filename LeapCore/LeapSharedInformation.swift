@@ -422,6 +422,5 @@ extension LeapSharedInformation {
         completedFlowsInPreview = []
         discoveryTerminationSentInPreview = []
         assistTerminationSentInPreview = []
-        
     }
 }

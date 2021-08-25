@@ -90,8 +90,6 @@ class LeapContextManager:NSObject {
         } else {
             initialize(withConfig: withConfig)
         }
-       
-        
     }
     
     private func appendNewProjectConfig(projectConfig:LeapConfig) {
@@ -192,6 +190,7 @@ class LeapContextManager:NSObject {
             }
         }
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
+        LeapPreferences.shared.isPreview = true
         contextDetector?.start()
         auiHandler?.startMediaFetch()
     }
@@ -223,6 +222,8 @@ class LeapContextManager:NSObject {
         previewSounds = nil
         previewConfig = nil
         LeapSharedInformation.shared.previewEnded()
+        LeapPreferences.shared.isPreview = false
+        LeapPreferences.shared.previewUserLanguage = LeapPreferences.shared.getUserLanguage() ?? constant_ang
         analyticsManager = LeapAnalyticsManager(self)
         contextDetector?.start()
     }
