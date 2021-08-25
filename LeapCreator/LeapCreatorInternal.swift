@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LeapCreatorInternal : NSObject{
+class LeapCreatorInternal: NSObject {
     
     var apiKey:String?
     var masterManager: LeapMasterManager?
@@ -47,8 +47,10 @@ class LeapCreatorInternal : NSObject{
 extension LeapCreatorInternal: LeapCreatorManagerDelegate {
     func fetchConfigSuccess() {
         if  let name = Bundle.main.bundleIdentifier , name != constant_LeapPreview_BundleId {
-            DispatchQueue.main.async {
-                LeapNotificationManager.shared.checkForAuthorisation()
+            if let _: AnyClass = NSClassFromString("\(constant_LeapSDK).\(constant_Leap)") {
+                DispatchQueue.main.async {
+                    LeapNotificationManager.shared.checkForAuthorisation()
+                }
             }
         }
         
