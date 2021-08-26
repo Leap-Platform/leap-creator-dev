@@ -40,13 +40,13 @@ class LeapReachabilityManager {
             reachability?.whenReachable = { reachability in
                 self.updateLabelColourWhenReachable(reachability)
                 if self.defaultConnection {
-                  NotificationCenter.default.post(Notification(name: NSNotification.Name(rawValue: "internetConnected")))
+                  NotificationCenter.default.post(Notification(name: NSNotification.Name(rawValue: constant_internetConnected)))
                 }
                 self.defaultConnection = true
             }
             reachability?.whenUnreachable = { reachability in
                 self.updateLabelColourWhenNotReachable(reachability)
-                NotificationCenter.default.post(Notification(name: NSNotification.Name(rawValue: "internetNotConnected")))
+                NotificationCenter.default.post(Notification(name: NSNotification.Name(rawValue: constant_internetNotConnected)))
                 self.defaultConnection = true
             }
         } else {

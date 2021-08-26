@@ -42,9 +42,9 @@ class LeapPermissionManager: LeapAppStateProtocol{
     //call start in LeapMasterManager
     func start()->Void {
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
         
         //seek permission to allow communication to take place
         DispatchQueue.main.async {
@@ -101,7 +101,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
                 self.permissionTimer?.invalidate()
                 self.permissionTimer = nil
                 self.decisionTaken = nil
-                NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+                NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
             }
         }.resume()
         
@@ -121,7 +121,7 @@ class LeapPermissionManager: LeapAppStateProtocol{
             permissionDenied()
             self.permissionTimer?.invalidate()
             self.permissionTimer = nil
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
         }
     }
     
@@ -168,12 +168,12 @@ class LeapPermissionManager: LeapAppStateProtocol{
         self.permissionAlert?.dismiss(animated: true, completion: nil)
         self.permissionListener?.onPermissionStatusUpdation(permission: "")
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
     }
     
     @objc func internetConnected() {
         
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
      
         guard let decision = self.decisionTaken else {
             
