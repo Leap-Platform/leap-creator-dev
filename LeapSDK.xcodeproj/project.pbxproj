@@ -207,6 +207,7 @@
 		D0B603F325DFB6BA0092F735 /* jiny_audio_anim.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D1702112591D13700F33729 /* jiny_audio_anim.html */; };
 		D0C1345E2613210100D599B3 /* LeapNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1345D2613210100D599B3 /* LeapNotificationManager.swift */; };
 		D0C1346826133CB100D599B3 /* LeapCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C1346726133CB100D599B3 /* LeapCameraViewController.swift */; };
+		D0E545E226D7A75B00AAD6C7 /* LeapHierarchyNetworkQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E545E126D7A75B00AAD6C7 /* LeapHierarchyNetworkQueue.swift */; };
 		D0F2C49925DFCD81006BFF3D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E55D582479747E005B3EAB /* LoginViewController.swift */; };
 		D0F2C49A25DFCD81006BFF3D /* PlaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */; };
 		D0F2C49B25DFCD81006BFF3D /* SearchHotelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */; };
@@ -449,6 +450,7 @@
 		D0D7293324AC9B0000F75D0D /* LeapJSMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapJSMaker.swift; sourceTree = "<group>"; };
 		D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSupportModals.swift; sourceTree = "<group>"; };
 		D0DC3EFF25540A8900B6FA93 /* LeapContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContext.swift; sourceTree = "<group>"; };
+		D0E545E126D7A75B00AAD6C7 /* LeapHierarchyNetworkQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapHierarchyNetworkQueue.swift; sourceTree = "<group>"; };
 		D0E55D582479747E005B3EAB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeapSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewController.swift; sourceTree = "<group>"; };
@@ -568,6 +570,7 @@
 				2D08591725A31FE9002D7993 /* LeapCreatorManager.swift */,
 				D0C1345D2613210100D599B3 /* LeapNotificationManager.swift */,
 				2DB75EFA2680ECCE00F558DD /* LeapQRCodeManager.swift */,
+				D0E545E126D7A75B00AAD6C7 /* LeapHierarchyNetworkQueue.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -1295,6 +1298,7 @@
 				D0C1345E2613210100D599B3 /* LeapNotificationManager.swift in Sources */,
 				D0963BA7268C9F8A00986181 /* HTTPHandler.swift in Sources */,
 				D0963BB4268C9FA200986181 /* Transport.swift in Sources */,
+				D0E545E226D7A75B00AAD6C7 /* LeapHierarchyNetworkQueue.swift in Sources */,
 				D02C12F925DFC6B000C80E28 /* LeapConstants.swift in Sources */,
 				D02C12FA25DFC6B000C80E28 /* LeapProtocolManager.swift in Sources */,
 				D0963BAF268C9F9700986181 /* Server.swift in Sources */,
