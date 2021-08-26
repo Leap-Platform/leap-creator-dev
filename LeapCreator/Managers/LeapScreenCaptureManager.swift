@@ -109,7 +109,7 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     }
     
     func postMessage(payload: String) {
-        
+        guard LeapHierarchyNetworkQueue.shared.hierarchyQueue.operationCount == 0 else { return }
         let splittedString = payload.components(withMaxLength: 10000)
         let length = splittedString.count
         let room = self.roomId as String?
@@ -142,13 +142,10 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
                   let splitString = String(data: splitData, encoding: .utf8) else {
                 return
             }
-            
-            self.socket?.write(string: splitString, completion: {
-                if end == "true"{
-                    print("Captured payload End :: \(end)")
-                    self.stop()
-                }
-            })
+            if let websocket = socket {
+                let op = LeapHierarchyOperation(socketTask: websocket, string: splitString)
+                LeapHierarchyNetworkQueue.shared.hierarchyQueue.addOperation(op)
+            }            
         }
     }
     
