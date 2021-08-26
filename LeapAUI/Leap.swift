@@ -34,6 +34,7 @@ import LeapCoreSDK
         auiManager.addObservers()
         isStarted = false
         super.init()
+        addObservers()
     }
     
     @discardableResult
@@ -138,5 +139,18 @@ extension Leap:LeapAUIManagerDelegate {
     func isClientCallbackRequired() -> Bool {
         guard let _ = callback else { return false }
         return true
+    }
+}
+
+extension Leap {
+    
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(postLeapSDKStarted), name: Notification.Name(constant_HasLeapSDKStarted), object: nil)
+    }
+    
+    @objc private func postLeapSDKStarted() {
+        if isStarted {
+            NotificationCenter.default.post(Notification(name: Notification.Name(constant_LeapSDKStarted)))
+        }
     }
 }

@@ -46,6 +46,7 @@
 		2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */; };
 		2D3D1B3526CD193600FFCB24 /* FlowMenuInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D3D1B3426CD193600FFCB24 /* FlowMenuInfo.swift */; };
 		2D3D1B3626CD211400FFCB24 /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8478D526C2688400C2E1BA /* Encoder.swift */; };
+		2D42C05A26D7A0B90087D1C9 /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D42C05926D7A0B90087D1C9 /* Leap+String.swift */; };
 		2D578485264EA80A0040D04E /* LeapMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D578484264EA80A0040D04E /* LeapMessageController.swift */; };
 		2D5E52CF263965E30037575C /* LeapTappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5E52CE263965E30037575C /* LeapTappable.swift */; };
 		2D8478D626C2688400C2E1BA /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8478D526C2688400C2E1BA /* Encoder.swift */; };
@@ -291,6 +292,7 @@
 		2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapProjectParameters.swift; sourceTree = "<group>"; };
 		2D31F8C225B987790027E80F /* LeapPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPing.swift; sourceTree = "<group>"; };
 		2D3D1B3426CD193600FFCB24 /* FlowMenuInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowMenuInfo.swift; sourceTree = "<group>"; };
+		2D42C05926D7A0B90087D1C9 /* Leap+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+String.swift"; sourceTree = "<group>"; };
 		2D578484264EA80A0040D04E /* LeapMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMessageController.swift; sourceTree = "<group>"; };
 		2D5E52CE263965E30037575C /* LeapTappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapTappable.swift; sourceTree = "<group>"; };
 		2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageOptions.swift; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 			isa = PBXGroup;
 			children = (
 				2DBCDA1A2684872F00985C51 /* Leap+UILabel.swift */,
+				2D42C05926D7A0B90087D1C9 /* Leap+String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1327,6 +1330,7 @@
 				D0963BB3268C9FA200986181 /* TCPTransport.swift in Sources */,
 				D02C130A25DFC6B000C80E28 /* LeapReachability.swift in Sources */,
 				D02C130B25DFC6B000C80E28 /* LeapAppIdManager.swift in Sources */,
+				2D42C05A26D7A0B90087D1C9 /* Leap+String.swift in Sources */,
 				D02C130C25DFC6B000C80E28 /* LeapStreamingManager.swift in Sources */,
 				D0963BA5268C9F8400986181 /* WSEngine.swift in Sources */,
 				D02C130D25DFC6B000C80E28 /* LeapMasterManager.swift in Sources */,

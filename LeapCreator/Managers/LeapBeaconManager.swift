@@ -47,7 +47,7 @@ class LeapBeaconManager {
     
     init(beaconListener: LeapBeaconListener) {
         self.beaconListener = beaconListener
-        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
     }
     
     func start(appId: String){
