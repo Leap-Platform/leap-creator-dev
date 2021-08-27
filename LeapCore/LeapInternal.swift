@@ -70,17 +70,36 @@ extension LeapInternal {
         req.httpBody = payloadData
         getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+            // Check if config fetch api failed
             guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode != 304,
-                  let resultData = data,
-                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
-                print("[Leap]Config fetched failed")
-                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+                  let resultData = data else {
                 let savedConfig = self.getSavedConfig()
                 self.startContextDetection(config: savedConfig)
                 return
             }
-            print("[Leap]Config fetched successfully")
+            
+            // Check if config & headers needs to reset
+            guard httpResponse.statusCode != 404 else {
+                self.resetSavedHeaders()
+                self.resetSavedConfig()
+                return
+            }
+            /// Save headers
+            self.saveHeaders(headers: httpResponse.allHeaderFields)
+            
+            // Check if there is no change in config. If no change, use saved config
+            guard httpResponse.statusCode != 304 else {
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
+            }
+            
+            // Process new config and start context detection
+            guard let configDict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable> else {
+                let savedConfig = self.getSavedConfig()
+                self.startContextDetection(config: savedConfig)
+                return
+            }
             self.saveHeaders(headers: httpResponse.allHeaderFields)
             self.saveConfig(config: configDict)
             self.startContextDetection(config: configDict)
@@ -249,10 +268,12 @@ extension LeapInternal {
     }
     
     private func resetSavedHeaders(for token: String) {
-        if token != LeapSharedInformation.shared.getAPIKey() {
-            let prefs = UserDefaults.standard
-            prefs.setValue([:], forKey: "leap_saved_headers")
-        }
+        if token != LeapSharedInformation.shared.getAPIKey() { resetSavedHeaders() }
+    }
+    
+    private func resetSavedHeaders() {
+        let prefs = UserDefaults.standard
+        prefs.setValue([:], forKey: "leap_saved_headers")
     }
     
     private func saveConfig(config:Dictionary<String,AnyHashable>) {
@@ -268,6 +289,11 @@ extension LeapInternal {
               let configData = configString.data(using: .utf8),
               let config = try? JSONSerialization.jsonObject(with: configData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
         return config
+    }
+    
+    private func resetSavedConfig() {
+        let prefs = UserDefaults.standard
+        prefs.setValue([:], forKey: "leap_config")
     }
 }
 
