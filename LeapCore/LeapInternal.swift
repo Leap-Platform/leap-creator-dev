@@ -36,18 +36,6 @@ class LeapInternal:NSObject {
         fetchConfig()
     }
     
-    init(_ token:String, projectId:String, uiManager:LeapAUIHandler?, resetProject:Bool) {
-        self.contextManager = LeapContextManager(withUIHandler: uiManager)
-        super.init()
-        self.contextManager.delegate = self
-        resetSavedHeaders(for: token)
-        LeapSharedInformation.shared.setAPIKey(token)
-        LeapSharedInformation.shared.setSessionId()
-        fetchProjectConfig(projectId: projectId, resetProject:resetProject)
-    }
-    
-    
-    
     func auiCallback() -> LeapAUICallback? {
         return self.contextManager
     }
