@@ -11,16 +11,27 @@ import UIKit
 class AutomaticViewController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
+    
+    @IBOutlet weak var priceValue: UILabel!
+    
+    @IBOutlet weak var priceSlider: UISlider!
+    
+    let value = 5000
+    
     var image:UIImage? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        priceValue.text = "\(value)"
+        priceSlider.setValue(Float(value), animated: true)
         guard let screenshot = image else { return }
         imageView.image = screenshot
-        // Do any additional setup after loading the view.
+    }
+
+    @IBAction func priceChanged(_ sender: UISlider) {
+        priceValue.text = "\(sender.value)"
     }
     
-
     /*
     // MARK: - Navigation
 
