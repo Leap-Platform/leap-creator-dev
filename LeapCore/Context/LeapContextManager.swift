@@ -33,7 +33,6 @@ class LeapContextManager:NSObject {
     private var taggedEvents:Dictionary<String,Any> = [:]
     private var lastEventId: String?
     private var lastEventLanguage: String?
-    private var isInitialized:Bool = false
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {
         auiHandler = uiHandler
@@ -41,10 +40,6 @@ class LeapContextManager:NSObject {
     
     /// Methods to setup all managers and setting up their delegates to be this class. After setting up all managers, it calls the start method and starts the context detection
     func initialize(withConfig:LeapConfig) {
-        if isInitialized {
-            appendProjectConfig(withConfig: withConfig, resetProject: false)
-        } else {
-            isInitialized = true
             configuration = withConfig
             contextDetector = LeapContextDetector(withDelegate: self)
             analyticsManager = LeapAnalyticsManager(self)
@@ -55,8 +50,6 @@ class LeapContextManager:NSObject {
             stageManager = LeapStageManager(self)
             self.start()
             print("[Leap]Context Detection started")
-        }
-        
     }
     
     func appendProjectConfig(withConfig:LeapConfig, resetProject:Bool) {
@@ -68,28 +61,20 @@ class LeapContextManager:NSObject {
                 LeapSharedInformation.shared.resetDiscovery(discovery.id, isPreview: isPreview())
             }
         }
-        if isInitialized {
-            contextDetector?.stop()
-            auiHandler?.removeAllViews()
-            assistManager?.resetAssistManager()
-            discoveryManager?.resetDiscoveryManager()
-            flowManager?.resetFlowsArray()
-            pageManager?.resetPageManager()
-            stageManager?.resetStageManager()
-            if let state = contextDetector?.getState() {
-                switch state {
-                case .Stage: contextDetector?.switchState()
-                default: break
-                }
+        auiHandler?.removeAllViews()
+        assistManager?.resetAssistManager()
+        discoveryManager?.resetDiscoveryManager()
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
+        if let state = contextDetector?.getState() {
+            switch state {
+            case .Stage: contextDetector?.switchState()
+            default: break
             }
-            //Append config
-            if configuration == nil { configuration = withConfig }
-            else { appendNewProjectConfig(projectConfig: withConfig) }
-            contextDetector?.start()
-            print("[Leap]Context Detection started for project config")
-        } else {
-            initialize(withConfig: withConfig)
         }
+        appendNewProjectConfig(projectConfig: withConfig)
+        contextDetector?.start()
     }
     
     private func appendNewProjectConfig(projectConfig:LeapConfig) {
@@ -1175,8 +1160,8 @@ extension LeapContextManager {
     }
     
     func resetAllManagers() {
-        self.assistManager?.resetManagerSession()
-        self.discoveryManager?.resetManagerSession()
+        self.assistManager?.resetCurrentAssist()
+        self.discoveryManager?.resetDiscovery()
         self.flowManager?.resetFlowsArray()
         self.pageManager?.resetPageManager()
         self.stageManager?.resetStageManager()

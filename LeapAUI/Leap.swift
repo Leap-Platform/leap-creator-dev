@@ -92,18 +92,6 @@ import LeapCoreSDK
         start()
     }
     
-    
-    @objc public func start(_ apiKey:String, projectId:String, resetProject:Bool = false) {
-        let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
-        token = apiKey
-        LeapPreferences.shared.apiKey = token
-        LeapPropertiesHandler.shared.start()
-        guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
-        auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: apiKey, projectId: projectId, uiManager: auiManager, resetProject: resetProject)
-        isStarted = true
-    }
-    
     @objc public func startProject(_ projectId:String, resetProject:Bool = false) {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
         guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
