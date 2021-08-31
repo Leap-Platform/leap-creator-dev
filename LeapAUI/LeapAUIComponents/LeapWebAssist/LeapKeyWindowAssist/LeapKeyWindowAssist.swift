@@ -174,4 +174,26 @@ class LeapKeyWindowAssist: LeapWebAssist {
             return ""
         }
     }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        
+        let hitTestView = super.hitTest(point, with: event)
+        
+        guard self.isKind(of: LeapPing.self) else { return hitTestView }
+        
+        if self.webView.frame.contains(point) {
+            
+            return hitTestView
+            
+        } else {
+            
+            /// To make tap pass through transparent view which is self in this case. Context is when there is no overlay.
+            if !(assistInfo?.highlightAnchor ?? false) && hitTestView == self {
+                
+                return nil
+            }
+            
+            return hitTestView
+        }
+    }
 }
