@@ -9,8 +9,6 @@
 import UIKit
 
 class AutomaticViewController: UIViewController {
-
-    @IBOutlet weak var imageView: UIImageView!
     
     @IBOutlet weak var priceValue: UILabel!
     
@@ -24,8 +22,6 @@ class AutomaticViewController: UIViewController {
         super.viewDidLoad()
         priceValue.text = "\(value)"
         priceSlider.setValue(Float(value), animated: true)
-        guard let screenshot = image else { return }
-        imageView.image = screenshot
     }
 
     @IBAction func priceChanged(_ sender: UISlider) {
