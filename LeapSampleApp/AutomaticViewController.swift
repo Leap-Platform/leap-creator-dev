@@ -15,9 +15,7 @@ class AutomaticViewController: UIViewController {
     @IBOutlet weak var priceSlider: UISlider!
     
     let value = 5000
-    
-    var image:UIImage? = nil
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         priceValue.text = "\(value)"

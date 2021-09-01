@@ -23,10 +23,4 @@ class LoginViewController: UIViewController {
     @IBAction func goToNext(_ sender: Any) {
         performSegue(withIdentifier: "login_completed", sender: nil)
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dest = segue.destination as? AutomaticViewController {
-            dest.image = image
-        }
-    }
 }
