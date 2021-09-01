@@ -886,6 +886,8 @@ extension LeapAUIManager: LeapAssistDelegate {
     func didPresentAssist() {
         playAudio()
         auiManagerCallBack?.didPresentAssist()
+        guard  currentAssist == nil else { return }
+        auiManagerCallBack?.didDismissView(byUser: false, autoDismissed: false, panelOpen: false, action: nil)
     }
     
     func failedToPresentAssist() { auiManagerCallBack?.failedToPerform() }

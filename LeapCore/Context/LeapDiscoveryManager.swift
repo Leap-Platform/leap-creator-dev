@@ -194,7 +194,11 @@ class LeapDiscoveryManager {
     }
     
     func discoveryDismissed(byUser:Bool, optIn:Bool) {
-        guard let discovery = currentDiscovery, byUser || optIn else { return }
+        guard let discovery = currentDiscovery else { return }
+        guard byUser || optIn else {
+            currentDiscovery = nil
+            return
+        }
         if byUser && !optIn {
             let isPreview = delegate?.isPreview() ?? false
             LeapSharedInformation.shared.discoveryDismissedByUser(discoveryId: discovery.id,isPreview: isPreview)
