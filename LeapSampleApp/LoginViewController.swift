@@ -9,8 +9,6 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
-    private var image:UIImage? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
