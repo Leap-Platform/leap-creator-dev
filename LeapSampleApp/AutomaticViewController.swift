@@ -25,7 +25,7 @@ class AutomaticViewController: UIViewController {
     }
 
     @IBAction func priceChanged(_ sender: UISlider) {
-        priceValue.text = "\(sender.value)"
+        priceValue.text = "\(Int(sender.value))"
     }
     
     /*
