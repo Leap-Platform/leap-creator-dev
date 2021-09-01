@@ -58,6 +58,7 @@
 		2DBCDA1C2684884800985C51 /* Leap+UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBCDA1A2684872F00985C51 /* Leap+UILabel.swift */; };
 		2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */; };
 		2DC5FF11265F774700826FEB /* LeapDelight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC5FF10265F774700826FEB /* LeapDelight.swift */; };
+		2DD7D96126DE95120071A19F /* HybridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD7D96026DE95120071A19F /* HybridViewController.swift */; };
 		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
 		2DF4645C26B06DA20063FAC2 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4645B26B06DA20063FAC2 /* MainViewController.swift */; };
 		D017401625F75D17002C051E /* scroll_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D017401525F75D17002C051E /* scroll_arrow.png */; };
@@ -309,6 +310,7 @@
 		2DD0E35225B6D7E700EBB9B8 /* LeapReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachability.swift; sourceTree = "<group>"; };
 		2DD0E35B25B7159400EBB9B8 /* LeapReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachabilityManager.swift; sourceTree = "<group>"; };
 		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
+		2DD7D96026DE95120071A19F /* HybridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridViewController.swift; sourceTree = "<group>"; };
 		2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LeapMedia.xcassets; sourceTree = "<group>"; };
 		2DF4645B26B06DA20063FAC2 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2DFFF57425A5D0DB001051D3 /* LeapAUIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAUIConstants.swift; sourceTree = "<group>"; };
@@ -672,6 +674,7 @@
 				D07FEB272494A95A004FFD99 /* SearchHotelViewController.swift */,
 				D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */,
 				D0BC371E249DFB41002648FF /* AutomaticViewController.swift */,
+				2DD7D96026DE95120071A19F /* HybridViewController.swift */,
 				D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */,
 				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
 				2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */,
@@ -1467,6 +1470,7 @@
 				D0F2C49D25DFCD81006BFF3D /* ManualScrollViewController.swift in Sources */,
 				D0F2C49E25DFCD81006BFF3D /* SingleWebviewViewController.swift in Sources */,
 				D0F2C49F25DFCD81006BFF3D /* MultipleWebViewsViewController.swift in Sources */,
+				2DD7D96126DE95120071A19F /* HybridViewController.swift in Sources */,
 				D0F2C4A025DFCD81006BFF3D /* AutomaticViewController.swift in Sources */,
 				D0F2C4A125DFCD81006BFF3D /* AppDelegate.swift in Sources */,
 				D0F2C4A225DFCD81006BFF3D /* LoginOptionViewController.swift in Sources */,
