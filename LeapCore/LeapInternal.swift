@@ -333,6 +333,10 @@ extension LeapInternal: LeapContextManagerDelegate {
                     self.resetSavedHeaders()
                     self.resetSavedConfig()
                 case .UseNewConfig:
+                    guard !configDict.isEmpty else {
+                        config(nil)
+                        return
+                    }
                     self.saveConfig(config: configDict)
                     fallthrough
                 case .UseCachedConfig:
@@ -340,7 +344,8 @@ extension LeapInternal: LeapContextManagerDelegate {
                         self.saveHeaders(headers: httpResponse.allHeaderFields)
                     }
                 }
-                let updatedConfig = LeapConfig(withDict: configDict, isPreview: false)
+                let savedConfig = self.getSavedConfig()
+                let updatedConfig = LeapConfig(withDict: savedConfig, isPreview: false)
                 config(updatedConfig)
                 self.currentEmbeddedProjectId = nil
                 for projId in self.fetchedProjectIds {
