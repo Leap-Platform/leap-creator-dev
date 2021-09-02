@@ -15,6 +15,7 @@ class LeapCreatorInternal: NSObject {
     var creatorManager: LeapCreatorManager?
     var applicationContext: UIApplication
     var appDelegate: UIApplicationDelegate?
+    private var isleapSDKStarted = false
     
     init(apiKey : String) {
         self.applicationContext = UIApplication.shared
@@ -23,14 +24,8 @@ class LeapCreatorInternal: NSObject {
         self.appDelegate = UIApplication.shared.delegate
     }
     
-    deinit {
-        
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
-    }
-    
-    
     func start() {
-        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
+        addObservers()
         guard let apiKey = self.apiKey else { return }
         self.creatorManager = LeapCreatorManager(key: apiKey, delegate: self)
         self.creatorManager?.fetchCreatorConfig()
@@ -48,15 +43,16 @@ extension LeapCreatorInternal: LeapCreatorManagerDelegate {
     func fetchConfigSuccess() {
         if  let name = Bundle.main.bundleIdentifier , name != constant_LeapPreview_BundleId {
             if let _: AnyClass = NSClassFromString("\(constant_LeapSDK).\(constant_Leap)") {
-                DispatchQueue.main.async {
-                    LeapNotificationManager.shared.checkForAuthorisation()
+                NotificationCenter.default.post(Notification(name: Notification.Name(constant_HasLeapSDKStarted)))
+                if isleapSDKStarted {
+                    DispatchQueue.main.async {
+                        LeapNotificationManager.shared.checkForAuthorisation()
+                    }
                 }
             }
         }
         
         startSendingBeacons()
-        
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
     }
     
     func fetchConfigFailure() {
@@ -68,22 +64,19 @@ extension LeapCreatorInternal: LeapCreatorManagerDelegate {
        
         if LeapCreatorShared.shared.creatorConfig == nil {
             
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "internetConnected"), object: nil)
-            
             start()
         }
     }
 }
-    
-extension String {
-    subscript (index: Int) -> Character {
-        let charIndex = self.index(self.startIndex, offsetBy: index)
-        return self[charIndex]
-    }
 
-    subscript (range: Range<Int>) -> Substring {
-        let startIndex = self.index(self.startIndex, offsetBy: range.startIndex)
-        let stopIndex = self.index(self.startIndex, offsetBy: range.startIndex + range.count)
-        return self[startIndex..<stopIndex]
+extension LeapCreatorInternal {
+    
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(leapSDKStarted), name: Notification.Name(constant_LeapSDKStarted), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(internetConnected), name: NSNotification.Name(rawValue: constant_internetConnected), object: nil)
+    }
+    
+    @objc private func leapSDKStarted() {
+        isleapSDKStarted = true
     }
 }

@@ -255,6 +255,10 @@ let constant_SAMPLE_APP = "SAMPLE_APP"
 let constant_PAIRING = "PAIRING"
 
 let constant_LeapSDK = "LeapSDK"
+let constant_HasLeapSDKStarted = "HasLeapSDKStarted"
+let constant_LeapSDKStarted = "LeapSDKStarted"
+let constant_internetConnected = "internetConnected"
+let constant_internetNotConnected = "internetNotConnected"
 
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
 

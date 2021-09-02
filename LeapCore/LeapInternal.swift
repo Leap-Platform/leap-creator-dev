@@ -9,22 +9,99 @@
 import Foundation
 import UIKit
 
+fileprivate let configUrl:String = {
+    #if DEV
+    return "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch"
+    #elseif STAGE
+    return "https://odin-stage-gke.leap.is/odin/api/v1/config/fetch"
+    #elseif PROD
+    return "https://odin.leap.is/odin/api/v1/config/fetch"
+    #else
+    return "https://odin.leap.is/odin/api/v1/config/fetch"
+    #endif
+}()
+
+fileprivate func getSavedHeaders() -> Dictionary<String,String> {
+    let prefs = UserDefaults.standard
+    let headers = prefs.object(forKey: "leap_saved_headers") as? Dictionary<String,String> ?? [:]
+    return headers
+}
+
+fileprivate func getCommonHeaders() -> Dictionary<String,String> {
+    guard let apiKey = LeapSharedInformation.shared.getAPIKey(), let versionCode = LeapSharedInformation.shared.getVersionCode(), let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
+    let headers = [
+        "x-jiny-client-id"      : apiKey,
+        "x-app-version-code"    : versionCode,
+        "x-app-version-name"    : versionName,
+        "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
+        "Content-Type"          : "application/json"
+    ]
+    return headers
+}
+
+fileprivate func getAllHeaders() -> Dictionary<String,String> {
+    guard let _ = LeapSharedInformation.shared.getAPIKey() else { return [:] }
+    var headers = getCommonHeaders()
+    getSavedHeaders().forEach { headers[$0.key] = $0.value }
+    return headers
+}
+
+fileprivate func getPayload() -> Dictionary<String,String> {
+    
+    let defaultStringProperties = LeapPropertiesHandler.shared.getDefaultStringProperties()
+    let defaultLongProperties = LeapPropertiesHandler.shared.getDefaultLongProperties()
+    let defaultIntProperties = LeapPropertiesHandler.shared.getDefaultIntProperties()
+    
+    let customLongProperties = LeapPropertiesHandler.shared.getCustomLongProperties()
+    let customStringProperties = LeapPropertiesHandler.shared.getCustomStringProperties()
+    let customIntProperties = LeapPropertiesHandler.shared.getCustomIntProperties()
+    
+    
+    var payload:Dictionary<String,String> = customStringProperties
+    defaultStringProperties.forEach { (key, value) in
+        payload[key] = value
+    }
+    
+    customIntProperties.forEach { (key,value) in
+        payload[key] = "\(value)"
+    }
+    
+    defaultIntProperties.forEach { (key, value) in
+        payload[key] = "\(value)"
+    }
+    
+    customLongProperties.forEach { (key,value) in
+        let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
+        payload[key] = "\(timeElapsed)"
+    }
+    
+    defaultLongProperties.forEach { (key, value) in
+        let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
+        payload[key] = "\(timeElapsed)"
+    }
+    
+    return payload
+}
+
+// MARK: - CONFIG ACTION
+enum ConfigAction {
+    case UseNewConfig
+    case UseCachedConfig
+    case ResetConfig
+}
+
+// MARK: - LEAPINTERNAL CLASS
 class LeapInternal:NSObject {
     var contextManager:LeapContextManager
-    private let configUrl:String = {
-        #if DEV
-        return "https://odin-dev-gke.leap.is/odin/api/v1/config/fetch"
-        #elseif STAGE
-        return "https://odin-stage-gke.leap.is/odin/api/v1/config/fetch"
-        #elseif PROD
-        return "https://odin.leap.is/odin/api/v1/config/fetch"
-        #else
-        return "https://odin.leap.is/odin/api/v1/config/fetch"
-        #endif
-    }()
+    
     var fetchedProjectIds:Array<String> = []
-    var embeddedProjectIds:Array<String> = []
     var currentEmbeddedProjectId:String?
+    lazy var fetchQueue:OperationQueue = {
+        var queue = OperationQueue()
+        queue.name = "Leap Config Fetch Queue"
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
     
     init(_ token : String, uiManager:LeapAUIHandler?) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
@@ -36,18 +113,6 @@ class LeapInternal:NSObject {
         fetchConfig()
     }
     
-    init(_ token:String, projectId:String, uiManager:LeapAUIHandler?, resetProject:Bool) {
-        self.contextManager = LeapContextManager(withUIHandler: uiManager)
-        super.init()
-        self.contextManager.delegate = self
-        resetSavedHeaders(for: token)
-        LeapSharedInformation.shared.setAPIKey(token)
-        LeapSharedInformation.shared.setSessionId()
-        fetchProjectConfig(projectId: projectId, resetProject:resetProject)
-    }
-    
-    
-    
     func auiCallback() -> LeapAUICallback? {
         return self.contextManager
     }
@@ -55,181 +120,101 @@ class LeapInternal:NSObject {
 }
 
 // MARK: - CONFIGURATION DOWNLOAD AND HANDLING
-
 extension LeapInternal {
     
     private func fetchConfig() {
-        let payload = getPayload()
-        let payloadData:Data = {
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
-            return payloadData
-        }()
-        guard let url = URL(string: configUrl) else { return }
-        var req = URLRequest(url: url)
-        req.httpMethod = "PUT"
-        req.httpBody = payloadData
-        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
-        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode != 304,
-                  let resultData = data,
-                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
-                print("[Leap]Config fetched failed")
-                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
+        let configOp = LeapConfigFetchOperation(projectId: nil) { response, data, error in
+            DispatchQueue.main.async {
+                let configDict:Dictionary<String,AnyHashable> = {
+                    guard let resultData = data else { return [:] }
+                    let dict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>
+                    return dict ?? [:]
+                }()
+                switch self.getConfigActionToTake(data: data, response: response) {
+                case .ResetConfig:
+                    self.resetSavedHeaders()
+                    self.resetSavedConfig()
+                case .UseNewConfig:
+                    self.saveConfig(config: configDict)
+                    fallthrough
+                case .UseCachedConfig:
+                    if let httpResponse = response as? HTTPURLResponse {
+                        self.saveHeaders(headers: httpResponse.allHeaderFields)
+                    }
+                }
                 let savedConfig = self.getSavedConfig()
                 self.startContextDetection(config: savedConfig)
-                return
             }
-            print("[Leap]Config fetched successfully")
-            self.saveHeaders(headers: httpResponse.allHeaderFields)
-            self.saveConfig(config: configDict)
-            self.startContextDetection(config: configDict)
         }
-        configTask.resume()
+        fetchQueue.addOperation(configOp)
     }
     
     public func fetchProjectConfig(projectId:String, resetProject:Bool) {
-        //Make API call
-        for embeddedProj in embeddedProjectIds { contextManager.removeConfigFor(projectId: embeddedProj) }
-        embeddedProjectIds = []
+        
+        if let embedProjId = currentEmbeddedProjectId { contextManager.removeConfigFor(projectId: embedProjId) }
         currentEmbeddedProjectId = nil
         
         guard !fetchedProjectIds.contains(projectId) else {
             if resetProject { contextManager.resetForProjectId(projectId) }
             return
         }
-        let payload = getPayload()
-        let payloadData:Data = {
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
-            return payloadData
-        }()
-        guard let url = URL(string: configUrl) else { return }
-        var req = URLRequest(url: url)
-        req.httpMethod = "PUT"
-        req.httpBody = payloadData
-        getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
-
-        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-ids")
-        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode != 304,
-                  let resultData = data,
-                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
-                print("[Leap]Project config fetched failed")
-                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
-                let savedConfig = self.getSavedConfig()
-                self.startContextDetection(config: savedConfig)
-                return
-            }
+        let projectConfigOp = LeapConfigFetchOperation(projectId: projectId) { response, data, error in
             DispatchQueue.main.async {
-                print("[Leap]Project config fetched successfully")
-                self.fetchedProjectIds.append(projectId)
-                let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
+                if !self.fetchedProjectIds.contains(projectId) { self.fetchedProjectIds.append(projectId) }
+                let configDict:Dictionary<String,AnyHashable> = {
+                    guard let resultData = data else { return [:] }
+                    let dict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>
+                    return dict ?? [:]
+                }()
+                switch self.getConfigActionToTake(data: data, response: response) {
+                case .ResetConfig:
+                    self.resetProjectConfigFor(projectId: projectId)
+                case .UseCachedConfig:
+                    break
+                case .UseNewConfig:
+                    self.saveProjectConfig(projectId: projectId, config: configDict)
+                }
+                let savedProjectConfig = self.getSavedProjectConfigFor(projectId: projectId)
+                let projectConfig = LeapConfig(withDict: savedProjectConfig, isPreview: false)
                 self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
             }
-            
         }
-        configTask.resume()
+        fetchQueue.addOperation(projectConfigOp)
     }
     
     public func embedProject(_ projectId:String) {
         contextManager.resetForProjectId(projectId)
-        if embeddedProjectIds.contains(projectId) {
-            if embeddedProjectIds.last == projectId { return }
-            embeddedProjectIds = embeddedProjectIds.filter { $0 != projectId }
-        }
-        let payload = getPayload()
-        let payloadData:Data = {
-            guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
-            return payloadData
-        }()
-        guard let url = URL(string: configUrl) else { return }
-        var req = URLRequest(url: url)
-        req.httpMethod = "PUT"
-        req.httpBody = payloadData
-        getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
-
-        req.addValue("[\"\(projectId)\"]", forHTTPHeaderField: "x-jiny-deployment-ids")
-        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode != 304,
-                  let resultData = data,
-                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
-                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
-                let savedConfig = self.getSavedConfig()
-                self.startContextDetection(config: savedConfig)
-                return
-            }
+        guard currentEmbeddedProjectId != projectId else { return }
+        
+        let fetchConfigOp = LeapConfigFetchOperation(projectId: projectId) { response, data, error in
             DispatchQueue.main.async {
-                for prevProjId in self.embeddedProjectIds {
-                    self.contextManager.removeConfigFor(projectId: prevProjId)
-                }
-                self.embeddedProjectIds.append(projectId)
                 self.currentEmbeddedProjectId = projectId
-                self.fetchedProjectIds.append(projectId)
+                let configDict:Dictionary<String,AnyHashable> = {
+                    guard let resultData = data else { return [:] }
+                    let dict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>
+                    return dict ?? [:]
+                }()
+                switch self.getConfigActionToTake(data: data, response: response) {
+                case .ResetConfig:
+                    self.resetProjectConfigFor(projectId: projectId)
+                case .UseCachedConfig:
+                    break
+                case .UseNewConfig:
+                    self.saveProjectConfig(projectId: projectId, config: configDict)
+                    break
+                }
                 let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
                 self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: true)
             }
-            
         }
-        configTask.resume()
+        fetchQueue.addOperation(fetchConfigOp)
     }
     
-    private func getHeaders() -> Dictionary<String,String> {
-        guard let _ = LeapSharedInformation.shared.getAPIKey() else { return [:] }
-        var headers = getCommonHeaders()
-        getSavedHeaders().forEach { headers[$0.key] = $0.value }
-        return headers
-    }
-    
-    private func getCommonHeaders() -> Dictionary<String,String> {
-        guard let apiKey = LeapSharedInformation.shared.getAPIKey(), let versionCode = LeapSharedInformation.shared.getVersionCode(), let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
-        let headers = [
-            "x-jiny-client-id"      : apiKey,
-            "x-app-version-code"    : versionCode,
-            "x-app-version-name"    : versionName,
-            "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
-            "Content-Type"          : "application/json"
-        ]
-        return headers
-    }
-    
-    private func getPayload() -> Dictionary<String,String> {
-        
-        let defaultStringProperties = LeapPropertiesHandler.shared.getDefaultStringProperties()
-        let defaultLongProperties = LeapPropertiesHandler.shared.getDefaultLongProperties()
-        let defaultIntProperties = LeapPropertiesHandler.shared.getDefaultIntProperties()
-        
-        let customLongProperties = LeapPropertiesHandler.shared.getCustomLongProperties()
-        let customStringProperties = LeapPropertiesHandler.shared.getCustomStringProperties()
-        let customIntProperties = LeapPropertiesHandler.shared.getCustomIntProperties()
-        
-        
-        var payload:Dictionary<String,String> = customStringProperties
-        defaultStringProperties.forEach { (key, value) in
-            payload[key] = value
-        }
-        
-        customIntProperties.forEach { (key,value) in
-            payload[key] = "\(value)"
-        }
-        
-        defaultIntProperties.forEach { (key, value) in
-            payload[key] = "\(value)"
-        }
-        
-        customLongProperties.forEach { (key,value) in
-            let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
-            payload[key] = "\(timeElapsed)"
-        }
-        
-        defaultLongProperties.forEach { (key, value) in
-            let timeElapsed = Int64(Date(timeIntervalSince1970: TimeInterval(value)).timeIntervalSinceNow * -1)
-            payload[key] = "\(timeElapsed)"
-        }
-        
-        return payload
-    }
+}
+
+
+// MARK: - APP CONFIG, HEADERS GETTERS & SETTERS
+extension LeapInternal {
     
     private func saveHeaders(headers:Dictionary<AnyHashable, Any>) {
         var toSaveHeaders:Dictionary<String,String> = [:]
@@ -242,17 +227,13 @@ extension LeapInternal {
         prefs.set(toSaveHeaders, forKey: "leap_saved_headers")
     }
     
-    private func getSavedHeaders() -> Dictionary<String,String> {
+    private func resetSavedHeaders() {
         let prefs = UserDefaults.standard
-        let headers = prefs.object(forKey: "leap_saved_headers") as? Dictionary<String,String> ?? [:]
-        return headers
+        prefs.setValue([:], forKey: "leap_saved_headers")
     }
     
     private func resetSavedHeaders(for token: String) {
-        if token != LeapSharedInformation.shared.getAPIKey() {
-            let prefs = UserDefaults.standard
-            prefs.setValue([:], forKey: "leap_saved_headers")
-        }
+        if token != LeapSharedInformation.shared.getAPIKey() { resetSavedHeaders() }
     }
     
     private func saveConfig(config:Dictionary<String,AnyHashable>) {
@@ -269,6 +250,59 @@ extension LeapInternal {
               let config = try? JSONSerialization.jsonObject(with: configData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
         return config
     }
+    
+    private func resetSavedConfig() {
+        let prefs = UserDefaults.standard
+        prefs.setValue([:], forKey: "leap_config")
+    }
+}
+
+// MARK: - PROJECT CONFIG SETTERS AND GETTERS
+extension LeapInternal {
+    
+    private func saveProjectConfig(projectId:String, config:Dictionary<String,AnyHashable>) {
+        let prefs = UserDefaults.standard
+        var savedConfigs = getSavedProjectConfigs()
+        savedConfigs[projectId] = config
+        guard let newSavedConfigsData = try? JSONSerialization.data(withJSONObject: savedConfigs, options: .prettyPrinted),
+              let newSavedConfigsString = String(data: newSavedConfigsData, encoding: .utf8) else { return }
+        prefs.setValue(newSavedConfigsString, forKey: "leap_project_configs")
+    }
+    
+    private func getSavedProjectConfigFor(projectId:String) -> Dictionary<String,AnyHashable> {
+        let savedProjectConfigs = getSavedProjectConfigs()
+        return savedProjectConfigs[projectId] ?? [:]
+    }
+    
+    private func getSavedProjectConfigs() -> Dictionary<String,Dictionary<String,AnyHashable>> {
+        let prefs = UserDefaults.standard
+        guard let savedProjectConfigsString = prefs.value(forKey: "leap_project_configs") as? String,
+              let savedConfigsData = savedProjectConfigsString.data(using: .utf8),
+              let savedProjectConfigs = try? JSONSerialization.jsonObject(with: savedConfigsData, options: .allowFragments) as? Dictionary<String,Dictionary<String,AnyHashable>> else { return [:] }
+        return savedProjectConfigs
+    }
+    
+    private func resetProjectConfigFor(projectId:String) {
+        let prefs = UserDefaults.standard
+        var savedProjectConfigs = getSavedProjectConfigs()
+        savedProjectConfigs.removeValue(forKey: projectId)
+        guard let newSavedConfigsData = try? JSONSerialization.data(withJSONObject: savedProjectConfigs, options: .prettyPrinted),
+              let newSavedConfigsString = String(data: newSavedConfigsData, encoding: .utf8) else { return }
+        prefs.setValue(newSavedConfigsString, forKey: "leap_project_configs")
+    }
+}
+
+// MARK: - CONFIG PROCESSING
+extension LeapInternal {
+    
+    private func getConfigActionToTake(data:Data?, response:URLResponse?) -> ConfigAction {
+        guard let _ = data,
+              let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode != 304 else { return .UseCachedConfig }
+        if httpResponse.statusCode == 404  { return .ResetConfig }
+        return .UseNewConfig
+    }
+    
 }
 
 // MARK: - CONTEXT DETECTION METHODS
@@ -283,8 +317,122 @@ extension LeapInternal {
 
 extension LeapInternal: LeapContextManagerDelegate {
     
-    
     func fetchUpdatedConfig(config:@escaping(_ :LeapConfig?)->Void) {
+        DispatchQueue.main.async {
+            
+        }
+        let configOp = LeapConfigFetchOperation(projectId: nil) { response, data, error in
+            DispatchQueue.main.async {
+                let configDict:Dictionary<String,AnyHashable> = {
+                    guard let resultData = data else { return [:] }
+                    let dict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>
+                    return dict ?? [:]
+                }()
+                switch self.getConfigActionToTake(data: data, response: response) {
+                case .ResetConfig:
+                    self.resetSavedHeaders()
+                    self.resetSavedConfig()
+                case .UseNewConfig:
+                    guard !configDict.isEmpty else {
+                        config(nil)
+                        return
+                    }
+                    self.saveConfig(config: configDict)
+                    fallthrough
+                case .UseCachedConfig:
+                    if let httpResponse = response as? HTTPURLResponse {
+                        self.saveHeaders(headers: httpResponse.allHeaderFields)
+                    }
+                }
+                let savedConfig = self.getSavedConfig()
+                let updatedConfig = LeapConfig(withDict: savedConfig, isPreview: false)
+                config(updatedConfig)
+                self.currentEmbeddedProjectId = nil
+                for projId in self.fetchedProjectIds {
+                    let projectConfigDict = self.getSavedProjectConfigFor(projectId: projId)
+                    let projectConfig  = LeapConfig(withDict: projectConfigDict, isPreview: false)
+                    self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: false)
+                }
+            }
+        }
+        self.fetchQueue.addOperation(configOp)
+    }
+    
+    func getCurrentEmbeddedProjectId() -> String? {
+        return self.currentEmbeddedProjectId
+    }
+    
+    func resetCurrentEmbeddedProjectId() {
+        self.currentEmbeddedProjectId = nil
+    }
+}
+
+
+class LeapConfigFetchOperation:Operation {
+    
+    let projectId:String?
+    let configCallCompletion:(_:URLResponse?, _:Data?, _:Error?)->Void
+    
+    override var isAsynchronous: Bool {
+        get {
+            return true
+        }
+    }
+    
+    private var _executing = false {
+        willSet {
+            willChangeValue(forKey: "isExecuting")
+        }
+        didSet {
+            didChangeValue(forKey: "isExecuting")
+        }
+    }
+    
+    override var isExecuting: Bool {
+        return _executing
+    }
+    
+    private var _finished = false {
+        willSet {
+            willChangeValue(forKey: "isFinished")
+        }
+        didSet {
+            didChangeValue(forKey: "isFinished")
+        }
+    }
+    
+    override var isFinished: Bool {
+        return _finished
+    }
+    
+    func executing (_ executing:Bool) {
+        _executing = executing
+    }
+    
+    func finished(_ finished:Bool) {
+        _finished = finished
+    }
+    
+    required init(projectId:String?, completion:@escaping(_:URLResponse?,_:Data?, _:Error?)->Void) {
+        self.projectId = projectId
+        self.configCallCompletion = completion
+    }
+    
+    override func main() {
+        guard isCancelled == false else {
+            finished(true)
+            configCallCompletion(nil, nil, nil)
+            return
+        }
+        self.executing(true)
+        fetchConfig(self.projectId) { data, response, error in
+            self.configCallCompletion(response,data,error)
+            self.finished(true)
+        }
+    }
+    
+    private func fetchConfig(_ projectId:String? = nil, completion : @escaping(_ data:Data?, _ response:URLResponse?, _ error:Error?)->Void) {
+        
         let payload = getPayload()
         let payloadData:Data = {
             guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .fragmentsAllowed) else { return Data() }
@@ -294,31 +442,16 @@ extension LeapInternal: LeapContextManagerDelegate {
         var req = URLRequest(url: url)
         req.httpMethod = "PUT"
         req.httpBody = payloadData
-        getHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+        if let projId = projectId {
+            getCommonHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+            req.addValue("[\"\(projId)\"]", forHTTPHeaderField: "x-jiny-deployment-ids")
+        } else {
+            getAllHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
+        }
+        
         let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode != 304,
-                  let resultData = data,
-                  let configDict = try?  JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>  else {
-                if let httpUrlResponse = response as? HTTPURLResponse { self.saveHeaders(headers: httpUrlResponse.allHeaderFields) }
-                let savedConfig = self.getSavedConfig()
-                DispatchQueue.main.async { config(LeapConfig(withDict: savedConfig, isPreview: false)) }
-                return
-            }
-            self.saveHeaders(headers: httpResponse.allHeaderFields)
-            self.saveConfig(config: configDict)
-            DispatchQueue.main.async { config(LeapConfig(withDict: configDict, isPreview: false)) }
-            
+            completion(data,response,error)
         }
         configTask.resume()
-    }
-    
-    func getCurrentEmbeddedProjectId() -> String? {
-        return self.currentEmbeddedProjectId
-    }
-    
-    func resetCurrentEmbeddedProjectId() {
-        self.embeddedProjectIds = self.embeddedProjectIds.filter{ $0 != self.currentEmbeddedProjectId }
-        self.currentEmbeddedProjectId = nil
     }
 }

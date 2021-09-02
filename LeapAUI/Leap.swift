@@ -34,6 +34,7 @@ import LeapCoreSDK
         auiManager.addObservers()
         isStarted = false
         super.init()
+        addObservers()
     }
     
     @discardableResult
@@ -91,18 +92,6 @@ import LeapCoreSDK
         start()
     }
     
-    
-    @objc public func start(_ apiKey:String, projectId:String, resetProject:Bool = false) {
-        let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
-        token = apiKey
-        LeapPreferences.shared.apiKey = token
-        LeapPropertiesHandler.shared.start()
-        guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
-        auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: apiKey, projectId: projectId, uiManager: auiManager, resetProject: resetProject)
-        isStarted = true
-    }
-    
     @objc public func startProject(_ projectId:String, resetProject:Bool = false) {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
         guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
@@ -138,5 +127,18 @@ extension Leap:LeapAUIManagerDelegate {
     func isClientCallbackRequired() -> Bool {
         guard let _ = callback else { return false }
         return true
+    }
+}
+
+extension Leap {
+    
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(postLeapSDKStarted), name: Notification.Name(constant_HasLeapSDKStarted), object: nil)
+    }
+    
+    @objc private func postLeapSDKStarted() {
+        if isStarted {
+            NotificationCenter.default.post(Notification(name: Notification.Name(constant_LeapSDKStarted)))
+        }
     }
 }

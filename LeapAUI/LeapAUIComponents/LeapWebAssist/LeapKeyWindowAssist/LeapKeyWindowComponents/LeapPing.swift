@@ -110,6 +110,8 @@ class LeapPing: LeapKeyWindowAssist {
         
         NSLayoutConstraint.activate([bottomConstraint!])
         
+        leapIconView.layoutIfNeeded()
+        
         leapIconView.configureIconButton()
     }
     
