@@ -109,9 +109,10 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     }
     
     func postMessage(payload: String) {
-        guard LeapHierarchyNetworkQueue.shared.hierarchyQueue.operationCount == 0 else { return }
+        //guard LeapHierarchyNetworkQueue.shared.hierarchyQueue.operationCount == 0 else { return }
         let splittedString = payload.components(withMaxLength: 10000)
         let length = splittedString.count
+        print("Payload count = \(payload.count), Length is \(length)")
         let room = self.roomId as String?
         var index: Int = -1
         for sub in splittedString {
