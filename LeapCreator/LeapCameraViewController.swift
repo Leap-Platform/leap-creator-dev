@@ -9,19 +9,12 @@
 import UIKit
 import AVFoundation
 
-protocol LeapCameraViewControllerDelegate: AnyObject {
-    func configFetched(type: NotificationType, config: Dictionary<String,Any>)
-    func paired(type: NotificationType, infoDict: Dictionary<String, Any>)
-    func closed(type: NotificationType)
-}
-
 public protocol SampleAppDelegate: AnyObject {
     func sendInfo(infoDict: Dictionary<String,Any>)
 }
 
 class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
-    weak var delegate:LeapCameraViewControllerDelegate?
     weak var sampleAppDelegate: SampleAppDelegate?
     let cameraImage = UIImageView()
     let openCamera = UIButton()
@@ -401,7 +394,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 if success {
                     let projectName = infoDict[constant_projectName] as? String ?? ""
                     UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
-                    self?.delegate?.paired(type: .pairing, infoDict: infoDict)
+                    self?.configFetched(type: .pairing, config: infoDict)
                     self?.dismiss(animated: true, completion: nil)
                     
                 } else {
@@ -466,7 +459,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                 self?.scannerView = nil
                 self?.cameraFrameView = nil
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
-                self?.delegate?.configFetched(type: .preview, config: previewDict)
+                self?.configFetched(type: .preview, config: previewDict)
                 self?.dismiss(animated: true, completion: nil)
             }
         }
@@ -474,8 +467,18 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     private func configureConnectedSampleApp(infoDict: Dictionary<String, Any>) {
-        self.delegate?.configFetched(type: .sampleApp, config: infoDict)
         self.sampleAppDelegate?.sendInfo(infoDict: infoDict)
+    }
+    
+    private func configFetched(type: NotificationType, config: Dictionary<String, Any>) {
+        
+        LeapNotificationManager.shared.checkForAuthorisation(type: type)
+        
+        if type == .preview {
+            NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
+        } else if type == .pairing {
+            NotificationCenter.default.post(name: NSNotification.Name("onPaired"), object: config)
+        }
     }
     
     func presentWarning(_ title:String) {
@@ -521,7 +524,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     @objc func closeButtonClicked() {
         dismiss(animated: true, completion: nil)
-        delegate?.closed(type: Bundle.main.bundleIdentifier == constant_LeapPreview_BundleId ? .sampleApp : .genericApp)
+        LeapNotificationManager.shared.resetNotification()
     }
     
     @objc func learnMore1Clicked() {
