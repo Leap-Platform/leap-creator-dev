@@ -130,7 +130,6 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
             let vc = UIApplication.getCurrentVC()
             guard let viewc = vc else { return }
             let camVC = LeapCameraViewController()
-            camVC.delegate = self
             camVC.modalPresentationStyle = .fullScreen
             if #available(iOS 13.0, *) { camVC.isModalInPresentation = false }
             viewc.present(camVC, animated: true)
@@ -154,28 +153,5 @@ extension LeapNotificationManager: UNUserNotificationCenterDelegate {
         } else {
             self.checkForAuthorisation(type: .genericApp)
         }
-    }
-}
-
-extension LeapNotificationManager: LeapCameraViewControllerDelegate {
-    
-    func configFetched(type: NotificationType, config: Dictionary<String, Any>) {
-        
-        checkForAuthorisation(type: type)
-        
-        if type == .preview {
-            NotificationCenter.default.post(name: NSNotification.Name("leap_preview_config"), object: config)
-        }
-    }
-    
-    func paired(type: NotificationType, infoDict: Dictionary<String, Any>) {
-        
-        checkForAuthorisation(type: type)
-        
-        NotificationCenter.default.post(name: NSNotification.Name("onPaired"), object: infoDict)
-    }
-    
-    func closed(type: NotificationType) {
-        checkForAuthorisation(type: type)
     }
 }

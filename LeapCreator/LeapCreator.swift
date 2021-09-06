@@ -32,7 +32,6 @@ import UIKit
         if name != constant_LeapPreview_BundleId  { return nil }
         let leapCameraViewController = LeapCameraViewController()
         leapCameraViewController.sampleAppDelegate = delegate
-        leapCameraViewController.delegate = LeapNotificationManager.shared
         leapCameraViewController.configureSampleApp()
         return leapCameraViewController
     }

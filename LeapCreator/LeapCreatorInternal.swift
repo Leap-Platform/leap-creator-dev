@@ -15,7 +15,7 @@ class LeapCreatorInternal: NSObject {
     var creatorManager: LeapCreatorManager?
     var applicationContext: UIApplication
     var appDelegate: UIApplicationDelegate?
-    private var isleapSDKStarted = false
+    private var isLeapSDKStarted = false
     
     init(apiKey : String) {
         self.applicationContext = UIApplication.shared
@@ -41,13 +41,11 @@ class LeapCreatorInternal: NSObject {
 
 extension LeapCreatorInternal: LeapCreatorManagerDelegate {
     func fetchConfigSuccess() {
-        if  let name = Bundle.main.bundleIdentifier , name != constant_LeapPreview_BundleId {
-            if let _: AnyClass = NSClassFromString("\(constant_LeapSDK).\(constant_Leap)") {
-                NotificationCenter.default.post(Notification(name: Notification.Name(constant_HasLeapSDKStarted)))
-                if isleapSDKStarted {
-                    DispatchQueue.main.async {
-                        LeapNotificationManager.shared.checkForAuthorisation()
-                    }
+        if let _: AnyClass = NSClassFromString("\(constant_LeapSDK).\(constant_Leap)") {
+            NotificationCenter.default.post(Notification(name: Notification.Name(constant_HasLeapSDKStarted)))
+            if isLeapSDKStarted {
+                DispatchQueue.main.async {
+                    LeapNotificationManager.shared.resetNotification()
                 }
             }
         }
@@ -77,6 +75,6 @@ extension LeapCreatorInternal {
     }
     
     @objc private func leapSDKStarted() {
-        isleapSDKStarted = true
+        isLeapSDKStarted = true
     }
 }
