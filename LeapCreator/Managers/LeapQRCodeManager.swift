@@ -26,7 +26,7 @@ class LeapQRCodeManager {
     
     var qrCodeDict: Dictionary<String, Any>?
     
-    func valideCode(with code: String, completion: @escaping SuccessCallBack) {
+    func validateCode(with code: String, completion: @escaping SuccessCallBack) {
         guard let codeUrl: URL = URL(string: codeUrl) else { return }
         var urlRequest: URLRequest = URLRequest(url: codeUrl)
         urlRequest.addValue(LeapCreatorShared.shared.apiKey ?? "NA", forHTTPHeaderField: "x-auth-id")

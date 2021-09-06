@@ -315,7 +315,12 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         scanner.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func setupCameraFrameView() {
+    private func removeScannerView() {
+        scannerView?.removeFromSuperview()
+        scannerView = nil
+    }
+    
+    private func setupCameraFrameView() {
         cameraFrameView = UIImageView(frame: .zero)
         guard let cameraFrameView = cameraFrameView  else { return }
         guard let scannerView = scannerView else { return }
@@ -329,6 +334,11 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraFrameView.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
     }
     
+    private func removeCameraFrameView() {
+        cameraFrameView?.removeFromSuperview()
+        cameraFrameView = nil
+    }
+    
     func failed() {
         let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
@@ -336,7 +346,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         captureSession = nil
     }
     
-    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         guard let metaDataObj = metadataObjects.first,
               let readableObj = metaDataObj as? AVMetadataMachineReadableCodeObject,
               let stringValue = readableObj.stringValue else { return }
@@ -454,10 +464,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                     return
                 }
                 self?.previewLayer?.removeFromSuperlayer()
-                self?.scannerView?.removeFromSuperview()
-                self?.cameraFrameView?.removeFromSuperview()
-                self?.scannerView = nil
-                self?.cameraFrameView = nil
+                self?.removeScannerView()
+                self?.removeCameraFrameView()
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.configFetched(type: .preview, config: previewDict)
                 self?.dismiss(animated: true, completion: nil)
@@ -483,6 +491,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     func presentWarning(_ title:String) {
         guard scannerView != nil else { return }
+        removeCameraFrameView()
         warningView = UIView(frame: .zero)
         warningView?.backgroundColor = UIColor(white: 0, alpha: 0.7)
         scannerView?.addSubview(warningView!)
@@ -551,6 +560,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             setupCaptureSession()
             return
         }
+        setupCameraFrameView()
         setupCloseButton(inView: scannerView!)
         setupModeButton(inView: scannerView!)
         captureSession?.startRunning()
@@ -634,10 +644,8 @@ extension LeapCameraViewController: UITextFieldDelegate {
         learnMoreButton1.removeFromSuperview()
         learnMoreButton2.removeFromSuperview()
         fetchView?.removeFromSuperview()
-        scannerView?.removeFromSuperview()
-        cameraFrameView?.removeFromSuperview()
-        scannerView = nil
-        cameraFrameView = nil
+        removeScannerView()
+        removeCameraFrameView()
         previewLayer?.removeFromSuperlayer()
     }
     
@@ -772,7 +780,7 @@ extension LeapCameraViewController: UITextFieldDelegate {
     
     @objc func submitCode() {
         guard codeTextField != nil else { return }
-        qrManager.valideCode(with: codeTextField?.text ?? "") { [weak self] success in
+        qrManager.validateCode(with: codeTextField?.text ?? "") { [weak self] success in
             DispatchQueue.main.async {
                 print(self?.qrManager.qrCodeDict ?? [:])
                 if success {
