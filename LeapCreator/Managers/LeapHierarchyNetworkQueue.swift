@@ -99,7 +99,7 @@ class LeapHierarchyNetworkQueue {
         guard hierarchyQueue.operationCount == 0, tempOpsArray.count > 0 else { return }
         let lastIndex = tempOpsArray.count > 20 ? 20 : tempOpsArray.count
         let subArray:Array<LeapHierarchyOperation> = Array(tempOpsArray[0..<lastIndex])
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.hierarchyQueue.addOperations(subArray, waitUntilFinished: false)
             self.tempOpsArray.removeFirst(lastIndex)
         }
