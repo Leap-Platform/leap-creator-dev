@@ -73,7 +73,7 @@ class LeapScreenHelper {
         let smallImage = UIImage(cgImage: finalCgImage, scale: 2.0, orientation: finalImage.imageOrientation)
         return smallImage
     }
-
+    
     static func captureHierarchy(finishListener: LeapFinishListener, completion: @escaping (_ dict: Dictionary<String, Any>) -> Void) {
         var hierarchy:Dictionary<String,Any> = [:]
         if let controller = UIApplication.getCurrentTopVC() {
@@ -86,21 +86,36 @@ class LeapScreenHelper {
         hierarchy[constant_screen_height] = UIScreen.main.nativeBounds.height
         hierarchy[constant_client_package_name] = Bundle.main.bundleIdentifier
         hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
-        guard let keyWindow = (UIApplication.shared.windows.first{ $0.isKeyWindow }) else { return }
-        _ = LeapViewProps(view: keyWindow, finishListener: finishListener) { (_, props) in
-            do {
-                let jsonEncoder = JSONEncoder()
-                jsonEncoder.outputFormatting = .prettyPrinted
-                let hierarchyData = try jsonEncoder.encode(props)
-                let payload = try JSONSerialization.jsonObject(with: hierarchyData, options: .mutableContainers) as? Dictionary<String,Any>
+        let windowsToCheck = getWindowsToCheck()
+        if windowsToCheck.count > 1 {
+            let hierarchyGroup = DispatchGroup()
+            var windowsViewProps:Array<Dictionary<String,Any>> = []
+            for window in windowsToCheck {
+                hierarchyGroup.enter()
+                getViewProps(forWindow: window, finishListener: finishListener) { props in
+                    if !props.isEmpty { windowsViewProps.append(props) }
+                    hierarchyGroup.leave()
+                }
+            }
+            hierarchyGroup.notify(queue: .main) {
+                let payload = generateDummyWindow(windowsViewProps)
                 hierarchy[constant_layout] = payload
                 completion(hierarchy)
-            } catch {
-                
             }
-        }        
+        } else {
+            guard let liveWindow = windowsToCheck.first else{
+                hierarchy[constant_layout] = [:]
+                completion(hierarchy)
+                return
+            }
+            getViewProps(forWindow: liveWindow, finishListener: finishListener) { props in
+                hierarchy[constant_layout] = props
+                completion(hierarchy)
+            }
+        }
+        
     }
-
+    
     static func jsonToString(json: AnyObject) -> String? {
         do {
             let data1 =  try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
@@ -136,9 +151,9 @@ class LeapScreenHelper {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let requestBody: String = getSamplePayload()
         request.httpBody = requestBody.data(using: .utf8)
-
-         URLSession.shared.dataTask(with: request) { (data, response, error) in
-
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
             if let httpResponse = response as? HTTPURLResponse {
                 let status = httpResponse.statusCode
                 switch status {
@@ -147,7 +162,7 @@ class LeapScreenHelper {
                           let responseData = try? JSONSerialization.jsonObject(with: resultData, options:.mutableLeaves) as? Dictionary<String, String>,
                           let timeStampString = responseData["requestTimeStamp"],
                           let timeStamp = Int(timeStampString) else {
-                     
+                        
                         failure()
                         return
                     }
@@ -158,8 +173,67 @@ class LeapScreenHelper {
                 default: break
                 }
             }
-
-         }.resume()
-        }
+            
+        }.resume()
+    }
 }
+
+extension LeapScreenHelper {
     
+    static func getWindowsToCheck() -> Array<UIWindow> {
+        var windowsToCheck = UIApplication.shared.windows.filter { window in
+            if String(describing: type(of: window.self)) == "UITextEffectsWindow" { return false }
+            if window.isHidden { return false }
+            return true
+        }
+        let remoteWindow = windowsToCheck.first { String(describing: type(of: $0.self)) == "UIRemoteKeyboardWindow" }
+        if let remoteWindow = remoteWindow, let datePicker = getTopDatePicker(inView: remoteWindow) {
+            if #available(iOS 14.0, *) {
+                if datePicker.datePickerStyle == .inline {
+                    windowsToCheck = windowsToCheck.filter{ $0 == remoteWindow}
+                }
+            }
+        }
+        return windowsToCheck
+    }
+    
+    static func generateDummyWindow(_ forWindows:Array<Dictionary<String,Any>>) -> Dictionary<String,Any> {
+        let payload:Dictionary<String,Any>  = [
+            "children" : forWindows,
+            "node_index" : -2,
+            "class" : "UIWindow",
+            "bounds":[
+                "left" : 0,
+                "top" : 0,
+                "right" : UIScreen.main.bounds.width * UIScreen.main.scale,
+                "bottom" : UIScreen.main.bounds.height * UIScreen.main.scale
+            ],
+            "location_x_on_screen" : 0,
+            "uuid":String.generateLeapCreatorUUIDString()
+        ]
+        return payload
+    }
+    
+    static func getViewProps(forWindow:UIWindow, finishListener:LeapFinishListener, fetchedProps:@escaping(_:Dictionary<String,Any>)->Void) {
+        
+        _ = LeapViewProps(view: forWindow, finishListener: finishListener, completion: { _, props in
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.outputFormatting = .prettyPrinted
+            guard let hierarchyData = try? jsonEncoder.encode(props),
+                  let payload = try? JSONSerialization.jsonObject(with: hierarchyData, options: .mutableContainers) as? Dictionary<String,Any> else {
+                fetchedProps([:])
+                return
+            }
+            fetchedProps(payload)
+        })
+    }
+    
+    static func getTopDatePicker(inView:UIView) -> UIDatePicker? {
+        if inView.isKind(of: UIDatePicker.self) { return (inView as! UIDatePicker) }
+        for child in inView.subviews.reversed() {
+            if let datePicker = getTopDatePicker(inView: child) { return datePicker }
+        }
+        return nil
+    }
+    
+}

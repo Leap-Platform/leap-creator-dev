@@ -29,16 +29,22 @@ class HomeViewController: UIViewController {
         datePicker.tag = 101
         dateOfJourney.inputView = datePicker
         
-        toolBar = UIToolbar()
-        toolBar.barStyle = .default
-        toolBar.isTranslucent = true
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onClickDoneButton))
-        toolBar.setItems([space, doneButton], animated: false)
-        toolBar.isUserInteractionEnabled = true
-        toolBar.sizeToFit()
-        toolBar.tag = 102
-        dateOfJourney.inputAccessoryView = toolBar
+        if #available(iOS 14.0, *) {
+            datePicker.preferredDatePickerStyle = .automatic
+        } else {
+            toolBar = UIToolbar()
+            toolBar.barStyle = .default
+            toolBar.isTranslucent = true
+            let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onClickDoneButton))
+            toolBar.setItems([space, doneButton], animated: false)
+            toolBar.isUserInteractionEnabled = true
+            toolBar.sizeToFit()
+            toolBar.tag = 102
+            dateOfJourney.inputAccessoryView = toolBar
+        }
+        
+        
         
         dateOfJourney.text = convertDateToString(Date())
         
