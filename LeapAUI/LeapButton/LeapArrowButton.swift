@@ -173,27 +173,6 @@ class LeapArrowButton: UIButton {
     }
     
     private func getViewVisibility() -> LeapViewPortVisibility {
-//        guard let view = toView else { return .InViewPort }
-//        let kw = UIApplication.shared.windows.first{ $0.isKeyWindow }
-//        guard let keywindow = kw,
-//              let superview = view.superview else { return .InViewPort }
-//        let globalToViewFrame = superview.convert(view.frame, to: nil)
-//        let scrolls = getScrollViews()
-//        guard scrolls.count > 1 else {
-//            if keywindow.bounds.contains(globalToViewFrame) { return .InViewPort }
-//            if globalToViewFrame.minY < keywindow.bounds.minY { return .AboveViewPort}
-//            else  { return .BelowViewPort }
-//        }
-//        let visibility:LeapViewPortVisibility = scrolls.reduce(.InViewPort) { (res, scroll) -> LeapViewPortVisibility in
-//            if res != .InViewPort { return res }
-//            let viewFrameForScroll = superview.convert(view.frame, to: scroll)
-//            if scroll.bounds.contains(viewFrameForScroll) { return .InViewPort }
-//            else {
-//                if viewFrameForScroll.minY < scroll.bounds.minY { return .AboveViewPort }
-//                else { return .BelowViewPort}
-//            }
-//        }
-//        return visibility
         if isViewAboveViewPort() { return .aboveViewPort }
         else if isViewBelowViewPort() { return .belowViewPort }
         return .inViewPort
@@ -262,10 +241,10 @@ class LeapArrowButton: UIButton {
             let visibility = getRectVisibility()
             if visibility == .inViewPort { return }
             else if visibility == .aboveViewPort {
-                let yOffset = toRect.minY < 0 ? 0 : toRect.minY
+                let yOffset = webview.scrollView.contentOffset.y - toRect.minY + (0.5 * toRect.height) + (0.3 * webview.frame.height)
                 webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
             } else if visibility == .belowViewPort {
-                let yOffset = toRect.maxY - webview.frame.height
+                let yOffset = webview.scrollView.contentOffset.y + toRect.minY - (0.5 * toRect.height) - (0.3 * webview.frame.height)
                 webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
             }
         }

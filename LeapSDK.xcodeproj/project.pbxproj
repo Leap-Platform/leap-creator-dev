@@ -90,6 +90,7 @@
 		D02E95FE261A4641001A2AA2 /* LeapPropertiesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E95FD261A4640001A2AA2 /* LeapPropertiesHandler.swift */; };
 		D02E9607261A503E001A2AA2 /* LeapPropertiesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E95FD261A4640001A2AA2 /* LeapPropertiesHandler.swift */; };
 		D051F1F825E3D29500A2D81B /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
+		D06CB7A026E8D7EE0013571A /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06CB79F26E8D7EE0013571A /* ScrollViewController.swift */; };
 		D08DA63625DEA2E800EB0EFC /* LeapCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* LeapCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D08DA63825DEA2E800EB0EFC /* LeapSupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */; };
 		D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* LeapDiscoveryManager.swift */; };
@@ -364,6 +365,7 @@
 		D0592E7B241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0592E91241FAA3D007782A8 /* LeapCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCore.swift; sourceTree = "<group>"; };
 		D0592E94241FAD99007782A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D06CB79F26E8D7EE0013571A /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		D071662C24629D3E001937EE /* LeapContextDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextDetector.swift; sourceTree = "<group>"; };
 		D071662E24629D5D001937EE /* LeapContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextManager.swift; sourceTree = "<group>"; };
 		D077C91E24B9B2BF001A04DF /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
@@ -679,6 +681,7 @@
 				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
 				2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */,
 				2DF4645B26B06DA20063FAC2 /* MainViewController.swift */,
+				D06CB79F26E8D7EE0013571A /* ScrollViewController.swift */,
 			);
 			path = LeapDemoApp;
 			sourceTree = "<group>";
@@ -1469,6 +1472,7 @@
 				D0F2C49C25DFCD81006BFF3D /* HomeViewController.swift in Sources */,
 				D0F2C49D25DFCD81006BFF3D /* ManualScrollViewController.swift in Sources */,
 				D0F2C49E25DFCD81006BFF3D /* SingleWebviewViewController.swift in Sources */,
+				D06CB7A026E8D7EE0013571A /* ScrollViewController.swift in Sources */,
 				D0F2C49F25DFCD81006BFF3D /* MultipleWebViewsViewController.swift in Sources */,
 				2DD7D96126DE95120071A19F /* HybridViewController.swift in Sources */,
 				D0F2C4A025DFCD81006BFF3D /* AutomaticViewController.swift in Sources */,
