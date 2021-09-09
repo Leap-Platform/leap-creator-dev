@@ -90,6 +90,7 @@
 		D02E95FE261A4641001A2AA2 /* LeapPropertiesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E95FD261A4640001A2AA2 /* LeapPropertiesHandler.swift */; };
 		D02E9607261A503E001A2AA2 /* LeapPropertiesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E95FD261A4640001A2AA2 /* LeapPropertiesHandler.swift */; };
 		D051F1F825E3D29500A2D81B /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
+		D06CB7A026E8D7EE0013571A /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06CB79F26E8D7EE0013571A /* ScrollViewController.swift */; };
 		D08DA63625DEA2E800EB0EFC /* LeapCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D0592E7A241FA6E3007782A8 /* LeapCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D08DA63825DEA2E800EB0EFC /* LeapSupportModals.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */; };
 		D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* LeapDiscoveryManager.swift */; };
@@ -364,6 +365,7 @@
 		D0592E7B241FA6E3007782A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0592E91241FAA3D007782A8 /* LeapCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCore.swift; sourceTree = "<group>"; };
 		D0592E94241FAD99007782A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D06CB79F26E8D7EE0013571A /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		D071662C24629D3E001937EE /* LeapContextDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextDetector.swift; sourceTree = "<group>"; };
 		D071662E24629D5D001937EE /* LeapContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextManager.swift; sourceTree = "<group>"; };
 		D077C91E24B9B2BF001A04DF /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
@@ -454,7 +456,7 @@
 		D0DC3EFF25540A8900B6FA93 /* LeapContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContext.swift; sourceTree = "<group>"; };
 		D0E545E126D7A75B00AAD6C7 /* LeapHierarchyNetworkQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapHierarchyNetworkQueue.swift; sourceTree = "<group>"; };
 		D0E55D582479747E005B3EAB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeapSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0F2C4B425DFCD81006BFF3D /* LeapDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeapDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewController.swift; sourceTree = "<group>"; };
 		D0FDAC2424B48B3C00D9332B /* Leap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Leap.h; sourceTree = "<group>"; };
 		D0FDAC2524B48B3C00D9332B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -658,7 +660,7 @@
 			path = LeapAUIUtils;
 			sourceTree = "<group>";
 		};
-		D03E44E12420AABA00A43FEA /* LeapSampleApp */ = {
+		D03E44E12420AABA00A43FEA /* LeapDemoApp */ = {
 			isa = PBXGroup;
 			children = (
 				D03E44E22420AABA00A43FEA /* AppDelegate.swift */,
@@ -679,8 +681,9 @@
 				D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */,
 				2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */,
 				2DF4645B26B06DA20063FAC2 /* MainViewController.swift */,
+				D06CB79F26E8D7EE0013571A /* ScrollViewController.swift */,
 			);
-			path = LeapSampleApp;
+			path = LeapDemoApp;
 			sourceTree = "<group>";
 		};
 		D04E8589248A886700BA5CA3 /* LeapImages */ = {
@@ -697,7 +700,7 @@
 			isa = PBXGroup;
 			children = (
 				D0592E79241FA6E3007782A8 /* LeapCore */,
-				D03E44E12420AABA00A43FEA /* LeapSampleApp */,
+				D03E44E12420AABA00A43FEA /* LeapDemoApp */,
 				D00B8F57249B2988006F4CA1 /* LeapCreator */,
 				D0FDAC2324B48B3C00D9332B /* LeapAUI */,
 				D0592E78241FA6E3007782A8 /* Products */,
@@ -711,7 +714,7 @@
 				D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */,
 				D0B603F725DFB6BA0092F735 /* LeapSDK.framework */,
 				D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */,
-				D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */,
+				D0F2C4B425DFCD81006BFF3D /* LeapDemoApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1129,9 +1132,9 @@
 			productReference = D0B603F725DFB6BA0092F735 /* LeapSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D0F2C49125DFCD81006BFF3D /* LeapSampleApp */ = {
+		D0F2C49125DFCD81006BFF3D /* LeapDemoApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0F2C4B125DFCD81006BFF3D /* Build configuration list for PBXNativeTarget "LeapSampleApp" */;
+			buildConfigurationList = D0F2C4B125DFCD81006BFF3D /* Build configuration list for PBXNativeTarget "LeapDemoApp" */;
 			buildPhases = (
 				D0F2C49825DFCD81006BFF3D /* Sources */,
 				D0F2C4A525DFCD81006BFF3D /* Frameworks */,
@@ -1145,9 +1148,9 @@
 				D0F2C49425DFCD81006BFF3D /* PBXTargetDependency */,
 				D0F2C49625DFCD81006BFF3D /* PBXTargetDependency */,
 			);
-			name = LeapSampleApp;
+			name = LeapDemoApp;
 			productName = JinySampleApp;
-			productReference = D0F2C4B425DFCD81006BFF3D /* LeapSampleApp.app */;
+			productReference = D0F2C4B425DFCD81006BFF3D /* LeapDemoApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1184,7 +1187,7 @@
 				D08DA63225DEA2E800EB0EFC /* LeapCoreSDK */,
 				D0B603B925DFB6BA0092F735 /* LeapSDK */,
 				D02C12F225DFC6B000C80E28 /* LeapCreatorSDK */,
-				D0F2C49125DFCD81006BFF3D /* LeapSampleApp */,
+				D0F2C49125DFCD81006BFF3D /* LeapDemoApp */,
 				D0992891260B744A00A1FF58 /* LeapUniversalDev */,
 				D09928B1260B785100A1FF58 /* LeapUniversalStage */,
 				D0ABE684260B78C6006D0E0C /* LeapUniversalProduction */,
@@ -1469,6 +1472,7 @@
 				D0F2C49C25DFCD81006BFF3D /* HomeViewController.swift in Sources */,
 				D0F2C49D25DFCD81006BFF3D /* ManualScrollViewController.swift in Sources */,
 				D0F2C49E25DFCD81006BFF3D /* SingleWebviewViewController.swift in Sources */,
+				D06CB7A026E8D7EE0013571A /* ScrollViewController.swift in Sources */,
 				D0F2C49F25DFCD81006BFF3D /* MultipleWebViewsViewController.swift in Sources */,
 				2DD7D96126DE95120071A19F /* HybridViewController.swift in Sources */,
 				D0F2C4A025DFCD81006BFF3D /* AutomaticViewController.swift in Sources */,
@@ -1697,14 +1701,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZTR9S7UW64;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				INFOPLIST_FILE = LeapDemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1884,14 +1888,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZTR9S7UW64;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				INFOPLIST_FILE = LeapDemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2061,14 +2065,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZTR9S7UW64;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				INFOPLIST_FILE = LeapDemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2238,14 +2242,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZTR9S7UW64;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				INFOPLIST_FILE = LeapDemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2425,14 +2429,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZTR9S7UW64;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				INFOPLIST_FILE = LeapDemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2602,14 +2606,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZTR9S7UW64;
-				INFOPLIST_FILE = LeapSampleApp/Info.plist;
+				INFOPLIST_FILE = LeapDemoApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.sampleapp;
+				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2854,7 +2858,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = DebugLeapProduction;
 		};
-		D0F2C4B125DFCD81006BFF3D /* Build configuration list for PBXNativeTarget "LeapSampleApp" */ = {
+		D0F2C4B125DFCD81006BFF3D /* Build configuration list for PBXNativeTarget "LeapDemoApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D09927C5260B4D7100A1FF58 /* DebugLeapProduction */,

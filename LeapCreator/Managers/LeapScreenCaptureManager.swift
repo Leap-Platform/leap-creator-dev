@@ -109,27 +109,19 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
     }
     
     func postMessage(payload: String) {
-        //guard LeapHierarchyNetworkQueue.shared.hierarchyQueue.operationCount == 0 else { return }
         let splittedString = payload.components(withMaxLength: 10000)
-        let length = splittedString.count
-        print("Payload count = \(payload.count), Length is \(length)")
-        let room = self.roomId as String?
-        var index: Int = -1
-        for sub in splittedString {
-            index += 1
-            let end = (splittedString.last == sub) ? "true" : "false"
-            guard let roomId = room else {
-                return
-            }
+        let ops:Array<LeapHierarchyOperation> = splittedString.compactMap { (sub) -> LeapHierarchyOperation? in
             
+            let end = (splittedString.last == sub) ? "true" : "false"
+            guard let roomId = self.roomId else { return nil }
             let trimString = sub.replacingOccurrences(of: "\n", with: "")
             
             let message: Dictionary<String, Any> = [
                 "dataPacket":trimString,
                 "commandType":"SCREENSHOT",
                 "end":end,
-                "index":index,
-                "total":length
+                "index":splittedString.firstIndex(of: sub)!,
+                "total":splittedString.count
             ]
             
             let splitPayload: Dictionary<String, Any> = [
@@ -140,14 +132,12 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
             ]
             
             guard let splitData = try? JSONSerialization.data(withJSONObject: splitPayload, options: .prettyPrinted),
-                  let splitString = String(data: splitData, encoding: .utf8) else {
-                return
-            }
-            if let websocket = socket {
-                let op = LeapHierarchyOperation(socketTask: websocket, string: splitString)
-                LeapHierarchyNetworkQueue.shared.hierarchyQueue.addOperation(op)
-            }            
+                  let splitString = String(data: splitData, encoding: .utf8) else { return nil }
+            guard let websocket = socket else { return nil }
+            let op = LeapHierarchyOperation(socketTask: websocket, string: splitString)
+            return op
         }
+        LeapHierarchyNetworkQueue.shared.operationToSend(ops: ops)
     }
     
     func getScreenCapture(compressionQuality: Float) ->String? {

@@ -460,18 +460,21 @@ extension LeapWebAssist: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
-        self.isHidden = false
-        
         if let language = LeapPreferences.shared.getUserLanguage() {
             
-           changeLanguage(locale: language)
+            self.changeLanguage(locale: language)
         }
         
-        didFinish(webView, didFinish: navigation)
-                
-        performEnterAnimation(animation: assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
-        
-        self.delegate?.didPresentAssist()
+        DispatchQueue.main.asyncAfter(deadline: .now() + webAssistPreloadTime) {
+            
+            self.isHidden = false
+            
+            self.didFinish(webView, didFinish: navigation)
+            
+            self.performEnterAnimation(animation: self.assistInfo?.layoutInfo?.enterAnimation ?? "zoom_in")
+            
+            self.delegate?.didPresentAssist()
+        }
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation?, withError error: Error) {

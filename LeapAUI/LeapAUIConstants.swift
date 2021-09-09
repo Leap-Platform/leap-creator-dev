@@ -34,3 +34,4 @@ let PING = "PING"
 let mainIconSize: CGFloat = 56
 let mainIconCornerConstant: CGFloat = 24
 let mainIconBottomConstant: CGFloat = 45
+let webAssistPreloadTime = 0.25
