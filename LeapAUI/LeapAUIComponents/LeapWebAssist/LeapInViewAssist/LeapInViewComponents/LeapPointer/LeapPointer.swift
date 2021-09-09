@@ -326,7 +326,7 @@ class LeapFingerPointer: LeapPointer {
                 
                 self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchorClick: true, constant_id: id]])
                 
-                return viewToCheck
+                return nil
             
             } else {
                 
