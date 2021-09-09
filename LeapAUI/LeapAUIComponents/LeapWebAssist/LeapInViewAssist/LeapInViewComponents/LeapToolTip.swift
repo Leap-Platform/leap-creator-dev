@@ -543,7 +543,49 @@ class LeapToolTip: LeapTipView {
         self.leapIconView.alpha = 0
         UIView.animate(withDuration: 0.08, delay: 0.24, options: .beginFromCurrentState, animations: {
             self.leapIconView.alpha = 1
-        }, completion: nil)
+        }) { _ in
+            DispatchQueue.main.async {
+                if let rect = self.webRect, let webview = self.toView as? WKWebView {
+                    let offset = webview.scrollView.contentOffset.y + self.getOffsetForWeb(rect, webview)
+                    webview.scrollView.contentOffset = CGPoint(x: 0, y: offset)
+                } else if let toView = self.toView {
+                    guard let scrollview = self.getScrollView(view: toView) else { return }
+                    let offset = scrollview.contentOffset.y + self.getOffsetForNative(toView)
+                    scrollview.setContentOffset(CGPoint(x: 0, y: offset), animated: false)
+                }
+            }
+        }
+    }
+    
+    func getOffsetForWeb(_ rect:CGRect,_ webview:WKWebView) -> CGFloat {
+        guard let arrowDirection  = getArrowDirection() else { return 0.0 }
+        guard let tooltipFrame = toolTipView.superview?.convert(toolTipView.frame, to: nil) else { return 0.0 }
+        guard let inView = self.inView else { return 0.0 }
+        switch arrowDirection {
+        case .top:
+            return tooltipFrame.maxY > inView.frame.maxY ? inView.frame.maxY - tooltipFrame.maxY : 0.0
+        case .bottom:
+            return tooltipFrame.minY < 0 ? tooltipFrame.minY : 0.0
+        }
+    }
+    
+    func getOffsetForNative(_ view:UIView) -> CGFloat {
+        guard let arrowDirection  = getArrowDirection() else { return 0.0 }
+        guard let tooltipFrame = toolTipView.superview?.convert(toolTipView.frame, to: nil) else { return 0.0 }
+        guard let inView = self.inView else { return 0.0 }
+        switch arrowDirection {
+        case .top:
+            return tooltipFrame.maxY > inView.frame.maxY ? inView.frame.maxY - tooltipFrame.maxY : 0.0
+        case .bottom:
+            return tooltipFrame.minY < 0 ? tooltipFrame.minY : 0.0
+        }
+    }
+    
+    func getScrollView(view:UIView) -> UIScrollView? {
+        guard !view.isKind(of: UIWindow.self) else { return nil }
+        if view.isKind(of: UIScrollView.self) { return view as? UIScrollView}
+        guard let superview = view.superview else { return nil }
+        return getScrollView(view: superview)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
