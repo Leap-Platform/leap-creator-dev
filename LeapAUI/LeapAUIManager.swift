@@ -42,6 +42,7 @@ class LeapAUIManager: NSObject {
     weak var currentTargetView: UIView?
     var currentTargetRect: CGRect?
     weak var currentWebView: UIView?
+    var currentAudioCompletionStatus:Bool?
     
     var autoDismissTimer: Timer?
     private var baseUrl = String()
@@ -321,6 +322,7 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
+        currentAudioCompletionStatus = nil
     }
     
     func removeLanguageOptions() {
@@ -494,6 +496,7 @@ extension LeapAUIManager {
                 self.startAutoDismissTimer()
                 return
             }
+            self.currentAudioCompletionStatus = false
             if currentAudio.isTTS {
                 if let text = currentAudio.text,
                    let ttsCode = self.auiManagerCallBack?.getTTSCodeFor(code: code) {
@@ -821,12 +824,14 @@ extension LeapAUIManager: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         self.audioPlayer = nil
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         self.audioPlayer = nil
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
 }
@@ -836,11 +841,13 @@ extension LeapAUIManager: AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
 }
@@ -908,6 +915,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         currentAssist = nil
         currentInstruction = nil
         stopAudio()
+        currentAudioCompletionStatus = nil
         scrollArrowButton.noAssist()
         if !byContext { dismissLeapButton() }
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
@@ -949,26 +957,6 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             }
             self.auiManagerCallBack?.optionPanelClosed()
         }
-        //                self.isLanguageOptionsOpen = true
-        //                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
-        //                    self.removeLanguageOptions()
-        //                    self.isLanguageOptionsOpen = false
-        //                    if success, let code = languageCode {
-        //                        if let userLanguage = LeapPreferences.shared.getUserLanguage() {
-        //                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
-        //                        }
-        //                        LeapPreferences.shared.setUserLanguage(code)
-        //                    } else { self.startAutoDismissTimer() }
-        //                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
-        //                        webAssist.changeLanguage(locale: code)
-        //                        self.playAudio()
-        //                    }
-        //                    self.startDiscoverySoundDownload()
-        //                    self.startStageSoundDownload()
-        //                    self.auiManagerCallBack?.optionPanelClosed()
-        //
-        //                }
-        //                self.languageOptions?.showBottomSheet()
     }
     
     func iconOptionsClosed() {
@@ -986,9 +974,18 @@ extension LeapAUIManager:LeapArrowButtonDelegate {
     
     func arrowShown() {
        currentAssist?.hide()
+        if audioPlayer?.isPlaying ?? false {
+            currentAudioCompletionStatus = false
+            stopAudio()
+        } else {
+            currentAudioCompletionStatus = true
+        }
     }
     
     func arrowHidden() {
        currentAssist?.unhide()
+        if !(currentAudioCompletionStatus ?? true) {
+            playAudio()
+        }
     }
 }
