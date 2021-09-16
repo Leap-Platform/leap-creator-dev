@@ -112,9 +112,6 @@ import LeapCoreSDK
         auiManager.removeAllViews()
     }
     
-    @objc public func addIdentifier(identifier:String, value:Any) {
-        auiManager.addIdentifier(identifier: identifier, value: value)
-    }
 }
 
 extension Leap:LeapAUIManagerDelegate {

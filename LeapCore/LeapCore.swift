@@ -34,7 +34,7 @@ import UIKit
 @objc public protocol LeapAUICallback:NSObjectProtocol {
     
     func getDefaultMedia() -> Dictionary<String,Any>
-    func triggerEvent(identifier:String, value:Any)
+
     func getWebScript(_ identifier:String) -> String?
     
     func isFlowMenu() -> Bool
