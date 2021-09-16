@@ -45,12 +45,21 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
         }
     }
     
-    func sendData(screenCapture: String, hierarchy: Dictionary<String, Any>)->Void{
+    func sendData(screenCapture: String, hierarchy: Dictionary<String, Any>) {
+        
         var payload : Dictionary<String, Any> = Dictionary<String, Any>()
         
+        // screenshot
         payload[constant_image] = screenCapture
-        payload[constant_hierarchy] = hierarchy
         
+        // hierarchy base64 encoded
+        guard let hierarchyPayloadData = try? JSONSerialization.data(withJSONObject: hierarchy, options: .prettyPrinted) else { return }
+        payload[constant_hierarchy] = hierarchyPayloadData.base64EncodedString()
+        
+        // isHierarchyBase64Encoded boolean
+        payload[constant_isHierarchyBase64Encoded] = true
+        
+        // payload
         guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
         guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
         
@@ -79,8 +88,10 @@ class LeapScreenCaptureManager: LeapAppStateProtocol{
                             return
                         }
                         
+                        // reduced image quality for low internet speed
                         payload[constant_image] = screenShotImage
                         
+                        // continued payload
                         guard let payloadData = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted) else { return }
                         guard let payloadString = String(data: payloadData, encoding: .utf8) else { return }
                         
