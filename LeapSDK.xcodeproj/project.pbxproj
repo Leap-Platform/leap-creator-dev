@@ -96,18 +96,13 @@
 		D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* LeapDiscoveryManager.swift */; };
 		D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662E24629D5D001937EE /* LeapContextManager.swift */; };
 		D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* LeapConfig.swift */; };
-		D08DA63C25DEA2E800EB0EFC /* LeapTimeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */; };
 		D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8F248681F90082508C /* LeapStage.swift */; };
 		D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9B67725B6EECD00250133 /* LeapClickHandler.swift */; };
 		D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* LeapStageManager.swift */; };
-		D08DA64125DEA2E800EB0EFC /* LeapDiscoveryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793462544237800DB94DD /* LeapDiscoveryInfo.swift */; };
 		D08DA64225DEA2E800EB0EFC /* LeapInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* LeapInternal.swift */; };
-		D08DA64325DEA2E800EB0EFC /* LeapSDKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD033248126820069FA67 /* LeapSDKInfo.swift */; };
 		D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
 		D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA024F6401F00EEE719 /* LeapAssistManager.swift */; };
-		D08DA64725DEA2E800EB0EFC /* LeapPageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD029248124250069FA67 /* LeapPageInfo.swift */; };
 		D08DA64825DEA2E800EB0EFC /* LeapConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */; };
-		D08DA64925DEA2E800EB0EFC /* LeapStageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD02B248124D50069FA67 /* LeapStageInfo.swift */; };
 		D08DA64A25DEA2E800EB0EFC /* LeapFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA424F8ECF900EEE719 /* LeapFeature.swift */; };
 		D08DA64B25DEA2E800EB0EFC /* LeapAnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */; };
 		D08DA64C25DEA2E800EB0EFC /* LeapContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFF25540A8900B6FA93 /* LeapContext.swift */; };
@@ -117,18 +112,12 @@
 		D08DA65025DEA2E800EB0EFC /* LeapAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E859924F51914000D8E5B /* LeapAssist.swift */; };
 		D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E8A6F24A8DF1E00374DE8 /* LeapIdentifier.swift */; };
 		D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */; };
-		D08DA65325DEA2E800EB0EFC /* LeapContextInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */; };
-		D08DA65425DEA2E800EB0EFC /* LeapAssistInfoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793442544217500DB94DD /* LeapAssistInfoType.swift */; };
 		D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722D246A987A0060E054 /* LeapFlowManager.swift */; };
 		D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D7293324AC9B0000F75D0D /* LeapJSMaker.swift */; };
 		D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* LeapFlow.swift */; };
 		D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */; };
-		D08DA65925DEA2E800EB0EFC /* LeapContentActionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */; };
-		D08DA65A25DEA2E800EB0EFC /* LeapLanguageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD00F2481198C0069FA67 /* LeapLanguageInfo.swift */; };
-		D08DA65B25DEA2E800EB0EFC /* LeapDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01B2481210D0069FA67 /* LeapDeviceInfo.swift */; };
 		D08DA65C25DEA2E800EB0EFC /* LeapContextDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662C24629D3E001937EE /* LeapContextDetector.swift */; };
 		D08DA65D25DEA2E800EB0EFC /* LeapLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04356C22498CB7C00B90276 /* LeapLanguage.swift */; };
-		D08DA65F25DEA2E800EB0EFC /* LeapFlowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD027248123D60069FA67 /* LeapFlowInfo.swift */; };
 		D08DA66025DEA2E800EB0EFC /* LeapDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C91248682A80082508C /* LeapDiscovery.swift */; };
 		D08DA66125DEA2E800EB0EFC /* LeapPageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D022817125C3E1490036D8C6 /* LeapPageManager.swift */; };
 		D08DA66325DEA2E800EB0EFC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92224B9B330001A04DF /* AVFoundation.framework */; };
@@ -1357,20 +1346,15 @@
 				D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */,
 				D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */,
 				D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */,
-				D08DA63C25DEA2E800EB0EFC /* LeapTimeInfo.swift in Sources */,
 				D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */,
 				2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */,
 				D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */,
 				D02E9607261A503E001A2AA2 /* LeapPropertiesHandler.swift in Sources */,
 				D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */,
-				D08DA64125DEA2E800EB0EFC /* LeapDiscoveryInfo.swift in Sources */,
 				D08DA64225DEA2E800EB0EFC /* LeapInternal.swift in Sources */,
-				D08DA64325DEA2E800EB0EFC /* LeapSDKInfo.swift in Sources */,
 				D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */,
 				D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */,
-				D08DA64725DEA2E800EB0EFC /* LeapPageInfo.swift in Sources */,
 				D08DA64825DEA2E800EB0EFC /* LeapConstants.swift in Sources */,
-				D08DA64925DEA2E800EB0EFC /* LeapStageInfo.swift in Sources */,
 				D08DA64A25DEA2E800EB0EFC /* LeapFeature.swift in Sources */,
 				D08DA64B25DEA2E800EB0EFC /* LeapAnalyticsManager.swift in Sources */,
 				2D8478D626C2688400C2E1BA /* Encoder.swift in Sources */,
@@ -1382,19 +1366,13 @@
 				2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */,
 				D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */,
 				D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */,
-				D08DA65325DEA2E800EB0EFC /* LeapContextInfo.swift in Sources */,
 				D0A234B3268F1A5500FA3218 /* Data+Gzip.swift in Sources */,
-				D08DA65425DEA2E800EB0EFC /* LeapAssistInfoType.swift in Sources */,
 				D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */,
 				D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */,
 				D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */,
 				D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */,
-				D08DA65925DEA2E800EB0EFC /* LeapContentActionInfo.swift in Sources */,
-				D08DA65A25DEA2E800EB0EFC /* LeapLanguageInfo.swift in Sources */,
-				D08DA65B25DEA2E800EB0EFC /* LeapDeviceInfo.swift in Sources */,
 				D08DA65C25DEA2E800EB0EFC /* LeapContextDetector.swift in Sources */,
 				D08DA65D25DEA2E800EB0EFC /* LeapLanguage.swift in Sources */,
-				D08DA65F25DEA2E800EB0EFC /* LeapFlowInfo.swift in Sources */,
 				D08DA66025DEA2E800EB0EFC /* LeapDiscovery.swift in Sources */,
 				D08DA66125DEA2E800EB0EFC /* LeapPageManager.swift in Sources */,
 			);
