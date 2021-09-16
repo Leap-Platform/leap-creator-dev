@@ -53,9 +53,6 @@ class LeapAUIManager: NSObject {
     
     var languageOptions: LeapLanguageOptions?
     
-    func addIdentifier(identifier: String, value: Any) {
-        auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
-    }
 }
 
 extension LeapAUIManager {
@@ -116,9 +113,10 @@ extension LeapAUIManager: LeapAUIHandler {
                 self?.soundManager.discoverySoundsJson = self?.soundManager.processSoundConfigs(configs:discoverySoundsDicts) ?? [:]
                 self?.startDiscoverySoundDownload()
             }
-            if let previewSoundsDict = initialSounds[constant_previewSounds] as? Array<Dictionary<String,Any>> {
-                self?.soundManager.previewSoundsJson = self?.soundManager.processSoundConfigs(configs: previewSoundsDict) ?? [:]
-                self?.startPreviewSoundDownload()
+            
+            if let localeSoundsDict = initialSounds[constant_localeSounds] as? Array<Dictionary<String,Any>> {
+                self?.soundManager.stageSoundsJson = self?.soundManager.processSoundConfigs(configs: localeSoundsDict) ?? [:]
+                self?.startStageSoundDownload()
             }
             
             var htmlBaseUrl:String?
@@ -146,10 +144,6 @@ extension LeapAUIManager: LeapAUIHandler {
                 }
             }
             
-            self?.soundManager.fetchSoundConfig({ [weak self] (success) in
-                
-                if success { self?.startStageSoundDownload() }
-            })
         }
     }
     
@@ -461,13 +455,6 @@ extension LeapAUIManager {
         for sound in discoverySoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
     }
     
-    func startPreviewSoundDownload() {
-        guard auiManagerCallBack != nil else { return }
-        let code = auiManagerCallBack!.getLanguageCode()
-        let previewSoundsForCode = soundManager.previewSoundsJson[code] ?? []
-        for sound in  previewSoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
-    }
-    
     func startStageSoundDownload() {
         guard auiManagerCallBack != nil else { return }
         let code = auiManagerCallBack!.getLanguageCode()
@@ -485,12 +472,8 @@ extension LeapAUIManager {
             let soundsArrayForLanguage = self.soundManager.discoverySoundsJson[code]  ?? []
             var audio = soundsArrayForLanguage.first { $0.name == mediaName }
             if audio ==  nil {
-                let previewSounds = self.soundManager.previewSoundsJson[code] ?? []
-                audio = previewSounds.first { $0.name == mediaName }
-                if audio == nil {
-                    let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
-                    audio = stageSounds.first { $0.name == mediaName }
-                }
+                let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
+                audio = stageSounds.first { $0.name == mediaName }
             }
             guard let currentAudio = audio else {
                 self.startAutoDismissTimer()

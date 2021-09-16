@@ -318,9 +318,6 @@ extension LeapInternal {
 extension LeapInternal: LeapContextManagerDelegate {
     
     func fetchUpdatedConfig(config:@escaping(_ :LeapConfig?)->Void) {
-        DispatchQueue.main.async {
-            
-        }
         let configOp = LeapConfigFetchOperation(projectId: nil) { response, data, error in
             DispatchQueue.main.async {
                 let configDict:Dictionary<String,AnyHashable> = {
