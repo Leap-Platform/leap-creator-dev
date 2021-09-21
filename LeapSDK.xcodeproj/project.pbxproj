@@ -366,7 +366,6 @@
 		D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWebviewViewController.swift; sourceTree = "<group>"; };
 		D0850078242CC081007889B1 /* LeapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapUtils.swift; sourceTree = "<group>"; };
 		D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsManager.swift; sourceTree = "<group>"; };
-		D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContentActionInfo.swift; sourceTree = "<group>"; };
 		D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapCoreSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0938E0D251DD67000FD462E /* LeapMediaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaManager.swift; sourceTree = "<group>"; };
 		D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapNetworking.swift; sourceTree = "<group>"; };
@@ -396,14 +395,6 @@
 		D09C722F246A98860060E054 /* LeapStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStageManager.swift; sourceTree = "<group>"; };
 		D0A234B2268F1A5500FA3218 /* Data+Gzip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Gzip.swift"; sourceTree = "<group>"; };
 		D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsEvent.swift; sourceTree = "<group>"; };
-		D0ABD00F2481198C0069FA67 /* LeapLanguageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageInfo.swift; sourceTree = "<group>"; };
-		D0ABD01B2481210D0069FA67 /* LeapDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDeviceInfo.swift; sourceTree = "<group>"; };
-		D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapTimeInfo.swift; sourceTree = "<group>"; };
-		D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextInfo.swift; sourceTree = "<group>"; };
-		D0ABD027248123D60069FA67 /* LeapFlowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapFlowInfo.swift; sourceTree = "<group>"; };
-		D0ABD029248124250069FA67 /* LeapPageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPageInfo.swift; sourceTree = "<group>"; };
-		D0ABD02B248124D50069FA67 /* LeapStageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStageInfo.swift; sourceTree = "<group>"; };
-		D0ABD033248126820069FA67 /* LeapSDKInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSDKInfo.swift; sourceTree = "<group>"; };
 		D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSharedInformation.swift; sourceTree = "<group>"; };
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
 		D0B603F725DFB6BA0092F735 /* LeapSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -432,8 +423,6 @@
 		D0B793282543186D00DB94DD /* LeapWebAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapWebAssist.swift; sourceTree = "<group>"; };
 		D0B793292543186D00DB94DD /* LeapStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapStyle.swift; sourceTree = "<group>"; };
 		D0B7932A2543186D00DB94DD /* LeapIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapIconView.swift; sourceTree = "<group>"; };
-		D0B793442544217500DB94DD /* LeapAssistInfoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAssistInfoType.swift; sourceTree = "<group>"; };
-		D0B793462544237800DB94DD /* LeapDiscoveryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDiscoveryInfo.swift; sourceTree = "<group>"; };
 		D0BC371C249DCF24002648FF /* LeapViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapViewProps.swift; sourceTree = "<group>"; };
 		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
 		D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleWebViewsViewController.swift; sourceTree = "<group>"; };
@@ -884,17 +873,6 @@
 			isa = PBXGroup;
 			children = (
 				D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */,
-				D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */,
-				D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */,
-				D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */,
-				D0ABD00F2481198C0069FA67 /* LeapLanguageInfo.swift */,
-				D0ABD01B2481210D0069FA67 /* LeapDeviceInfo.swift */,
-				D0ABD027248123D60069FA67 /* LeapFlowInfo.swift */,
-				D0ABD029248124250069FA67 /* LeapPageInfo.swift */,
-				D0ABD02B248124D50069FA67 /* LeapStageInfo.swift */,
-				D0ABD033248126820069FA67 /* LeapSDKInfo.swift */,
-				D0B793442544217500DB94DD /* LeapAssistInfoType.swift */,
-				D0B793462544237800DB94DD /* LeapDiscoveryInfo.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -1685,7 +1663,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1872,7 +1850,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2049,7 +2027,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2226,7 +2204,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2413,7 +2391,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2590,7 +2568,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
