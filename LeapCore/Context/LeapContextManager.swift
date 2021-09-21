@@ -791,7 +791,7 @@ extension LeapContextManager:LeapAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Any> {
         guard let config = self.currentConfiguration() else { return [:] }
-        var initialMedia:Dictionary<String,Any> = [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting, constant_localeSounds:config.localeSounds]
+        let initialMedia:Dictionary<String,Any> = [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting, constant_localeSounds:config.localeSounds]
         return initialMedia
     }
 
