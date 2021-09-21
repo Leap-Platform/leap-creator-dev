@@ -42,6 +42,7 @@ class LeapAUIManager: NSObject {
     weak var currentTargetView: UIView?
     var currentTargetRect: CGRect?
     weak var currentWebView: UIView?
+    var currentAudioCompletionStatus:Bool?
     
     var autoDismissTimer: Timer?
     private var baseUrl = String()
@@ -52,9 +53,6 @@ class LeapAUIManager: NSObject {
     
     var languageOptions: LeapLanguageOptions?
     
-    func addIdentifier(identifier: String, value: Any) {
-        auiManagerCallBack?.triggerEvent(identifier: identifier, value: value)
-    }
 }
 
 extension LeapAUIManager {
@@ -115,9 +113,10 @@ extension LeapAUIManager: LeapAUIHandler {
                 self?.soundManager.discoverySoundsJson = self?.soundManager.processSoundConfigs(configs:discoverySoundsDicts) ?? [:]
                 self?.startDiscoverySoundDownload()
             }
-            if let previewSoundsDict = initialSounds[constant_previewSounds] as? Array<Dictionary<String,Any>> {
-                self?.soundManager.previewSoundsJson = self?.soundManager.processSoundConfigs(configs: previewSoundsDict) ?? [:]
-                self?.startPreviewSoundDownload()
+            
+            if let localeSoundsDict = initialSounds[constant_localeSounds] as? Array<Dictionary<String,Any>> {
+                self?.soundManager.stageSoundsJson = self?.soundManager.processSoundConfigs(configs: localeSoundsDict) ?? [:]
+                self?.startStageSoundDownload()
             }
             
             var htmlBaseUrl:String?
@@ -145,10 +144,6 @@ extension LeapAUIManager: LeapAUIHandler {
                 }
             }
             
-            self?.soundManager.fetchSoundConfig({ [weak self] (success) in
-                
-                if success { self?.startStageSoundDownload() }
-            })
         }
     }
     
@@ -321,6 +316,7 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
+        currentAudioCompletionStatus = nil
     }
     
     func removeLanguageOptions() {
@@ -459,13 +455,6 @@ extension LeapAUIManager {
         for sound in discoverySoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
     }
     
-    func startPreviewSoundDownload() {
-        guard auiManagerCallBack != nil else { return }
-        let code = auiManagerCallBack!.getLanguageCode()
-        let previewSoundsForCode = soundManager.previewSoundsJson[code] ?? []
-        for sound in  previewSoundsForCode { if sound.url != nil { downloadFromMediaManager(forMedia: sound, atPriority: .normal) } }
-    }
-    
     func startStageSoundDownload() {
         guard auiManagerCallBack != nil else { return }
         let code = auiManagerCallBack!.getLanguageCode()
@@ -483,17 +472,14 @@ extension LeapAUIManager {
             let soundsArrayForLanguage = self.soundManager.discoverySoundsJson[code]  ?? []
             var audio = soundsArrayForLanguage.first { $0.name == mediaName }
             if audio ==  nil {
-                let previewSounds = self.soundManager.previewSoundsJson[code] ?? []
-                audio = previewSounds.first { $0.name == mediaName }
-                if audio == nil {
-                    let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
-                    audio = stageSounds.first { $0.name == mediaName }
-                }
+                let stageSounds = self.soundManager.stageSoundsJson[code] ?? []
+                audio = stageSounds.first { $0.name == mediaName }
             }
             guard let currentAudio = audio else {
                 self.startAutoDismissTimer()
                 return
             }
+            self.currentAudioCompletionStatus = false
             if currentAudio.isTTS {
                 if let text = currentAudio.text,
                    let ttsCode = self.auiManagerCallBack?.getTTSCodeFor(code: code) {
@@ -821,12 +807,14 @@ extension LeapAUIManager: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         self.audioPlayer = nil
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
     
     func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
         self.audioPlayer = nil
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
 }
@@ -836,11 +824,13 @@ extension LeapAUIManager: AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         leapButton?.iconState = .rest
+        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
 }
@@ -908,6 +898,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         currentAssist = nil
         currentInstruction = nil
         stopAudio()
+        currentAudioCompletionStatus = nil
         scrollArrowButton.noAssist()
         if !byContext { dismissLeapButton() }
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
@@ -949,26 +940,6 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             }
             self.auiManagerCallBack?.optionPanelClosed()
         }
-        //                self.isLanguageOptionsOpen = true
-        //                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: htmlUrl, baseUrl: nil) { success, languageCode in
-        //                    self.removeLanguageOptions()
-        //                    self.isLanguageOptionsOpen = false
-        //                    if success, let code = languageCode {
-        //                        if let userLanguage = LeapPreferences.shared.getUserLanguage() {
-        //                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
-        //                        }
-        //                        LeapPreferences.shared.setUserLanguage(code)
-        //                    } else { self.startAutoDismissTimer() }
-        //                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
-        //                        webAssist.changeLanguage(locale: code)
-        //                        self.playAudio()
-        //                    }
-        //                    self.startDiscoverySoundDownload()
-        //                    self.startStageSoundDownload()
-        //                    self.auiManagerCallBack?.optionPanelClosed()
-        //
-        //                }
-        //                self.languageOptions?.showBottomSheet()
     }
     
     func iconOptionsClosed() {
@@ -986,9 +957,18 @@ extension LeapAUIManager:LeapArrowButtonDelegate {
     
     func arrowShown() {
        currentAssist?.hide()
+        if audioPlayer?.isPlaying ?? false {
+            currentAudioCompletionStatus = false
+            stopAudio()
+        } else {
+            currentAudioCompletionStatus = true
+        }
     }
     
     func arrowHidden() {
        currentAssist?.unhide()
+        if !(currentAudioCompletionStatus ?? true) {
+            playAudio()
+        }
     }
 }

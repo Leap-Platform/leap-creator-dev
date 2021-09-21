@@ -96,18 +96,13 @@
 		D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D084A13924AB58810093E8AB /* LeapDiscoveryManager.swift */; };
 		D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662E24629D5D001937EE /* LeapContextManager.swift */; };
 		D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C872486814D0082508C /* LeapConfig.swift */; };
-		D08DA63C25DEA2E800EB0EFC /* LeapTimeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */; };
 		D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8F248681F90082508C /* LeapStage.swift */; };
 		D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9B67725B6EECD00250133 /* LeapClickHandler.swift */; };
 		D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* LeapStageManager.swift */; };
-		D08DA64125DEA2E800EB0EFC /* LeapDiscoveryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793462544237800DB94DD /* LeapDiscoveryInfo.swift */; };
 		D08DA64225DEA2E800EB0EFC /* LeapInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* LeapInternal.swift */; };
-		D08DA64325DEA2E800EB0EFC /* LeapSDKInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD033248126820069FA67 /* LeapSDKInfo.swift */; };
 		D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
 		D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA024F6401F00EEE719 /* LeapAssistManager.swift */; };
-		D08DA64725DEA2E800EB0EFC /* LeapPageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD029248124250069FA67 /* LeapPageInfo.swift */; };
 		D08DA64825DEA2E800EB0EFC /* LeapConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */; };
-		D08DA64925DEA2E800EB0EFC /* LeapStageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD02B248124D50069FA67 /* LeapStageInfo.swift */; };
 		D08DA64A25DEA2E800EB0EFC /* LeapFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA424F8ECF900EEE719 /* LeapFeature.swift */; };
 		D08DA64B25DEA2E800EB0EFC /* LeapAnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */; };
 		D08DA64C25DEA2E800EB0EFC /* LeapContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DC3EFF25540A8900B6FA93 /* LeapContext.swift */; };
@@ -117,18 +112,12 @@
 		D08DA65025DEA2E800EB0EFC /* LeapAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E859924F51914000D8E5B /* LeapAssist.swift */; };
 		D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02E8A6F24A8DF1E00374DE8 /* LeapIdentifier.swift */; };
 		D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */; };
-		D08DA65325DEA2E800EB0EFC /* LeapContextInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */; };
-		D08DA65425DEA2E800EB0EFC /* LeapAssistInfoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B793442544217500DB94DD /* LeapAssistInfoType.swift */; };
 		D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722D246A987A0060E054 /* LeapFlowManager.swift */; };
 		D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D7293324AC9B0000F75D0D /* LeapJSMaker.swift */; };
 		D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8B248681A30082508C /* LeapFlow.swift */; };
 		D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */; };
-		D08DA65925DEA2E800EB0EFC /* LeapContentActionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */; };
-		D08DA65A25DEA2E800EB0EFC /* LeapLanguageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD00F2481198C0069FA67 /* LeapLanguageInfo.swift */; };
-		D08DA65B25DEA2E800EB0EFC /* LeapDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD01B2481210D0069FA67 /* LeapDeviceInfo.swift */; };
 		D08DA65C25DEA2E800EB0EFC /* LeapContextDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071662C24629D3E001937EE /* LeapContextDetector.swift */; };
 		D08DA65D25DEA2E800EB0EFC /* LeapLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04356C22498CB7C00B90276 /* LeapLanguage.swift */; };
-		D08DA65F25DEA2E800EB0EFC /* LeapFlowInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0ABD027248123D60069FA67 /* LeapFlowInfo.swift */; };
 		D08DA66025DEA2E800EB0EFC /* LeapDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C91248682A80082508C /* LeapDiscovery.swift */; };
 		D08DA66125DEA2E800EB0EFC /* LeapPageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D022817125C3E1490036D8C6 /* LeapPageManager.swift */; };
 		D08DA66325DEA2E800EB0EFC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D077C92224B9B330001A04DF /* AVFoundation.framework */; };
@@ -377,7 +366,6 @@
 		D084F92824ADAFAA00ED2362 /* SingleWebviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWebviewViewController.swift; sourceTree = "<group>"; };
 		D0850078242CC081007889B1 /* LeapUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapUtils.swift; sourceTree = "<group>"; };
 		D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsManager.swift; sourceTree = "<group>"; };
-		D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContentActionInfo.swift; sourceTree = "<group>"; };
 		D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapCoreSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0938E0D251DD67000FD462E /* LeapMediaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaManager.swift; sourceTree = "<group>"; };
 		D0938E0F251DD7AB00FD462E /* LeapNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapNetworking.swift; sourceTree = "<group>"; };
@@ -407,14 +395,6 @@
 		D09C722F246A98860060E054 /* LeapStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStageManager.swift; sourceTree = "<group>"; };
 		D0A234B2268F1A5500FA3218 /* Data+Gzip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Gzip.swift"; sourceTree = "<group>"; };
 		D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsEvent.swift; sourceTree = "<group>"; };
-		D0ABD00F2481198C0069FA67 /* LeapLanguageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageInfo.swift; sourceTree = "<group>"; };
-		D0ABD01B2481210D0069FA67 /* LeapDeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDeviceInfo.swift; sourceTree = "<group>"; };
-		D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapTimeInfo.swift; sourceTree = "<group>"; };
-		D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextInfo.swift; sourceTree = "<group>"; };
-		D0ABD027248123D60069FA67 /* LeapFlowInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapFlowInfo.swift; sourceTree = "<group>"; };
-		D0ABD029248124250069FA67 /* LeapPageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPageInfo.swift; sourceTree = "<group>"; };
-		D0ABD02B248124D50069FA67 /* LeapStageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStageInfo.swift; sourceTree = "<group>"; };
-		D0ABD033248126820069FA67 /* LeapSDKInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSDKInfo.swift; sourceTree = "<group>"; };
 		D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSharedInformation.swift; sourceTree = "<group>"; };
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
 		D0B603F725DFB6BA0092F735 /* LeapSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeapSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -443,8 +423,6 @@
 		D0B793282543186D00DB94DD /* LeapWebAssist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapWebAssist.swift; sourceTree = "<group>"; };
 		D0B793292543186D00DB94DD /* LeapStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapStyle.swift; sourceTree = "<group>"; };
 		D0B7932A2543186D00DB94DD /* LeapIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeapIconView.swift; sourceTree = "<group>"; };
-		D0B793442544217500DB94DD /* LeapAssistInfoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAssistInfoType.swift; sourceTree = "<group>"; };
-		D0B793462544237800DB94DD /* LeapDiscoveryInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDiscoveryInfo.swift; sourceTree = "<group>"; };
 		D0BC371C249DCF24002648FF /* LeapViewProps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapViewProps.swift; sourceTree = "<group>"; };
 		D0BC371E249DFB41002648FF /* AutomaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticViewController.swift; sourceTree = "<group>"; };
 		D0BC9ED724AE243000CE5364 /* MultipleWebViewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleWebViewsViewController.swift; sourceTree = "<group>"; };
@@ -895,17 +873,6 @@
 			isa = PBXGroup;
 			children = (
 				D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */,
-				D0ABD0252481237E0069FA67 /* LeapContextInfo.swift */,
-				D08D6F50254C650B009AA138 /* LeapContentActionInfo.swift */,
-				D0ABD021248122A80069FA67 /* LeapTimeInfo.swift */,
-				D0ABD00F2481198C0069FA67 /* LeapLanguageInfo.swift */,
-				D0ABD01B2481210D0069FA67 /* LeapDeviceInfo.swift */,
-				D0ABD027248123D60069FA67 /* LeapFlowInfo.swift */,
-				D0ABD029248124250069FA67 /* LeapPageInfo.swift */,
-				D0ABD02B248124D50069FA67 /* LeapStageInfo.swift */,
-				D0ABD033248126820069FA67 /* LeapSDKInfo.swift */,
-				D0B793442544217500DB94DD /* LeapAssistInfoType.swift */,
-				D0B793462544237800DB94DD /* LeapDiscoveryInfo.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -1357,20 +1324,15 @@
 				D08DA63925DEA2E800EB0EFC /* LeapDiscoveryManager.swift in Sources */,
 				D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */,
 				D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */,
-				D08DA63C25DEA2E800EB0EFC /* LeapTimeInfo.swift in Sources */,
 				D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */,
 				2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */,
 				D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */,
 				D02E9607261A503E001A2AA2 /* LeapPropertiesHandler.swift in Sources */,
 				D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */,
-				D08DA64125DEA2E800EB0EFC /* LeapDiscoveryInfo.swift in Sources */,
 				D08DA64225DEA2E800EB0EFC /* LeapInternal.swift in Sources */,
-				D08DA64325DEA2E800EB0EFC /* LeapSDKInfo.swift in Sources */,
 				D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */,
 				D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */,
-				D08DA64725DEA2E800EB0EFC /* LeapPageInfo.swift in Sources */,
 				D08DA64825DEA2E800EB0EFC /* LeapConstants.swift in Sources */,
-				D08DA64925DEA2E800EB0EFC /* LeapStageInfo.swift in Sources */,
 				D08DA64A25DEA2E800EB0EFC /* LeapFeature.swift in Sources */,
 				D08DA64B25DEA2E800EB0EFC /* LeapAnalyticsManager.swift in Sources */,
 				2D8478D626C2688400C2E1BA /* Encoder.swift in Sources */,
@@ -1382,19 +1344,13 @@
 				2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */,
 				D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */,
 				D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */,
-				D08DA65325DEA2E800EB0EFC /* LeapContextInfo.swift in Sources */,
 				D0A234B3268F1A5500FA3218 /* Data+Gzip.swift in Sources */,
-				D08DA65425DEA2E800EB0EFC /* LeapAssistInfoType.swift in Sources */,
 				D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */,
 				D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */,
 				D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */,
 				D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */,
-				D08DA65925DEA2E800EB0EFC /* LeapContentActionInfo.swift in Sources */,
-				D08DA65A25DEA2E800EB0EFC /* LeapLanguageInfo.swift in Sources */,
-				D08DA65B25DEA2E800EB0EFC /* LeapDeviceInfo.swift in Sources */,
 				D08DA65C25DEA2E800EB0EFC /* LeapContextDetector.swift in Sources */,
 				D08DA65D25DEA2E800EB0EFC /* LeapLanguage.swift in Sources */,
-				D08DA65F25DEA2E800EB0EFC /* LeapFlowInfo.swift in Sources */,
 				D08DA66025DEA2E800EB0EFC /* LeapDiscovery.swift in Sources */,
 				D08DA66125DEA2E800EB0EFC /* LeapPageManager.swift in Sources */,
 			);
@@ -1620,7 +1576,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1652,7 +1608,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1683,7 +1639,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1707,7 +1663,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1807,7 +1763,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1839,7 +1795,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1870,7 +1826,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1894,7 +1850,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1988,7 +1944,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2018,7 +1974,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2048,7 +2004,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2071,7 +2027,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2165,7 +2121,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.core-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2195,7 +2151,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.aui-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2225,7 +2181,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "is.leap.ios.creator-stage";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2248,7 +2204,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2348,7 +2304,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2380,7 +2336,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.aui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2411,7 +2367,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2435,7 +2391,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2529,7 +2485,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.core;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2559,7 +2515,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.aui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2589,7 +2545,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.creator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2612,7 +2568,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = is.leap.ios.demoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

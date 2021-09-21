@@ -23,6 +23,7 @@ class LeapConfig {
     var iconSetting: Dictionary<String, LeapIconSetting> = [:]
     var webViewList:Array<Dictionary<String,Any>> = []
     var projectContextDict:Dictionary<String,Int> = [:]
+    var localeSounds:Array<Dictionary<String,Any>> = []
     var contextProjectParametersDict:Dictionary<String,LeapProjectParameters> = [:]
     
     init(withDict dataDict:Dictionary<String,Any>, isPreview:Bool) {
@@ -109,6 +110,9 @@ class LeapConfig {
             }
             if let discoverySoundsDict = configDict[constant_discoverySounds] as? Dictionary<String,Any> {
                 discoverySounds.append(discoverySoundsDict)
+            }
+            if let localeSoundsDict = configDict[constant_localeSounds] as? Dictionary<String,Any> {
+                localeSounds.append(localeSoundsDict)
             }
             if var auiContentsDict = configDict[constant_auiContent] as? Dictionary<String,Any> {
                 var contents = auiContentsDict[constant_content] as? Array<AnyHashable> ?? []

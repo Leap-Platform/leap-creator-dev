@@ -27,7 +27,6 @@ class LeapContextManager:NSObject {
     private var analyticsManager:LeapAnalyticsManager?
     private var configuration:LeapConfig?
     private var previewConfig: LeapConfig?
-    private var previewSounds:Array<Dictionary<String,Any>>?
     private weak var auiHandler:LeapAUIHandler?
     public weak var delegate:LeapContextManagerDelegate?
     private var taggedEvents:Dictionary<String,Any> = [:]
@@ -157,7 +156,6 @@ class LeapContextManager:NSObject {
             configs = configs.filter{ !($0 is NSNull) }
             return configs as? Array<Dictionary<String,Any>> ?? []
         }()
-//        let tempConfig = previewDict["configs"] as? Array<Dictionary<String,Any>> ?? []
         let configDict = ["data": tempConfig ]
         print("[Leap] Preview config received")
         assistManager?.resetManagerSession()
@@ -168,12 +166,6 @@ class LeapContextManager:NSObject {
         auiHandler?.removeAllViews()
         previewConfig = LeapConfig(withDict: configDict, isPreview: true)
         analyticsManager = nil
-        for config in tempConfig {
-            if let soundDict = config["localeSounds"] as? Dictionary<String,Any> {
-                if previewSounds == nil { previewSounds = [] }
-                previewSounds?.append(soundDict)
-            }
-        }
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         LeapPreferences.shared.isPreview = true
         contextDetector?.start()
@@ -204,7 +196,6 @@ class LeapContextManager:NSObject {
         flowManager?.resetFlowsArray()
         pageManager?.resetPageManager()
         stageManager?.resetStageManager()
-        previewSounds = nil
         previewConfig = nil
         LeapSharedInformation.shared.previewEnded()
         LeapPreferences.shared.isPreview = false
@@ -337,7 +328,6 @@ extension LeapContextManager:LeapContextDetectorDelegate {
     
     // MARK: - Page Methods
     func pageIdentified(_ page: LeapPage) {
-//        print("[Leap] Page Detected \t page native identifiers = \(page.nativeIdentifiers) \t page web identifiers = \(page.webIdentifiers)")
         pageManager?.setCurrentPage(page)
         flowManager?.updateFlowArrayAndResetCounter()
     }
@@ -801,14 +791,10 @@ extension LeapContextManager:LeapAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Any> {
         guard let config = self.currentConfiguration() else { return [:] }
-        var initialMedia:Dictionary<String,Any> = [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting]
-        if previewSounds != nil { initialMedia[constant_previewSounds] = previewSounds }
+        let initialMedia:Dictionary<String,Any> = [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting, constant_localeSounds:config.localeSounds]
         return initialMedia
     }
-    
-    func triggerEvent(identifier: String, value: Any) {
-        
-    }
+
     
     func isFlowMenu() -> Bool {
         return isDiscoveryFlowMenu()
