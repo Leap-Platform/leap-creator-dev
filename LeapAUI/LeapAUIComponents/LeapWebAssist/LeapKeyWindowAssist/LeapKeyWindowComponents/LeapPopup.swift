@@ -72,6 +72,7 @@ class LeapPopup: LeapKeyWindowAssist {
         guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
         guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
         guard let height = rect[constant_height] else { return }
-        self.configureHeightConstraint(height: CGFloat(height))
+        let heightToApply = CGFloat(height) < (UIScreen.main.bounds.height - 96) ? CGFloat(height) : (UIScreen.main.bounds.height - 96)
+        self.configureHeightConstraint(height: heightToApply)
     }
 }
