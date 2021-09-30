@@ -72,12 +72,15 @@ extension WKWebView {
     /// - Parameters:
     ///   - url: A url of type URL to load html content.
     func loadHTML(withUrl url : URL) {
-        
+        let urlToLoad:URL = {
+            guard url.pathExtension == "gz" else { return url }
+            return url.deletingPathExtension().appendingPathExtension("html")
+        }()
        DispatchQueue.global().async {
           do {
-             let htmlString = try String(contentsOf: url)  // Method description refers to this
+             let htmlString = try String(contentsOf: urlToLoad)  // Method description refers to this
              DispatchQueue.main.async {
-               self.loadHTMLString(htmlString, baseURL: url)
+               self.loadHTMLString(htmlString, baseURL: urlToLoad)
              }
           } catch let error {
              print(error)
