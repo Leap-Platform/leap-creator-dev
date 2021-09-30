@@ -980,7 +980,12 @@ extension LeapContextManager:LeapAUICallback {
         // send flow disable event
         analyticsManager?.saveEvent(event: getFlowDisableEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
         
-        guard let state = contextDetector?.getState(), state == .Stage else { return }
+        guard let state = contextDetector?.getState(), state == .Stage else {
+            if let discoveryId = discoveryManager?.getCurrentDiscovery()?.id {
+                LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
+            }
+            return
+        }
         contextDetector?.switchState()
         guard let discoveryId = flowManager?.getDiscoveryId() else { return }
         LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
