@@ -547,7 +547,7 @@ extension LeapAUIManager {
 // MARK: - DISCOVERY LANGUAGE OPTIONS
 extension LeapAUIManager {
     
-    func showLanguageOptionsIfApplicable(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
+    func showLanguageOptionsIfApplicable(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)?) {
         
         if localeCodes.count == 1 {
             LeapPreferences.shared.setUserLanguage(localeCodes.first?[constant_localeId] ?? "ang")
