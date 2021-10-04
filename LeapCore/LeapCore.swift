@@ -27,6 +27,8 @@ import UIKit
     func updateRect(rect:CGRect, inWebView:UIView?)
     func updateView(inView:UIView)
     
+    func showLanguageOptionsIfApplicable(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)?)
+    
     func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool)
     func removeAllViews()
 }
