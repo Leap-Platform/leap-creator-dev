@@ -56,7 +56,10 @@ class LeapPopup: LeapKeyWindowAssist {
     ///   - height: Height of the content of the webview.
     private func configureHeightConstraint(height: CGFloat) {
         
-        heightConstraint?.constant = height
+        // heightToApply is the calculated height to avoid popup overflow / out of bounds if image is large
+        let heightToApply = CGFloat(height) < (UIScreen.main.bounds.height - 96) ? CGFloat(height) : (UIScreen.main.bounds.height - 96)
+        
+        heightConstraint?.constant = heightToApply
     }
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {

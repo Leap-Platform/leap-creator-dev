@@ -547,7 +547,7 @@ extension LeapAUIManager {
 // MARK: - DISCOVERY LANGUAGE OPTIONS
 extension LeapAUIManager {
     
-    func showLanguageOptionsIfApplicable(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)? = nil) {
+    func showLanguageOptionsIfApplicable(withLocaleCodes localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, Any>, localeHtmlUrl: String?, handler: ((_ success: Bool) -> Void)?) {
         
         if localeCodes.count == 1 {
             LeapPreferences.shared.setUserLanguage(localeCodes.first?[constant_localeId] ?? "ang")
@@ -792,7 +792,11 @@ extension LeapAUIManager {
             guard let htmlUrl = assistInfo[constant_htmlUrl] as? String else { return false }
             let fileName = htmlUrl.replacingOccurrences(of: "/", with: "$")
             let filePath = LeapSharedAUI.shared.getAUIContentFolderPath().appendingPathComponent(fileName)
-            if FileManager.default.fileExists(atPath: filePath.path) {
+            let filePathToCheck:String = {
+                guard filePath.pathExtension == "gz" else { return filePath.path }
+                return filePath.deletingPathExtension().appendingPathExtension("html").path
+            }()
+            if FileManager.default.fileExists(atPath: filePathToCheck ) {
                 return true
             } else {
                 return false

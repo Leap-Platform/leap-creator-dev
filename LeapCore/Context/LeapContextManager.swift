@@ -450,10 +450,24 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
             aui.presentLeapButton(for: iconInfo, iconEnabled: discovery.enableIcon)
             return
         }
-        guard let instruction = discovery.instructionInfoDict else { return }
-        let iconInfo:Dictionary<String,AnyHashable> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
-        let localeCode = generateLangDicts(localeCodes: discovery.localeCodes)
         let htmlUrl = discovery.languageOption?[constant_htmlUrl]
+        let iconInfo:Dictionary<String,AnyHashable> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
+        guard !discovery.autoStart else {
+            auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: self.generateLangDicts(localeCodes: discovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: { langChose in
+                if langChose {
+                    self.didPresentAssist()
+                    self.didDismissView(byUser: true, autoDismissed: false, panelOpen: false, action: [constant_body:[constant_optIn:true]])
+                } else {
+                    self.auiHandler?.presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
+                }
+            })
+            return
+        }
+        
+        guard let instruction = discovery.instructionInfoDict else { return }
+        
+        let localeCode = generateLangDicts(localeCodes: discovery.localeCodes)
+        
 
         if let anchorRect = rect {
             aui.performWebDiscovery(instruction: instruction, rect: anchorRect, webview: webview, localeCodes: localeCode, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
@@ -791,7 +805,41 @@ extension LeapContextManager:LeapAUICallback {
     
     func getDefaultMedia() -> Dictionary<String, Any> {
         guard let config = self.currentConfiguration() else { return [:] }
-        let initialMedia:Dictionary<String,Any> = [constant_discoverySounds:config.discoverySounds, constant_auiContent:config.auiContent, constant_iconSetting:config.iconSetting, constant_localeSounds:config.localeSounds]
+        let auiContent = config.auiContent.compactMap { content -> Dictionary<String,Any>? in
+            var updatedContent:Dictionary<String,Any>? = content
+            var content:Array<String> = updatedContent?[constant_content] as? Array<String> ?? []
+            for discovery in config.discoveries {
+                if !discovery.autoStart { continue }
+                if let discoveryHtml = discovery.instruction?.assistInfo?.htmlUrl {
+                    content = content.filter{ $0 != discoveryHtml }
+                }
+            }
+            if content.isEmpty { return nil }
+            updatedContent?[constant_content] = content
+            return updatedContent
+        }
+        let discoverySounds = config.discoverySounds.compactMap { tempDiscoverySound -> [String:Any]? in
+            var discoverySound = tempDiscoverySound
+            var jinySound = discoverySound[constant_leapSounds] as? [String:[[String:AnyHashable]]]
+            for disc in config.discoveries {
+                if !disc.autoStart { continue }
+                if let soundNameForDis = disc.instruction?.soundName {
+                    jinySound?.forEach({ localeCode, localeSoundsArray in
+                        let newLocaleSoundsArray = localeSoundsArray.filter { localeSoundInfo in
+                            if let soundName = localeSoundInfo[constant_name] as? String {
+                                return soundNameForDis != soundName
+                            }
+                            return true
+                        }
+                        if newLocaleSoundsArray.isEmpty { jinySound?.removeValue(forKey: localeCode) }
+                        else { jinySound?[localeCode] = newLocaleSoundsArray }
+                    })
+                } else { continue }
+            }
+            discoverySound[constant_leapSounds] = jinySound
+            return discoverySound
+        }
+        let initialMedia:Dictionary<String,Any> = [constant_discoverySounds:discoverySounds, constant_auiContent:auiContent, constant_iconSetting:config.iconSetting, constant_localeSounds:config.localeSounds]
         return initialMedia
     }
 
@@ -980,7 +1028,12 @@ extension LeapContextManager:LeapAUICallback {
         // send flow disable event
         analyticsManager?.saveEvent(event: getFlowDisableEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
         
-        guard let state = contextDetector?.getState(), state == .Stage else { return }
+        guard let state = contextDetector?.getState(), state == .Stage else {
+            if let discoveryId = discoveryManager?.getCurrentDiscovery()?.id {
+                LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
+            }
+            return
+        }
         contextDetector?.switchState()
         guard let discoveryId = flowManager?.getDiscoveryId() else { return }
         LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
@@ -1063,6 +1116,21 @@ extension LeapContextManager {
         let iconInfo:Dictionary<String,AnyHashable> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
         
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
+        
+        guard !liveDiscovery.autoStart else {
+            auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: { langChose in
+                if langChose {
+                    self.didPresentAssist()
+                    self.didDismissView(byUser: true, autoDismissed: false, panelOpen: false, action: [constant_body:[constant_optIn:true]])
+                } else {
+                    self.auiHandler?.presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
+                }
+            })
+            
+            return
+        }
+        
+        
         guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
             if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
                 auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)

@@ -118,7 +118,15 @@ class LeapDownloadOperation: LeapOperation {
             }
             self.copyFileToLeapFolder(tempLocation)
             self.statusUpdate(false, true, true, filePath)
-            print("[Leap]File downloaded = \(filePath.path)")
+            guard filePath.pathExtension == "gz",
+                  let gzipData = try? Data(contentsOf: filePath),
+                  let unzippedData = try? gzipData.gunzipped() else {
+                print("[Leap]File downloaded = \(filePath.path)")
+                return
+            }
+            let newFilePath = filePath.deletingPathExtension().appendingPathExtension("html")
+            try! unzippedData.write(to: newFilePath, options: .atomic)
+            print("[Leap]File download = \(newFilePath.path)")
         }
         dlTask.resume()
     }
