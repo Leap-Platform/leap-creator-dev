@@ -955,6 +955,10 @@ extension LeapContextManager:LeapAUICallback {
             else if let _ = liveContext as? LeapDiscovery { handleDiscoveryDismiss(byUser: byUser, action: action) }
             
         case .Stage:
+            if panelOpen {
+                stageManager?.resetCurrentStage()
+                return
+            }
             // aui action tracking
             if let action = action {
                 analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: getProjectParameter(), action: action), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
@@ -1045,9 +1049,7 @@ extension LeapContextManager:LeapAUICallback {
     }
     
     func didLanguageChange(from previousLanguage: String, to currentLanguage: String) {
-        if previousLanguage != currentLanguage {
-            analyticsManager?.saveEvent(event: getLanguageChangeEvent(with: getProjectParameter(), from: previousLanguage, to: currentLanguage), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
-        }
+        analyticsManager?.saveEvent(event: getLanguageChangeEvent(with: getProjectParameter(), from: previousLanguage, to: currentLanguage), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
     }
     
     func receiveAUIEvent(action: Dictionary<String, Any>) {
