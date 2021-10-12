@@ -13,6 +13,7 @@ class LeapConfig {
     var projectParameters: Array<LeapProjectParameters> = []
     var webIdentifiers:Dictionary<String,LeapWebIdentifier> = [:]
     var nativeIdentifiers:Dictionary<String,LeapNativeIdentifier> = [:]
+    var connectedProjects:Array<Dictionary<String,String>> = []
     var assists:Array<LeapAssist> = []
     var discoveries:Array<LeapDiscovery> = []
     var flows:Array<LeapFlow> = []
@@ -124,8 +125,49 @@ class LeapConfig {
                 supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
             }
             if let currentProjectParams = currentProjectParameters { projectParameters.append(currentProjectParams) }
+            if let connectedProjectsArray = configDict[constant_connectedProjects] as? Array<Dictionary<String,String>> {
+                for connectedProject in connectedProjectsArray {
+                    let alreadyAdded = self.isProjectAlreadyAdded(newProj: connectedProject)
+                    if !alreadyAdded { self.connectedProjects.append(connectedProject) }
+                }
+            }
+        }
+        
+        for proj in connectedProjects {
+            if let projId = proj[constant_projectId] {
+                contextProjectParametersDict.forEach { key, projectParameters in
+                    if key.hasPrefix("discovery_"), projectParameters.deploymentId == projId {
+                        projectParameters.setEmbed(embed: true)
+                        projectParameters.setEnabled(enabled: false)
+                    }
+                }
+            }
+        }
+        
+        if languages.isEmpty {
+            let defaultLangDict:Dictionary<String,Any> = [
+                "muteText" : "Stop",
+                "localeName" : "English",
+                "localeScript" : "English",
+                "changeLanguageText" : "Languages",
+                "repeatText" : "Repeat",
+                "localeId" : "ang",
+                "ttsInfo" :[
+                    "ttsLocale" : "en",
+                    "ttsRegion" : "IN"
+                ]
+            ]
+            languages.append(LeapLanguage(withLanguageDict: defaultLangDict))
         }
         
     }
     
+    private func isProjectAlreadyAdded(newProj:Dictionary<String,String>) -> Bool {
+        guard let newProjId = newProj[constant_projectId] else { return false }
+        for proj in self.connectedProjects {
+            if let projId = proj[constant_projectId],
+               newProjId == projId { return true }
+        }
+        return false
+    }
 }

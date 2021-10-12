@@ -16,7 +16,7 @@ class LeapAssist:LeapContext {
     
     init(withDict assistDict:Dictionary<String,Any>, isPreview:Bool) {
         type = assistDict[constant_type] as? String ?? "NORMAL"
-        localeCode = assistDict[constant_localeCode]  as? String ?? ""
+        localeCode = assistDict[constant_localeCode]  as? String ?? "ang"
         if !isPreview {
             if let terminationFrequencyDict = assistDict[constant_terminationFrequency] as? Dictionary<String,Int> {
                 terminationFrequency = LeapFlowTerminationFrequency(with: terminationFrequencyDict)

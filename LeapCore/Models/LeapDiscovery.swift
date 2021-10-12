@@ -104,12 +104,17 @@ class LeapDiscovery:LeapContext {
         
         if let localeCodes = discoveryDict[constant_localeCodes] as? [String] {
             self.localeCodes = localeCodes
+        } else {
+            self.localeCodes = ["ang"]
         }
         if let languageOption = discoveryDict[constant_languageOption] as? [String : String] {
             self.languageOption = languageOption
         }
         
         super.init(with: discoveryDict)
+        if let locales = self.localeCodes, locales.isEmpty {
+            self.localeCodes = ["ang"]
+        }
     }
     
 }

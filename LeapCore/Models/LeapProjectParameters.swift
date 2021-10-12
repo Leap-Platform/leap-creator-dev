@@ -18,6 +18,8 @@ class LeapProjectParameters: NSObject, Codable {
     var projectId: String?
     var projectType: String?
     var id: Int?
+    var isEmbed:Bool = false
+    var isEnabled:Bool = false
     
     init(withDict paramDict: Dictionary<String, Any>) {
         
@@ -43,4 +45,21 @@ class LeapProjectParameters: NSObject, Codable {
             self.projectType = projectType
         }
     }
+    
+    func setEnabled(enabled:Bool) {
+        isEnabled = enabled
+    }
+    
+    func setEmbed(embed:Bool) {
+        isEmbed = embed
+    }
+    
+    func getIsEnabled() -> Bool {
+        return isEnabled
+    }
+    
+    func getIsEmbed() -> Bool {
+        return isEmbed
+    }
+    
 }

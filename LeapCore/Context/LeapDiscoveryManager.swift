@@ -14,6 +14,7 @@ protocol LeapDiscoveryManagerDelegate: AnyObject {
     
     func getAllDiscoveries() -> Array<LeapDiscovery>
     func getProjContextIdDict() -> Dictionary<String,Int>
+    func getProjParametersDict() -> Dictionary<String,LeapProjectParameters>
     func newDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func sameDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
     func dismissDiscovery()
@@ -52,6 +53,7 @@ class LeapDiscoveryManager {
         let discoveryDismissInfo = LeapSharedInformation.shared.getDismissedDiscoveryInfo(isPreview: isPreview)
         let discoveryFlowInfo = LeapSharedInformation.shared.getDiscoveryFlowCompletedInfo(isPreview: isPreview)
         let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveries(isPreview: isPreview)
+        let contextParametersDict = delegate?.getProjParametersDict() ?? [:]
         discoveriesToCheck = discoveriesToCheck.filter{ !terminatedDiscoveries.contains($0.id) }
         discoveriesToCheck = discoveriesToCheck.filter({ (discovery) -> Bool in
             let presentedCount = discoveryPresentedCount[String(discovery.id)] ?? 0
@@ -79,6 +81,9 @@ class LeapDiscoveryManager {
                     }
                     return false
                 }
+            }
+            if let projParam = contextParametersDict["discovery_\(discovery.id)"] {
+                if projParam.getIsEmbed() && !projParam.getIsEnabled() { return false }
             }
             return true
         })

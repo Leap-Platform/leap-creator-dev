@@ -52,6 +52,7 @@ class LeapContextManager:NSObject {
     }
     
     func appendProjectConfig(withConfig:LeapConfig, resetProject:Bool) {
+        if configuration != nil { configuration = LeapConfig(withDict: [:], isPreview: false) }
         if resetProject {
             for assist in withConfig.assists {
                 LeapSharedInformation.shared.resetAssist(assist.id, isPreview: self.isPreview())
@@ -148,6 +149,45 @@ class LeapContextManager:NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
     }
     
+    func startSubproj(mainProjId:String, subProjId:String) {
+        var mainId:String?
+        var mainParams:LeapProjectParameters?
+        
+        var subId:String?
+        var subParams:LeapProjectParameters?
+        
+        configuration?.contextProjectParametersDict.forEach({ key, parameters in
+            if key.hasPrefix("discovery_") && parameters.deploymentId == mainProjId {
+                mainId = key.components(separatedBy: "_")[1]
+                mainParams = parameters
+            }
+            if key.hasPrefix("discovery_") && parameters.deploymentId == subProjId {
+                subId = key.components(separatedBy: "_")[1]
+                subParams = parameters
+            }
+        })
+        
+        guard let mainId = mainId, let mainParams = mainParams, let subId = subId, let subParams = subParams, let flowId = getFlowIdFor(projId: subProjId) else { return }
+        let isMainProjFlowMenu:Bool = {
+            return mainParams.projectType == constant_DYNAMIC_FLOW_MENU || mainParams.projectType == constant_STATIC_FLOW_MENU || mainParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || mainParams.projectType == constant_STATIC_FLOW_CHECKLIST
+        }()
+        let isSubProjFlowMenu:Bool = {
+            return subParams.projectType == constant_DYNAMIC_FLOW_MENU || subParams.projectType == constant_STATIC_FLOW_MENU || subParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || subParams.projectType == constant_STATIC_FLOW_CHECKLIST
+        }()
+        if !isMainProjFlowMenu || isSubProjFlowMenu { return }
+        analyticsManager?.saveEvent(event: getStartScreenEvent(with: mainParams, instructionId: mainId), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
+        analyticsManager?.saveEvent(event: getOptInEvent(with: mainParams), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
+        analyticsManager?.saveEvent(event: getStartScreenEvent(with: subParams, instructionId: subId), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
+        analyticsManager?.saveEvent(event: getOptInEvent(with: subParams), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
+        let flowSelected = self.currentConfiguration()?.flows.first { $0.id == flowId }
+        guard let flow = flowSelected, let fm = flowManager else { return }
+        fm.addNewFlow(flow, false, Int(mainId))
+        contextDetector?.switchState()
+        if isStaticFlow(), let firstStep = flow.firstStep, let stage = getStage(firstStep) {
+            stageManager?.setFirstStage(stage)
+        }
+    }
+    
     @objc func previewNotification(_ notification:NSNotification) {
         contextDetector?.stop()
         guard let previewDict = notification.object as? Dictionary<String,Any> else { return }
@@ -228,14 +268,21 @@ class LeapContextManager:NSObject {
             })
             return currentParams
         }()
-        guard let projId = params?.projectId else { return }
-        configuration?.projectContextDict.forEach({ projIdKey, contextId in
+        guard let parameters = params,
+              let projId = parameters.projectId,
+              let config = self.currentConfiguration() else { return }
+        config.projectContextDict.forEach({ projIdKey, contextId in
             if projIdKey == "assist_\(projId)"{
-                configuration?.assists = configuration?.assists.filter{ $0.id != contextId } ?? []
-                configuration?.contextProjectParametersDict.removeValue(forKey: "assist_\(contextId)")
+                config.assists = config.assists.filter{ $0.id != contextId }
+                config.contextProjectParametersDict.removeValue(forKey: "assist_\(contextId)")
             } else if projIdKey == "discovery_\(projId)" {
-                configuration?.discoveries = configuration?.discoveries.filter{ $0.id != contextId} ?? []
-                configuration?.contextProjectParametersDict.removeValue(forKey: "discovery_\(contextId)")
+                if parameters.getIsEmbed() {
+                    parameters.setEnabled(enabled: false)
+                } else {
+                    config.discoveries = config.discoveries.filter{ $0.id != contextId}
+                    config.contextProjectParametersDict.removeValue(forKey: "discovery_\(contextId)")
+                }
+                
             }
         })
     }
@@ -426,6 +473,10 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
     
     func getProjContextIdDict() -> Dictionary<String, Int> {
         return self.currentConfiguration()?.projectContextDict ?? [:]
+    }
+    
+    func getProjParametersDict() -> Dictionary<String, LeapProjectParameters> {
+        return self.currentConfiguration()?.contextProjectParametersDict ?? [:]
     }
     
     func newDiscoveryIdentified(discovery: LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?) {
@@ -1163,8 +1214,8 @@ extension LeapContextManager {
         }
         
         let flowId:Int? = {
-            if let projId = body["projectId"] as? String { return currentConfiguration()?.projectContextDict["flow_\(projId)"] }
-            else { return discovery.flowId }
+            guard let projId = body[constant_projectId] as? String else { return discovery.flowId }
+            return getFlowIdFor(projId: projId)
         }()
         guard let flowId = flowId else {
             analyticsManager?.saveEvent(event: getOptOutEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
@@ -1237,7 +1288,7 @@ extension LeapContextManager {
         guard isDiscoveryChecklist(discovery: discovery) else { return nil }
         let completedFlowIds:Array<Int> = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview())
         let completedProjectIds:Array<String> = completedFlowIds.compactMap { flowId in
-            return self.currentConfiguration()?.contextProjectParametersDict["flow_\(flowId)"]?.projectId
+            return self.currentConfiguration()?.contextProjectParametersDict["flow_\(flowId)"]?.deploymentId
         }
         var flowInfo: Dictionary<String,Bool> = [:]
         completedProjectIds.forEach { projectId in
@@ -1249,5 +1300,26 @@ extension LeapContextManager {
             }
         })
         return flowInfo
+    }
+    
+    func getFlowIdFor(projId:String) -> Int? {
+        var flowId:Int? = nil
+        self.currentConfiguration()?.contextProjectParametersDict.forEach({ key, projParams in
+            if key.hasPrefix("flow_"), projParams.deploymentId == projId {
+                flowId = Int(key.split(separator: "_")[1])
+            }
+        })
+        return flowId
+    }
+    
+    func isFlowEmbedFor(projectId:String) -> Bool {
+        var projParams:LeapProjectParameters?
+        self.currentConfiguration()?.contextProjectParametersDict.forEach({ key, params in
+            if key.hasPrefix("discovery_") && params.deploymentId == projectId {
+                projParams = params
+            }
+        })
+        guard let projectParameters = projParams else { return false }
+        return projectParameters.getIsEmbed()
     }
 }
