@@ -181,6 +181,15 @@ class LeapContextManager:NSObject {
         analyticsManager?.saveEvent(event: getOptInEvent(with: subParams), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
         let flowSelected = self.currentConfiguration()?.flows.first { $0.id == flowId }
         guard let flow = flowSelected, let fm = flowManager else { return }
+        if let connectedProjs = configuration?.connectedProjects {
+            for connectedProj in connectedProjs {
+                if let connectedProjId = connectedProj[constant_projectId],
+                   let deepLinkURL = connectedProj["deepLinkURL"],
+                   connectedProjId == subProjId, let url = URL(string: deepLinkURL) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
         fm.addNewFlow(flow, false, Int(mainId))
         contextDetector?.switchState()
         if isStaticFlow(), let firstStep = flow.firstStep, let stage = getStage(firstStep) {
