@@ -128,6 +128,13 @@ class LeapContextManager:NSObject {
         configuration?.projectContextDict.merge(projectConfig.projectContextDict, uniquingKeysWith: { _, newContextId in
             newContextId
         })
+        
+        configuration?.connectedProjects += projectConfig.connectedProjects.compactMap({ tempProj -> Dictionary<String,String>? in
+            guard let presentConnectedProjs = configuration?.connectedProjects else { return tempProj }
+            if presentConnectedProjs.contains(tempProj) { return nil }
+            return tempProj
+        })
+        
         auiHandler?.startMediaFetch()
     }
     
@@ -187,6 +194,7 @@ class LeapContextManager:NSObject {
                    let deepLinkURL = connectedProj["deepLinkURL"],
                    connectedProjId == subProjId, let url = URL(string: deepLinkURL) {
                     UIApplication.shared.open(url)
+                    break
                 }
             }
         }
