@@ -52,7 +52,7 @@ class LeapContextManager:NSObject {
     }
     
     func appendProjectConfig(withConfig:LeapConfig, resetProject:Bool) {
-        if configuration != nil { configuration = LeapConfig(withDict: [:], isPreview: false) }
+        if configuration == nil { configuration = LeapConfig(withDict: [:], isPreview: false) }
         if resetProject {
             for assist in withConfig.assists {
                 LeapSharedInformation.shared.resetAssist(assist.id, isPreview: self.isPreview())
@@ -111,6 +111,7 @@ class LeapContextManager:NSObject {
         
         configuration?.supportedAppLocales = Array(Set(configuration?.supportedAppLocales ?? [] + projectConfig.supportedAppLocales))
         configuration?.discoverySounds += projectConfig.discoverySounds
+        configuration?.localeSounds += projectConfig.localeSounds
         configuration?.auiContent += projectConfig.auiContent
         projectConfig.iconSetting.forEach { (key, value) in
             configuration?.iconSetting[key] = value
@@ -187,7 +188,7 @@ class LeapContextManager:NSObject {
         analyticsManager?.saveEvent(event: getStartScreenEvent(with: subParams, instructionId: subId), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
         analyticsManager?.saveEvent(event: getOptInEvent(with: subParams), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
         let flowSelected = self.currentConfiguration()?.flows.first { $0.id == flowId }
-        guard let flow = flowSelected, let fm = flowManager else { return }
+        guard let flow = flowSelected, let _ = flowManager else { return }
         if let connectedProjs = configuration?.connectedProjects {
             for connectedProj in connectedProjs {
                 if let connectedProjId = connectedProj[constant_projectId],
@@ -198,11 +199,21 @@ class LeapContextManager:NSObject {
                 }
             }
         }
-        fm.addNewFlow(flow, false, Int(mainId))
-        contextDetector?.switchState()
-        if isStaticFlow(), let firstStep = flow.firstStep, let stage = getStage(firstStep) {
-            stageManager?.setFirstStage(stage)
-        }
+        let fmDiscovery = configuration?.discoveries.first { $0.id == Int(mainId) }
+        guard let discovery = fmDiscovery else { return }
+        let iconInfo:Dictionary<String,AnyHashable> = discovery.enableIcon ? getIconSettings(discovery.id) : [:]
+        let htmlUrl = discovery.languageOption?[constant_htmlUrl]
+        
+        auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: self.generateLangDicts(localeCodes: discovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: { chosen in
+            if chosen {
+                self.flowManager?.addNewFlow(flow, false, Int(mainId), subDisId: Int(subId))
+                self.contextDetector?.switchState()
+                self.discoveryManager?.discoveryDismissed(byUser: false, optIn: true)
+                if self.isStaticFlow(), let firstStep = flow.firstStep, let stage = self.getStage(firstStep) {
+                    self.stageManager?.setFirstStage(stage)
+                }
+            }
+        })
     }
     
     @objc func previewNotification(_ notification:NSNotification) {
