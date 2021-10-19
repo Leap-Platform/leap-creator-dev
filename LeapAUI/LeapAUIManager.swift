@@ -309,8 +309,8 @@ extension LeapAUIManager: LeapAUIHandler {
         dismissLeapButton()
     }
     
-    func removeCurrentAssist() {
-        currentAssist?.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: false, byContext: true, panelOpen: false, action: nil)
+    func removeCurrentAssist(byContext: Bool = true, panelOpen: Bool = false) {
+        currentAssist?.performExitAnimation(animation: self.currentAssist?.assistInfo?.layoutInfo?.exitAnimation ?? "fade_out", byUser: false, autoDismissed: false, byContext: byContext, panelOpen: panelOpen, action: nil)
         currentAssist = nil
         currentInstruction = nil
         currentTargetView = nil
@@ -585,7 +585,7 @@ extension LeapAUIManager {
                     self.isLanguageOptionsOpen = false
                     if success, let code = languageCode {
                         if let userLanguage = LeapPreferences.shared.getUserLanguage() {
-                           self.auiManagerCallBack?.didLanguageChange(from: userLanguage, to: code)
+                           self.didLanguageChange(from: userLanguage, to: code)
                         }
                         LeapPreferences.shared.setUserLanguage(code)
                     }
@@ -599,6 +599,13 @@ extension LeapAUIManager {
                 self.languageOptions?.showBottomSheet()
             }
         }) }
+    }
+    
+    func didLanguageChange(from previousLanguage: String, to currentLanguage: String) {
+        if previousLanguage != currentLanguage {
+            self.auiManagerCallBack?.didLanguageChange(from: previousLanguage, to: currentLanguage)
+            removeCurrentAssist(byContext: false, panelOpen: true)
+        }
     }
 }
 
