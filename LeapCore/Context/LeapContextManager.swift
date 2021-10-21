@@ -1117,6 +1117,9 @@ extension LeapContextManager:LeapAUICallback {
             }
             return
         }
+        flowManager?.resetFlowsArray()
+        pageManager?.resetPageManager()
+        stageManager?.resetStageManager()
         contextDetector?.switchState()
         guard let discoveryId = flowManager?.getDiscoveryId() else { return }
         LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())

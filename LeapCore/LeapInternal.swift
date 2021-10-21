@@ -162,7 +162,7 @@ extension LeapInternal {
             guard mainProjId != currentEmbeddedProjectId else { return }
         } else {
             if resetProject { contextManager.resetForProjectId(mainProjId) }
-            guard !fetchedProjectIds.contains(mainProjId) else { return }
+            else { guard !fetchedProjectIds.contains(mainProjId) else { return } }
         }
         if let currentEmbed = currentEmbeddedProjectId {
             contextManager.removeConfigFor(projectId: currentEmbed)
