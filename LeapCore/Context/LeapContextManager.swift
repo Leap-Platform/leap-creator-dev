@@ -74,7 +74,6 @@ class LeapContextManager:NSObject {
             }
         }
         appendNewProjectConfig(projectConfig: withConfig)
-        contextDetector?.start()
     }
     
     private func appendNewProjectConfig(projectConfig:LeapConfig) {
