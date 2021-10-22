@@ -18,7 +18,7 @@ class LeapFlowManager {
     private var flowsArray:Array<LeapFlow> = []
     private var indexFromLast:Int = 0
     private var startedFromDiscovery:Int?
-    private var subFlowId:Int?
+    private var subDiscoveryId:Int?
     
     init(_ flowDelegate:LeapFlowManagerDelegate) {
         delegate = flowDelegate
@@ -29,7 +29,7 @@ class LeapFlowManager {
     func addNewFlow(_ flow:LeapFlow, _ isBranch:Bool,_ disId:Int?, subDisId:Int? = nil) {
         if !isBranch{
             startedFromDiscovery = disId
-            subFlowId = subDisId
+            subDiscoveryId = subDisId
             flowsArray.removeAll()
         }
         flowsArray.append(flow)
@@ -60,6 +60,8 @@ class LeapFlowManager {
     }
     
     func getDiscoveryId() -> Int? { return startedFromDiscovery }
+    
+    func getSubId() -> Int? { return subDiscoveryId }
     
     func resetFlowsArray () {
         flowsArray = []

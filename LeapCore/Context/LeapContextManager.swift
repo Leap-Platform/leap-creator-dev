@@ -1286,7 +1286,21 @@ extension LeapContextManager {
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
         }
-        fm.addNewFlow(flow, false, discovery.id)
+        
+        let isFlowMenu = isDiscoveryFlowMenu()
+        let subId:Int? = {
+            guard let projId = body[constant_projectId] as? String, isFlowMenu else { return nil }
+            var parameters:LeapProjectParameters?
+            self.currentConfiguration()?.contextProjectParametersDict.forEach({ key, params in
+                if params.deploymentId == projId && key.hasPrefix("discovery_") { parameters = params }
+            })
+            guard let selectedParameters = parameters,
+                  let projectId = selectedParameters.projectId else { return nil }
+            
+            let subId = self.currentConfiguration()?.projectContextDict["discovery_\(projectId)"]
+            return subId
+        }()
+        fm.addNewFlow(flow, false, discovery.id, subDisId: subId)
         // intended to switch from discovery to stage
         contextDetector?.switchState()
         if isStaticFlow(), let firstStep = flow.firstStep, let stage = getStage(firstStep) {
