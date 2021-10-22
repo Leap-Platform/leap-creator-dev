@@ -61,16 +61,19 @@ class LeapContextManager:NSObject {
                 LeapSharedInformation.shared.resetDiscovery(discovery.id, isPreview: isPreview())
             }
         }
-        auiHandler?.removeAllViews()
-        assistManager?.resetAssistManager()
-        discoveryManager?.resetDiscoveryManager()
-        flowManager?.resetFlowsArray()
-        pageManager?.resetPageManager()
-        stageManager?.resetStageManager()
-        if let state = contextDetector?.getState() {
-            switch state {
-            case .Stage: contextDetector?.switchState()
-            default: break
+        let isTerminated:Bool = isNewConfigTerminated(newConfig: withConfig)
+        if !isTerminated {
+            auiHandler?.removeAllViews()
+            assistManager?.resetAssistManager()
+            discoveryManager?.resetDiscoveryManager()
+            flowManager?.resetFlowsArray()
+            pageManager?.resetPageManager()
+            stageManager?.resetStageManager()
+            if let state = contextDetector?.getState() {
+                switch state {
+                case .Stage: contextDetector?.switchState()
+                default: break
+                }
             }
         }
         appendNewProjectConfig(projectConfig: withConfig)
@@ -136,6 +139,30 @@ class LeapContextManager:NSObject {
         })
         
         auiHandler?.startMediaFetch()
+    }
+    
+    private func isNewConfigTerminated(newConfig:LeapConfig) -> Bool {
+        let discoveries = newConfig.discoveries
+        if discoveries.count > 0 {
+            let terminatedDiscoveries = LeapSharedInformation.shared.getTerminatedDiscoveries(isPreview: false)
+            if discoveries.count == 1 {
+                let discovery = discoveries[0]
+                return terminatedDiscoveries.contains(discovery.id)
+            } else {
+                let fmDisc = discoveries.first { discovery in
+                    guard let projParams = newConfig.contextProjectParametersDict["discovery_\(discovery.id)"], let type = projParams.projectType else { return false }
+                    return type == constant_STATIC_FLOW_CHECKLIST || type == constant_DYNAMIC_FLOW_CHECKLIST || type == constant_STATIC_FLOW_MENU || type == constant_DYNAMIC_FLOW_MENU
+                }
+                guard let flowMenuDisc = fmDisc else { return false }
+                return terminatedDiscoveries.contains(flowMenuDisc.id)
+                
+            }
+        }
+        return false
+    }
+    
+    private func getFlowMenuDisc(discoveries:Array<LeapDiscovery>) -> LeapDiscovery? {
+        return nil
     }
     
     func resetForProjectId(_ projectId:String) {
