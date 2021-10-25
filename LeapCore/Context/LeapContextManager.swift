@@ -525,6 +525,14 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
         return config.discoveries
     }
     
+    func getFlowProjIdsFor(flowIds:Array<Int>) -> Array<String> {
+        guard let config = self.currentConfiguration() else { return [] }
+        let projIds:Array<String> = flowIds.compactMap { flowId -> String? in
+            return config.contextProjectParametersDict["flow_\(flowId)"]?.deploymentId
+        }
+        return projIds
+    }
+    
     func getProjContextIdDict() -> Dictionary<String, Int> {
         return self.currentConfiguration()?.projectContextDict ?? [:]
     }
@@ -694,8 +702,8 @@ extension LeapContextManager: LeapStageManagerDelegate {
                 }
             }
         }
-        if let flowId = flowManager?.getArrayOfFlows().last?.id {
-            LeapSharedInformation.shared.saveCompletedFlowInfo(flowId, isPreview: isPreview())
+        if let flowId = flowManager?.getArrayOfFlows().last?.id, let discoveryId = flowManager?.getDiscoveryId() {
+            LeapSharedInformation.shared.saveCompletedFlowInfo(flowId,disId: discoveryId, isPreview: isPreview())
         }
         auiHandler?.removeAllViews()
         flowManager?.popLastFlow()
@@ -1359,8 +1367,10 @@ extension LeapContextManager {
     
     func getFlowMenuInfo(discovery: LeapDiscovery) -> Dictionary<String, Bool>? {
         guard isDiscoveryChecklist(discovery: discovery) else { return nil }
-        let completedFlowIds:Array<Int> = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview())
-        let completedProjectIds:Array<String> = completedFlowIds.compactMap { flowId in
+        guard let currentDiscovery = discoveryManager?.getCurrentDiscovery() else { return nil }
+        let completedFlowIds:Dictionary<String,Array<Int>> = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview())
+        let completedFlowIdForCurrentDiscovery = completedFlowIds["\(currentDiscovery.id)"] ?? []
+        let completedProjectIds:Array<String> = completedFlowIdForCurrentDiscovery.compactMap { flowId in
             return self.currentConfiguration()?.contextProjectParametersDict["flow_\(flowId)"]?.deploymentId
         }
         var flowInfo: Dictionary<String,Bool> = [:]

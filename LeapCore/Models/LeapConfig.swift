@@ -80,9 +80,17 @@ class LeapConfig {
                     return lang
                 }.compactMap{ return $0 }
             }
+            let connectedProjectsArray = configDict[constant_connectedProjects] as? Array<Dictionary<String,String>> ?? []
+            for connectedProject in connectedProjectsArray {
+                let alreadyAdded = self.isProjectAlreadyAdded(newProj: connectedProject)
+                if !alreadyAdded { self.connectedProjects.append(connectedProject) }
+            }
+            let connectedProjectIds = connectedProjectsArray.compactMap { connectedProjectDict -> String? in
+                return connectedProjectDict[constant_projectId]
+            }
             if let discoveryDictsArray = configDict[constant_discoveryList] as? Array<Dictionary<String,Any>> {
                 discoveries += discoveryDictsArray.map({ (discoveryDict) -> LeapDiscovery? in
-                    let discovery = LeapDiscovery(withDict: discoveryDict,isPreview: isPreview)
+                    let discovery = LeapDiscovery(withDict: discoveryDict,isPreview: isPreview, connectedProjectIds: connectedProjectIds)
                     if let tempParams = currentProjectParameters, let projId = tempParams.projectId {
                         projectContextDict["discovery_\(projId)"] = discovery.id
                         currentProjectParameters?.id = discovery.id
@@ -125,12 +133,6 @@ class LeapConfig {
                 supportedAppLocales = Array(Set(supportedAppLocales+newSupportedAppLocale))
             }
             if let currentProjectParams = currentProjectParameters { projectParameters.append(currentProjectParams) }
-            if let connectedProjectsArray = configDict[constant_connectedProjects] as? Array<Dictionary<String,String>> {
-                for connectedProject in connectedProjectsArray {
-                    let alreadyAdded = self.isProjectAlreadyAdded(newProj: connectedProject)
-                    if !alreadyAdded { self.connectedProjects.append(connectedProject) }
-                }
-            }
         }
         
         for proj in connectedProjects {

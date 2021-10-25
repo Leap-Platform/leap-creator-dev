@@ -13,6 +13,7 @@ import UIKit
 protocol LeapDiscoveryManagerDelegate: AnyObject {
     
     func getAllDiscoveries() -> Array<LeapDiscovery>
+    func getFlowProjIdsFor(flowIds:Array<Int>) -> Array<String>
     func getProjContextIdDict() -> Dictionary<String,Int>
     func getProjParametersDict() -> Dictionary<String,LeapProjectParameters>
     func newDiscoveryIdentified(discovery:LeapDiscovery, view:UIView?, rect:CGRect?, webview:UIView?)
@@ -71,15 +72,11 @@ class LeapDiscoveryManager {
                 if let nDismissedByUser = terminationFreq.nDismissByUser, nDismissedByUser != -1 {
                     if hasBeenDismissed { return false }
                 }
-                if let projectIds = discovery.flowProjectIds, discovery.terminationfrequency?.untilAllFlowsAreCompleted ?? false {
+                if let projectIds = discovery.flowProjectIds, projectIds.count > 0, discovery.terminationfrequency?.untilAllFlowsAreCompleted ?? false {
                     let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview)
-                    let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
-                    for projectId in projectIds {
-                        if let disId =  projectContextIdDict["flow_\(projectId)"] {
-                            if !completedFlows.contains(disId) { return true }
-                        }
-                    }
-                    return false
+                    let completedFlowsForDisId = completedFlows["\(discovery.id)"] ?? []
+                    let completedFlowProjIds = delegate?.getFlowProjIdsFor(flowIds: completedFlowsForDisId) ?? []
+                    return projectIds.sorted() != completedFlowProjIds.sorted()
                 }
             }
             if let projParam = contextParametersDict["discovery_\(discovery.id)"] {
@@ -148,15 +145,11 @@ class LeapDiscoveryManager {
             case .playOnce:
                 return (LeapSharedInformation.shared.getDiscoveriesPresentedInfo(isPreview: isPreview)[String(disc.id)] ?? 0) > 0
             case .everySessionUntilAllFlowsAreCompleted:
-                guard let projectIds = disc.flowProjectIds else { return false }
+                guard let projectIds = disc.flowProjectIds, projectIds.count > 0 else { return false }
                 let completedFlows = LeapSharedInformation.shared.getCompletedFlowInfo(isPreview: isPreview)
-                let projectContextIdDict = delegate?.getProjContextIdDict() ?? [:]
-                for projectId in projectIds {
-                    if let disId =  projectContextIdDict["flow_\(projectId)"] {
-                        if !completedFlows.contains(disId) { return false }
-                    }
-                }
-                return true
+                let completedFlowsForDisId = completedFlows["\(disc.id)"] ?? []
+                let completedFlowProjIds = delegate?.getFlowProjIdsFor(flowIds: completedFlowsForDisId) ?? []
+                return projectIds.sorted() == completedFlowProjIds.sorted()
             case .manualTrigger:
                 return true
             }
