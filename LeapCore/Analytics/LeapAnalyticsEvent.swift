@@ -27,7 +27,9 @@ class LeapAnalyticsEvent: Codable {
     
     var id: String?
     var sessionId: String?
+    var parentProjectName: String?
     var projectName: String?
+    var parentProjectId: String?
     var projectId: String?
     var deploymentId: String?
     var deploymentName: String?
