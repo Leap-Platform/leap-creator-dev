@@ -94,11 +94,11 @@ import UIKit
     }
     
     public func startProject(projectId:String, resetProject:Bool) {
-        self.leapInternal?.fetchProjectConfig(projectId: projectId, resetProject: resetProject)
+        self.leapInternal?.startProject(projectId: projectId, resetProject: resetProject, isEmbedProject: false)
     }
     
     public func embedProject(_ projectId:String) {
-        self.leapInternal?.embedProject(projectId)
+        self.leapInternal?.startProject(projectId: projectId, resetProject: true, isEmbedProject: true)
     }
     
 }
