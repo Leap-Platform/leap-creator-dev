@@ -722,6 +722,10 @@ extension LeapContextManager {
         let event = LeapAnalyticsEvent(withEvent: EventName.startScreenEvent, withParams: projectParameter)
         lastEventId = instructionId
         lastEventLanguage = event.language
+        if !isFlowMenu(projectParams: projectParameter) {
+            event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
+            event.parentProjectName = validateFlowMenu().projectParams?.projectName
+        }
         print("start screen")
         return event
     }
