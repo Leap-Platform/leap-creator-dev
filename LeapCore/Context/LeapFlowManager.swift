@@ -66,6 +66,8 @@ class LeapFlowManager {
     func resetFlowsArray () {
         flowsArray = []
         indexFromLast = 0
+        startedFromDiscovery = nil
+        subDiscoveryId = nil
     }
     
 }
