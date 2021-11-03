@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 enum EventName: String {
+    case flowMenuStartScreen = "flow_menu_start"
     case startScreenEvent = "flow_start"
     case optInEvent = "flow_opt_in"
     case optOutEvent = "flow_opt_out"
