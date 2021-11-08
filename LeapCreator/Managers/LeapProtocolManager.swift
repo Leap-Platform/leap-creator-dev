@@ -108,6 +108,8 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
             return "wss://raven-dev-gke.leap.is/ws"
         #elseif STAGE
             return "wss://raven-stage-gke.leap.is/ws"
+        #elseif PREPROD
+            return "wss://raven-preprod.leap.is/ws"
         #elseif PROD
             return "wss://raven.leap.is/ws"
         #else
