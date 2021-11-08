@@ -45,6 +45,8 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         return "https://alfred-dev-gke.leap.is/alfred/api/v1/device/preview"
         #elseif STAGE
         return "https://alfred-stage-gke.leap.is/alfred/api/v1/device/preview"
+        #elseif PREPROD
+        return "https://alfred-preprod.leap.is/alfred/api/v1/device/preview"
         #elseif PROD
         return "https://alfred.leap.is/alfred/api/v1/device/preview"
         #else

@@ -134,6 +134,8 @@ struct Constants {
                 return "https://odin-dev-gke.leap.is/odin/api/v1/analytics"
             #elseif STAGE
                 return "https://odin-stage-gke.leap.is/odin/api/v1/analytics"
+            #elseif PREPROD
+                return "https://odin-preprod.leap.is/odin/api/v1/analytics"
             #elseif PROD
                 return "https://odin.leap.is/odin/api/v1/analytics"
             #else

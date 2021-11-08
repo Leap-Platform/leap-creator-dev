@@ -23,6 +23,8 @@ class LeapCreatorShared {
             return "https://alfred-dev-gke.leap.is"
         #elseif STAGE
             return "https://alfred-stage-gke.leap.is"
+        #elseif PREPROD
+            return "https://alfred-preprod.leap.is"
         #elseif PROD
             return "https://alfred.leap.is"
         #else

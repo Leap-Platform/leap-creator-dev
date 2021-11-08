@@ -15,6 +15,8 @@ class LeapQRCodeManager {
         return "https://alfred-dev-gke.leap.is/alfred/api/v1/device/qr"
         #elseif STAGE
         return "https://alfred-stage-gke.leap.is/alfred/api/v1/device/qr"
+        #elseif PREPROD
+        return "https://alfred-preprod.leap.is/alfred/api/v1/device/qr"
         #elseif PROD
         return "https://alfred.leap.is/alfred/api/v1/device/qr"
         #else
