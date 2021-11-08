@@ -725,8 +725,11 @@ extension LeapContextManager {
         if !isFlowMenu(projectParams: projectParameter) {
             event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
             event.parentProjectName = validateFlowMenu().projectParams?.projectName
+            print("Start Screen")
+        } else {
+            event.eventName = EventName.flowMenuStartScreen.rawValue
+            print("FlowMenu Start Screen")
         }
-        print("start screen")
         return event
     }
     
@@ -736,11 +739,12 @@ extension LeapContextManager {
         if isFlowMenu(projectParams: projectParameter) {
             event.selectedProjectId = getSubFlowProjectParams()?.projectId // subflow projectId
             event.selectedFlow = getSubFlowProjectParams()?.projectName // subflow's name
+            print("FlowMenu Opt In")
         } else {
             event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
             event.parentProjectName = validateFlowMenu().projectParams?.projectName
+            print("Opt In")
         }
-        print("Opt in")
         return event
     }
     
@@ -1341,8 +1345,8 @@ extension LeapContextManager {
         analyticsManager?.saveEvent(event: getStartScreenEvent(with: getSubFlowProjectParams(), instructionId: "\(subFlowId)"), deploymentType: getSubFlowProjectParams()?.deploymentType, isFlowMenu: false)
         }
         
-        // optIn event for sub-flow
-        analyticsManager?.saveEvent(event: getOptInEvent(with: getSubFlowProjectParams()), deploymentType: getSubFlowProjectParams()?.deploymentType, isFlowMenu: false)
+        // optIn event for sub-flow / project
+        analyticsManager?.saveEvent(event: getOptInEvent(with: getSubFlowProjectParams() ?? getProjectParameter()), deploymentType: getSubFlowProjectParams()?.deploymentType ?? getProjectParameter()?.deploymentType, isFlowMenu: false)
     }
     
     func getIconSettings(_ discoveryId:Int) -> Dictionary<String,AnyHashable> {
