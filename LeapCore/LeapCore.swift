@@ -31,6 +31,8 @@ import UIKit
     
     func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool)
     func removeAllViews()
+    
+    func appGoesToBackground()
 }
 
 @objc public protocol LeapAUICallback:NSObjectProtocol {
