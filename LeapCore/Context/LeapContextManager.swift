@@ -146,6 +146,21 @@ class LeapContextManager:NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(authLiveNotification(_:)), name: .init("leap_creator_live"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(previewNotification(_:)), name: .init("leap_preview_config"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appGoesToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appResumes), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    @objc func appGoesToBackground() {
+        contextDetector?.stop()
+        assistManager?.resetCurrentAssist()
+        discoveryManager?.resetDiscovery()
+        pageManager?.resetPageManager()
+        stageManager?.resetCurrentStage()
+        auiHandler?.appGoesToBackground()
+    }
+    
+    @objc func appResumes() {
+        contextDetector?.start()
     }
     
     @objc func previewNotification(_ notification:NSNotification) {

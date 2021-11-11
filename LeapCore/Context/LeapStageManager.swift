@@ -116,6 +116,7 @@ class LeapStageManager {
     func resetCurrentStage() {
         if delegate?.isStaticFlow() ?? false { nextStage = currentStage }
         currentStage = nil
+        stageTimer = nil
     }
     
     func sameStage (_ newStage:LeapStage, _ view:UIView?, _ rect:CGRect?, _ webviewForRect:UIView?, flowMenuIconNeeded:Bool?) {
