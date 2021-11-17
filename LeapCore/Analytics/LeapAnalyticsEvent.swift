@@ -34,6 +34,7 @@ class LeapAnalyticsEvent: Codable {
     var projectId: String?
     var deploymentId: String?
     var deploymentName: String?
+    var parentDeploymentVersion: String?
     var deploymentVersion: String?
     var previousLanguage: String?
     var language: String?
