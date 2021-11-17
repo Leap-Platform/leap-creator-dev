@@ -209,6 +209,7 @@ class LeapContextManager:NSObject {
             return subParams.projectType == constant_DYNAMIC_FLOW_MENU || subParams.projectType == constant_STATIC_FLOW_MENU || subParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || subParams.projectType == constant_STATIC_FLOW_CHECKLIST
         }()
         if !isMainProjFlowMenu || isSubProjFlowMenu { return }
+        contextDetector?.stop()
         analyticsManager?.saveEvent(event: getStartScreenEvent(with: mainParams, instructionId: mainId), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
         analyticsManager?.saveEvent(event: getOptInEvent(with: mainParams), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
         analyticsManager?.saveEvent(event: getStartScreenEvent(with: subParams, instructionId: subId), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
@@ -239,6 +240,7 @@ class LeapContextManager:NSObject {
                     self.stageManager?.setFirstStage(stage)
                 }
             }
+            self.contextDetector?.start()
         })
     }
     
@@ -725,6 +727,7 @@ extension LeapContextManager {
         if !isFlowMenu(projectParams: projectParameter) {
             event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
             event.parentProjectName = validateFlowMenu().projectParams?.projectName
+            event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
             print("Start Screen")
         } else {
             event.eventName = EventName.flowMenuStartScreen.rawValue
@@ -743,6 +746,7 @@ extension LeapContextManager {
         } else {
             event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
             event.parentProjectName = validateFlowMenu().projectParams?.projectName
+            event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
             print("Opt In")
         }
         return event
@@ -769,6 +773,7 @@ extension LeapContextManager {
         
         event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
         event.parentProjectName = validateFlowMenu().projectParams?.projectName
+        event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
         event.selectedFlow = validateFlowMenu().isFlowMenu ? getSubFlowProjectParams()?.projectName : nil // subflow's name
         
         print("element seen")
@@ -793,6 +798,7 @@ extension LeapContextManager {
         let event = LeapAnalyticsEvent(withEvent: EventName.flowSuccessEvent, withParams: projectParameter)
         event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
         event.parentProjectName = validateFlowMenu().projectParams?.projectName
+        event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
         event.selectedFlow = validateFlowMenu().isFlowMenu ? getSubFlowProjectParams()?.projectName : nil // subflow's name
         print("flow success")
         return event
@@ -858,6 +864,7 @@ extension LeapContextManager {
         
         event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
         event.parentProjectName = validateFlowMenu().projectParams?.projectName
+        event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
         event.selectedFlow = validateFlowMenu().isFlowMenu ? getSubFlowProjectParams()?.projectName : nil // subflow's name
         
         print("AUI action tracking")
