@@ -86,7 +86,7 @@ extension LeapAUIManager {
     
     @objc func appDidBecomeActive() {
         guard currentAssist != nil else { return }
-        playAudio()
+        if !(currentAudioCompletionStatus ?? true) { playAudio() }
     }
     
     @objc func startPreview() {
@@ -372,6 +372,15 @@ extension LeapAUIManager: LeapAUIHandler {
         leapButton?.htmlUrl = iconSetting.htmlUrl
         leapButton?.iconSize = mainIconSize
         leapButton?.configureIconButton()
+    }
+    
+    func appGoesToBackground() {
+        stopAudio()
+        currentAudioCompletionStatus = true
+        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
+        languageOptions?.removeFromSuperview()
+        leapButton?.removeDisableDialog()
+        leapIconOptions?.dismiss(withAnimation: false)
     }
 }
 
