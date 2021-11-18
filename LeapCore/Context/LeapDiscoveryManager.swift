@@ -107,7 +107,7 @@ class LeapDiscoveryManager {
         }
         
         currentDiscovery = discovery
-        
+        let isPreview = delegate?.isPreview() ?? false
         let type =  currentDiscovery?.trigger?.type ?? .instant
         if type == .delay && !identifiedDiscoveriesInSession.contains(discovery.id) {
             let delay = currentDiscovery?.trigger?.delay ?? 0
@@ -115,18 +115,24 @@ class LeapDiscoveryManager {
                 self.discoveryTimer?.invalidate()
                 self.discoveryTimer = nil
                 self.delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
+                if !self.identifiedDiscoveriesInSession.contains(discovery.id) {
+                    LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: discovery.id, assistId: nil, isPreview: isPreview)
+                    LeapSharedInformation.shared.discoveryPresentedInSession(discoveryId: discovery.id, isPreview: isPreview)
+                    self.identifiedDiscoveriesInSession.append(discovery.id)
+                }
             })
             guard let discoveryTimer = self.discoveryTimer else { return }
             RunLoop.main.add(discoveryTimer, forMode: .default)
         } else  {
             delegate?.newDiscoveryIdentified(discovery: discovery, view: view, rect: rect, webview: webview)
+            if !identifiedDiscoveriesInSession.contains(discovery.id) {
+                LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: discovery.id, assistId: nil, isPreview: isPreview)
+                LeapSharedInformation.shared.discoveryPresentedInSession(discoveryId: discovery.id, isPreview: isPreview)
+                identifiedDiscoveriesInSession.append(discovery.id)
+            }
         }
-        let isPreview = delegate?.isPreview() ?? false
-        if !identifiedDiscoveriesInSession.contains(discovery.id) {
-            LeapSharedInformation.shared.removeTerminationEventSent(discoveryId: discovery.id, assistId: nil, isPreview: isPreview)
-            LeapSharedInformation.shared.discoveryPresentedInSession(discoveryId: discovery.id, isPreview: isPreview)
-            identifiedDiscoveriesInSession.append(discovery.id)
-        }
+        
+        
     }
     
     func isManualTrigger() -> Bool {

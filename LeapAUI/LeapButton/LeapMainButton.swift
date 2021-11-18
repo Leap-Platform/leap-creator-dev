@@ -166,4 +166,9 @@ extension LeapMainButton: LeapDraggableDelegate {
             self.bottomConstraint?.constant = constant
         }
     }
+    
+    func removeDisableDialog() {
+        self.disableDialog.bottomDialogView.removeFromSuperview()
+        self.disableDialog.removeFromSuperview()
+    }
 }
