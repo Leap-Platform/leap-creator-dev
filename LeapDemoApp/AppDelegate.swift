@@ -37,8 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Leap.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         Leap.shared.callback = self
-        Leap.shared.startProject("13039834-c8dc-4ef8-bdb7-d4905affa59f#c75b001b-4ee0-40c4-9546-0a0b1ebd0ac3")
-//        LeapCreator.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        LeapCreator.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
         return true
     }
     
