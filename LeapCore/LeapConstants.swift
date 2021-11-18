@@ -258,6 +258,7 @@ let constant_LeapPreview_BundleId = "is.leap.LeapPreview"
 let constant_PREVIEW = "PREVIEW"
 let constant_SAMPLE_APP = "SAMPLE_APP"
 let constant_PAIRING = "PAIRING"
+let constant_deepLinkURL = "deepLinkURL"
 
 let constant_LeapSDK = "LeapSDK"
 let constant_HasLeapSDKStarted = "HasLeapSDKStarted"

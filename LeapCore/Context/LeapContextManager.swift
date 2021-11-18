@@ -138,7 +138,7 @@ class LeapContextManager:NSObject {
             return tempProj
         })
         
-        auiHandler?.startMediaFetch()
+        startSoundDownload()
     }
     
     private func isNewConfigTerminated(newConfig:LeapConfig) -> Bool {
@@ -209,16 +209,20 @@ class LeapContextManager:NSObject {
             return subParams.projectType == constant_DYNAMIC_FLOW_MENU || subParams.projectType == constant_STATIC_FLOW_MENU || subParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || subParams.projectType == constant_STATIC_FLOW_CHECKLIST
         }()
         if !isMainProjFlowMenu || isSubProjFlowMenu { return }
-        analyticsManager?.saveEvent(event: getStartScreenEvent(with: mainParams, instructionId: mainId), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
-        analyticsManager?.saveEvent(event: getOptInEvent(with: mainParams), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
-        analyticsManager?.saveEvent(event: getStartScreenEvent(with: subParams, instructionId: subId), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
-        analyticsManager?.saveEvent(event: getOptInEvent(with: subParams), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
+        
+        // context detection is stopped
+        contextDetector?.stop()
+        
         let flowSelected = self.currentConfiguration()?.flows.first { $0.id == flowId }
-        guard let flow = flowSelected, let _ = flowManager else { return }
+        guard let flow = flowSelected, let _ = flowManager else {
+            // context detection is started
+            self.contextDetector?.start()
+            return
+        }
         if let connectedProjs = configuration?.connectedProjects {
             for connectedProj in connectedProjs {
                 if let connectedProjId = connectedProj[constant_projectId],
-                   let deepLinkURL = connectedProj["deepLinkURL"],
+                   let deepLinkURL = connectedProj[constant_deepLinkURL],
                    connectedProjId == subProjId, let url = URL(string: deepLinkURL) {
                     UIApplication.shared.open(url)
                     break
@@ -232,6 +236,10 @@ class LeapContextManager:NSObject {
         
         auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: self.generateLangDicts(localeCodes: discovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: { chosen in
             if chosen {
+                self.analyticsManager?.saveEvent(event: self.getStartScreenEvent(with: mainParams, instructionId: mainId), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
+                self.analyticsManager?.saveEvent(event: self.getOptInEvent(with: mainParams), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
+                self.analyticsManager?.saveEvent(event: self.getStartScreenEvent(with: subParams, instructionId: subId), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
+                self.analyticsManager?.saveEvent(event: self.getOptInEvent(with: subParams), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
                 self.flowManager?.addNewFlow(flow, false, Int(mainId), subDisId: Int(subId))
                 self.contextDetector?.switchState()
                 self.discoveryManager?.discoveryDismissed(byUser: false, optIn: true)
@@ -239,6 +247,8 @@ class LeapContextManager:NSObject {
                     self.stageManager?.setFirstStage(stage)
                 }
             }
+            // context detection is started
+            self.contextDetector?.start()
         })
     }
     
@@ -263,7 +273,7 @@ class LeapContextManager:NSObject {
         if let state =  contextDetector?.getState(), state == .Stage { contextDetector?.switchState() }
         LeapPreferences.shared.isPreview = true
         contextDetector?.start()
-        auiHandler?.startMediaFetch()
+        startSoundDownload()
     }
     
     func currentConfiguration() -> LeapConfig? {
@@ -1200,7 +1210,7 @@ extension LeapContextManager:LeapAUICallback {
     
     func flush() {
         delegate?.fetchUpdatedConfig(config: { (config) in
-            DispatchQueue.main.async { self.auiHandler?.startMediaFetch() }
+            DispatchQueue.main.async { self.startSoundDownload() }
             guard let config = config, let state = self.contextDetector?.getState() else { return }
             switch state {
             case .Discovery:
