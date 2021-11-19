@@ -73,6 +73,7 @@ class LeapAnalyticsManager {
         }
         
         clientCallbackEvent.selectedProjectId = nil
+        clientCallbackEvent.parentProjectId = nil
         
         guard let clientPayload = generatePayload(clientCallbackEvent) else { return }
         delegate?.sendPayload(clientPayload)

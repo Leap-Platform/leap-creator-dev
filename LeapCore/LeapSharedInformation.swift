@@ -42,7 +42,7 @@ class LeapSharedInformation {
     private var discoveryFlowCompletedInPreview:Dictionary<String,Int> = [:]
     private var mutedDiscoveriesInPreview:Array<Int> = []
     private var terminatedDiscoveriesInPreview:Array<Int> = []
-    private var completedFlowsInPreview:Array<Int> = []
+    private var completedFlowsInPreview:Dictionary<String,Array<Int>> = [:]
     private var assistTerminationSentInPreview:Array<Int> = []
     private var discoveryTerminationSentInPreview:Array<Int> = []
 }
@@ -302,6 +302,13 @@ extension LeapSharedInformation {
             prefs.setValue(flowCompletedInfo, forKey: LeapSharedInformationConstants.discoveryFlowCompleted)
         }
         
+        var flowInfo = getCompletedFlowInfo(isPreview: isPreview)
+        flowInfo.removeValue(forKey: "\(discoveryId)")
+        if isPreview {
+            completedFlowsInPreview = flowInfo
+        } else {
+            prefs.setValue(flowInfo, forKey: LeapSharedInformationConstants.completedFlows)
+        }
         
         self.unmuteDiscovery(discoveryId, isPreview: isPreview)
         
@@ -395,9 +402,11 @@ extension LeapSharedInformation {
 }
 
 extension LeapSharedInformation {
-    func saveCompletedFlowInfo(_ flowId:Int, isPreview:Bool) {
+    func saveCompletedFlowInfo(_ flowId:Int, disId:Int, isPreview:Bool) {
         var completedFlows = getCompletedFlowInfo(isPreview: isPreview)
-        if !completedFlows.contains(flowId) { completedFlows.append(flowId) }
+        var completedFlowsForDisId = completedFlows["\(disId)"] ?? []
+        if !completedFlowsForDisId.contains(flowId) { completedFlowsForDisId.append(flowId) }
+        completedFlows["\(disId)"] = completedFlowsForDisId
         guard !isPreview else {
             completedFlowsInPreview = completedFlows
             return
@@ -405,8 +414,8 @@ extension LeapSharedInformation {
         prefs.setValue(completedFlows, forKey: LeapSharedInformationConstants.completedFlows)
     }
     
-    func getCompletedFlowInfo(isPreview:Bool) -> [Int] {
-        return isPreview ? completedFlowsInPreview : prefs.object(forKey: LeapSharedInformationConstants.completedFlows) as? Array<Int> ?? []
+    func getCompletedFlowInfo(isPreview:Bool) -> [String:[Int]] {
+        return isPreview ? completedFlowsInPreview : prefs.object(forKey: LeapSharedInformationConstants.completedFlows) as? Dictionary<String,Array<Int>> ?? [:]
     }
 }
 
@@ -419,7 +428,7 @@ extension LeapSharedInformation {
         discoveryFlowCompletedInPreview = [:]
         mutedDiscoveriesInPreview = []
         terminatedDiscoveriesInPreview = []
-        completedFlowsInPreview = []
+        completedFlowsInPreview = [:]
         discoveryTerminationSentInPreview = []
         assistTerminationSentInPreview = []
     }

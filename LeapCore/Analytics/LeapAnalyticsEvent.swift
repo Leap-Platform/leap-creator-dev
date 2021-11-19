@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 enum EventName: String {
+    case flowMenuStartScreen = "flow_menu_start"
     case startScreenEvent = "flow_start"
     case optInEvent = "flow_opt_in"
     case optOutEvent = "flow_opt_out"
@@ -27,10 +28,13 @@ class LeapAnalyticsEvent: Codable {
     
     var id: String?
     var sessionId: String?
+    var parentProjectName: String?
     var projectName: String?
+    var parentProjectId: String?
     var projectId: String?
     var deploymentId: String?
     var deploymentName: String?
+    var parentDeploymentVersion: String?
     var deploymentVersion: String?
     var previousLanguage: String?
     var language: String?

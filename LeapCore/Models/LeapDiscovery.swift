@@ -86,12 +86,12 @@ class LeapDiscovery:LeapContext {
     var localeCodes: Array<String>?
     var languageOption: Dictionary<String,String>?
     
-    init(withDict discoveryDict:Dictionary<String,Any>, isPreview:Bool) {
+    init(withDict discoveryDict:Dictionary<String,Any>, isPreview:Bool, connectedProjectIds:Array<String> = []) {
         triggerMode = LeapTriggerMode(rawValue: (discoveryDict[constant_triggerMode] as? String ?? "SINGLE_FLOW_TRIGGER")) ??  LeapTriggerMode.Single
         enableIcon = discoveryDict[constant_enableIcon] as? Bool ?? false
         autoStart = discoveryDict[constant_autoStart] as? Bool ?? false
         flowId = discoveryDict[constant_flowId] as? Int
-        flowProjectIds = discoveryDict[constant_flowProjectIds] as? Array<String>
+        flowProjectIds = connectedProjectIds
         
         if !isPreview {
             if let freqDict = discoveryDict[constant_flowTerminationFrequency] as? Dictionary<String,Any> {
@@ -104,12 +104,17 @@ class LeapDiscovery:LeapContext {
         
         if let localeCodes = discoveryDict[constant_localeCodes] as? [String] {
             self.localeCodes = localeCodes
+        } else {
+            self.localeCodes = ["ang"]
         }
         if let languageOption = discoveryDict[constant_languageOption] as? [String : String] {
             self.languageOption = languageOption
         }
         
         super.init(with: discoveryDict)
+        if let locales = self.localeCodes, locales.isEmpty {
+            self.localeCodes = ["ang"]
+        }
     }
     
 }

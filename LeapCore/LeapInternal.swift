@@ -151,18 +151,35 @@ extension LeapInternal {
         fetchQueue.addOperation(configOp)
     }
     
-    public func fetchProjectConfig(projectId:String, resetProject:Bool) {
-        
-        if let embedProjId = currentEmbeddedProjectId { contextManager.removeConfigFor(projectId: embedProjId) }
-        currentEmbeddedProjectId = nil
-        
-        guard !fetchedProjectIds.contains(projectId) else {
-            if resetProject { contextManager.resetForProjectId(projectId) }
-            return
+    public func startProject(projectId:String, resetProject:Bool, isEmbedProject:Bool) {
+        let projIds = projectId.components(separatedBy: "#")
+        guard let mainProjId = projIds.first else { return }
+        let subFlowId:String? = {
+            guard projIds.count == 2 else { return  nil }
+            return projIds[1]
+        }()
+        let isEmbeddedFlow = contextManager.isFlowEmbedFor(projectId: mainProjId)
+        if isEmbedProject {
+            contextManager.resetForProjectId(mainProjId)
+            guard mainProjId != currentEmbeddedProjectId else { return }
+        } else {
+            if resetProject { contextManager.resetForProjectId(mainProjId) }
+            else {
+                guard !fetchedProjectIds.contains(mainProjId) else {
+                    let savedProjectConfig = self.getSavedProjectConfigFor(projectId: mainProjId)
+                    let projectConfig = LeapConfig(withDict: savedProjectConfig, isPreview: false)
+                    contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
+                    return
+                }
+            }
         }
-        let projectConfigOp = LeapConfigFetchOperation(projectId: projectId) { response, data, error in
+        if let currentEmbed = currentEmbeddedProjectId {
+            contextManager.removeConfigFor(projectId: currentEmbed)
+            currentEmbeddedProjectId = nil
+        }
+        let configOp = LeapConfigFetchOperation(projectId: mainProjId) { response, data, error in
             DispatchQueue.main.async {
-                if !self.fetchedProjectIds.contains(projectId) { self.fetchedProjectIds.append(projectId) }
+                if !isEmbedProject { self.fetchedProjectIds.append(mainProjId) }
                 let configDict:Dictionary<String,AnyHashable> = {
                     guard let resultData = data else { return [:] }
                     let dict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>
@@ -170,46 +187,33 @@ extension LeapInternal {
                 }()
                 switch self.getConfigActionToTake(data: data, response: response) {
                 case .ResetConfig:
-                    self.resetProjectConfigFor(projectId: projectId)
+                    self.resetProjectConfigFor(projectId: mainProjId)
                 case .UseCachedConfig:
                     break
                 case .UseNewConfig:
-                    self.saveProjectConfig(projectId: projectId, config: configDict)
+                    self.saveProjectConfig(projectId: mainProjId, config: configDict)
                 }
-                let savedProjectConfig = self.getSavedProjectConfigFor(projectId: projectId)
+                let savedProjectConfig = self.getSavedProjectConfigFor(projectId: mainProjId)
                 let projectConfig = LeapConfig(withDict: savedProjectConfig, isPreview: false)
-                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
-            }
-        }
-        fetchQueue.addOperation(projectConfigOp)
-    }
-    
-    public func embedProject(_ projectId:String) {
-        contextManager.resetForProjectId(projectId)
-        guard currentEmbeddedProjectId != projectId else { return }
-        
-        let fetchConfigOp = LeapConfigFetchOperation(projectId: projectId) { response, data, error in
-            DispatchQueue.main.async {
-                self.currentEmbeddedProjectId = projectId
-                let configDict:Dictionary<String,AnyHashable> = {
-                    guard let resultData = data else { return [:] }
-                    let dict = try? JSONSerialization.jsonObject(with: resultData, options: .allowFragments) as? Dictionary<String,AnyHashable>
-                    return dict ?? [:]
-                }()
-                switch self.getConfigActionToTake(data: data, response: response) {
-                case .ResetConfig:
-                    self.resetProjectConfigFor(projectId: projectId)
-                case .UseCachedConfig:
-                    break
-                case .UseNewConfig:
-                    self.saveProjectConfig(projectId: projectId, config: configDict)
-                    break
+                if isEmbeddedFlow {
+                    var projParams:LeapProjectParameters?
+                    projectConfig.contextProjectParametersDict.forEach { key, parameters in
+                        if key.hasPrefix("discovery_") && parameters.deploymentId == mainProjId {
+                            projParams = parameters
+                        }
+                    }
+                    if let projectParameters = projParams {
+                        projectParameters.setEmbed(embed: true)
+                        projectParameters.setEnabled(enabled: true)
+                    }
                 }
-                let projectConfig = LeapConfig(withDict: configDict, isPreview: false)
-                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: true)
+                self.contextManager.appendProjectConfig(withConfig: projectConfig, resetProject: resetProject)
+                guard let subflowProjectId = subFlowId else { return }
+                self.contextManager.startSubproj(mainProjId: mainProjId, subProjId: subflowProjectId)
             }
         }
-        fetchQueue.addOperation(fetchConfigOp)
+        fetchQueue.addOperation(configOp)
+        
     }
     
 }
