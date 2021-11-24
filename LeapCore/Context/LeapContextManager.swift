@@ -1199,6 +1199,7 @@ extension LeapContextManager:LeapAUICallback {
         guard let state = contextDetector?.getState(), state == .Stage else {
             if let discoveryId = discoveryManager?.getCurrentDiscovery()?.id {
                 LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
+                discoveryManager?.resetDiscovery()
             }
             return
         }
@@ -1208,6 +1209,7 @@ extension LeapContextManager:LeapAUICallback {
         contextDetector?.switchState()
         guard let discoveryId = flowManager?.getDiscoveryId() else { return }
         LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
+        discoveryManager?.resetDiscovery()
     }
     
     func disableLeapSDK() {
