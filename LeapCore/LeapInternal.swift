@@ -451,10 +451,10 @@ class LeapConfigFetchOperation:Operation {
         } else {
             getAllHeaders().forEach { req.addValue($0.value, forHTTPHeaderField: $0.key) }
         }
-        
-        let configTask = URLSession.shared.dataTask(with: req) { (data, response, error) in
+        let session = SSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? SSLManager.shared.session : URLSession.shared
+        let configTask = session?.dataTask(with: req) { (data, response, error) in
             completion(data,response,error)
         }
-        configTask.resume()
+        configTask?.resume()
     }
 }
