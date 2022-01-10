@@ -266,6 +266,12 @@ let constant_LeapSDKStarted = "LeapSDKStarted"
 let constant_internetConnected = "internetConnected"
 let constant_internetNotConnected = "internetNotConnected"
 
+// file extensions
+ let constant_cer = "cer"
+
+ // domain patterns
+ let constant_leapDomainPattern = "^https://.*\\.leap\\.is.*$"
+
 typealias SuccessCallBack = ((_ success: Bool) -> Void)
 
 func print(_ object: Any) {

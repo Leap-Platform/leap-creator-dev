@@ -21,11 +21,9 @@ class LeapAnalyticsManager {
     
     let MAX_COUNT = 5
     weak var delegate: LeapAnalyticsManagerDelegate?
-    var session: URLSession
     
     init(_ analyticsDelegate: LeapAnalyticsManagerDelegate) {
         delegate = analyticsDelegate
-        session = URLSession.shared
         NotificationCenter.default.addObserver(self, selector: #selector(flushPendingEvents), name: UIApplication.willResignActiveNotification, object: nil)
         flushPendingEvents()
     }
@@ -98,7 +96,8 @@ class LeapAnalyticsManager {
             return
         }
         req.httpBody = jsonData
-        let analyticsTask = session.dataTask(with: req) { (data, response, error) in
+        let session = SSLManager.shared.isValidForSSLPinning(urlString: req.url!.absoluteString) ? SSLManager.shared.session : URLSession.shared
+        let analyticsTask = session?.dataTask(with: req) { (data, response, error) in
             if error != nil { self.delegate?.failedToSendEvents(payload: events) }
             else if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
@@ -108,7 +107,7 @@ class LeapAnalyticsManager {
                 } else { self.delegate?.failedToSendEvents(payload: events) }
             }
         }
-        analyticsTask.resume()
+        analyticsTask?.resume()
     }
     
     func createURLRequest(urlString: String) -> URLRequest? {
