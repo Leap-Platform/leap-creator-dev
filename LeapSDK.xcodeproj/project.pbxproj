@@ -60,13 +60,13 @@
 		2D42C05A26D7A0B90087D1C9 /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D42C05926D7A0B90087D1C9 /* Leap+String.swift */; };
 		2D578485264EA80A0040D04E /* LeapMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D578484264EA80A0040D04E /* LeapMessageController.swift */; };
 		2D5E52CF263965E30037575C /* LeapTappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5E52CE263965E30037575C /* LeapTappable.swift */; };
+		2D664A7D2799A56200F5EEA2 /* Leap.cer in Resources */ = {isa = PBXBuildFile; fileRef = 2D664A7C2799A56200F5EEA2 /* Leap.cer */; };
+		2D664A7E2799A56200F5EEA2 /* Leap.cer in Resources */ = {isa = PBXBuildFile; fileRef = 2D664A7C2799A56200F5EEA2 /* Leap.cer */; };
 		2D8478D626C2688400C2E1BA /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8478D526C2688400C2E1BA /* Encoder.swift */; };
 		2D8478D726C26D2500C2E1BA /* LeapProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */; };
 		2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */; };
 		2D918D8D278710330021AE11 /* SSLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D918D8C278710330021AE11 /* SSLManager.swift */; };
 		2D918D8E278710330021AE11 /* SSLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D918D8C278710330021AE11 /* SSLManager.swift */; };
-		2D918D91278710890021AE11 /* Leap.cer in Resources */ = {isa = PBXBuildFile; fileRef = 2D918D90278710890021AE11 /* Leap.cer */; };
-		2D918D92278710890021AE11 /* Leap.cer in Resources */ = {isa = PBXBuildFile; fileRef = 2D918D90278710890021AE11 /* Leap.cer */; };
 		2DACA43D261E2863007293AC /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DACA43C261E2863007293AC /* Leap+String.swift */; };
 		2DB75EFB2680ECCE00F558DD /* LeapQRCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB75EFA2680ECCE00F558DD /* LeapQRCodeManager.swift */; };
 		2DB75EFD26811D0400F558DD /* Creator.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DB75EFC26811D0400F558DD /* Creator.xcassets */; };
@@ -302,12 +302,12 @@
 		2D42C05926D7A0B90087D1C9 /* Leap+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+String.swift"; sourceTree = "<group>"; };
 		2D578484264EA80A0040D04E /* LeapMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMessageController.swift; sourceTree = "<group>"; };
 		2D5E52CE263965E30037575C /* LeapTappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapTappable.swift; sourceTree = "<group>"; };
+		2D664A7C2799A56200F5EEA2 /* Leap.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = Leap.cer; sourceTree = "<group>"; };
 		2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageOptions.swift; sourceTree = "<group>"; };
 		2D8478D526C2688400C2E1BA /* Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encoder.swift; sourceTree = "<group>"; };
 		2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSoundManager.swift; sourceTree = "<group>"; };
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
 		2D918D8C278710330021AE11 /* SSLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLManager.swift; sourceTree = "<group>"; };
-		2D918D90278710890021AE11 /* Leap.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = Leap.cer; sourceTree = "<group>"; };
 		2DACA43C261E2863007293AC /* Leap+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+String.swift"; sourceTree = "<group>"; };
 		2DB75EFA2680ECCE00F558DD /* LeapQRCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapQRCodeManager.swift; sourceTree = "<group>"; };
 		2DB75EFC26811D0400F558DD /* Creator.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Creator.xcassets; sourceTree = "<group>"; };
@@ -539,7 +539,7 @@
 		2D918D8F278710690021AE11 /* Supported Files */ = {
 			isa = PBXGroup;
 			children = (
-				2D918D90278710890021AE11 /* Leap.cer */,
+				2D664A7C2799A56200F5EEA2 /* Leap.cer */,
 			);
 			path = "Supported Files";
 			sourceTree = "<group>";
@@ -1203,7 +1203,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D918D91278710890021AE11 /* Leap.cer in Resources */,
+				2D664A7D2799A56200F5EEA2 /* Leap.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,7 +1213,7 @@
 			files = (
 				2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */,
 				D0B603EF25DFB6BA0092F735 /* jiny_option_language.png in Resources */,
-				2D918D92278710890021AE11 /* Leap.cer in Resources */,
+				2D664A7E2799A56200F5EEA2 /* Leap.cer in Resources */,
 				D0B603F025DFB6BA0092F735 /* jiny_option_cross.png in Resources */,
 				D0B603F125DFB6BA0092F735 /* jiny_default_icon.html in Resources */,
 				D0B603F225DFB6BA0092F735 /* jiny_ping_close.png in Resources */,
