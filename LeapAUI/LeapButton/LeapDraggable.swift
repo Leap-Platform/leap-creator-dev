@@ -42,24 +42,38 @@ class LeapDraggable: UIPanGestureRecognizer {
                 
                 guard let superView = viewToDrag.superview else { return }
                 
-                if (viewToDrag.frame.origin.y + translation.y) > mainIconBottomConstant && (viewToDrag.frame.origin.y + translation.y) <= (superView.frame.maxY - mainIconBottomConstant - viewToDrag.frame.height)  {
+                if UIApplication.shared.statusBarOrientation.isLandscape {
                     
-                    viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
-                                                y: viewToDrag.center.y + translation.y)
-                    sender.setTranslation(CGPoint(x: 0, y: 0), in: viewToDrag)
+                    if (viewToDrag.frame.origin.x + translation.x) >= (superView.layoutMargins.left) && (viewToDrag.frame.origin.x + translation.x) <= (superView.frame.maxX - superView.layoutMargins.right - viewToDrag.frame.width) && (viewToDrag.frame.origin.y + translation.y) >= (superView.layoutMargins.top) {
+                        
+                        viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
+                                                    y: viewToDrag.center.y + translation.y)
+                        sender.setTranslation(CGPoint(x: 0, y: 0), in: viewToDrag)
+                        
+                        self.draggableDelegate?.iconDidDrag()
+                    }
                     
-                    self.draggableDelegate?.iconDidDrag()
+                } else {
+                    
+                    if (viewToDrag.frame.origin.y + translation.y) >= (superView.layoutMargins.top)  {
+                        
+                        viewToDrag.center = CGPoint(x: viewToDrag.center.x + translation.x,
+                                                    y: viewToDrag.center.y + translation.y)
+                        sender.setTranslation(CGPoint(x: 0, y: 0), in: viewToDrag)
+                        
+                        self.draggableDelegate?.iconDidDrag()
+                    }
                 }
             }
-        
+            
         } else if sender.state == .ended {
-                        
+            
             var draggedLocation: CGPoint = .zero
             
             if let viewToDrag = sender.view {
                 
                 draggedLocation = viewToDrag.frame.origin
-            
+                
                 self.draggableDelegate?.iconDidRelease(atLocation: draggedLocation)
             }
         }

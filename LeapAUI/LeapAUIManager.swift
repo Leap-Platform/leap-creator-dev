@@ -26,7 +26,6 @@ class LeapAUIManager: NSObject {
     var currentAssist: LeapAssist? { didSet { if let _ = currentAssist { currentAssist?.delegate = self } } }
     
     var keyboardHeight: Float = 0
-    var leapButtonBottomConstraint: NSLayoutConstraint?
     
     var audioPlayer: AVAudioPlayer?
     var utterance = AVSpeechUtterance()
@@ -43,16 +42,16 @@ class LeapAUIManager: NSObject {
     var currentTargetRect: CGRect?
     weak var currentWebView: UIView?
     var currentAudioCompletionStatus:Bool?
+    var currentIconInfo: Dictionary<String, Any>?
+    
+    private var lastOrientation: UIInterfaceOrientation?
     
     var autoDismissTimer: Timer?
     private var baseUrl = String()
-    
-    private var isLanguageOptionsOpen = false
-    
+        
     let soundManager = LeapSoundManager()
     
     var languageOptions: LeapLanguageOptions?
-    
 }
 
 extension LeapAUIManager {
@@ -63,6 +62,7 @@ extension LeapAUIManager {
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(startPreview), name: .init("leap_preview_config"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     @objc func keyboardDidShow(_ notification: NSNotification) {
@@ -71,7 +71,7 @@ extension LeapAUIManager {
         {
             let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight = Float(keyboardRectangle.height)
-            leapButtonBottomConstraint?.constant = CGFloat(keyboardHeight + 20)
+            leapButton?.bottomConstraint?.constant = CGFloat(keyboardHeight + 20)
             leapButton?.updateConstraints()
         }
     }
@@ -79,7 +79,7 @@ extension LeapAUIManager {
     @objc func keyboardDidHide(_ notification: NSNotification) {
         keyboardHeight = 0
         if leapButton != nil {
-            leapButtonBottomConstraint?.constant = mainIconBottomConstant
+            leapButton?.bottomConstraint?.constant = mainIconBottomConstant
             leapButton?.updateConstraints()
         }
     }
@@ -157,7 +157,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func performNativeAssist(instruction: Dictionary<String, Any>, view: UIView?, localeCode: String) {
-        setupDefaultValues(instruction:instruction, langCode: localeCode, view: view, rect: nil, webview: nil)
+        setupDefaultValues(instruction:instruction, langCode: localeCode, view: view, rect: nil, webview: nil, iconInfo: nil)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
             if let _ = instruction[constant_soundName] as? String {
                 auiManagerCallBack?.didPresentAssist()
@@ -175,7 +175,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func performWebAssist(instruction: Dictionary<String,Any>, rect: CGRect, webview: UIView?, localeCode: String) {
-        setupDefaultValues(instruction:instruction, langCode: localeCode, view: nil, rect: rect, webview: webview)
+        setupDefaultValues(instruction:instruction, langCode: localeCode, view: nil, rect: rect, webview: webview, iconInfo: nil)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
             if let _ = instruction[constant_soundName] as? String {
                 auiManagerCallBack?.didPresentAssist()
@@ -190,7 +190,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func performNativeDiscovery(instruction: Dictionary<String, Any>, view: UIView?, localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
-        setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil, iconInfo: iconInfo)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
                 auiManagerCallBack?.failedToPerform()
@@ -198,7 +198,7 @@ extension LeapAUIManager: LeapAUIHandler {
             }
         }
         showLanguageOptionsIfApplicable(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
-            self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil)
+            self.setupDefaultValues(instruction: instruction, langCode: nil, view: view, rect: nil, webview: nil, iconInfo: iconInfo)
             if languageChose {
                 guard let anchorView = view else {
                     self.dismissLeapButton()
@@ -215,7 +215,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func performWebDiscovery(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, localeCodes: Array<Dictionary<String, String>>, iconInfo: Dictionary<String, AnyHashable>, localeHtmlUrl: String?) {
-        setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+        setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview, iconInfo: iconInfo)
         if !iconInfo.isEmpty {
             guard isReadyToPresent(type: "", assistInfo: iconInfo) else {
                 auiManagerCallBack?.failedToPerform()
@@ -224,7 +224,7 @@ extension LeapAUIManager: LeapAUIHandler {
         }
         showLanguageOptionsIfApplicable(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: localeHtmlUrl) { (languageChose) in
             if languageChose {
-                self.setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview)
+                self.setupDefaultValues(instruction: instruction, langCode: nil, view: nil, rect: rect, webview: webview, iconInfo: iconInfo)
                 guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
                       let type = assistInfo[constant_type] as? String,
                       let anchorWebview = webview else { return }
@@ -236,7 +236,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func performNativeStage(instruction: Dictionary<String, Any>, view: UIView?, iconInfo: Dictionary<String, AnyHashable>) {
-        setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil)
+        setupDefaultValues(instruction:instruction, langCode: nil, view: view, rect: nil, webview: nil, iconInfo: nil)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
             if let _ = instruction[constant_soundName] as? String {
                 auiManagerCallBack?.didPresentAssist()
@@ -257,7 +257,7 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func performWebStage(instruction: Dictionary<String, Any>, rect: CGRect, webview: UIView?, iconInfo: Dictionary<String, AnyHashable>) {
-        setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview)
+        setupDefaultValues(instruction:instruction, langCode:nil, view: nil, rect: rect, webview: webview, iconInfo: nil)
         guard instruction[constant_assistInfo] as? Dictionary<String,Any> != nil else {
             if let _ = instruction[constant_soundName] as? String {
                 auiManagerCallBack?.didPresentAssist()
@@ -283,7 +283,6 @@ extension LeapAUIManager: LeapAUIHandler {
         else if let spot = currentAssist as? LeapSpot { spot.updateSpot(toRect: rect, inView: inWebView) }
         else if let beacon = currentAssist as? LeapBeacon { beacon.updateRect(newRect: rect, inView: inWebView) }
         scrollArrowButton.updateRect(newRect: rect)
-
     }
     
     func updateView(inView view: UIView) {
@@ -317,6 +316,7 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetRect = nil
         currentWebView = nil
         currentAudioCompletionStatus = nil
+        currentIconInfo = nil
     }
     
     func removeLanguageOptions() {
@@ -326,11 +326,7 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func presentLeapButton(for iconInfo: Dictionary<String,AnyHashable>, iconEnabled: Bool) {
         guard iconEnabled, leapIconOptions == nil else {
-            if leapIconOptions != nil, leapButton != nil {
-            let kw = UIApplication.shared.windows.first{ $0.isKeyWindow }
-            if let window = kw {
-                window.bringSubviewToFront(leapIconOptions!)
-                window.bringSubviewToFront(leapButton!) } }
+            self.bringLeapIconOnTop()
             return
         }
         let jsonDecoder = JSONDecoder()
@@ -344,8 +340,7 @@ extension LeapAUIManager: LeapAUIHandler {
                 return
             }
             leapButton?.isHidden = false
-            let kw = UIApplication.shared.windows.first{ $0.isKeyWindow}
-            if let keyWindow = kw { keyWindow.bringSubviewToFront(leapButton!) }
+            self.bringLeapIconOnTop()
             return
         }
         LeapSharedAUI.shared.iconSetting = iconSetting
@@ -359,25 +354,55 @@ extension LeapAUIManager: LeapAUIHandler {
         leapButton?.leapTappable.tappableDelegate = self
         leapButton?.stateDelegate = self
         leapButton?.disableDialog.delegate = self
-        leapButtonBottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
-        leapButton?.bottomConstraint = leapButtonBottomConstraint!
-        var distance = mainIconCornerConstant
-        var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
-        if iconSetting.leftAlign ?? false {
-            cornerAttribute = .leading
-            distance = -mainIconCornerConstant
-        }
-        let cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: leapButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
-        NSLayoutConstraint.activate([leapButtonBottomConstraint!, cornerConstraint])
+        self.setLeapIconOrientationConstraints()
         leapButton?.htmlUrl = iconSetting.htmlUrl
         leapButton?.iconSize = mainIconSize
         leapButton?.configureIconButton()
     }
     
+    @objc func setLeapIconOrientationConstraints() {
+        
+        guard leapButton != nil else { return }
+        
+        leapButton?.cornerConstraint?.isActive = false
+        leapButton?.bottomConstraint?.isActive = false
+        
+        guard let keyWindow = UIApplication.shared.keyWindow else { return }
+        
+        var distance = mainIconCornerConstant
+        var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
+        if LeapSharedAUI.shared.iconSetting?.leftAlign ?? false {
+            cornerAttribute = .leading
+            distance = -mainIconCornerConstant
+        }
+        leapButton?.cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: leapButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
+        leapButton?.bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
+        NSLayoutConstraint.activate([(leapButton?.cornerConstraint)!, (leapButton?.bottomConstraint)!])
+                
+        if leapIconOptions != nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.leapIconOptions?.frame = self.leapButton?.frame ?? CGRect.zero
+                self.leapIconOptions?.show()
+            }
+        }
+    }
+    
+    private func bringLeapIconOnTop() {
+        if leapButton != nil {
+            let kw = UIApplication.shared.windows.first{ $0.isKeyWindow }
+            if let window = kw {
+                if leapIconOptions != nil {
+                    window.bringSubviewToFront(leapIconOptions!)
+                }
+                window.bringSubviewToFront(leapButton!)
+            }
+        }
+    }
+    
     func appGoesToBackground() {
         stopAudio()
         currentAudioCompletionStatus = true
-        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil)
+        currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil, isReinitialize: false)
         languageOptions?.removeFromSuperview()
         leapButton?.removeDisableDialog()
         leapIconOptions?.dismiss(withAnimation: false)
@@ -432,6 +457,7 @@ extension LeapAUIManager: LeapIconStateDelegate {
 extension LeapAUIManager: LeapDisableAssistanceDelegate {
     
     func didPresentDisableAssistance() {
+        self.removeCurrentAssistTemporarily()
         guard let _ = autoDismissTimer else { return }
         self.stopAutoDismissTimer()
     }
@@ -442,6 +468,7 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     }
     
     func didDismissDisableAssistance() {
+        self.showCurrentAssist()
         startAutoDismissTimer()
     }
 }
@@ -588,21 +615,25 @@ extension LeapAUIManager {
         let auiContent = LeapAUIContent(baseUrl: self.baseUrl, location: localeHtmlUrl ?? "")
         if auiContent.url != nil { self.downloadFromMediaManager(forMedia: auiContent, atPriority: .veryHigh, completion: { (success) in
             DispatchQueue.main.async {
-                self.isLanguageOptionsOpen = true
-                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { success, languageCode in
-                    self.removeLanguageOptions()
-                    self.isLanguageOptionsOpen = false
+                self.dismissLeapButton()
+                self.removeCurrentAssistTemporarily()
+                self.languageOptions = LeapLanguageOptions(withDict: [:], iconDict: iconInfo, withLanguages: localeCodes, withHtmlUrl: localeHtmlUrl, baseUrl: nil) { [weak self] success, languageCode in
+                    self?.removeLanguageOptions()
+                    if LeapPreferences.shared.getUserLanguage() != nil {
+                        self?.leapButton?.isHidden = false
+                        self?.showCurrentAssist()
+                    }
                     if success, let code = languageCode {
                         if let userLanguage = LeapPreferences.shared.getUserLanguage() {
-                           self.didLanguageChange(from: userLanguage, to: code)
+                           self?.didLanguageChange(from: userLanguage, to: code)
                         }
                         LeapPreferences.shared.setUserLanguage(code)
                     }
-                    if let webAssist = self.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
+                    if let webAssist = self?.currentAssist as? LeapWebAssist, let code = LeapPreferences.shared.getUserLanguage() {
                         webAssist.changeLanguage(locale: code)
                     }
-                    self.startDiscoverySoundDownload()
-                    self.startStageSoundDownload()
+                    self?.startDiscoverySoundDownload()
+                    self?.startStageSoundDownload()
                     handler?(success)
                 }
                 self.languageOptions?.showBottomSheet()
@@ -621,7 +652,7 @@ extension LeapAUIManager {
 // MARK: - PRESENT AUI COMPONENTS
 extension LeapAUIManager {
     
-    private func setupDefaultValues(instruction: Dictionary<String,Any>, langCode: String?, view: UIView?, rect: CGRect?, webview: UIView?) {
+    private func setupDefaultValues(instruction: Dictionary<String,Any>, langCode: String?, view: UIView?, rect: CGRect?, webview: UIView?, iconInfo: Dictionary<String, Any>?) {
         if let code = langCode {
             LeapPreferences.shared.setUserLanguage(code)
             self.startDiscoverySoundDownload()
@@ -631,7 +662,76 @@ extension LeapAUIManager {
         currentTargetView = view
         currentTargetRect = rect
         currentWebView = webview
+        currentIconInfo = iconInfo
         self.stopAutoDismissTimer()
+    }
+    
+    @objc private func orientationDidChange() {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            
+            guard self.lastOrientation != UIApplication.shared.statusBarOrientation else { return }
+            
+            self.lastOrientation = UIApplication.shared.statusBarOrientation
+            
+            self.setLeapIconOrientationConstraints()
+            
+            if self.languageOptions != nil {
+                self.languageOptions?.resetLanguageOptions()
+            }
+            
+            if self.leapButton?.disableDialog.superview != nil {
+                self.leapButton?.disableDialog.orientationDidChange()
+            }
+            
+            if self.currentAssist != nil {
+                self.removeCurrentAssistTemporarily()
+            }
+            
+            if self.languageOptions == nil && self.leapButton?.disableDialog.superview == nil {
+                self.showCurrentAssist()
+            }
+        }
+    }
+    
+    private func showCurrentAssist() {
+        
+        if self.currentAssist == nil {
+            self.reinitializeCurrentAssist()
+        }
+        
+        self.bringLeapIconOnTop()
+    }
+    
+    private func removeCurrentAssistTemporarily() {
+        
+        currentAssist?.remove(byContext: true, byUser: false, autoDismissed: false, panelOpen: false, action: [:], isReinitialize: true)
+        
+        currentAssist = nil
+    }
+    
+    private func reinitializeCurrentAssist() {
+        
+        guard let instruction = currentInstruction,
+              let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        
+        guard currentWebView == nil else {
+            
+            guard let anchorWebview = currentWebView,
+                  let rect = currentTargetRect else { return }
+            
+            performInViewWebInstruction(instruction: instruction, rect: rect, inWebview: anchorWebview, type: type, iconInfo: currentIconInfo)
+            return
+        }
+        
+        guard let view = currentTargetView else {
+            performKeyWindowInstruction(instruction: instruction, iconInfo: currentIconInfo)
+            return
+        }
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>,
+              let type = assistInfo[constant_type] as? String else { return }
+        performInViewNativeInstruction(instruction: instruction, inView: view, type: type, iconInfo: currentIconInfo)
     }
     
     private func performInViewNativeInstruction(instruction: Dictionary<String,Any>, inView: UIView, type: String, iconInfo: Dictionary<String,Any>? = nil) {
@@ -788,7 +888,7 @@ extension LeapAUIManager {
         case PING:
             self.leapButton?.layoutIfNeeded()
             UIView.animate(withDuration: 0.2) {
-                self.leapButtonBottomConstraint?.constant = mainIconBottomConstant
+                self.leapButton?.bottomConstraint?.constant = mainIconBottomConstant
                 self.leapButton?.layoutIfNeeded()
             }
             dismissLeapButton()
@@ -859,7 +959,7 @@ extension LeapAUIManager: AVSpeechSynthesizerDelegate {
 extension LeapAUIManager {
     
     func startAutoDismissTimer() {
-        guard !isLanguageOptionsOpen else { return }
+        guard languageOptions == nil else { return }
         DispatchQueue.main.async {
             guard let instruction = self.currentInstruction else { return }
             let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any>
@@ -870,6 +970,7 @@ extension LeapAUIManager {
             }
             self.autoDismissTimer = Timer.init(timeInterval: dismissTimer/1000, repeats: false, block: { (timer) in
                 self.currentInstruction = nil
+                self.currentIconInfo = nil
                 self.dismissLeapButton()
                 self.stopAutoDismissTimer()
                 guard let assist = self.currentAssist else {
@@ -919,6 +1020,7 @@ extension LeapAUIManager: LeapAssistDelegate {
         currentInstruction = nil
         stopAudio()
         currentAudioCompletionStatus = nil
+        currentIconInfo = nil
         scrollArrowButton.noAssist()
         if !byContext { dismissLeapButton() }
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
@@ -950,15 +1052,15 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
         self.stopAutoDismissTimer()
         self.stopAudio()
         
-        self.showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: htmlUrl) { success in
+        self.showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: htmlUrl) { [weak self] success in
             
             if !success {
-                self.startAutoDismissTimer()
+                self?.startAutoDismissTimer()
             }
-            if let _ = self.currentAssist as? LeapWebAssist, let _ = LeapPreferences.shared.getUserLanguage() {
-                self.playAudio()
+            if let _ = self?.currentAssist as? LeapWebAssist, let _ = LeapPreferences.shared.getUserLanguage() {
+                self?.playAudio()
             }
-            self.auiManagerCallBack?.optionPanelClosed()
+            self?.auiManagerCallBack?.optionPanelClosed()
         }
     }
     

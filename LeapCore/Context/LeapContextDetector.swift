@@ -721,6 +721,7 @@ extension LeapContextDetector {
                     if let wkWb = webview as? WKWebView {
                         if #available(iOS 11.0, *) {
                             rect.origin.y += wkWb.scrollView.adjustedContentInset.top
+                            rect.origin.x += UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0
                         }
                     }
                     completed(rect)

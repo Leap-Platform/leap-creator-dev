@@ -37,6 +37,10 @@ class LeapNativeAssist: UIView, LeapAssist {
         delegate?.didPresentAssist()
     }
     
+    func remove() {
+        self.removeFromSuperview()
+    }
+    
     func performEnterAnimation(animation: String) {
         
     }
@@ -53,9 +57,9 @@ class LeapNativeAssist: UIView, LeapAssist {
         remove(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
-    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
+    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?, isReinitialize: Bool = false) {
         self.removeFromSuperview()
+        guard !isReinitialize else { return }
         self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
-
 }

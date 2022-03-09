@@ -116,6 +116,8 @@ class LeapNotification: LeapKeyWindowAssist {
         
         inView?.addConstraint(NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: inView, attribute: .leading, multiplier: 1, constant: 24))
         
+        heightConstraint?.isActive = false
+        
         heightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
         
         NSLayoutConstraint.activate([heightConstraint!])

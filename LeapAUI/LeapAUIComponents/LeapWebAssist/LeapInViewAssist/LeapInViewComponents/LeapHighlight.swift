@@ -310,10 +310,20 @@ class LeapHighlight: LeapTipView {
             safeArea = inView?.safeAreaInsets.top ?? UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0
         }
         
+        /// priority is given to bottom tooltip. Bottom tooltip appears on top of targetview.
         if calculatedY >= (inViewFrame.origin.y + CGFloat(safeArea)) {
             
             return .bottom
+        }
+        
+        let availableSpaceOnTop = globalToViewFrame.origin.y - (inViewFrame.origin.y + CGFloat(safeArea))
+        
+        let availableSpaceOnBottom = inViewFrame.maxY - (globalToViewFrame.origin.y + globalToViewFrame.size.height)
+        
+        if availableSpaceOnTop >= availableSpaceOnBottom {
             
+            return .bottom
+        
         } else {
             
             return .top
@@ -342,11 +352,6 @@ class LeapHighlight: LeapTipView {
                 x = x - ((x + toolTipView.frame.size.width) - inViewFrame.size.width)
             }
             
-            if x < 0 {
-                
-                x = 0
-            }
-            
             y = globalToViewFrame.origin.y + globalToViewFrame.size.height
             
             if assistInfo?.highlightAnchor ?? true {
@@ -365,11 +370,6 @@ class LeapHighlight: LeapTipView {
                 x = x - ((x + toolTipView.frame.size.width) - inViewFrame.size.width)
             }
             
-            if x < 0 {
-                
-                x = 0
-            }
-            
             y = (globalToViewFrame.origin.y - toolTipView.frame.size.height)
             
             if assistInfo?.highlightAnchor ?? true {
@@ -380,9 +380,19 @@ class LeapHighlight: LeapTipView {
             y = y - (CGFloat(connectorLength))
         }
         
+        if #available(iOS 11.0, *) {
+            x += UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0
+        }
+        
+        // edge case
         if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
             
-            x = x - 12
+            x -= minimalSpacing
+        }
+        
+        if x < 0 {
+            
+            x = 0
         }
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
@@ -495,44 +505,20 @@ class LeapHighlight: LeapTipView {
         return path
     }
     
-    /// finds eligible parent view.
-    /// - Parameters:
-    ///   - view: Takes a non-optional view to check for eligible view or it's parent view.
-    func findEligibleInView(view: UIView) -> UIView {
-        
-        let eligibleView = view
-        
-        if canCompletelyHoldPointer(eligibleView) { return eligibleView }
-        
-        guard let superView = eligibleView.superview else { return eligibleView }
-        
-        if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
-            
-            if canCompletelyHoldPointer(superView) { return eligibleView }
-            
-            else { return findEligibleInView(view: superView) }
-            
-        } else {
-            
-            return findEligibleInView(view: superView)
-        }
-    }
-    
-    /// checks whether a view's size is greater than the tooltipView's size.
-    /// - Parameters:
-    ///   - view: A non-optional to check it's size against the tooltipView's size.
-    func canCompletelyHoldPointer(_ view: UIView) -> Bool {
-        
-        return (view.bounds.height > 120 && view.bounds.width > 260)
-    }
-    
     /// sets toolTip size based on the webview's callback.
     /// - Parameters:
     ///   - width: width to set for the tooltip's webview.
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
+        var orientationWidth = self.frame.width
+        
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            orientationWidth = self.frame.height
+        }
+        
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(orientationWidth)) / 100)
         
         var sizeWidth: Double?
         
@@ -547,7 +533,7 @@ class LeapHighlight: LeapTipView {
         
         if (self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) >= 1 {
             
-            sizeWidth = sizeWidth ?? Double(width) - 24
+            sizeWidth = sizeWidth ?? Double(width)
         }
         
         self.webView.frame.size = CGSize(width: CGFloat(sizeWidth ?? Double(width)), height: CGFloat(height))

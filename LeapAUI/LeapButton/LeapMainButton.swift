@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LeapCloseTransaprentView:UIView {
+class LeapCloseTransaprentView: UIView {
     override init(frame: CGRect) {
         super.init(frame: .zero)
     }
@@ -25,6 +25,8 @@ class LeapMainButton: LeapIconView {
     var isDismissible = false
     
     var bottomConstraint: NSLayoutConstraint?
+    
+    var cornerConstraint: NSLayoutConstraint?
     
     var closeIcon = UIImageView(frame: .zero)
     
@@ -118,6 +120,9 @@ extension LeapMainButton: LeapDraggableDelegate {
             closeTransparentView?.addConstraint(NSLayoutConstraint(item: closeIcon, attribute: .centerX, relatedBy: .equal, toItem: closeTransparentView, attribute: .centerX, multiplier: 1.0, constant: 0))
             
             closeTransparentView?.addConstraint(NSLayoutConstraint(item: closeIcon, attribute: .bottom, relatedBy: .equal, toItem: closeTransparentView, attribute: .bottom, multiplier: 1.0, constant: -mainIconBottomConstant))
+            
+            closeIconWidthConstraint?.isActive = false
+            closeIconHeightConstraint?.isActive = false
             
             closeIconWidthConstraint = NSLayoutConstraint(item: closeIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
             

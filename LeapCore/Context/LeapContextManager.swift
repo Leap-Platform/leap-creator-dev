@@ -1203,13 +1203,13 @@ extension LeapContextManager:LeapAUICallback {
             }
             return
         }
+        guard let discoveryId = flowManager?.getDiscoveryId() else { return }
+        LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
+        discoveryManager?.resetDiscovery()
         flowManager?.resetFlowsArray()
         pageManager?.resetPageManager()
         stageManager?.resetStageManager()
         contextDetector?.switchState()
-        guard let discoveryId = flowManager?.getDiscoveryId() else { return }
-        LeapSharedInformation.shared.terminateDiscovery(discoveryId, isPreview: isPreview())
-        discoveryManager?.resetDiscovery()
     }
     
     func disableLeapSDK() {

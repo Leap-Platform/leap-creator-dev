@@ -32,6 +32,8 @@ let PING = "PING"
 
 // Value Constants
 let mainIconSize: CGFloat = 56
-let mainIconCornerConstant: CGFloat = 24
+var mainIconCornerConstant: CGFloat {
+    return UIApplication.shared.statusBarOrientation.isLandscape ? 48 : 24
+}
 let mainIconBottomConstant: CGFloat = 45
 let webAssistPreloadTime = 0.25
