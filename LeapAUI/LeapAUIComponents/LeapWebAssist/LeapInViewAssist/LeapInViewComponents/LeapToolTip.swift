@@ -533,11 +533,11 @@ class LeapToolTip: LeapTipView {
                 if UIApplication.shared.statusBarOrientation.isPortrait {
                     if let rect = self.webRect, let webview = self.toView as? WKWebView {
                         let offset = webview.scrollView.contentOffset.y + self.getOffsetForWeb(rect, webview)
-                        webview.scrollView.contentOffset = CGPoint(x: 0, y: offset)
+                        webview.scrollView.contentOffset = CGPoint(x: webview.scrollView.contentOffset.x, y: offset)
                     } else if let toView = self.toView {
                         guard let scrollview = self.getScrollView(view: toView) else { return }
                         let offset = scrollview.contentOffset.y + self.getOffsetForNative(toView)
-                        scrollview.setContentOffset(CGPoint(x: 0, y: offset), animated: false)
+                        scrollview.setContentOffset(CGPoint(x: scrollview.contentOffset.x, y: offset), animated: false)
                     }
                 }
             }

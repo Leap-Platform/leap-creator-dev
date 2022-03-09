@@ -381,7 +381,7 @@ class LeapHighlight: LeapTipView {
         }
         
         if #available(iOS 11.0, *) {
-            x += UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0
+            x -= UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0
         }
         
         // edge case

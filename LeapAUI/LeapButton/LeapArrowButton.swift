@@ -284,7 +284,7 @@ class LeapArrowButton: UIButton {
                     print("Keywindow height - \(UIApplication.shared.keyWindow!.bounds.height)")
                     print("toRect y position - \(toRect.minY)")
                     
-                    scroller.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+                    scroller.setContentOffset(CGPoint(x: scroller.contentOffset.x, y: yOffset), animated: true)
                 }
             }
         }
