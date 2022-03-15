@@ -253,16 +253,9 @@ class LeapArrowButton: UIButton {
                     scroller.scrollRectToVisible(childViewRectWRTParent, animated: true)
                 }
             }
-        } else if let toRect = rect, let webview = inWebView {
+        } else if let toRect = rect, let _ = inWebView {
             let visibility = getRectVisibility()
             if visibility == .inViewPort { return }
-            else if visibility == .aboveViewPort {
-                let yOffset = webview.scrollView.contentOffset.y - toRect.minY + (0.5 * toRect.height) + (0.3 * webview.frame.height)
-                //webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
-            } else if visibility == .belowViewPort {
-                let yOffset = webview.scrollView.contentOffset.y + toRect.minY - (0.5 * toRect.height) - (0.3 * webview.frame.height)
-                //webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
-            }
             
             let nestedScrolls = getScrollViewsFromWebView()
             
@@ -270,21 +263,29 @@ class LeapArrowButton: UIButton {
                 
                 if let scroller = scroller as? UIScrollView {
                     
-                    // for both aboveViewPort and belowViewPort.
+                    // shouldn't pull down the scrollView beyond minOffset.
+                    let minOffset: CGFloat = 0
+                    
+                    // shouldn't push up the scrollView above maxOffset.
+                    let maxOffset = scroller.contentSize.height - (scroller.bounds.height + scroller.contentInset.bottom)
+
+                    // for both aboveViewPort and belowViewPort to scroll to the center of the scrollView.
                     var yOffset = (scroller.contentOffset.y + toRect.origin.y) - scroller.bounds.height/2
                     
-                    // if toRect/target is at the bottom half of the scrollView.
-                    if (scroller.contentSize.height-toRect.minY) <= (scroller.bounds.height/2) {
-                        yOffset = scroller.contentSize.height - (scroller.bounds.height + scroller.contentInset.bottom)
+                    // if toRect/target is at bottom half of the scrollView.
+                    if (scroller.contentSize.height-toRect.origin.y) <= (scroller.bounds.height/2) {
+                        yOffset = maxOffset
                     }
                     
-                    print("YOffset - \(yOffset)")
-                    print("scrollview content height - \(scroller.contentSize.height)")
-                    print("scrollview height - \(scroller.bounds.height)")
-                    print("Keywindow height - \(UIApplication.shared.keyWindow!.bounds.height)")
-                    print("toRect y position - \(toRect.minY)")
+                    // if toRect/target is at top half of the scrollView.
+                    if (scroller.contentOffset.y + toRect.origin.y) <= (scroller.bounds.height/2) {
+                        yOffset = minOffset
+                    }
                     
-                    scroller.setContentOffset(CGPoint(x: scroller.contentOffset.x, y: yOffset), animated: true)
+                    // check min OffSet and max OffSet so that it doesn't get scrolled out of bounds.
+                    if yOffset >= minOffset && yOffset <= maxOffset {
+                        scroller.setContentOffset(CGPoint(x: scroller.contentOffset.x, y: yOffset), animated: true)
+                    }
                 }
             }
         }
