@@ -460,4 +460,34 @@ class LeapTipView: LeapInViewAssist {
         pulseLayer.add(animationGroup1, forKey: "pulse")
         opacityLayer.add(animationGroup2, forKey: "opacity")
     }
+    
+    /// finds eligible parent view.
+    /// - Parameters:
+    ///   - view: Takes a non-optional view to check for eligible view or it's parent view.
+    func findEligibleInView(view: UIView) -> UIView {
+        
+        let eligibleView = view
+        
+        if canCompletelyHoldPointer(eligibleView) { return eligibleView }
+        
+        guard let superView = eligibleView.superview else { return eligibleView }
+        
+        if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
+            
+            if canCompletelyHoldPointer(superView) { return eligibleView }
+            
+            else { return findEligibleInView(view: superView) }
+            
+        } else {
+            
+            return findEligibleInView(view: superView)
+        }
+    }
+    
+    /// checks whether a view's size is greater than the tooltipView's size.
+    /// - Parameters:
+    ///   - view: A non-optional to check it's size against the tooltipView's size.
+    func canCompletelyHoldPointer(_ view: UIView) -> Bool {
+        return (view.bounds.height > 120 && view.bounds.width > 260)
+    }
 }

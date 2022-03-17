@@ -153,6 +153,9 @@ class LeapIconView: UIView {
         
         // set width and height constraints to LeapIconView
         
+        iconWidthConstraint?.isActive = false
+        iconHeightConstraint?.isActive = false
+        
         iconWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
         
         iconHeightConstraint = NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
@@ -197,6 +200,9 @@ class LeapIconView: UIView {
         self.addConstraint(NSLayoutConstraint(item: audioWebView!, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
         
         // set width and height constraints to LeapIconView
+        
+        iconWidthConstraint?.isActive = false
+        iconHeightConstraint?.isActive = false
         
         iconWidthConstraint = NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: iconSize)
         
