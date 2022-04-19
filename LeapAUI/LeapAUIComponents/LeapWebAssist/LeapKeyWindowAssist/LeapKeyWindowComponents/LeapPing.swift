@@ -16,11 +16,10 @@ class LeapPing: LeapKeyWindowAssist {
     private var closeButton = UIButton(type: .custom)
     
     private var bottomConstraint: NSLayoutConstraint?
+    
+    private var cornerConstraint: NSLayoutConstraint?
         
     private let animateConstraintConstant: CGFloat = 90
-    
-    /// width constraint to increase the constant when html resizes
-    var widthConstraint: NSLayoutConstraint?
         
     /// call the method to configure constraints for the component and to load the content to display.
     func showPing() {
@@ -55,7 +54,27 @@ class LeapPing: LeapKeyWindowAssist {
     private func configureWebViewForPing() {
         
         // Setting Constraints to WebView
-                
+        
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: leapIconView, attribute: .top, multiplier: 1, constant: -leapIconView.iconGap))
+        
+        self.setCornerConstraint()
+        
+        widthConstraint?.isActive = false
+        heightConstraint?.isActive = false
+        
+        widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
+        
+        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
+        
+        NSLayoutConstraint.activate([widthConstraint!, heightConstraint!])
+    }
+    
+    @objc private func setCornerConstraint() {
+
+        cornerConstraint?.isActive = false
+        
         var attribute1: NSLayoutConstraint.Attribute = .leading
         
         var distance = mainIconCornerConstant
@@ -67,17 +86,9 @@ class LeapPing: LeapKeyWindowAssist {
             distance = -mainIconCornerConstant
         }
         
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: leapIconView, attribute: .top, multiplier: 1, constant: -leapIconView.iconGap))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: attribute1, relatedBy: .equal, toItem: self, attribute: attribute1, multiplier: 1, constant: CGFloat(distance)))
-        
-        widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
-        
-        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
-        
-        NSLayoutConstraint.activate([widthConstraint!, heightConstraint!])
+        cornerConstraint = NSLayoutConstraint(item: webView, attribute: attribute1, relatedBy: .equal, toItem: self, attribute: attribute1, multiplier: 1, constant: CGFloat(distance))
+
+        NSLayoutConstraint.activate([cornerConstraint!])
     }
     
     override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0, heightDistance:CGFloat? = nil) {
@@ -165,7 +176,14 @@ class LeapPing: LeapKeyWindowAssist {
     ///   - width: Height of the content of the webview.
     private func configureWidthConstraint(width: CGFloat) {
         
-        let proportionalWidth: CGFloat = (((CGFloat((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8))*100) * self.frame.width) / 100)
+        var orientationWidth = self.frame.width
+        
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            orientationWidth = self.frame.height
+        }
+        
+        let proportionalWidth: CGFloat = (((CGFloat((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8))*100) * orientationWidth) / 100)
         
         var sizeWidth: CGFloat?
         

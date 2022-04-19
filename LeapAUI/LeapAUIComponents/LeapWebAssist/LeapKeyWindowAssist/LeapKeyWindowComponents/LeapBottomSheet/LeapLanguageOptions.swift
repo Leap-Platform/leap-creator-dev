@@ -44,26 +44,6 @@ class LeapLanguageOptions: LeapBottomSheet {
         }        
     }
     
-    /// This is a custom configuration of constraints for the LanguageOptions component.
-    override func configureWebViewForBottomSheet() {
-      
-        // Setting Constraints to WebView
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
-        
-        let maxHeight = 0.8 * (self.superview?.frame.height ?? 0.0)
-        
-        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: maxHeight)
-        
-        NSLayoutConstraint.activate([heightConstraint!])
-    }
-    
     private func getLanguages() {
         webView.evaluateJavaScript("initIOSHtml('\(discoveryLanguagesScript)', '\(self.iconInfo?.backgroundColor ?? "#00000000")')", completionHandler: nil)
     }
@@ -79,6 +59,12 @@ class LeapLanguageOptions: LeapBottomSheet {
         getLanguages()
         
         setLanguage()
+    }
+    
+    func resetLanguageOptions() {
+        self.leapIconView.removeFromSuperview()
+        self.removeFromSuperview()
+        self.showBottomSheet()
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

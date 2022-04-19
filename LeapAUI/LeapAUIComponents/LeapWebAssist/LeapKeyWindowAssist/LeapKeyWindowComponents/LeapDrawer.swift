@@ -28,7 +28,19 @@ class LeapDrawer: LeapKeyWindowAssist {
         
         if assistInfo?.layoutInfo?.layoutAlignment == nil {
             
-           assistInfo?.layoutInfo?.layoutAlignment = LeapAlignmentType.left.rawValue
+            assistInfo?.layoutInfo?.layoutAlignment = LeapAlignmentType.left.rawValue
+        }
+        
+        if UIDevice.current.hasNotch {
+            
+            if UIDevice.current.orientation == .landscapeLeft {
+                
+                assistInfo?.layoutInfo?.layoutAlignment = LeapAlignmentType.right.rawValue
+                
+            } else if UIDevice.current.orientation == .landscapeRight {
+                
+                assistInfo?.layoutInfo?.layoutAlignment = LeapAlignmentType.left.rawValue
+            }
         }
         
         configureWebView()
@@ -72,16 +84,16 @@ class LeapDrawer: LeapKeyWindowAssist {
         webView.translatesAutoresizingMaskIntoConstraints = false
         
         switch assistInfo?.layoutInfo?.layoutAlignment {
-            
-            case LeapAlignmentType.left.rawValue:
+        
+        case LeapAlignmentType.left.rawValue:
             
             configureConstraintsForLeftAlignment()
             
-            case LeapAlignmentType.right.rawValue:
+        case LeapAlignmentType.right.rawValue:
             
             configureConstraintsForRightAlignment()
-                  
-            default:
+            
+        default:
             
             configureConstraintsForLeftAlignment()
         }
@@ -96,7 +108,18 @@ class LeapDrawer: LeapKeyWindowAssist {
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0))
+        widthConstraint?.isActive = false
+        
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0)
+            
+        } else {
+            
+            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0)
+        }
+        
+        NSLayoutConstraint.activate([widthConstraint!])
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
         
@@ -110,7 +133,18 @@ class LeapDrawer: LeapKeyWindowAssist {
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0))
+        widthConstraint?.isActive = false
+        
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0)
+            
+        } else {
+            
+            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0)
+        }
+        
+        NSLayoutConstraint.activate([widthConstraint!])
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
     }
@@ -141,16 +175,16 @@ class LeapDrawer: LeapKeyWindowAssist {
         var verticalDistance: CGFloat = -self.leapIconView.iconGap
         
         switch assistInfo?.layoutInfo?.layoutAlignment {
+        
+        case LeapAlignmentType.right.rawValue:
             
-            case LeapAlignmentType.right.rawValue:
+            attributeType1 = .trailing
             
-                attributeType1 = .trailing
-                
-                attributeType2 = .leading
+            attributeType2 = .leading
             
-                horizontalDistance = -self.leapIconView.iconGap
-                  
-            default: print("")
+            horizontalDistance = -self.leapIconView.iconGap
+            
+        default: print("")
         }
         
         if alignmentType == .top {
