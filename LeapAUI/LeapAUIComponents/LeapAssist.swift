@@ -56,7 +56,7 @@ protocol LeapAssist {
     ///   - anchorBounds: Another value.
     func updateLayout(alignment: String, anchorBounds: CGRect?)
     
-    /// call when there is a callback from webview
+    /// call when you want to show the AUI component.
     func show()
     
     /// performs animation to the AUIComponent
@@ -76,5 +76,5 @@ protocol LeapAssist {
     func performExitAnimation(animation: String, byUser:Bool, autoDismissed:Bool, byContext:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
     
     /// removes the AUIComponent
-    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?)
+    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?, isReinitialize: Bool)
 }
