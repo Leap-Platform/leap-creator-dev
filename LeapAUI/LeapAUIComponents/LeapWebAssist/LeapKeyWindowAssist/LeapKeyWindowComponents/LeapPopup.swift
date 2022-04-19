@@ -42,9 +42,20 @@ class LeapPopup: LeapKeyWindowAssist {
         
         self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -24))
+        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 24))
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+            
+        } else {
+            
+            self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -24))
+            
+            self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 24))
+        }
+        
+        heightConstraint?.isActive = false
         
         heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
         
@@ -64,7 +75,7 @@ class LeapPopup: LeapKeyWindowAssist {
     
     override func didFinish(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
         
-        self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .bottom)
+        self.configureLeapIconView(superView: self, toItemView: self.webView, alignmentType: .bottom, cornerDistance: UIApplication.shared.statusBarOrientation.isLandscape ? leapIconView.iconGap : .zero, heightDistance: UIApplication.shared.statusBarOrientation.isLandscape ? .zero : nil)
     }
     
     override func didReceive(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

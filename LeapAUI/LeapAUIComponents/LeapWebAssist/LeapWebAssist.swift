@@ -367,7 +367,10 @@ class LeapWebAssist: UIView, LeapAssist {
         self.delegate?.didDismissAssist(byContext: byContext, byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
     }
     
-    func remove(byContext:Bool, byUser:Bool, autoDismissed:Bool, panelOpen:Bool, action:Dictionary<String,Any>?) {
+    func remove(byContext: Bool, byUser: Bool, autoDismissed: Bool, panelOpen: Bool, action: Dictionary<String, Any>?, isReinitialize: Bool = false) {
+        self.leapIconView.removeFromSuperview()
+        self.webView = WKWebView.init(frame: .zero)
+        self.webView.removeFromSuperview()
         self.removeFromSuperview()
     }
     
@@ -399,7 +402,9 @@ class LeapWebAssist: UIView, LeapAssist {
         
         self.leapIconView.translatesAutoresizingMaskIntoConstraints = false
         
-        var cornerConstraint: NSLayoutConstraint.Attribute = .leading
+        var cornerConstraint1: NSLayoutConstraint.Attribute = .leading
+        
+        var cornerConstraint2: NSLayoutConstraint.Attribute?
         
         var attributeType2: NSLayoutConstraint.Attribute = .top
         
@@ -411,7 +416,7 @@ class LeapWebAssist: UIView, LeapAssist {
         
         if !(iconInfo?.isLeftAligned ?? false) {
 
-            cornerConstraint = .trailing
+            cornerConstraint1 = .trailing
             
             cornerPadding = -cornerDistance
         }
@@ -424,8 +429,32 @@ class LeapWebAssist: UIView, LeapAssist {
             
             distance = -(heightDistance ?? self.leapIconView.iconGap)
         }
+        
+        if (self.isKind(of: LeapPopup.self) || self.isKind(of: LeapBottomSheet.self)) && UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            if !(iconInfo?.isLeftAligned ?? false) {
+
+                cornerConstraint1 = .leading
                 
-        superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: cornerConstraint, relatedBy: .equal, toItem: toItemView, attribute: cornerConstraint, multiplier: 1, constant: cornerPadding))
+                cornerPadding = cornerDistance
+                
+                cornerConstraint2 = .trailing
+            
+            } else {
+                
+                cornerConstraint1 = .trailing
+                
+                cornerPadding = -cornerDistance
+                
+                cornerConstraint2 = .leading
+            }
+            
+            attributeType2 = .bottom
+            
+            attributeType3 = .bottom
+        }
+                
+        superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: cornerConstraint1, relatedBy: .equal, toItem: toItemView, attribute: cornerConstraint2 ?? cornerConstraint1, multiplier: 1, constant: cornerPadding))
         
         superView.addConstraint(NSLayoutConstraint(item: leapIconView, attribute: attributeType2, relatedBy: .equal, toItem: toItemView, attribute: attributeType3, multiplier: 1, constant: distance))
         

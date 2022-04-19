@@ -55,6 +55,8 @@ class LeapCarousel: LeapKeyWindowAssist {
             
             self.webView.isOpaque = false
             
+            heightConstraint?.isActive = false
+            
             heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
             
             NSLayoutConstraint.activate([heightConstraint!])

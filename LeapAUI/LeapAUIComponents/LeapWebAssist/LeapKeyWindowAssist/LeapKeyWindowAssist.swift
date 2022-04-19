@@ -22,6 +22,9 @@ class LeapKeyWindowAssist: LeapWebAssist {
     /// height constraint to increase the constant when html resizes
     var heightConstraint: NSLayoutConstraint?
     
+    /// width constraint to increase the constant when orientation of device changes.
+    var widthConstraint: NSLayoutConstraint?
+    
     /// source view of the AUIComponent that is relatively positioned.
     weak var inView: UIView?
     

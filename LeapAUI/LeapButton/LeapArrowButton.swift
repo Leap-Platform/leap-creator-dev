@@ -115,6 +115,7 @@ class LeapArrowButton: UIButton {
     }
     
     func updateRect(newRect: CGRect) {
+        if rect?.origin == newRect.origin { return }
         rect = newRect
         let visibility = getRectVisibility()
         switch visibility {
@@ -225,6 +226,21 @@ class LeapArrowButton: UIButton {
         return scrollViews
     }
     
+    private func getScrollViewsFromWebView() -> Array<UIView> {
+        guard let view = inWebView else { return [] }
+        var scrollViews: Array<UIView> = []
+        
+        func getWebScrollViews(view: UIView) {
+            guard view.isKind(of: UIView.self) else { return }
+            if let scroll = view as? UIScrollView { scrollViews.append(scroll) }
+            for subview in view.subviews {
+                getWebScrollViews(view: subview)
+            }
+        }
+        getWebScrollViews(view: view)
+        return scrollViews
+    }
+    
     @objc private func clicked() {
         if let _ = toView {
             let nestedScrolls = getScrollViews()
@@ -237,15 +253,40 @@ class LeapArrowButton: UIButton {
                     scroller.scrollRectToVisible(childViewRectWRTParent, animated: true)
                 }
             }
-        } else if let toRect = rect, let webview = inWebView {
+        } else if let toRect = rect, let _ = inWebView {
             let visibility = getRectVisibility()
             if visibility == .inViewPort { return }
-            else if visibility == .aboveViewPort {
-                let yOffset = webview.scrollView.contentOffset.y - toRect.minY + (0.5 * toRect.height) + (0.3 * webview.frame.height)
-                webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
-            } else if visibility == .belowViewPort {
-                let yOffset = webview.scrollView.contentOffset.y + toRect.minY - (0.5 * toRect.height) - (0.3 * webview.frame.height)
-                webview.scrollView.contentOffset = CGPoint(x: 0, y: yOffset)
+            
+            let nestedScrolls = getScrollViewsFromWebView()
+            
+            for scroller in nestedScrolls {
+                
+                if let scroller = scroller as? UIScrollView {
+                    
+                    // shouldn't pull down the scrollView beyond minOffset.
+                    let minOffset: CGFloat = 0
+                    
+                    // shouldn't push up the scrollView above maxOffset.
+                    let maxOffset = scroller.contentSize.height - (scroller.bounds.height + scroller.contentInset.bottom)
+
+                    // for both aboveViewPort and belowViewPort to scroll to the center of the scrollView.
+                    var yOffset = (scroller.contentOffset.y + toRect.origin.y) - scroller.bounds.height/2
+                    
+                    // if toRect/target is at bottom half of the scrollView.
+                    if (scroller.contentSize.height-toRect.origin.y) <= (scroller.bounds.height/2) {
+                        yOffset = maxOffset
+                    }
+                    
+                    // if toRect/target is at top half of the scrollView.
+                    if (scroller.contentOffset.y + toRect.origin.y) <= (scroller.bounds.height/2) {
+                        yOffset = minOffset
+                    }
+                    
+                    // check min OffSet and max OffSet so that it doesn't get scrolled out of bounds.
+                    if yOffset >= minOffset && yOffset <= maxOffset {
+                        scroller.setContentOffset(CGPoint(x: scroller.contentOffset.x, y: yOffset), animated: true)
+                    }
+                }
             }
         }
         let currentVc = UIApplication.getCurrentVC()

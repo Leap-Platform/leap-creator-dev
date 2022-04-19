@@ -100,7 +100,7 @@ class LeapToolTip: LeapTipView {
         // set webView to max width of the screen
         let maxWidth = CGFloat(assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)
         
-        webView.frame.size.width =  maxWidth * UIScreen.main.bounds.width
+        webView.frame.size.width =  maxWidth * (UIApplication.shared.statusBarOrientation.isLandscape ? UIScreen.main.bounds.height : UIScreen.main.bounds.width)
         
         cornerRadius = CGFloat((self.assistInfo?.layoutInfo?.style.cornerRadius) ?? 8.0)
         
@@ -188,10 +188,20 @@ class LeapToolTip: LeapTipView {
             safeArea = inView?.safeAreaInsets.top ?? UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0
         }
         
+        /// priority is given to bottom tooltip. Bottom tooltip appears on top of targetview.
         if calculatedY >= (inViewFrame.origin.y + CGFloat(safeArea)) {
             
             return .bottom
+        }
+        
+        let availableSpaceOnTop = globalToViewFrame.origin.y - (inViewFrame.origin.y + CGFloat(safeArea))
+        
+        let availableSpaceOnBottom = inViewFrame.maxY - (globalToViewFrame.origin.y + globalToViewFrame.size.height)
+        
+        if availableSpaceOnTop >= availableSpaceOnBottom {
             
+            return .bottom
+        
         } else {
             
             return .top
@@ -207,7 +217,7 @@ class LeapToolTip: LeapTipView {
         
         let inViewFrame = (inView != nil ? inView!.frame : UIScreen.main.bounds)
         
-        var x:CGFloat = 0, y:CGFloat = 0
+        var x: CGFloat = 0, y: CGFloat = 0
         
         switch direction {
         
@@ -218,11 +228,6 @@ class LeapToolTip: LeapTipView {
             if (x + toolTipView.frame.size.width) > inViewFrame.size.width {
                 
                 x = x - ((x + toolTipView.frame.size.width) - inViewFrame.size.width)
-            }
-            
-            if x < 0 {
-                
-                x = 0
             }
             
             y = globalToViewFrame.origin.y + globalToViewFrame.size.height
@@ -241,17 +246,31 @@ class LeapToolTip: LeapTipView {
                 x = x - ((x + toolTipView.frame.size.width) - inViewFrame.size.width)
             }
             
-            if x < 0 {
-                
-                x = 0
-            }
-            
             y = (globalToViewFrame.origin.y - toolTipView.frame.size.height)
             
             if assistInfo?.highlightAnchor ?? false {
                 
                 y = y - CGFloat(manipulatedHighlightSpacing)
             }
+        }
+        
+        if #available(iOS 11.0, *) {
+            x -= UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0
+        }
+        
+        // edge case for left side tooltip
+        if (globalToViewFrame.midX-minimalSpacing) <= minimalSpacing {
+            x -= minimalSpacing
+        }
+        
+        // edge case for right side tooltip
+        if (UIScreen.main.bounds.size.width - (globalToViewFrame.midX+minimalSpacing)) <= minimalSpacing {
+            x += minimalSpacing
+        }
+        
+        if x < 0 {
+            
+            x = 0
         }
         
         toolTipView.frame.origin = CGPoint(x: x, y: y)
@@ -430,50 +449,9 @@ class LeapToolTip: LeapTipView {
         let globalToView = getGlobalToViewFrame()
         var arrowMidX: CGFloat = globalToView.midX - toolTipView.frame.origin.x
         
-        // edge case for left side tooltip
-        if (globalToView.midX-minimalSpacing) <= minimalSpacing {
-            toolTipView.frame.origin.x -= minimalSpacing
-        }
-        
-        // edge case for right side tooltip
-        if (UIScreen.main.bounds.size.width - (globalToView.midX+minimalSpacing)) <= minimalSpacing {
-            toolTipView.frame.origin.x += minimalSpacing
-        }
-        
         arrowMidX = globalToView.midX - toolTipView.frame.origin.x
         
         return arrowMidX
-    }
-    
-    /// finds eligible parent view.
-    /// - Parameters:
-    ///   - view: Takes a non-optional view to check for eligible view or it's parent view.
-    func findEligibleInView(view: UIView) -> UIView{
-        
-        let eligibleView = view
-        
-        if canCompletelyHoldPointer(eligibleView) { return eligibleView }
-        
-        guard let superView = eligibleView.superview else { return eligibleView }
-        
-        if eligibleView.clipsToBounds == false && eligibleView.layer.masksToBounds == false {
-            
-            if canCompletelyHoldPointer(superView) { return eligibleView }
-            
-            else { return findEligibleInView(view: superView) }
-            
-        } else {
-            
-            return findEligibleInView(view: superView)
-        }
-    }
-    
-    /// checks whether a view's size is greater than the tooltipView's size.
-    /// - Parameters:
-    ///   - view: A non-optional to check it's size against the tooltipView's size.
-    func canCompletelyHoldPointer(_ view: UIView) -> Bool {
-        
-        return (view.bounds.height > 120 && view.bounds.width > 260)
     }
     
     /// sets toolTip size based on the webview's callback.
@@ -482,7 +460,14 @@ class LeapToolTip: LeapTipView {
     ///   - height: height to set for the tooltip's webview.
     private func setToolTipDimensions(width: Float, height: Float) {
         
-        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(self.frame.width)) / 100)
+        var orientationWidth = self.frame.width
+                
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            
+            orientationWidth = self.frame.height
+        }
+        
+        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(orientationWidth)) / 100)
         
         var sizeWidth: Double?
         
@@ -510,7 +495,7 @@ class LeapToolTip: LeapTipView {
         guard let width = rect[constant_width] else { return }
         guard let height = rect[constant_height] else { return }
         setToolTipDimensions(width: width, height: height)
-        if dict["type"] as? String == "resize" { DispatchQueue.main.async {
+        if dict[constant_type] as? String == constant_resize { DispatchQueue.main.async {
             
             self.placePointer()
         } }
@@ -545,19 +530,21 @@ class LeapToolTip: LeapTipView {
             self.leapIconView.alpha = 1
         }) { _ in
             DispatchQueue.main.async {
-                if let rect = self.webRect, let webview = self.toView as? WKWebView {
-                    let offset = webview.scrollView.contentOffset.y + self.getOffsetForWeb(rect, webview)
-                    webview.scrollView.contentOffset = CGPoint(x: 0, y: offset)
-                } else if let toView = self.toView {
-                    guard let scrollview = self.getScrollView(view: toView) else { return }
-                    let offset = scrollview.contentOffset.y + self.getOffsetForNative(toView)
-                    scrollview.setContentOffset(CGPoint(x: 0, y: offset), animated: false)
+                if UIApplication.shared.statusBarOrientation.isPortrait {
+                    if let rect = self.webRect, let webview = self.toView as? WKWebView {
+                        let offset = webview.scrollView.contentOffset.y + self.getOffsetForWeb(rect, webview)
+                        webview.scrollView.contentOffset = CGPoint(x: webview.scrollView.contentOffset.x, y: offset)
+                    } else if let toView = self.toView {
+                        guard let scrollview = self.getScrollView(view: toView) else { return }
+                        let offset = scrollview.contentOffset.y + self.getOffsetForNative(toView)
+                        scrollview.setContentOffset(CGPoint(x: scrollview.contentOffset.x, y: offset), animated: false)
+                    }
                 }
             }
         }
     }
     
-    func getOffsetForWeb(_ rect:CGRect,_ webview:WKWebView) -> CGFloat {
+    private func getOffsetForWeb(_ rect:CGRect,_ webview:WKWebView) -> CGFloat {
         guard let arrowDirection  = getArrowDirection() else { return 0.0 }
         guard let tooltipFrame = toolTipView.superview?.convert(toolTipView.frame, to: nil) else { return 0.0 }
         guard let inView = self.inView else { return 0.0 }
@@ -569,7 +556,7 @@ class LeapToolTip: LeapTipView {
         }
     }
     
-    func getOffsetForNative(_ view:UIView) -> CGFloat {
+    private func getOffsetForNative(_ view:UIView) -> CGFloat {
         guard let arrowDirection  = getArrowDirection() else { return 0.0 }
         guard let tooltipFrame = toolTipView.superview?.convert(toolTipView.frame, to: nil) else { return 0.0 }
         guard let inView = self.inView else { return 0.0 }
@@ -581,7 +568,7 @@ class LeapToolTip: LeapTipView {
         }
     }
     
-    func getScrollView(view:UIView) -> UIScrollView? {
+    private func getScrollView(view:UIView) -> UIScrollView? {
         guard !view.isKind(of: UIWindow.self) else { return nil }
         if view.isKind(of: UIScrollView.self) { return view as? UIScrollView}
         guard let superview = view.superview else { return nil }
