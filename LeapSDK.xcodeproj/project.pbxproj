@@ -160,6 +160,8 @@
 		D0963BB4268C9FA200986181 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0963B73268C9EEC00986181 /* Transport.swift */; };
 		D096B3E825F0F027009BE7B3 /* LeapArrowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D096B3E725F0F027009BE7B3 /* LeapArrowButton.swift */; };
 		D0A234B3268F1A5500FA3218 /* Data+Gzip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A234B2268F1A5500FA3218 /* Data+Gzip.swift */; };
+		D0A8B54E28190CD6001783DA /* LeapViewProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A8B54D28190CD6001783DA /* LeapViewProperties.swift */; };
+		D0A8B54F28190CD6001783DA /* LeapViewProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A8B54D28190CD6001783DA /* LeapViewProperties.swift */; };
 		D0B603BD25DFB6BA0092F735 /* Leap.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FDAC2424B48B3C00D9332B /* Leap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D0B603BF25DFB6BA0092F735 /* LeapHighlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931C2543186D00DB94DD /* LeapHighlight.swift */; };
 		D0B603C025DFB6BA0092F735 /* LeapToolTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7931D2543186D00DB94DD /* LeapToolTip.swift */; };
@@ -411,6 +413,7 @@
 		D09C722D246A987A0060E054 /* LeapFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapFlowManager.swift; sourceTree = "<group>"; };
 		D09C722F246A98860060E054 /* LeapStageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStageManager.swift; sourceTree = "<group>"; };
 		D0A234B2268F1A5500FA3218 /* Data+Gzip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Gzip.swift"; sourceTree = "<group>"; };
+		D0A8B54D28190CD6001783DA /* LeapViewProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapViewProperties.swift; sourceTree = "<group>"; };
 		D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsEvent.swift; sourceTree = "<group>"; };
 		D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSharedInformation.swift; sourceTree = "<group>"; };
 		D0B205B22494DDEE00C69775 /* FlightSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightSuccessViewController.swift; sourceTree = "<group>"; };
@@ -607,6 +610,7 @@
 				D0DC3EFD2553ED9E00B6FA93 /* LeapSupportModals.swift */,
 				2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */,
 				2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */,
+				D0A8B54D28190CD6001783DA /* LeapViewProperties.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1392,6 +1396,7 @@
 				D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */,
 				D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */,
 				D0A234B3268F1A5500FA3218 /* Data+Gzip.swift in Sources */,
+				D0A8B54E28190CD6001783DA /* LeapViewProperties.swift in Sources */,
 				D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */,
 				D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */,
 				D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */,
@@ -1461,6 +1466,7 @@
 				D0B603E725DFB6BA0092F735 /* LeapPopup.swift in Sources */,
 				D0B603E825DFB6BA0092F735 /* LeapIconOptions.swift in Sources */,
 				D0B603E925DFB6BA0092F735 /* LeapInViewAssist.swift in Sources */,
+				D0A8B54F28190CD6001783DA /* LeapViewProperties.swift in Sources */,
 				2D3D1B3526CD193600FFCB24 /* FlowMenuInfo.swift in Sources */,
 				D0B603EA25DFB6BA0092F735 /* LeapPointer.swift in Sources */,
 			);
