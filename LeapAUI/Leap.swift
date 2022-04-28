@@ -31,7 +31,6 @@ import LeapCoreSDK
     
     private override init() {
         auiManager = LeapAUIManager()
-        auiManager.addObservers()
         isStarted = false
         super.init()
         addObservers()
