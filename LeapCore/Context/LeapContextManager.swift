@@ -217,12 +217,10 @@ class LeapContextManager:NSObject {
         })
         
         guard let mainId = mainId, let mainParams = mainParams, let subId = subId, let subParams = subParams, let flowId = getFlowIdFor(projId: subProjId) else { return }
-        let isMainProjFlowMenu:Bool = {
-            return mainParams.projectType == constant_DYNAMIC_FLOW_MENU || mainParams.projectType == constant_STATIC_FLOW_MENU || mainParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || mainParams.projectType == constant_STATIC_FLOW_CHECKLIST
-        }()
-        let isSubProjFlowMenu:Bool = {
-            return subParams.projectType == constant_DYNAMIC_FLOW_MENU || subParams.projectType == constant_STATIC_FLOW_MENU || subParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || subParams.projectType == constant_STATIC_FLOW_CHECKLIST
-        }()
+        
+        let isMainProjFlowMenu = isFlowMenu(projectParams: mainParams)
+        let isSubProjFlowMenu = isFlowMenu(projectParams: subParams)
+        
         if !isMainProjFlowMenu || isSubProjFlowMenu { return }
         
         // context detection is stopped
@@ -251,10 +249,10 @@ class LeapContextManager:NSObject {
         
         auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: self.generateLangDicts(localeCodes: discovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: { chosen in
             if chosen {
-                self.analyticsManager?.saveEvent(event: self.getStartScreenEvent(with: mainParams, instructionId: mainId), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
-                self.analyticsManager?.saveEvent(event: self.getOptInEvent(with: mainParams), deploymentType: mainParams.deploymentType, isFlowMenu: isMainProjFlowMenu)
-                self.analyticsManager?.saveEvent(event: self.getStartScreenEvent(with: subParams, instructionId: subId), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
-                self.analyticsManager?.saveEvent(event: self.getOptInEvent(with: subParams), deploymentType: subParams.deploymentType, isFlowMenu: isSubProjFlowMenu)
+                self.analyticsManager?.startScreenEvent(with: mainParams, instructionId: mainId)
+                self.analyticsManager?.optInEvent(with: mainParams)
+                self.analyticsManager?.startScreenEvent(with: subParams, instructionId: subId)
+                self.analyticsManager?.optInEvent(with: subParams)
                 self.flowManager?.addNewFlow(flow, false, Int(mainId), subDisId: Int(subId))
                 self.contextDetector?.switchState()
                 self.discoveryManager?.discoveryDismissed(byUser: false, optIn: true)
@@ -533,8 +531,7 @@ extension LeapContextManager: LeapAssistManagerDelegate {
     
     func sendAssistTerminationEvent(with id: Int, for rule: String) {
         let projectParams = self.currentConfiguration()?.projectParameters.first { $0.id == id }
-        guard let event = getProjectTerminationEvent(with: projectParams, for: rule) else { return }
-        analyticsManager?.saveEvent(event: event, deploymentType: projectParams?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.projectTerminationEvent(with: projectParams, for: rule)
         LeapSharedInformation.shared.terminationEventSent(discoveryId: nil, assistId: id, isPreview: isPreview())
     }
 }
@@ -623,8 +620,7 @@ extension LeapContextManager: LeapDiscoveryManagerDelegate {
     
     func sendDiscoveryTerminationEvent(with id: Int, for rule: String) {
         let projectParams = self.currentConfiguration()?.projectParameters.first { $0.id == id }
-        guard let event = getProjectTerminationEvent(with: projectParams, for: rule) else { return }
-        analyticsManager?.saveEvent(event: event, deploymentType: projectParams?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.projectTerminationEvent(with: projectParams, for: rule)
         LeapSharedInformation.shared.terminationEventSent(discoveryId: id, assistId: nil, isPreview: isPreview())
     }
 }
@@ -653,7 +649,6 @@ extension LeapContextManager: LeapStageManagerDelegate {
     func getCurrentPage() -> LeapPage? {
         return pageManager?.getCurrentPage()
     }
-    
     
     func getStage(_ name:String) -> LeapStage? {
         guard let fm = flowManager, let flow = fm.getArrayOfFlows().last else { return nil }
@@ -723,7 +718,7 @@ extension LeapContextManager: LeapStageManagerDelegate {
             let discovery = currentConfiguration()?.discoveries.first { $0.id == discoveryId }
             if let currentFlowCompletedCount = flowsCompletedCount["\(discoveryId)"], let perApp = discovery?.terminationfrequency?.perApp, perApp != -1 {
                 if currentFlowCompletedCount >= perApp {
-                    analyticsManager?.saveEvent(event: getProjectTerminationEvent(with: getProjectParameter(), for: "After \(perApp) flow completion"), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+                    analyticsManager?.projectTerminationEvent(with: getProjectParameter(), for: "After \(perApp) flow completion")
                 }
             }
         }
@@ -736,179 +731,7 @@ extension LeapContextManager: LeapStageManagerDelegate {
     
 }
 
-// MARK: - CREATE AND SEND ANALYTICS EVENT
 extension LeapContextManager {
-    
-    func getStartScreenEvent(with projectParameter: LeapProjectParameters?, instructionId: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
-            return nil
-        }
-        let event = LeapAnalyticsEvent(withEvent: EventName.startScreenEvent, withParams: projectParameter)
-        lastEventId = instructionId
-        lastEventLanguage = event.language
-        if !isFlowMenu(projectParams: projectParameter) {
-            event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
-            event.parentProjectName = validateFlowMenu().projectParams?.projectName
-            event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
-            print("Start Screen")
-        } else {
-            event.eventName = EventName.flowMenuStartScreen.rawValue
-            print("FlowMenu Start Screen")
-        }
-        return event
-    }
-    
-    func getOptInEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.optInEvent, withParams: projectParameter)
-        if isFlowMenu(projectParams: projectParameter) {
-            event.selectedProjectId = getSubFlowProjectParams()?.projectId // subflow projectId
-            event.selectedFlow = getSubFlowProjectParams()?.projectName // subflow's name
-            print("FlowMenu Opt In")
-        } else {
-            event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
-            event.parentProjectName = validateFlowMenu().projectParams?.projectName
-            event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
-            print("Opt In")
-        }
-        return event
-    }
-    
-    func getOptOutEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.optOutEvent, withParams: projectParameter)
-        lastEventId = nil
-        print("Opt out")
-        return event
-    }
-    
-    func getInstructionEvent(with projectParameter: LeapProjectParameters?, instructionId: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
-            return nil
-        }
-        let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
-        lastEventId = instructionId
-        lastEventLanguage = event.language
-        event.elementName = stageManager?.getCurrentStage()?.name
-        event.pageName = pageManager?.getCurrentPage()?.name
-        
-        event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
-        event.parentProjectName = validateFlowMenu().projectParams?.projectName
-        event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
-        event.selectedFlow = validateFlowMenu().isFlowMenu ? getSubFlowProjectParams()?.projectName : nil // subflow's name
-        
-        print("element seen")
-        return event
-    }
-    
-    func getAssistInstructionEvent(with projectParameter: LeapProjectParameters?, instructionId: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        if lastEventId == instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
-            return nil
-        }
-        let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
-        lastEventId = instructionId
-        lastEventLanguage = event.language
-        event.elementName = assistManager?.getCurrentAssist()?.name
-        print("assist element seen")
-        return event
-    }
-    
-    func getFlowSuccessEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.flowSuccessEvent, withParams: projectParameter)
-        event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
-        event.parentProjectName = validateFlowMenu().projectParams?.projectName
-        event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
-        event.selectedFlow = validateFlowMenu().isFlowMenu ? getSubFlowProjectParams()?.projectName : nil // subflow's name
-        print("flow success")
-        return event
-    }
-    
-    func getFlowStopEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.flowStopEvent, withParams: projectParameter)
-        event.elementName = stageManager?.getCurrentStage()?.name
-        event.pageName = pageManager?.getCurrentPage()?.name
-        print("flow stop")
-        return event
-    }
-    
-    func getFlowDisableEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.flowDisableEvent, withParams: projectParameter)
-        print("flow disable")
-        return event
-    }
-    
-    func getLanguageChangeEvent(with projectParameter: LeapProjectParameters?, from previousLanguage: String, to currentLanguage: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.languageChangeEvent, withParams: projectParameter)
-        event.language = currentLanguage
-        event.previousLanguage = previousLanguage
-        print("Language change")
-        return event
-    }
-    
-    func getAUIActionTrackingEvent(with projectParameter: LeapProjectParameters?, action: Dictionary<String,Any>?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.actionTrackingEvent, withParams: projectParameter)
-        
-        guard let body = action?[constant_body] as? Dictionary<String, Any> else { return nil }
-        
-        if let id = body[constant_id] as? String {
-            
-            if lastEventId == id { return nil }
-            
-            lastEventId = id
-        }
-        
-        if let labelValue = body[constant_buttonLabel] as? String {
-            event.actionEventValue = labelValue
-        }
-        // cases for actionEventType
-        if let _ = body[constant_externalLink] as? Bool {
-            event.actionEventType = constant_externalLink
-        } else if let _ = body[constant_deepLink] as? Bool {
-            event.actionEventType = constant_deepLink
-        } else if let _ = body[constant_endFlow] as? Bool {
-            event.actionEventType = constant_endFlow
-        } else if let _ = body[constant_close] as? Bool {
-            event.actionEventType = constant_close
-        } else if let _ = body[constant_anchorClick] as? Bool {
-            event.actionEventType = constant_anchorClick
-            event.actionEventValue = nil
-        }
-        
-        event.elementName = stageManager?.getCurrentStage()?.name ?? assistManager?.getCurrentAssist()?.name
-        event.pageName = pageManager?.getCurrentPage()?.name
-        
-        event.parentProjectId = validateFlowMenu().projectParams?.projectId // flow menu projectId if there is parent
-        event.parentProjectName = validateFlowMenu().projectParams?.projectName
-        event.parentDeploymentVersion = validateFlowMenu().projectParams?.deploymentVersion
-        event.selectedFlow = validateFlowMenu().isFlowMenu ? getSubFlowProjectParams()?.projectName : nil // subflow's name
-        
-        print("AUI action tracking")
-        return event
-    }
-    
-    func getLeapSDKDisableEvent(with projectParameter: LeapProjectParameters?) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.leapSdkDisableEvent, withParams: projectParameter)
-        event.language = nil
-        print("Leap SDK disable")
-        return event
-    }
-    
-    func getProjectTerminationEvent(with projectParameter: LeapProjectParameters?, for terminationRule: String) -> LeapAnalyticsEvent? {
-        guard let projectParameter = projectParameter, projectParameter.deploymentType == constant_LINK else { return nil }
-        let event = LeapAnalyticsEvent(withEvent: EventName.projectTerminationEvent, withParams: projectParameter)
-        event.terminationRule = terminationRule
-        print("Project Termination")
-        return event
-    }
     
     func validateFlowMenu() -> (isFlowMenu: Bool, projectParams: LeapProjectParameters?) {
         if let discoveryId = flowManager?.getDiscoveryId(), let projectParams = currentConfiguration()?.contextProjectParametersDict["discovery_\(discoveryId)"] {
@@ -940,13 +763,29 @@ extension LeapContextManager {
 // MARK: - ANALYTICS MANAGER DELEGATE METHODS
 extension LeapContextManager: LeapAnalyticsManagerDelegate {
     
-    func getHeaders() -> Dictionary<String, String> {
-        guard let apiKey = LeapSharedInformation.shared.getAPIKey() else { return [:] }
-        return [
-            Constants.AnalyticsKeys.xLeapId:UIDevice.current.identifierForVendor?.uuidString ?? "",
-            Constants.AnalyticsKeys.xJinyClientId: apiKey,
-            Constants.AnalyticsKeys.contentTypeKey:Constants.AnalyticsKeys.contentTypeValue
-        ]
+    func isProjectFlowMenu(projectParams: LeapProjectParameters) -> Bool {
+        
+        return isFlowMenu(projectParams: projectParams)
+    }
+    
+    func getCurrentFlowMenu() -> LeapProjectParameters? {
+       
+        return validateFlowMenu().projectParams
+    }
+    
+    func getCurrentSubFlow() -> LeapProjectParameters? {
+       
+        return getSubFlowProjectParams()
+    }
+    
+    func getCurrentAssist() -> LeapAssist? {
+        
+        return assistManager?.getCurrentAssist()
+    }
+    
+    func getCurrentPageForAnalytics() -> LeapPage? {
+        
+        return pageManager?.getCurrentPage()
     }
     
     func failedToSendEvents(payload: Array<Dictionary<String, Any>>) {
@@ -1078,13 +917,13 @@ extension LeapContextManager:LeapAUICallback {
                 // assist Instriuction
                 am.assistPresented()
                 guard let instruction = assist.instruction else { return }
-                analyticsManager?.saveEvent(event: getAssistInstructionEvent(with: getProjectParameter(), instructionId: instruction.id), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+                analyticsManager?.assistInstructionEvent(with: getProjectParameter(), instructionId: instruction.id)
             }
             else if let dm = discoveryManager, let discovery = dm.getCurrentDiscovery() {
                 dm.discoveryPresented()
                 // start screen event
                 guard let instruction = discovery.instruction else { return }
-                analyticsManager?.saveEvent(event: getStartScreenEvent(with: getProjectParameter(), instructionId: instruction.id), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+                analyticsManager?.startScreenEvent(with: getProjectParameter(), instructionId: instruction.id)
             }
         case .Stage:
             // stage instruction
@@ -1093,7 +932,7 @@ extension LeapContextManager:LeapAUICallback {
             // TODO: - above scenario for start screen and element seen
             guard let sm = stageManager, let stage = sm.getCurrentStage(), let instruction = stage.instruction else { return }
             // Element seen Event
-            analyticsManager?.saveEvent(event: getInstructionEvent(with: getProjectParameter(), instructionId: instruction.id), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+            analyticsManager?.instructionEvent(with: getProjectParameter(), instructionId: instruction.id)
             break
         }
     }
@@ -1111,7 +950,7 @@ extension LeapContextManager:LeapAUICallback {
             if let am = assistManager, let _ = am.getCurrentAssist() {
                 // aui action tracking
                 if let action = action {
-                    analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: getProjectParameter(), action: action), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+                    analyticsManager?.auiActionTrackingEvent(with: getProjectParameter(), action: action)
                 }
             }
             guard let liveContext = getLiveContext() else { return }
@@ -1125,13 +964,13 @@ extension LeapContextManager:LeapAUICallback {
             }
             // aui action tracking
             if let action = action {
-                analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: getProjectParameter(), action: action), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+                analyticsManager?.auiActionTrackingEvent(with: getProjectParameter(), action: action)
             }
             guard let sm = stageManager, let stage = sm.getCurrentStage() else { return }
             
             // Flow success Event
             if stage.isSuccess && (byUser || autoDismissed) {
-                analyticsManager?.saveEvent(event: getFlowSuccessEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+                analyticsManager?.flowSuccessEvent(with: getProjectParameter())
             }
             
             var endFlow = false
@@ -1172,7 +1011,7 @@ extension LeapContextManager:LeapAUICallback {
     
     func optionPanelStopClicked() {
         // Flow Stop event
-        analyticsManager?.saveEvent(event: getFlowStopEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.flowStopEvent(with: getProjectParameter())
         guard let dis = getLiveDiscovery() else {
             contextDetector?.start()
             return
@@ -1194,7 +1033,7 @@ extension LeapContextManager:LeapAUICallback {
     
     func disableAssistance() {
         // send flow disable event
-        analyticsManager?.saveEvent(event: getFlowDisableEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.flowDisableEvent(with: getProjectParameter())
         
         guard let state = contextDetector?.getState(), state == .Stage else {
             if let discoveryId = discoveryManager?.getCurrentDiscovery()?.id {
@@ -1214,15 +1053,15 @@ extension LeapContextManager:LeapAUICallback {
     
     func disableLeapSDK() {
         contextDetector?.stop()
-        analyticsManager?.saveEvent(event: getLeapSDKDisableEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.leapSDKDisableEvent(with: getProjectParameter())
     }
     
     func didLanguageChange(from previousLanguage: String, to currentLanguage: String) {
-        analyticsManager?.saveEvent(event: getLanguageChangeEvent(with: getProjectParameter(), from: previousLanguage, to: currentLanguage), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.languageChangeEvent(with: getProjectParameter(), from: previousLanguage, to: currentLanguage)
     }
     
     func receiveAUIEvent(action: Dictionary<String, Any>) {
-        analyticsManager?.saveEvent(event: getAUIActionTrackingEvent(with: getProjectParameter(), action: action), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.auiActionTrackingEvent(with: getProjectParameter(), action: action)
     }
     
     func flush() {
@@ -1328,7 +1167,7 @@ extension LeapContextManager {
               let dm = discoveryManager,
               let discovery = dm.getCurrentDiscovery() else {
             // optOut
-            analyticsManager?.saveEvent(event: getOptOutEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+            analyticsManager?.optOutEvent(with: getProjectParameter())
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
         }
@@ -1338,7 +1177,7 @@ extension LeapContextManager {
             return getFlowIdFor(projId: projId)
         }()
         guard let flowId = flowId else {
-            analyticsManager?.saveEvent(event: getOptOutEvent(with: getProjectParameter()), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+            analyticsManager?.optOutEvent(with: getProjectParameter())
             discoveryManager?.discoveryDismissed(byUser: byUser, optIn: false)
             return
         }
@@ -1370,15 +1209,15 @@ extension LeapContextManager {
         discoveryManager?.discoveryDismissed(byUser: true, optIn: true)
         
         // optIn event
-        analyticsManager?.saveEvent(event: getOptInEvent(with: validateFlowMenu().projectParams), deploymentType: getProjectParameter()?.deploymentType, isFlowMenu: validateFlowMenu().isFlowMenu)
+        analyticsManager?.optInEvent(with: validateFlowMenu().projectParams)
         
         // start screen event
         if let subFlowId = flowManager?.getSubId() {
-        analyticsManager?.saveEvent(event: getStartScreenEvent(with: getSubFlowProjectParams(), instructionId: "\(subFlowId)"), deploymentType: getSubFlowProjectParams()?.deploymentType, isFlowMenu: false)
+            analyticsManager?.startScreenEvent(with: getSubFlowProjectParams(), instructionId: "\(subFlowId)")
         }
         
         // optIn event for sub-flow / project
-        analyticsManager?.saveEvent(event: getOptInEvent(with: getSubFlowProjectParams() ?? getProjectParameter()), deploymentType: getSubFlowProjectParams()?.deploymentType ?? getProjectParameter()?.deploymentType, isFlowMenu: false)
+        analyticsManager?.optInEvent(with: getSubFlowProjectParams() ?? getProjectParameter())
     }
     
     func getIconSettings(_ discoveryId:Int) -> Dictionary<String,AnyHashable> {
