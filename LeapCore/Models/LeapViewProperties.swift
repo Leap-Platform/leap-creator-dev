@@ -11,7 +11,7 @@ import UIKit
 import WebKit
 
 class LeapViewProperties {
-    var uuid: String
+    var viewId: String
     weak var weakView: UIView?
     var parent: String?
     var children: [String] = []
@@ -27,8 +27,8 @@ class LeapViewProperties {
     var isFocused:Bool
     var isWKWebview:Bool
     
-    init(with view:UIView, parentUUID:String?, index:Int = 0) {
-        uuid = UUID().uuidString
+    init(with view:UIView, uuid:String, parentUUID:String?, index:Int = 0) {
+        viewId = uuid
         weakView = view
         parent = parentUUID
         nodeIndex = index
