@@ -55,6 +55,7 @@
 
 /* Begin PBXBuildFile section */
 		2D00D44027748E9200AD5F1C /* LeapMediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00D43F27748E9200AD5F1C /* LeapMediaPlayer.swift */; };
+		2D076DEF281FF08E008AE73F /* LeapRemoteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */; };
 		2D2C3310276B4B6B00E09B97 /* LeapNewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C330F276B4B6B00E09B97 /* LeapNewConfig.swift */; };
 		2D2C3312276B4BBE00E09B97 /* LeapNewProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C3311276B4BBE00E09B97 /* LeapNewProjectParameters.swift */; };
 		2D2C3314276B512900E09B97 /* LeapNewLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C3313276B512900E09B97 /* LeapNewLanguage.swift */; };
@@ -91,15 +92,21 @@
 		2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */; };
 		2D918D8D278710330021AE11 /* SSLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D918D8C278710330021AE11 /* SSLManager.swift */; };
 		2D918D8E278710330021AE11 /* SSLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D918D8C278710330021AE11 /* SSLManager.swift */; };
+		2D9823A8281ABD4E000F7614 /* LeapNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9823A7281ABD4E000F7614 /* LeapNetworkService.swift */; };
+		2D9823A9281ABD4E000F7614 /* LeapNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D9823A7281ABD4E000F7614 /* LeapNetworkService.swift */; };
 		2DACA43D261E2863007293AC /* Leap+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DACA43C261E2863007293AC /* Leap+String.swift */; };
 		2DB75EFB2680ECCE00F558DD /* LeapQRCodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB75EFA2680ECCE00F558DD /* LeapQRCodeManager.swift */; };
 		2DB75EFD26811D0400F558DD /* Creator.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DB75EFC26811D0400F558DD /* Creator.xcassets */; };
 		2DBCDA1C2684884800985C51 /* Leap+UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBCDA1A2684872F00985C51 /* Leap+UILabel.swift */; };
 		2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */; };
 		2DC5FF11265F774700826FEB /* LeapDelight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC5FF10265F774700826FEB /* LeapDelight.swift */; };
+		2DD02F56281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */; };
+		2DD02F57281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */; };
 		2DD7D96126DE95120071A19F /* HybridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD7D96026DE95120071A19F /* HybridViewController.swift */; };
 		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
 		2DF4645C26B06DA20063FAC2 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4645B26B06DA20063FAC2 /* MainViewController.swift */; };
+		2DFC7F7B281D10A100C6B7CD /* LeapAnalyticsDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFC7F7A281D10A100C6B7CD /* LeapAnalyticsDataManager.swift */; };
+		2DFC7F7D281D10E100C6B7CD /* LeapAnalyticsNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFC7F7C281D10E100C6B7CD /* LeapAnalyticsNetworkManager.swift */; };
 		D017401625F75D17002C051E /* scroll_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D017401525F75D17002C051E /* scroll_arrow.png */; };
 		D02C12F725DFC6B000C80E28 /* LeapCreatorInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D049F5F8249D2BA100372324 /* LeapCreatorInternal.swift */; };
 		D02C12F825DFC6B000C80E28 /* LeapCreatorConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D08593E25A3391C002D7993 /* LeapCreatorConfig.swift */; };
@@ -138,7 +145,7 @@
 		D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0084C8F248681F90082508C /* LeapStage.swift */; };
 		D08DA63F25DEA2E800EB0EFC /* LeapClickHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9B67725B6EECD00250133 /* LeapClickHandler.swift */; };
 		D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09C722F246A98860060E054 /* LeapStageManager.swift */; };
-		D08DA64225DEA2E800EB0EFC /* LeapInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* LeapInternal.swift */; };
+		D08DA64225DEA2E800EB0EFC /* LeapStarter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E45102420DE1500A43FEA /* LeapStarter.swift */; };
 		D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D25C4772577EC4B008F04C9 /* LeapIconSetting.swift */; };
 		D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0521CA024F6401F00EEE719 /* LeapAssistManager.swift */; };
 		D08DA64825DEA2E800EB0EFC /* LeapConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */; };
@@ -310,6 +317,7 @@
 
 /* Begin PBXFileReference section */
 		2D00D43F27748E9200AD5F1C /* LeapMediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaPlayer.swift; sourceTree = "<group>"; };
+		2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapRemoteHandler.swift; sourceTree = "<group>"; };
 		2D08591725A31FE9002D7993 /* LeapCreatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCreatorManager.swift; sourceTree = "<group>"; };
 		2D08593E25A3391C002D7993 /* LeapCreatorConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCreatorConfig.swift; sourceTree = "<group>"; };
 		2D16BB0B25D29815001F57BD /* ManualScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScrollViewController.swift; sourceTree = "<group>"; };
@@ -356,18 +364,22 @@
 		2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSoundManager.swift; sourceTree = "<group>"; };
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
 		2D918D8C278710330021AE11 /* SSLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLManager.swift; sourceTree = "<group>"; };
+		2D9823A7281ABD4E000F7614 /* LeapNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapNetworkService.swift; sourceTree = "<group>"; };
 		2DACA43C261E2863007293AC /* Leap+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+String.swift"; sourceTree = "<group>"; };
 		2DB75EFA2680ECCE00F558DD /* LeapQRCodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapQRCodeManager.swift; sourceTree = "<group>"; };
 		2DB75EFC26811D0400F558DD /* Creator.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Creator.xcassets; sourceTree = "<group>"; };
 		2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConstants.swift; sourceTree = "<group>"; };
 		2DBCDA1A2684872F00985C51 /* Leap+UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+UILabel.swift"; sourceTree = "<group>"; };
 		2DC5FF10265F774700826FEB /* LeapDelight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDelight.swift; sourceTree = "<group>"; };
+		2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapNetworkRequestHandler.swift; sourceTree = "<group>"; };
 		2DD0E35225B6D7E700EBB9B8 /* LeapReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachability.swift; sourceTree = "<group>"; };
 		2DD0E35B25B7159400EBB9B8 /* LeapReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachabilityManager.swift; sourceTree = "<group>"; };
 		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
 		2DD7D96026DE95120071A19F /* HybridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridViewController.swift; sourceTree = "<group>"; };
 		2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LeapMedia.xcassets; sourceTree = "<group>"; };
 		2DF4645B26B06DA20063FAC2 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		2DFC7F7A281D10A100C6B7CD /* LeapAnalyticsDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsDataManager.swift; sourceTree = "<group>"; };
+		2DFC7F7C281D10E100C6B7CD /* LeapAnalyticsNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsNetworkManager.swift; sourceTree = "<group>"; };
 		2DFFF57425A5D0DB001051D3 /* LeapAUIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAUIConstants.swift; sourceTree = "<group>"; };
 		B6153A32253E98DB008CA08F /* LeapBeaconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapBeaconManager.swift; sourceTree = "<group>"; };
 		B6153A3C253E9933008CA08F /* LeapPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPermissionManager.swift; sourceTree = "<group>"; };
@@ -407,7 +419,7 @@
 		D03E44EB2420AABC00A43FEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D03E44EE2420AABC00A43FEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D03E44F02420AABC00A43FEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D03E45102420DE1500A43FEA /* LeapInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapInternal.swift; sourceTree = "<group>"; };
+		D03E45102420DE1500A43FEA /* LeapStarter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapStarter.swift; sourceTree = "<group>"; };
 		D03E45162423AAAA00A43FEA /* LeapPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapPointer.swift; sourceTree = "<group>"; };
 		D04356C22498CB7C00B90276 /* LeapLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguage.swift; sourceTree = "<group>"; };
 		D049F5F6249D242000372324 /* LeapCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCreator.swift; sourceTree = "<group>"; };
@@ -811,8 +823,8 @@
 				D071662B24629C7E001937EE /* Utils */,
 				2D8478D426C2686100C2E1BA /* Extensions */,
 				D071662924629C69001937EE /* Context */,
-				D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */,
-				D03E45102420DE1500A43FEA /* LeapInternal.swift */,
+				D03E45102420DE1500A43FEA /* LeapStarter.swift */,
+				2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */,
 				D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */,
 				D0592E7A241FA6E3007782A8 /* LeapCore.h */,
 				D0592E7B241FA6E3007782A8 /* Info.plist */,
@@ -856,6 +868,8 @@
 				D0D7293324AC9B0000F75D0D /* LeapJSMaker.swift */,
 				2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */,
 				2D918D8C278710330021AE11 /* SSLManager.swift */,
+				2D9823A7281ABD4E000F7614 /* LeapNetworkService.swift */,
+				2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -979,6 +993,9 @@
 			isa = PBXGroup;
 			children = (
 				D0ABD0052481155F0069FA67 /* LeapAnalyticsEvent.swift */,
+				D08C079A247FBFD40026F068 /* LeapAnalyticsManager.swift */,
+				2DFC7F7C281D10E100C6B7CD /* LeapAnalyticsNetworkManager.swift */,
+				2DFC7F7A281D10A100C6B7CD /* LeapAnalyticsDataManager.swift */,
 			);
 			path = Analytics;
 			sourceTree = "<group>";
@@ -1448,6 +1465,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DFC7F7B281D10A100C6B7CD /* LeapAnalyticsDataManager.swift in Sources */,
 				D08DA63825DEA2E800EB0EFC /* LeapSupportModals.swift in Sources */,
 				2D5883BA276A124800759C94 /* LeapNewAssist.swift in Sources */,
 				2D5BB252276C92E900BC2360 /* LeapNewAUIContent.swift in Sources */,
@@ -1455,6 +1473,7 @@
 				2D2C3312276B4BBE00E09B97 /* LeapNewProjectParameters.swift in Sources */,
 				2D5BB244276C8B5500BC2360 /* LeapNewLocaleSounds.swift in Sources */,
 				2D5BB254276C93AF00BC2360 /* LeapNewIconSetting.swift in Sources */,
+				2DD02F56281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */,
 				D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */,
 				D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */,
 				D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */,
@@ -1465,11 +1484,13 @@
 				D02E9607261A503E001A2AA2 /* LeapPropertiesHandler.swift in Sources */,
 				2D5BB246276C8BA800BC2360 /* LeapNewDiscovery.swift in Sources */,
 				D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */,
-				D08DA64225DEA2E800EB0EFC /* LeapInternal.swift in Sources */,
+				D08DA64225DEA2E800EB0EFC /* LeapStarter.swift in Sources */,
 				D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */,
 				D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */,
+				2D9823A8281ABD4E000F7614 /* LeapNetworkService.swift in Sources */,
 				2D5BB258276CA08600BC2360 /* LeapNewConnectedProject.swift in Sources */,
 				2D5BB25E276CA57800BC2360 /* LeapNewWebView.swift in Sources */,
+				2D076DEF281FF08E008AE73F /* LeapRemoteHandler.swift in Sources */,
 				D08DA64825DEA2E800EB0EFC /* LeapConstants.swift in Sources */,
 				D08DA64A25DEA2E800EB0EFC /* LeapFeature.swift in Sources */,
 				D08DA64B25DEA2E800EB0EFC /* LeapAnalyticsManager.swift in Sources */,
@@ -1495,6 +1516,7 @@
 				D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */,
 				2D5BB250276C90CA00BC2360 /* LeapNewInstruction.swift in Sources */,
 				D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */,
+				2DFC7F7D281D10E100C6B7CD /* LeapAnalyticsNetworkManager.swift in Sources */,
 				2D5BB240276C72FE00BC2360 /* LeapNewPage.swift in Sources */,
 				2D5BB248276C8DB800BC2360 /* LeapNewTrigger.swift in Sources */,
 				D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */,
@@ -1531,6 +1553,7 @@
 				D0B603CB25DFB6BA0092F735 /* Leap.swift in Sources */,
 				D0B603CC25DFB6BA0092F735 /* LeapNotification.swift in Sources */,
 				D0B603CD25DFB6BA0092F735 /* LeapMedia.swift in Sources */,
+				2D9823A9281ABD4E000F7614 /* LeapNetworkService.swift in Sources */,
 				D0B603CE25DFB6BA0092F735 /* LeapSlideIn.swift in Sources */,
 				D0B603CF25DFB6BA0092F735 /* LeapLabel.swift in Sources */,
 				D0B603D025DFB6BA0092F735 /* LeapBottomSheet.swift in Sources */,
@@ -1546,6 +1569,7 @@
 				D0B603D925DFB6BA0092F735 /* LeapAUIUtils.swift in Sources */,
 				D096B3E825F0F027009BE7B3 /* LeapArrowButton.swift in Sources */,
 				D0B603DA25DFB6BA0092F735 /* LeapFullScreen.swift in Sources */,
+				2DD02F57281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */,
 				D0B603DB25DFB6BA0092F735 /* LeapKeyWindowAssist.swift in Sources */,
 				D0B603DC25DFB6BA0092F735 /* LeapSpot.swift in Sources */,
 				D0B603DD25DFB6BA0092F735 /* LeapAUIManager.swift in Sources */,
