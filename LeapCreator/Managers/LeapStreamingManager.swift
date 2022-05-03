@@ -91,7 +91,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
             guard let roomId = room else {
                 return
             }
-            let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\",\"screenDimensions\":{\"screenWidth\":\"\(UIScreen.main.nativeBounds.width)\",\"screenHeight\":\"\(UIScreen.main.nativeBounds.height)\"}}"
+            let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\",\"screenDimensions\":{\"screenWidth\":\"\(UIScreen.main.bounds.width)\",\"screenHeight\":\"\(UIScreen.main.bounds.height)\"}}"
         let payload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
 
         webSocket?.write(string: payload, completion: {

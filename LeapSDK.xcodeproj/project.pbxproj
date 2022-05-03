@@ -86,7 +86,6 @@
 		2D5E52CF263965E30037575C /* LeapTappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5E52CE263965E30037575C /* LeapTappable.swift */; };
 		2D664A7D2799A56200F5EEA2 /* Leap.cer in Resources */ = {isa = PBXBuildFile; fileRef = 2D664A7C2799A56200F5EEA2 /* Leap.cer */; };
 		2D664A7E2799A56200F5EEA2 /* Leap.cer in Resources */ = {isa = PBXBuildFile; fileRef = 2D664A7C2799A56200F5EEA2 /* Leap.cer */; };
-		2D8347072779AE4000A03B22 /* embedVideo1.html in Resources */ = {isa = PBXBuildFile; fileRef = 2D8347062779AE4000A03B22 /* embedVideo1.html */; };
 		2D8478D626C2688400C2E1BA /* Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8478D526C2688400C2E1BA /* Encoder.swift */; };
 		2D8478D726C26D2500C2E1BA /* LeapProjectParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2FF4FF2610BE6100962B0C /* LeapProjectParameters.swift */; };
 		2D8CD76E2636B3130049D21F /* LeapSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */; };
@@ -1308,7 +1307,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D8347072779AE4000A03B22 /* embedVideo1.html in Resources */,
 				2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */,
 				D0B603EF25DFB6BA0092F735 /* jiny_option_language.png in Resources */,
 				2D664A7E2799A56200F5EEA2 /* Leap.cer in Resources */,
