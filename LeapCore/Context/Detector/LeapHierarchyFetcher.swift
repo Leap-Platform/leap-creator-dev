@@ -9,8 +9,11 @@
 import Foundation
 import UIKit
 
+/// LeapHierarchyFetcher class' sole objective is to generate the hierarchy of the app as a dictionary. The dictionary wil be as [viewId : LeapViewProperties]
 class LeapHierarchyFetcher {
     
+    /// Fetches current hierarchy of the app as a flat map
+    /// - Returns: current hierarchy
     func fetchHierarchy() -> [String : LeapViewProperties] {
         var hierarchy:[String : LeapViewProperties] = [:]
         let allWindows = UIApplication.shared.windows
@@ -24,6 +27,9 @@ class LeapHierarchyFetcher {
         return hierarchy
     }
     
+    /// Gets view properties hierarchy for a specific view. Recursive method doing depth-first-search to get all properties of a single view
+    /// - Parameter viewProperties: view properties of the view for which the hieratchy is to be generated
+    /// - Returns: hierarchy for specific view as a flat dictionary
     private func getChildrenHierachy(_ viewProperties:LeapViewProperties) -> [String:LeapViewProperties] {
         let viewId = viewProperties.viewId
         var hierarchy:[String : LeapViewProperties] = [viewId : viewProperties]
@@ -40,12 +46,18 @@ class LeapHierarchyFetcher {
         return hierarchy
     }
     
+    /// Gets valid subviews for a view by eliminating hidden, invisible, covered views. Also eliminates views created by Leap
+    /// - Parameter view: view to get valid subviews
+    /// - Returns: visible and valid subviews
     private func validSubviewsFor(_ view:UIView) -> [UIView] {
         let filteredSubviews = view.subviews.filter{ !$0.isHidden && ($0.alpha > 0)  && !String(describing: type(of: $0)).contains("Leap") }
         let filteredVisibleSubviews = visibleChildrenFor(filteredSubviews)
         return filteredVisibleSubviews
     }
     
+    /// Eliminates views covered by younger sibling views
+    /// - Parameter views: list of subviews
+    /// - Returns: list of subviews which are visible and are not completely covered by younger siblings
     private func visibleChildrenFor(_ views: Array<UIView>) -> Array<UIView> {
         var visibleViews:Array<UIView> = views
         for coveringView in views.reversed() {
@@ -59,6 +71,12 @@ class LeapHierarchyFetcher {
         return visibleViews
     }
     
+    /// Generates LeapViewProperties object for a view
+    /// - Parameters:
+    ///   - view: view for which the LeapViewProperties object is to be generated
+    ///   - parentUUID: the viewId of the parent view
+    ///   - index: index of view in list of subviews of the parent
+    /// - Returns: LeapViewProperties object for the view
     private func generateLeapViewProperties(_ view: UIView, _ parentUUID:String?, _ index:Int) -> LeapViewProperties {
         return LeapViewProperties(with: view, uuid: UUID().uuidString, parentUUID: parentUUID, index: index)
     }
