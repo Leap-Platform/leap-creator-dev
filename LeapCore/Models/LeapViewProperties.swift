@@ -20,7 +20,7 @@ class LeapViewProperties {
     var accId: String?
     var accLabel: String?
     var className: String
-    var tag: Int
+    var tag: String
     var text:String?
     var isSelected:Bool
     var isEnabled:Bool
@@ -36,7 +36,7 @@ class LeapViewProperties {
         accId = view.accessibilityIdentifier
         accLabel = view.accessibilityLabel
         className = String(describing: type(of: view))
-        tag = view.tag
+        tag = "\(view.tag)"
         
         text = {
             if let label = view as? UILabel { return label.text }

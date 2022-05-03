@@ -12,17 +12,18 @@ import UIKit
 class LeapViewFinder {
     
     public func findValidContextsIn(_ hierarchy:[String:LeapViewProperties],
-                             contexts:[LeapContext],
-                             nativeIdentifierFor:(_ nativeIdentifierId:String) -> LeapNativeIdentifier?,
-                             webIdentifierFor:(_ webIdentifierId:String) -> LeapWebIdentifier?,
-                             completion:(_ validContexts:[LeapContext]) -> Void) {
+                                    contexts:[LeapContext],
+                                    nativeIdentifierFor:(_ nativeIdentifierId:String) -> LeapNativeIdentifier?,
+                                    webIdentifierFor:(_ webIdentifierId:String) -> LeapWebIdentifier?,
+                                    completion:(_ validContexts:[LeapContext]) -> Void) {
         
         let nativeIdentifierIds = nativeIdentifierIdList(from :contexts)
         let webIdentifierIds = webIdentifierIdList(from :contexts)
         var passingNativeIdentifierIds:[String] = []
+        let nativeViewFinder = LeapNativeViewFinder(with: hierarchy)
         for nativeIdentifierId in nativeIdentifierIds {
             if let nativeIdentifier = nativeIdentifierFor(nativeIdentifierId),
-                LeapNativeViewFinder().isViewFor(nativeIdentifier, presentIn: hierarchy) {
+               nativeViewFinder.isIdentifierValid(nativeIdentifier) {
                 passingNativeIdentifierIds.append(nativeIdentifierId)
             }
         }
