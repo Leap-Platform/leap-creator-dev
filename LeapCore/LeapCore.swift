@@ -76,7 +76,7 @@ import UIKit
 @objc public class LeapCore:NSObject {
         
     @objc public static let shared = LeapCore()
-    private var leapInternal:LeapInternal?
+    private var leapStarter: LeapStarter?
     private var apiKey:String? = nil
     private var isTest:Bool? = false
     
@@ -91,16 +91,16 @@ import UIKit
         self.apiKey = token
         self.isTest = isTest
         guard let apiKey = self.apiKey else { return nil }
-        self.leapInternal = LeapInternal.init(apiKey, uiManager: uiManager)
-        return self.leapInternal?.auiCallback()
+        self.leapStarter = LeapStarter.init(apiKey, uiManager: uiManager)
+        return self.leapStarter?.auiCallback()
     }
     
     public func startProject(projectId:String, resetProject:Bool) {
-        self.leapInternal?.startProject(projectId: projectId, resetProject: resetProject, isEmbedProject: false)
+        self.leapStarter?.startProject(projectId: projectId, resetProject: resetProject, isEmbedProject: false)
     }
     
     public func embedProject(_ projectId:String) {
-        self.leapInternal?.startProject(projectId: projectId, resetProject: true, isEmbedProject: true)
+        self.leapStarter?.startProject(projectId: projectId, resetProject: true, isEmbedProject: true)
     }
     
 }
