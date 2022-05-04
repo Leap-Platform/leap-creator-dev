@@ -9,36 +9,33 @@
 import Foundation
 import UIKit
 
-protocol LeapAnalyticsManagerDelegate: AnyObject {
+@objc protocol LeapEventsDelegate: AnyObject {
+    @objc optional func successfullySentEvents(events: Array<Dictionary<String, Any>>)
     func sendPayload(_ payload: Dictionary<String, Any>)
-    func failedToSendEvents(payload: Array<Dictionary<String, Any>>)
-    func successfullySentEvents(payload: Array<Dictionary<String, Any>>)
-    func isProjectFlowMenu(projectParams: LeapProjectParameters?) -> Bool
-    func getCurrentFlowMenu() -> LeapProjectParameters?
-    func getCurrentSubFlow() -> LeapProjectParameters?
-    func getCurrentPageForAnalytics() -> LeapPage?
-    func getCurrentStage() -> LeapStage?
-    func getCurrentAssist() -> LeapAssist?
+}
+
+protocol LeapAnalyticsDelegate: AnyObject {
+    func queue(event name: EventName, for analytics: LeapAnalyticsModel)
 }
 
 class LeapAnalyticsManager {
-        
-    private lazy var analyticsModelHandler: LeapAnalyticsModelHandler = {
-        return LeapAnalyticsModelHandler(self)
-    }()
     
-    private lazy var analyticsDataHandler: LeapAnalyticsDataHandler = {
-        return LeapAnalyticsDataHandler(self)
+    private lazy var analyticsModelHandler: LeapAnalyticsModelHandler = {
+        return LeapAnalyticsModelHandler()
     }()
     
     private lazy var analyticsNetworkHandler: LeapAnalyticsNetworkHandler = {
         return LeapAnalyticsNetworkHandler(self)
     }()
     
-    weak var delegate: LeapAnalyticsManagerDelegate?
+    private lazy var analyticsDataHandler: LeapAnalyticsDataHandler = {
+        return LeapAnalyticsDataHandler(self)
+    }()
     
-    init(_ analyticsDelegate: LeapAnalyticsManagerDelegate) {
-        self.delegate = analyticsDelegate
+    weak var eventsDelegate: LeapEventsDelegate?
+    
+    init(_ eventsDelegate: LeapEventsDelegate) {
+        self.eventsDelegate = eventsDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(flushPendingEvents), name: UIApplication.willResignActiveNotification, object: nil)
         flushPendingEvents()
     }
@@ -53,125 +50,126 @@ class LeapAnalyticsManager {
         analyticsNetworkHandler.flushEvents(eventsToFlush)
     }
     
-    func queue(event name: EventName, for analytics: LeapAnalyticsModel) {
+    private func queueEvent(event name: EventName, for analytics: LeapAnalyticsModel) {
         
         switch name {
             
         case .startScreenEvent, .flowMenuStartScreen:
+            
             if let event = analyticsModelHandler.startScreenEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
         case .optInEvent:
+            
             if let event = analyticsModelHandler.optInEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .optOutEvent:
+            
             if let event = analyticsModelHandler.optOutEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .instructionEvent:
+            
             if let event = analyticsModelHandler.instructionEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .assistInstructionEvent:
+            
             if let event = analyticsModelHandler.assistInstructionEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .flowSuccessEvent:
+            
             if let event = analyticsModelHandler.flowSuccessEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .flowStopEvent:
+            
             if let event = analyticsModelHandler.flowStopEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .flowDisableEvent:
+            
             if let event = analyticsModelHandler.flowDisableEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .languageChangeEvent:
+            
             if let event = analyticsModelHandler.languageChangeEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .actionTrackingEvent:
+            
             if let event = analyticsModelHandler.auiActionTrackingEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
-            
         case .leapSdkDisableEvent:
-            if let event = analyticsModelHandler.leapSDKDisableEvent(with: analytics) {
-                analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
-            }
             
-        case .projectTerminationEvent:
-            if let event = analyticsModelHandler.projectTerminationEvent(with: analytics) {
+            if let event = analyticsModelHandler.leapSDKDisableEvent(with: analytics) {
+                
                 analyticsDataHandler.saveEvent(event: event)
-                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
+            }
+        case .projectTerminationEvent:
+            
+            if let event = analyticsModelHandler.projectTerminationEvent(with: analytics) {
+                
+                analyticsDataHandler.saveEvent(event: event)
+                
+                analyticsDataHandler.sendClientCallbackEvent(event: event, projectParameter: analytics.projectParameter, isProjectFlowMenu: analytics.isProjectFlowMenu)
             }
         }
-        
-        if let events = analyticsDataHandler.eventsToFlush() {
-         
+        if let events = analyticsDataHandler.getEventsToFlush() {
+            
             analyticsNetworkHandler.flushEvents(events)
         }
     }
 }
 
-extension LeapAnalyticsManager: LeapAnalyticsManagerDelegate {
+extension LeapAnalyticsManager: LeapAnalyticsDelegate {
+    func queue(event name: EventName, for analytics: LeapAnalyticsModel) {
+        queueEvent(event: name, for: analytics)
+    }
+}
+
+extension LeapAnalyticsManager: LeapEventsDelegate {
+    func successfullySentEvents(events: Array<Dictionary<String, Any>>) {
+        analyticsDataHandler.deleteFlushedEvents()
+    }
     
     func sendPayload(_ payload: Dictionary<String, Any>) {
-        delegate?.sendPayload(payload)
-    }
-    
-    func failedToSendEvents(payload: Array<Dictionary<String, Any>>) {
-        delegate?.failedToSendEvents(payload: payload)
-    }
-    
-    func successfullySentEvents(payload: Array<Dictionary<String, Any>>) {
-        analyticsDataHandler.deleteFlushedEvents()
-        delegate?.successfullySentEvents(payload: payload)
-    }
-    
-    func isProjectFlowMenu(projectParams: LeapProjectParameters?) -> Bool {
-        return delegate?.isProjectFlowMenu(projectParams: projectParams) ?? false
-    }
-    
-    func getCurrentFlowMenu() -> LeapProjectParameters? {
-        return delegate?.getCurrentFlowMenu()
-    }
-    
-    func getCurrentSubFlow() -> LeapProjectParameters? {
-        return delegate?.getCurrentSubFlow()
-    }
-    
-    func getCurrentPageForAnalytics() -> LeapPage? {
-        return delegate?.getCurrentPageForAnalytics()
-    }
-    
-    func getCurrentStage() -> LeapStage? {
-        return delegate?.getCurrentStage()
-    }
-    
-    func getCurrentAssist() -> LeapAssist? {
-        return delegate?.getCurrentAssist()
+        eventsDelegate?.sendPayload(payload)
     }
 }

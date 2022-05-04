@@ -13,11 +13,11 @@ class LeapAnalyticsNetworkHandler {
     
     private let networkService = LeapNetworkService()
     
-    weak var delegate: LeapAnalyticsManagerDelegate?
+    weak var delegate: LeapEventsDelegate?
     
     private let prefs = UserDefaults.standard
     
-    init(_ delegate: LeapAnalyticsManagerDelegate) {
+    init(_ delegate: LeapEventsDelegate) {
         self.delegate = delegate
     }
     
@@ -26,32 +26,18 @@ class LeapAnalyticsNetworkHandler {
         guard events.count > 0 else { return }
         
         guard let req = createURLRequest(urlString: Constants.Networking.analyticsEndPoint), let analyticsURLRequest = addRequestBody(analyticsURLRequest: req, events: events) else {
-            delegate?.failedToSendEvents(payload: events)
             return
         }
         
         self.networkService.makeUrlRequest(analyticsURLRequest) { [weak self] (result: Result<ResponseData, RequestError>) in
             switch result {
             case .success(let (data, _)): print(data)
-                self?.delegate?.successfullySentEvents(payload: events)
+                print("\(events.count) events successfully sent")
+                self?.delegate?.successfullySentEvents?(events: events)
             case .failure(let error): print(error.localizedDescription)
-                self?.delegate?.failedToSendEvents(payload: events)
+                print("\(events.count) events failed to send")
             }
         }
-        
-//        let session = SSLManager.shared.isValidForSSLPinning(urlString: req.url!.absoluteString) ? SSLManager.shared.session : URLSession.shared
-//
-//        let analyticsTask = session?.dataTask(with: analyticsURLRequest) { [weak self] (data, response, error) in
-//            print(data)
-//            if error != nil { self?.delegate?.failedToSendEvents(payload: events) }
-//            else if let httpResponse = response as? HTTPURLResponse {
-//                if httpResponse.statusCode == 200 {
-//                    self?.delegate?.successfullySentEvents(payload: events)
-//                    self?.prefs.removeObject(forKey: "leap_flush_events")
-//                } else { self?.delegate?.failedToSendEvents(payload: events) }
-//            }
-//        }
-//        analyticsTask?.resume()
     }
     
     private func createURLRequest(urlString: String) -> URLRequest? {

@@ -11,13 +11,19 @@ import Foundation
 struct LeapAnalyticsModel {
     
     var projectParameter: LeapProjectParameters?
+    var isProjectFlowMenu: Bool?
     var instructionId: String?
     var previousLanguage: String?
     var currentLanguage: String?
     var action: Dictionary<String, Any>?
     var terminationRule: String?
+    var currentFlowMenu: LeapProjectParameters?
+    var currentSubFlow: LeapProjectParameters?
+    var currentStage: LeapStage?
+    var currentPage: LeapPage?
+    var currentAssist: LeapAssist?
     
-    init(projectParameter: LeapProjectParameters?, instructionId: String? = nil, previousLanguage: String? = nil, currentLanguage: String? = nil, action: Dictionary<String, Any>? = nil, terminationRule: String? = nil) {
+    init(projectParameter: LeapProjectParameters?, instructionId: String? = nil, previousLanguage: String? = nil, currentLanguage: String? = nil, action: Dictionary<String, Any>? = nil, terminationRule: String? = nil, isProjectFlowMenu: Bool? = nil, currentFlowMenu: LeapProjectParameters? = nil, currentSubFlow: LeapProjectParameters? = nil, currentStage: LeapStage? = nil, currentPage: LeapPage? = nil, currentAssist: LeapAssist? = nil) {
         
         self.projectParameter = projectParameter
         self.instructionId = instructionId
@@ -34,12 +40,6 @@ class LeapAnalyticsModelHandler {
     private var lastEventId: String?
     private var lastEventLanguage: String?
     
-    weak var delegate: LeapAnalyticsManagerDelegate?
-    
-    init(_ delegate: LeapAnalyticsManagerDelegate) {
-        self.delegate = delegate
-    }
-    
     func startScreenEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent? {
         guard let projectParameter = analytics.projectParameter else { return nil }
         if lastEventId == analytics.instructionId && lastEventLanguage == LeapPreferences.shared.getUserLanguage() {
@@ -48,10 +48,10 @@ class LeapAnalyticsModelHandler {
         let event = LeapAnalyticsEvent(withEvent: EventName.startScreenEvent, withParams: projectParameter)
         lastEventId = analytics.instructionId
         lastEventLanguage = event.language
-        if !(delegate?.isProjectFlowMenu(projectParams: projectParameter) ?? false) {
-            event.parentProjectId = delegate?.getCurrentFlowMenu()?.projectId // flow menu projectId if there is parent
-            event.parentProjectName = delegate?.getCurrentFlowMenu()?.projectName
-            event.parentDeploymentVersion = delegate?.getCurrentFlowMenu()?.deploymentVersion
+        if !(analytics.isProjectFlowMenu ?? false) {
+            event.parentProjectId = analytics.currentFlowMenu?.projectId // flow menu projectId if there is parent
+            event.parentProjectName = analytics.currentFlowMenu?.projectName
+            event.parentDeploymentVersion = analytics.currentFlowMenu?.deploymentVersion
             print("Start Screen")
         } else {
             event.eventName = EventName.flowMenuStartScreen.rawValue
@@ -63,14 +63,14 @@ class LeapAnalyticsModelHandler {
     func optInEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent? {
         guard let projectParameter = analytics.projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.optInEvent, withParams: projectParameter)
-        if delegate?.isProjectFlowMenu(projectParams: projectParameter) ?? false {
-            event.selectedProjectId = delegate?.getCurrentSubFlow()?.projectId // subflow projectId
-            event.selectedFlow = delegate?.getCurrentSubFlow()?.projectName // subflow's name
+        if (analytics.isProjectFlowMenu ?? false) {
+            event.selectedProjectId = analytics.currentSubFlow?.projectId // subflow projectId
+            event.selectedFlow = analytics.currentSubFlow?.projectName // subflow's name
             print("FlowMenu Opt In")
         } else {
-            event.parentProjectId = delegate?.getCurrentFlowMenu()?.projectId // flow menu projectId if there is parent
-            event.parentProjectName = delegate?.getCurrentFlowMenu()?.projectName
-            event.parentDeploymentVersion = delegate?.getCurrentFlowMenu()?.deploymentVersion
+            event.parentProjectId = analytics.currentFlowMenu?.projectId // flow menu projectId if there is parent
+            event.parentProjectName = analytics.currentFlowMenu?.projectName
+            event.parentDeploymentVersion = analytics.currentFlowMenu?.deploymentVersion
             print("Opt In")
         }
         return event
@@ -92,13 +92,13 @@ class LeapAnalyticsModelHandler {
         let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
         lastEventId = analytics.instructionId
         lastEventLanguage = event.language
-        event.elementName = delegate?.getCurrentStage()?.name
-        event.pageName = delegate?.getCurrentPageForAnalytics()?.name
+        event.elementName = analytics.currentStage?.name
+        event.pageName = analytics.currentPage?.name
         
-        event.parentProjectId = delegate?.getCurrentFlowMenu()?.projectId // flow menu projectId if there is parent
-        event.parentProjectName = delegate?.getCurrentFlowMenu()?.projectName
-        event.parentDeploymentVersion = delegate?.getCurrentFlowMenu()?.deploymentVersion
-        event.selectedFlow = delegate?.getCurrentFlowMenu() != nil ? delegate?.getCurrentSubFlow()?.projectName : nil // subflow's name
+        event.parentProjectId = analytics.currentFlowMenu?.projectId // flow menu projectId if there is parent
+        event.parentProjectName = analytics.currentFlowMenu?.projectName
+        event.parentDeploymentVersion = analytics.currentFlowMenu?.deploymentVersion
+        event.selectedFlow = analytics.currentFlowMenu != nil ? analytics.currentSubFlow?.projectName : nil // subflow's name
         print("element seen")
         return event
     }
@@ -112,7 +112,7 @@ class LeapAnalyticsModelHandler {
         let event = LeapAnalyticsEvent(withEvent: EventName.instructionEvent, withParams: projectParameter)
         lastEventId = analytics.instructionId
         lastEventLanguage = event.language
-        event.elementName = delegate?.getCurrentAssist()?.name
+        event.elementName = analytics.currentAssist?.name
         print("assist element seen")
         return event
     }
@@ -120,10 +120,10 @@ class LeapAnalyticsModelHandler {
     func flowSuccessEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent? {
         guard let projectParameter = analytics.projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowSuccessEvent, withParams: projectParameter)
-        event.parentProjectId = delegate?.getCurrentFlowMenu()?.projectId // flow menu projectId if there is parent
-        event.parentProjectName = delegate?.getCurrentFlowMenu()?.projectName
-        event.parentDeploymentVersion = delegate?.getCurrentFlowMenu()?.deploymentVersion
-        event.selectedFlow = delegate?.getCurrentFlowMenu() != nil ? delegate?.getCurrentSubFlow()?.projectName : nil // subflow's name
+        event.parentProjectId = analytics.currentFlowMenu?.projectId // flow menu projectId if there is parent
+        event.parentProjectName = analytics.currentFlowMenu?.projectName
+        event.parentDeploymentVersion = analytics.currentFlowMenu?.deploymentVersion
+        event.selectedFlow = analytics.currentFlowMenu != nil ? analytics.currentSubFlow?.projectName : nil // subflow's name
         print("flow success")
         return event
     }
@@ -131,8 +131,8 @@ class LeapAnalyticsModelHandler {
     func flowStopEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent? {
         guard let projectParameter = analytics.projectParameter else { return nil }
         let event = LeapAnalyticsEvent(withEvent: EventName.flowStopEvent, withParams: projectParameter)
-        event.elementName = delegate?.getCurrentStage()?.name
-        event.pageName = delegate?.getCurrentPageForAnalytics()?.name
+        event.elementName = analytics.currentStage?.name
+        event.pageName = analytics.currentPage?.name
         print("flow stop")
         return event
     }
@@ -183,13 +183,13 @@ class LeapAnalyticsModelHandler {
             event.actionEventValue = nil
         }
         
-        event.elementName = delegate?.getCurrentStage()?.name ?? delegate?.getCurrentAssist()?.name
-        event.pageName = delegate?.getCurrentPageForAnalytics()?.name
+        event.elementName = analytics.currentStage?.name ?? analytics.currentAssist?.name
+        event.pageName = analytics.currentPage?.name
         
-        event.parentProjectId = delegate?.getCurrentFlowMenu()?.projectId // flow menu projectId if there is parent
-        event.parentProjectName = delegate?.getCurrentFlowMenu()?.projectName
-        event.parentDeploymentVersion = delegate?.getCurrentFlowMenu()?.deploymentVersion
-        event.selectedFlow = delegate?.getCurrentFlowMenu() != nil ? delegate?.getCurrentSubFlow()?.projectName : nil // subflow's name
+        event.parentProjectId = analytics.currentFlowMenu?.projectId // flow menu projectId if there is parent
+        event.parentProjectName = analytics.currentFlowMenu?.projectName
+        event.parentDeploymentVersion = analytics.currentFlowMenu?.deploymentVersion
+        event.selectedFlow = analytics.currentFlowMenu != nil ? analytics.currentSubFlow?.projectName : nil // subflow's name
         print("AUI action tracking")
         return event
     }
@@ -215,11 +215,11 @@ class LeapAnalyticsDataHandler {
     
     private let MAX_COUNT = 5
     
-    weak var delegate: LeapAnalyticsManagerDelegate?
+    weak var delegate: LeapEventsDelegate?
     
     let prefs = UserDefaults.standard
     
-    init(_ delegate: LeapAnalyticsManagerDelegate) {
+    init(_ delegate: LeapEventsDelegate) {
         self.delegate = delegate
     }
     
@@ -241,11 +241,11 @@ class LeapAnalyticsDataHandler {
         prefs.synchronize()
     }
     
-    func sendClientCallbackEvent(event: LeapAnalyticsEvent?, projectParameter: LeapProjectParameters?) {
+    func sendClientCallbackEvent(event: LeapAnalyticsEvent?, projectParameter: LeapProjectParameters?, isProjectFlowMenu: Bool?) {
                 
         if projectParameter?.deploymentType == constant_LINK {
             
-            if !(delegate?.isProjectFlowMenu(projectParams: projectParameter) ?? false) {
+            if !(isProjectFlowMenu ?? false) {
                 event?.projectId = event?.deploymentId
             }
             event?.sessionId = nil
@@ -263,7 +263,7 @@ class LeapAnalyticsDataHandler {
         delegate?.sendPayload(clientPayload)
     }
     
-    func eventsToFlush() -> Array<Dictionary<String, String>>? {
+    func getEventsToFlush() -> Array<Dictionary<String, String>>? {
         
         let savedEvents = prefs.object(forKey: "leap_saved_events") as? Array<Dictionary<String, String>> ?? []
         
