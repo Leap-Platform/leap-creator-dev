@@ -238,8 +238,9 @@
 		D0F2C4AE25DFCD81006BFF3D /* LeapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0B603F725DFB6BA0092F735 /* LeapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F2C4AF25DFCD81006BFF3D /* LeapCoreSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F2C4B025DFCD81006BFF3D /* LeapCreatorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D0F44B5D28210306009971BE /* LeapViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B5C28210306009971BE /* LeapViewFinder.swift */; };
+		D0F44B5D28210306009971BE /* LeapContextsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B5C28210306009971BE /* LeapContextsValidator.swift */; };
 		D0F44B5F282136EF009971BE /* LeapNativeViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B5E282136EF009971BE /* LeapNativeViewFinder.swift */; };
+		D0F44B612821593C009971BE /* LeapWebViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B602821593C009971BE /* LeapWebViewFinder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -460,8 +461,9 @@
 		D0E55D582479747E005B3EAB /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		D0F2C4B425DFCD81006BFF3D /* LeapDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeapDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F434CB2456CC30005D6C96 /* PlaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceViewController.swift; sourceTree = "<group>"; };
-		D0F44B5C28210306009971BE /* LeapViewFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapViewFinder.swift; sourceTree = "<group>"; };
+		D0F44B5C28210306009971BE /* LeapContextsValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapContextsValidator.swift; sourceTree = "<group>"; };
 		D0F44B5E282136EF009971BE /* LeapNativeViewFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapNativeViewFinder.swift; sourceTree = "<group>"; };
+		D0F44B602821593C009971BE /* LeapWebViewFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapWebViewFinder.swift; sourceTree = "<group>"; };
 		D0FDAC2424B48B3C00D9332B /* Leap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Leap.h; sourceTree = "<group>"; };
 		D0FDAC2524B48B3C00D9332B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0FDAC3024B4A49700D9332B /* Leap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leap.swift; sourceTree = "<group>"; };
@@ -812,8 +814,9 @@
 			isa = PBXGroup;
 			children = (
 				D08B84D0281BD2F000A3DFFA /* LeapHierarchyFetcher.swift */,
-				D0F44B5C28210306009971BE /* LeapViewFinder.swift */,
+				D0F44B5C28210306009971BE /* LeapContextsValidator.swift */,
 				D0F44B5E282136EF009971BE /* LeapNativeViewFinder.swift */,
+				D0F44B602821593C009971BE /* LeapWebViewFinder.swift */,
 			);
 			path = Detector;
 			sourceTree = "<group>";
@@ -1408,6 +1411,7 @@
 				D08DA64C25DEA2E800EB0EFC /* LeapContext.swift in Sources */,
 				D08DA64D25DEA2E800EB0EFC /* LeapCore.swift in Sources */,
 				D08DA64E25DEA2E800EB0EFC /* LeapPage.swift in Sources */,
+				D0F44B612821593C009971BE /* LeapWebViewFinder.swift in Sources */,
 				D08DA64F25DEA2E800EB0EFC /* LeapUtils.swift in Sources */,
 				D08DA65025DEA2E800EB0EFC /* LeapAssist.swift in Sources */,
 				2D2FF5002610BE6100962B0C /* LeapProjectParameters.swift in Sources */,
@@ -1417,7 +1421,7 @@
 				D0A8B54E28190CD6001783DA /* LeapViewProperties.swift in Sources */,
 				D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */,
 				D08DA65625DEA2E800EB0EFC /* LeapJSMaker.swift in Sources */,
-				D0F44B5D28210306009971BE /* LeapViewFinder.swift in Sources */,
+				D0F44B5D28210306009971BE /* LeapContextsValidator.swift in Sources */,
 				D08DA65725DEA2E800EB0EFC /* LeapFlow.swift in Sources */,
 				D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */,
 				D08DA65C25DEA2E800EB0EFC /* LeapContextDetector.swift in Sources */,
