@@ -84,7 +84,7 @@ class LeapDownloadOperation: LeapOperation {
     
     init(_ file: LeapMedia, _ success: @escaping ((Bool, Bool, Bool, URL?) -> Void)) {
         media = file
-        let request = URLRequest(url: media.url!)
+        let request = URLRequest(url: media.url ?? URL(string: "localhost:8080")!)
         super.init(request,success)
     }
     

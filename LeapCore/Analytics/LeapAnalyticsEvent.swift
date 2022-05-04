@@ -15,6 +15,7 @@ enum EventName: String {
     case optInEvent = "flow_opt_in"
     case optOutEvent = "flow_opt_out"
     case instructionEvent = "element_seen"
+    case assistInstructionEvent // both instructionEvent and assistInstructionEvent have same values, no need of unique value.
     case flowSuccessEvent = "flow_success"
     case flowStopEvent = "flow_stop"
     case flowDisableEvent = "flow_disable"
