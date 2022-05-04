@@ -60,7 +60,12 @@ class LeapNativeViewFinder {
         }
         if nativeIdentifier.isAnchorSameAsTarget ?? true { return true }
         guard let relation = nativeIdentifier.relationToTarget else { return true }
-        guard let _ = getViewIdFromRelation(relation, forViewProps: viewProps) else { return false }
+        guard let targetViewPropsId = getViewIdFromRelation(relation, forViewProps: viewProps),
+                let targetViewProps = hierarchy[targetViewPropsId] else { return false }
+        guard let targetIdParam = nativeIdentifier.target?.idParameters else { return true }
+        guard isIdParams(targetIdParam, matchingProps: targetViewProps) else { return false }
+        guard let targetMatchingProps = nativeIdentifier.target?.viewProps else { return true }
+        guard isIdentifierViewProps(targetMatchingProps, matching: targetViewProps) else { return false }
         return true
     }
     
