@@ -16,6 +16,7 @@ class LeapViewProperties {
     var parent: String?
     var children: [String] = []
     var nodeIndex: Int
+    var controller:String?
     
     var accId: String?
     var accLabel: String?
@@ -27,11 +28,12 @@ class LeapViewProperties {
     var isFocused:Bool
     var isWKWebview:Bool
     
-    init(with view:UIView, uuid:String, parentUUID:String?, index:Int = 0) {
+    init(with view:UIView, uuid:String, parentUUID:String?, index:Int = 0, controllerName:String?) {
         viewId = uuid
         weakView = view
         parent = parentUUID
         nodeIndex = index
+        controller = controllerName
         
         accId = view.accessibilityIdentifier
         accLabel = view.accessibilityLabel

@@ -48,10 +48,9 @@ class LeapNativeViewFinder {
     ///   - viewProps: View properties of the view to check against
     /// - Returns: True if the view matches the identifier; else false
     private func isNativeIdentifier(_ nativeIdentifier:LeapNativeIdentifier, matching viewProps:LeapViewProperties) -> Bool {
-        if let currentVC = UIApplication.getCurrentVC() {
-            let currentVCString = String(describing: type(of: currentVC.self))
+        if let currentVC = viewProps.controller {
             let identifierController = nativeIdentifier.controller
-            if currentVCString != identifierController { return false }
+            if currentVC != identifierController { return false }
         } else if let _ = nativeIdentifier.controller { return false }
         guard let idParams = nativeIdentifier.idParameters else { return true }
         guard isIdParams(idParams, matchingProps: viewProps) else { return false }

@@ -12,6 +12,12 @@ import UIKit
 /// LeapHierarchyFetcher class' sole objective is to generate the hierarchy of the app as a dictionary. The dictionary wil be as [viewId : LeapViewProperties]
 class LeapHierarchyFetcher {
     
+    let controller:String?
+    
+    init(forController name:String?) {
+        controller = name
+    }
+    
     /// Fetches current hierarchy of the app as a flat map
     /// - Returns: current hierarchy
     func fetchHierarchy() -> [String : LeapViewProperties] {
@@ -78,7 +84,7 @@ class LeapHierarchyFetcher {
     ///   - index: index of view in list of subviews of the parent
     /// - Returns: LeapViewProperties object for the view
     private func generateLeapViewProperties(_ view: UIView, _ parentUUID:String?, _ index:Int) -> LeapViewProperties {
-        return LeapViewProperties(with: view, uuid: UUID().uuidString, parentUUID: parentUUID, index: index)
+        return LeapViewProperties(with: view, uuid: UUID().uuidString, parentUUID: parentUUID, index: index, controllerName: controller)
     }
     
 }
