@@ -24,18 +24,38 @@ struct LeapAnalyticsModel {
     var currentAssist: LeapAssist?
     
     init(projectParameter: LeapProjectParameters?, instructionId: String? = nil, previousLanguage: String? = nil, currentLanguage: String? = nil, action: Dictionary<String, Any>? = nil, terminationRule: String? = nil, isProjectFlowMenu: Bool? = nil, currentFlowMenu: LeapProjectParameters? = nil, currentSubFlow: LeapProjectParameters? = nil, currentStage: LeapStage? = nil, currentPage: LeapPage? = nil, currentAssist: LeapAssist? = nil) {
-        
         self.projectParameter = projectParameter
         self.instructionId = instructionId
         self.previousLanguage = previousLanguage
         self.currentLanguage = currentLanguage
         self.action = action
         self.terminationRule = terminationRule
+        self.isProjectFlowMenu = isProjectFlowMenu
+        self.currentFlowMenu = currentFlowMenu
+        self.currentSubFlow = currentSubFlow
+        self.currentStage = currentStage
+        self.currentPage = currentPage
+        self.currentAssist = currentAssist
     }
 }
 
+protocol LeapAnalyticsModelHandlerDelegate: AnyObject {
+    func startScreenEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func optInEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func optOutEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func instructionEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func assistInstructionEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func flowSuccessEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func flowStopEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func flowDisableEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func languageChangeEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func auiActionTrackingEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func leapSDKDisableEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+    func projectTerminationEvent(with analytics: LeapAnalyticsModel) -> LeapAnalyticsEvent?
+}
+
 // MARK: - CREATE ANALYTICS EVENTS
-class LeapAnalyticsModelHandler {
+class LeapAnalyticsModelHandler: LeapAnalyticsModelHandlerDelegate {
     
     private var lastEventId: String?
     private var lastEventLanguage: String?

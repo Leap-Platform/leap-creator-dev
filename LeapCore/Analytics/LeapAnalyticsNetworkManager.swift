@@ -25,7 +25,7 @@ class LeapAnalyticsNetworkHandler {
         
         guard events.count > 0 else { return }
         
-        guard let req = createURLRequest(urlString: Constants.Networking.analyticsEndPoint), let analyticsURLRequest = addRequestBody(analyticsURLRequest: req, events: events) else {
+        guard let req = createURLRequestForAnalytics(urlString: Constants.Networking.analyticsEndPoint), let analyticsURLRequest = addRequestBody(analyticsURLRequest: req, events: events) else {
             return
         }
         
@@ -40,7 +40,7 @@ class LeapAnalyticsNetworkHandler {
         }
     }
     
-    private func createURLRequest(urlString: String) -> URLRequest? {
+    private func createURLRequestForAnalytics(urlString: String) -> URLRequest? {
         guard let url = URL(string: urlString) else { return nil }
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
