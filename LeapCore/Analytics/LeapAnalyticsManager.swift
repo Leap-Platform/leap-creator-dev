@@ -20,9 +20,7 @@ protocol LeapAnalyticsDelegate: AnyObject {
 
 class LeapAnalyticsManager {
     
-    private lazy var analyticsModelHandler: LeapAnalyticsModelHandler = {
-        return LeapAnalyticsModelHandler()
-    }()
+    private var analyticsModelHandler = LeapAnalyticsModelHandler()
     
     private lazy var analyticsNetworkHandler: LeapAnalyticsNetworkHandler = {
         return LeapAnalyticsNetworkHandler(self)
@@ -32,10 +30,13 @@ class LeapAnalyticsManager {
         return LeapAnalyticsDataHandler(self)
     }()
     
-    weak var eventsDelegate: LeapEventsDelegate?
+    private weak var eventsDelegate: LeapEventsDelegate?
     
-    init(_ eventsDelegate: LeapEventsDelegate) {
+    private weak var modelHandlerDelegate: LeapAnalyticsModelHandlerDelegate?
+    
+    init(_ eventsDelegate: LeapEventsDelegate? = nil) {
         self.eventsDelegate = eventsDelegate
+        self.modelHandlerDelegate = self.analyticsModelHandler
         NotificationCenter.default.addObserver(self, selector: #selector(flushPendingEvents), name: UIApplication.willResignActiveNotification, object: nil)
         flushPendingEvents()
     }
@@ -55,8 +56,8 @@ class LeapAnalyticsManager {
         switch name {
             
         case .startScreenEvent, .flowMenuStartScreen:
-            
-            if let event = analyticsModelHandler.startScreenEvent(with: analytics) {
+                        
+            if let event = modelHandlerDelegate?.startScreenEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -64,7 +65,7 @@ class LeapAnalyticsManager {
             }
         case .optInEvent:
             
-            if let event = analyticsModelHandler.optInEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.optInEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -72,7 +73,7 @@ class LeapAnalyticsManager {
             }
         case .optOutEvent:
             
-            if let event = analyticsModelHandler.optOutEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.optOutEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -80,7 +81,7 @@ class LeapAnalyticsManager {
             }
         case .instructionEvent:
             
-            if let event = analyticsModelHandler.instructionEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.instructionEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -88,7 +89,7 @@ class LeapAnalyticsManager {
             }
         case .assistInstructionEvent:
             
-            if let event = analyticsModelHandler.assistInstructionEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.assistInstructionEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -96,7 +97,7 @@ class LeapAnalyticsManager {
             }
         case .flowSuccessEvent:
             
-            if let event = analyticsModelHandler.flowSuccessEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.flowSuccessEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -104,7 +105,7 @@ class LeapAnalyticsManager {
             }
         case .flowStopEvent:
             
-            if let event = analyticsModelHandler.flowStopEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.flowStopEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -112,7 +113,7 @@ class LeapAnalyticsManager {
             }
         case .flowDisableEvent:
             
-            if let event = analyticsModelHandler.flowDisableEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.flowDisableEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -120,7 +121,7 @@ class LeapAnalyticsManager {
             }
         case .languageChangeEvent:
             
-            if let event = analyticsModelHandler.languageChangeEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.languageChangeEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -128,7 +129,7 @@ class LeapAnalyticsManager {
             }
         case .actionTrackingEvent:
             
-            if let event = analyticsModelHandler.auiActionTrackingEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.auiActionTrackingEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -136,7 +137,7 @@ class LeapAnalyticsManager {
             }
         case .leapSdkDisableEvent:
             
-            if let event = analyticsModelHandler.leapSDKDisableEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.leapSDKDisableEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 
@@ -144,7 +145,7 @@ class LeapAnalyticsManager {
             }
         case .projectTerminationEvent:
             
-            if let event = analyticsModelHandler.projectTerminationEvent(with: analytics) {
+            if let event = modelHandlerDelegate?.projectTerminationEvent(with: analytics) {
                 
                 analyticsDataHandler.saveEvent(event: event)
                 

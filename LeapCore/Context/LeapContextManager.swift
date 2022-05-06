@@ -31,8 +31,6 @@ class LeapContextManager:NSObject {
     private weak var auiHandler:LeapAUIHandler?
     public weak var delegate:LeapContextManagerDelegate?
     private var taggedEvents:Dictionary<String,Any> = [:]
-    private var lastEventId: String?
-    private var lastEventLanguage: String?
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {
         auiHandler = uiHandler
@@ -743,7 +741,7 @@ extension LeapContextManager {
     
     func validateFlowMenu() -> (isFlowMenu: Bool, projectParams: LeapProjectParameters?) {
         if let discoveryId = flowManager?.getDiscoveryId(), let projectParams = currentConfiguration()?.contextProjectParametersDict["discovery_\(discoveryId)"] {
-            if projectParams.projectType == constant_DYNAMIC_FLOW_MENU || projectParams.projectType == constant_DYNAMIC_FLOW_CHECKLIST || projectParams.projectType == constant_STATIC_FLOW_MENU || projectParams.projectType == constant_STATIC_FLOW_CHECKLIST {
+            if isFlowMenu(projectParams: projectParams) {
                 return (true, projectParams)
             } else {
                 return (false, nil)
