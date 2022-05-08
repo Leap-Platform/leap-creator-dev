@@ -270,6 +270,8 @@
 		D0F2C4B025DFCD81006BFF3D /* LeapCreatorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D02C131625DFC6B000C80E28 /* LeapCreatorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D0F44B612821593C009971BE /* LeapWebViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B602821593C009971BE /* LeapWebViewFinder.swift */; };
 		D0F44B622822D585009971BE /* LeapViewProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A8B54D28190CD6001783DA /* LeapViewProperties.swift */; };
+		D0F44B632823A288009971BE /* LeapContextsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B5C28210306009971BE /* LeapContextsValidator.swift */; };
+		D0F44B642823A28F009971BE /* LeapNativeViewFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F44B5E282136EF009971BE /* LeapNativeViewFinder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1580,6 +1582,7 @@
 				D08DA64025DEA2E800EB0EFC /* LeapStageManager.swift in Sources */,
 				D08DA64225DEA2E800EB0EFC /* LeapStarter.swift in Sources */,
 				D08DA64525DEA2E800EB0EFC /* LeapIconSetting.swift in Sources */,
+				D0F44B632823A288009971BE /* LeapContextsValidator.swift in Sources */,
 				D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */,
 				2D9823A8281ABD4E000F7614 /* LeapNetworkService.swift in Sources */,
 				2D5BB258276CA08600BC2360 /* LeapNewConnectedProject.swift in Sources */,
@@ -1603,6 +1606,7 @@
 				D08DA65125DEA2E800EB0EFC /* LeapIdentifier.swift in Sources */,
 				2D5883C0276A244100759C94 /* LeapNewLayoutInfo.swift in Sources */,
 				D08DA65225DEA2E800EB0EFC /* LeapSharedInformation.swift in Sources */,
+				D0F44B642823A28F009971BE /* LeapNativeViewFinder.swift in Sources */,
 				D0A234B3268F1A5500FA3218 /* Data+Gzip.swift in Sources */,
 				2D5BB24C276C8FB500BC2360 /* LeapNewData.swift in Sources */,
 				D08DA65525DEA2E800EB0EFC /* LeapFlowManager.swift in Sources */,

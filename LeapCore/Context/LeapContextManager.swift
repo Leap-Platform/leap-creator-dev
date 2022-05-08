@@ -395,6 +395,16 @@ extension LeapContextManager:LeapContextDetectorDelegate {
         return currentConfiguration.nativeIdentifiers[identifierId]
     }
     
+    func getNativeIdentifierDict() -> [String : LeapNativeIdentifier] {
+        guard let currentConfiguration = self.currentConfiguration() else { return [:] }
+        return currentConfiguration.nativeIdentifiers
+    }
+    
+    func getWebIdentifierDict() -> [String : LeapWebIdentifier] {
+        guard let currentConfiguration = self.currentConfiguration() else { return [:] }
+        return currentConfiguration.webIdentifiers
+    }
+    
     
     // MARK: - Context Methods
     
@@ -1094,45 +1104,46 @@ extension LeapContextManager {
     
     func manuallyTriggerCurrentDiscovery() {
         guard let dm = discoveryManager,
-              let liveDiscovery = dm.getCurrentDiscovery(),
-              let cd = contextDetector else { return }
+              let liveDiscovery = dm.getCurrentDiscovery() else { return }
+        
         LeapSharedInformation.shared.unmuteDiscovery(liveDiscovery.id, isPreview: isPreview())
         let iconInfo:Dictionary<String,AnyHashable> = liveDiscovery.enableIcon ? getIconSettings(liveDiscovery.id) : [:]
-        
         let htmlUrl = liveDiscovery.languageOption?["htmlUrl"]
-        
-        guard !liveDiscovery.autoStart else {
-            auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: { langChose in
-                if langChose {
-                    self.didPresentAssist()
-                    self.didDismissView(byUser: true, autoDismissed: false, panelOpen: false, action: [constant_body:[constant_optIn:true]])
-                } else {
-                    self.auiHandler?.presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
+        let langDict = self.generateLangDicts(localeCodes: liveDiscovery.localeCodes)
+        if liveDiscovery.autoStart {
+            auiHandler?.showLanguageOptionsIfApplicable(withLocaleCodes: langDict, iconInfo: iconInfo, localeHtmlUrl: htmlUrl, handler: {[weak self] languageChose in
+                guard !languageChose else {
+                    self?.didPresentAssist()
+                    self?.didDismissView(byUser: true, autoDismissed: false, panelOpen: false, action: [constant_body:[constant_optIn:true]])
+                    return
                 }
+                self?.auiHandler?.presentLeapButton(for: iconInfo, iconEnabled: !iconInfo.isEmpty)
             })
-            
             return
         }
         
-        
-        guard let identifier = liveDiscovery.instruction?.assistInfo?.identifier else {
+        guard let _ = liveDiscovery.instruction?.assistInfo?.identifier else {
             if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
                 auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: nil, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
             }
             return
         }
-        let isWeb = liveDiscovery.instruction?.assistInfo?.isWeb ?? false
-        contextDetector?.getViewOrRect(allView: cd.fetchViewHierarchy(), id: identifier, isWeb: isWeb, targetCheckCompleted: { (view, rect, webview) in
-            if let anchorRect = rect {
-                if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                    self.auiHandler?.performWebDiscovery(instruction: liveDiscoveryInstructionInfoDict, rect: anchorRect, webview: webview, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
-                }
-            } else {
-                if let liveDiscoveryInstructionInfoDict = liveDiscovery.instructionInfoDict {
-                    self.auiHandler?.performNativeDiscovery(instruction: liveDiscoveryInstructionInfoDict, view: view, localeCodes: self.generateLangDicts(localeCodes: liveDiscovery.localeCodes), iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+    
+        guard let nativeDict = currentConfiguration()?.nativeIdentifiers,
+              let webDict = currentConfiguration()?.webIdentifiers,
+              let controller = UIApplication.getCurrentVC() else { return }
+        let hierarchyFetcher = LeapHierarchyFetcher(forController: String(describing: type(of: controller)))
+        let hierarchy = hierarchyFetcher.fetchHierarchy()
+        let contextValidator = LeapContextsValidator<LeapDiscovery>(withNativeDict: nativeDict, webDict: webDict)
+        contextValidator.getTriggerableContext(liveDiscovery, validContexts: [liveDiscovery], hierarchy: hierarchy) {[weak self] contextToTrigger, anchorViewId, anchorRect, anchorWebview in
+            if let discoveryInstructionDict = liveDiscovery.instructionInfoDict {
+                if let anchorRect = anchorRect {
+                    self?.auiHandler?.performWebDiscovery(instruction: discoveryInstructionDict, rect: anchorRect, webview: anchorWebview, localeCodes: langDict, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
+                } else {
+                    self?.auiHandler?.performNativeDiscovery(instruction: discoveryInstructionDict, view: anchorWebview, localeCodes: langDict, iconInfo: iconInfo, localeHtmlUrl: htmlUrl)
                 }
             }
-        })
+        }
     }
     
     func handleDiscoveryDismiss(byUser:Bool, action:Dictionary<String,Any>?) {
