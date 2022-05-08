@@ -14,6 +14,7 @@ class LeapWebViewFinder {
     
     /// Array of viewprops of views which are WKWebviews
     let webviewProps:[LeapViewProperties]
+    let webInjectionDispatchGroup = DispatchGroup()
     
     /// Intialization method
     /// - Parameter hierarchy: hierachy to filter out webviews from
@@ -36,13 +37,13 @@ class LeapWebViewFinder {
             return
         }
         var passedIds:[String] = []
-        let webInjectionDispatchGroup = DispatchGroup()
+        
         for webviewProp in webviewProps {
             if let wkWebView = webviewProp.weakView as? WKWebView {
                 webInjectionDispatchGroup.enter()
-                webIdsPassingIn(webIdentifierTuples, passingIn: wkWebView) { newPassedIds in
+                webIdsPassingIn(webIdentifierTuples, passingIn: wkWebView) {[weak self] newPassedIds in
                     passedIds = Array(Set(passedIds+newPassedIds))
-                    webInjectionDispatchGroup.leave()
+                    self?.webInjectionDispatchGroup.leave()
                 }
             }
         }
@@ -51,14 +52,43 @@ class LeapWebViewFinder {
         }
     }
     
+    /// Get bounds of web element if present
+    /// - Parameters:
+    ///   - webIdentifier: The identifier of the web element to get the bounds for
+    ///   - completion: Completion callback providing bounds and the webview in which the bounds is present; If not present both are nil
+    ///   - rect: The bounds as CGrect of element; If not found returns nil
+    ///   - webview: The webview in which the web element was identified
+    public func getRectFor(_ webIdentifier:LeapWebIdentifier, completion:@escaping(_ rect:CGRect?, _ webview:WKWebView?)->Void) {
+        let webViewList = webviewProps.compactMap { return $0.weakView as? WKWebView }
+        guard webViewList.count > 0 else {
+            completion(nil,nil)
+            return
+        }
+        var counter = 0
+        var boundsCompletion:((_ rect:CGRect?) -> Void)? = nil
+        boundsCompletion = { rect in
+            if rect != nil {
+                completion(rect, webViewList[counter])
+                return
+            }
+            counter += 1
+            guard counter < webViewList.count else {
+                completion(nil,nil)
+                return
+            }
+            self.getRect(for: webIdentifier, inWebView: webViewList[counter], completion: boundsCompletion!)
+        }
+        self.getRect(for: webIdentifier, inWebView: webViewList[counter], completion: boundsCompletion!)
+    }
+    
     ///  Checks if webId is passing in webview
     /// - Parameters:
     ///   - idTuples: List of all (webIdentifierId, webIdentifier) as array of tuples
     ///   - webview: Webview to check in
     ///   - completion: Completion callback returning ids of passing web identifiers
-    private func webIdsPassingIn(_ idTuples:[(String,LeapWebIdentifier)],
-                        passingIn webview:WKWebView,
-                        completion:@escaping(_ newPassedIds:[String])->Void) {
+    public func webIdsPassingIn(_ idTuples:[(String,LeapWebIdentifier)],
+                                 passingIn webview:WKWebView,
+                                 completion:@escaping(_ newPassedIds:[String])->Void) {
         webIdsPresentCheck(idTuples, presentIn: webview) {[weak self] presentIdTuples in
             self?.webIdsAttributeCheck(presentIdTuples, in: webview, attributeCheckCompletion: { passedIdTuples in
                 let passedIds:[String] = passedIdTuples.map { return $0.0 }
@@ -150,4 +180,29 @@ class LeapWebViewFinder {
         return presentIds
     }
     
+    
+    /// Method to calculate bounds of a web element in a single webview
+    /// - Parameters:
+    ///   - identifier: The identifier of the web element to which rect is to be found
+    ///   - inWebView: The webview in which the element is to be checked for
+    ///   - completion: Completion callback returning bounds if found; else nil
+    private func getRect(for identifier:LeapWebIdentifier, inWebView:WKWebView, completion:@escaping(_ rect:CGRect?)->Void) {
+        let boundsScript = LeapJSMaker.calculateBoundsScript(identifier)
+        runJavascript(boundsScript, wkweb: inWebView) { resultString in
+            if let result = resultString {
+                let resultArray = result.components(separatedBy: ",").compactMap({ CGFloat(($0 as NSString).doubleValue) })
+                if resultArray.count != 4 { completion(nil) }
+                else {
+                    var rect = CGRect(x: resultArray[0], y: resultArray[1], width: resultArray[2], height: resultArray[3])
+                    
+                    if #available(iOS 11.0, *) {
+                        rect.origin.y += inWebView.scrollView.adjustedContentInset.top
+                        rect.origin.x += UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0
+                    }
+                    
+                    completion(rect)
+                }
+            } else { (completion(nil)) }
+        }
+    }
 }

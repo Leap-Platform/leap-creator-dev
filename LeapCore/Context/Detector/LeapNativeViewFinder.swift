@@ -36,7 +36,12 @@ class LeapNativeViewFinder {
         var viewId:String? = nil
         hierarchy.forEach { tempViewId, viewProps in
             if viewId == nil {
-                if isNativeIdentifier(nativeIdentifier, matching: viewProps) { viewId = tempViewId }
+                if isNativeIdentifier(nativeIdentifier, anchorFor: viewProps) {
+                    if nativeIdentifier.isAnchorSameAsTarget ?? true { viewId = tempViewId }
+                    else if let targetViewId = self.targetViewId(for: nativeIdentifier, from: tempViewId) {
+                        viewId = targetViewId
+                    }
+                }
             }
         }
         return viewId
@@ -47,7 +52,7 @@ class LeapNativeViewFinder {
     ///   - nativeIdentifier: Identifier to check for
     ///   - viewProps: View properties of the view to check against
     /// - Returns: True if the view matches the identifier; else false
-    private func isNativeIdentifier(_ nativeIdentifier:LeapNativeIdentifier, matching viewProps:LeapViewProperties) -> Bool {
+    private func isNativeIdentifier(_ nativeIdentifier:LeapNativeIdentifier, anchorFor viewProps:LeapViewProperties) -> Bool {
         if let currentVC = viewProps.controller {
             let identifierController = nativeIdentifier.controller
             if currentVC != identifierController { return false }
@@ -57,15 +62,24 @@ class LeapNativeViewFinder {
         if let identifierViewProps = nativeIdentifier.viewProps {
             guard isIdentifierViewProps(identifierViewProps, matching: viewProps) else { return false }
         }
-        if nativeIdentifier.isAnchorSameAsTarget ?? true { return true }
-        guard let relation = nativeIdentifier.relationToTarget else { return true }
-        guard let targetViewPropsId = getViewIdFromRelation(relation, forViewProps: viewProps),
-                let targetViewProps = hierarchy[targetViewPropsId] else { return false }
-        guard let targetIdParam = nativeIdentifier.target?.idParameters else { return true }
-        guard isIdParams(targetIdParam, matchingProps: targetViewProps) else { return false }
-        guard let targetMatchingProps = nativeIdentifier.target?.viewProps else { return true }
-        guard isIdentifierViewProps(targetMatchingProps, matching: targetViewProps) else { return false }
         return true
+    }
+    
+    /// Get target views id from anchor view using relation
+    /// - Parameters:
+    ///   - nativeIdentifier: The native identifier containing information about the relation
+    ///   - anchorViewId: The anchor view id from the hierarchy to start search for target view
+    /// - Returns: The target view id if found; else nil
+    private func targetViewId(for nativeIdentifier:LeapNativeIdentifier, from anchorViewId:String) -> String? {
+        guard let relation = nativeIdentifier.relationToTarget,
+              let anchorViewProps = hierarchy[anchorViewId] else { return nil }
+        guard let targetViewPropsId = getViewIdFromRelation(relation, forViewProps: anchorViewProps),
+              let targetViewProps = hierarchy[targetViewPropsId] else { return nil }
+        guard let targetIdParam = nativeIdentifier.target?.idParameters else { return targetViewPropsId }
+        guard isIdParams(targetIdParam, matchingProps: targetViewProps) else { return nil }
+        guard let targetMatchingProps = nativeIdentifier.target?.viewProps else { return targetViewPropsId }
+        guard isIdentifierViewProps(targetMatchingProps, matching: targetViewProps) else { return nil }
+        return targetViewPropsId
     }
     
     /// Checks if the parameters provided for the native identifier is matching the properties of the view
@@ -74,11 +88,11 @@ class LeapNativeViewFinder {
     ///   - props: View props of the view to check to check against
     /// - Returns: True if is matching; else false
     private func isIdParams(_ idParams:LeapNativeParameters, matchingProps props:LeapViewProperties) -> Bool {
-        guard idParams.accId == props.accId,
-              idParams.accLabel == props.accLabel,
-              idParams.tag == props.tag,
-              idParams.className == props.className,
-              (idParams.text[constant_ang] as? String) == props.text else { return false }
+        if let accId = idParams.accId { if accId != props.accId { return false } }
+        if let accLabel = idParams.accLabel { if accLabel != props.accLabel { return false } }
+        if let tag = idParams.tag { if tag != props.tag { return false } }
+        if let className = idParams.className { if className != props.className { return false } }
+        if let text = idParams.text[constant_ang] as? String { if text != props.text { return false } }
         return true
     }
     
@@ -88,11 +102,11 @@ class LeapNativeViewFinder {
     ///   - viewProps: View properties of the view to check against
     /// - Returns: True if matching; else false
     private func isIdentifierViewProps(_ identifierProps:LeapNativeViewProps, matching viewProps:LeapViewProperties) -> Bool {
-        guard identifierProps.isFocused == viewProps.isFocused,
-              identifierProps.isEnabled == viewProps.isEnabled,
-              identifierProps.isSelected == viewProps.isSelected,
-              identifierProps.className == viewProps.className,
-              identifierProps.text[constant_ang] as? String == viewProps.text else { return false }
+        if let isFocused = identifierProps.isChecked { if isFocused != viewProps.isFocused { return false} }
+        if let isEnabled = identifierProps.isEnabled { if isEnabled != viewProps.isEnabled { return false} }
+        if let isSelected = identifierProps.isSelected { if isSelected != viewProps.isSelected { return false} }
+        if let className = identifierProps.className { if className != viewProps.className { return false} }
+        if let text = identifierProps.text[constant_ang] as? String { if text != viewProps.text { return false} }
         return true
     }
     
