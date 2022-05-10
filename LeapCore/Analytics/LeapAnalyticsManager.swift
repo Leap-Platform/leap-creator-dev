@@ -43,7 +43,7 @@ class LeapAnalyticsManager {
         flushPendingEvents()
     }
     
-    @objc private func flushPendingEvents() {
+    @objc func flushPendingEvents() {
         let prefs = UserDefaults.standard
         let savedEvents = prefs.object(forKey: "leap_saved_events") as? Array<Dictionary<String, String>> ?? []
         var eventsToFlush = prefs.object(forKey: "leap_flush_events") as? Array<Dictionary<String, String>> ?? []
