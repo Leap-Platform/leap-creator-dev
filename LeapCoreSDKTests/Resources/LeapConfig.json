@@ -1,0 +1,516 @@
+{
+    "data": [
+        {
+            "projectParameters": {
+                "deploymentType": "REGULAR",
+                "deploymentVersion": "3",
+                "deploymentId": "bdeee93b-dd92-4699-9d3d-7dc62a6dead3",
+                "projectType": "STATIC_FLOW_CHECKLIST",
+                "deploymentName": "Flow Menu",
+                "projectName": "Flow Menu",
+                "projectId": "827a2de5-2f4e-4fe8-a280-4ae11cfb44aa"
+            },
+            "languages": [
+                {
+                    "localeId": "ang",
+                    "localeName": "ENGLISH",
+                    "localeScript": "ENGLISH",
+                    "muteText": "Stop",
+                    "repeatText": "Repeat",
+                    "changeLanguageText": "Languages",
+                    "ttsInfo": {
+                        "ttsLocale": "en",
+                        "ttsRegion": "IN"
+                    }
+                }
+            ],
+            "discoverySounds": {
+                "baseUrl": "https://np-asset.leap.is",
+                "jinySounds": {}
+            },
+            "localeSounds": {
+                "baseUrl": "https://np-asset.leap.is",
+                "sounds": {}
+            },
+            "discoveryList": [
+                {
+                    "id": 16,
+                    "uniqueID": "discovery_16",
+                    "name": "Flow Menu",
+                    "nativeIdentifiers": [
+                        "ID1-16"
+                    ],
+                    "checkPoint": false,
+                    "enableIcon": true,
+                    "triggerMode": "FLOW_MENU_TRIGGER",
+                    "instruction": {
+                        "assistInfo": {
+                            "type": "BOTTOMUP",
+                            "highlightClickable": true,
+                            "layoutInfo": {
+                                "alignment": "bottom",
+                                "style": {
+                                    "bgColor": "#CC000000"
+                                },
+                                "dismissAction": {
+                                    "outsideDismiss": true
+                                }
+                            },
+                            "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/html/fdc5638a-a83f-463e-a499-e2922d31e739/htmls/f2223f56-615d-4b42-a32d-96e92c69211b.html",
+                            "accessibilityText": "Static Flow Checklist "
+                        }
+                    },
+                    "flowId": 16,
+                    "trigger": {
+                        "type": "instant",
+                        "delay": 0
+                    },
+                    "triggerFrequency": {
+                        "type": "EVERY_SESSION"
+                    },
+                    "localeCodes": [
+                        "ang"
+                    ],
+                    "languageOption": {
+                        "htmlUrl": "/static/html/jiny-language-panel.html",
+                        "accessibilityText": "Language Selector"
+                    },
+                    "autoStart": false,
+                    "isWeb": false
+                }
+            ],
+            "nativeIdentifiers": {
+                "ID1-16": {
+                    "controller": "MainViewController",
+                    "idParams": {
+                        "className": "UIButton",
+                        "text": {
+                            "ang": "Native Views"
+                        }
+                    }
+                }
+            },
+            "auiContent": {
+                "baseUrl": "https://np-asset.leap.is",
+                "content": [
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/html/fdc5638a-a83f-463e-a499-e2922d31e739/htmls/f2223f56-615d-4b42-a32d-96e92c69211b.html",
+                    "/static/html/jiny-language-panel.html",
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/htmls/4375ebf0-6502-4770-9822-bc8151cdc77b.html"
+                ]
+            },
+            "iconSetting": {
+                "16": {
+                    "dismissible": true,
+                    "leftAlign": true,
+                    "bgColor": "#5532FF",
+                    "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/htmls/4375ebf0-6502-4770-9822-bc8151cdc77b.html",
+                    "isCustomised": true
+                }
+            },
+            "defaultAccessibilityText": {
+                "stop": "Stop Flow",
+                "language": "Change Language",
+                "arrowDown": "Click to scroll down",
+                "arrowUp": "Click to scroll up",
+                "pingCross": "Close",
+                "closeIconOptions": "Dismiss Options"
+            },
+            "connectedProjects": [
+                {
+                    "flowTitle": "Flow - 1",
+                    "projectId": "e5608f2b-a882-4cac-b0b5-3a4fe1263c57",
+                    "deepLinkURL": "demoApp://nativeViews\n\n"
+                }
+            ]
+        },
+        {
+            "projectParameters": {
+                "deploymentType": "LINK",
+                "deploymentVersion": "10",
+                "deploymentId": "e5608f2b-a882-4cac-b0b5-3a4fe1263c57",
+                "projectType": "STATIC_FLOW",
+                "deploymentName": "Native Static Flow",
+                "projectName": "Native Static Flow",
+                "projectId": "8270a802-c5e6-4384-a211-cb67ae9322ee"
+            },
+            "flows": [
+                {
+                    "id": 3,
+                    "name": "Native Static Flow",
+                    "pages": [
+                        {
+                            "id": 1,
+                            "uniqueID": "flow_3_page_1",
+                            "name": "page 1",
+                            "nativeIdentifiers": [
+                                "ID6-3"
+                            ],
+                            "checkPoint": false,
+                            "stages": [
+                                {
+                                    "id": 1,
+                                    "uniqueID": "flow_3_page_1_stage_1",
+                                    "name": "Step 1",
+                                    "nativeIdentifiers": [
+                                        "ID1-3"
+                                    ],
+                                    "checkPoint": false,
+                                    "type": "MANUAL_SEQUENCE",
+                                    "frequency": {
+                                        "perSession": -1,
+                                        "perApp": -1,
+                                        "perSessionWoJiny": -1,
+                                        "perAppWoJiny": -1,
+                                        "perFlow": 1
+                                    },
+                                    "instruction": {
+                                        "assistInfo": {
+                                            "type": "BOTTOMUP",
+                                            "highlightClickable": false,
+                                            "focus": false,
+                                            "layoutInfo": {
+                                                "alignment": "bottom",
+                                                "style": {
+                                                    "bgColor": "#CC000000"
+                                                },
+                                                "dismissAction": {
+                                                    "outsideDismiss": true,
+                                                    "dismissOnAnchorClick": false
+                                                }
+                                            },
+                                            "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/html/bb022174-785c-4d97-ba4a-847f67e86dd5/htmls/00bfdbe9-c164-4c98-9728-8596379d024d.html",
+                                            "contentUrls": [
+                                                "/static/images/ed917eeb-a657-45a8-bc29-8329e4301534.png",
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                                            ],
+                                            "highlightAnchor": true,
+                                            "accessibilityText": "Bottom sheet"
+                                        }
+                                    },
+                                    "transition": {
+                                        "prev": null,
+                                        "next": "flow_3_page_1_stage_2"
+                                    },
+                                    "isWeb": false
+                                },
+                                {
+                                    "id": 2,
+                                    "uniqueID": "flow_3_page_1_stage_2",
+                                    "name": "Step 2",
+                                    "nativeIdentifiers": [
+                                        "ID3-3"
+                                    ],
+                                    "checkPoint": false,
+                                    "type": "MANUAL_SEQUENCE",
+                                    "frequency": {
+                                        "perSession": -1,
+                                        "perApp": -1,
+                                        "perSessionWoJiny": -1,
+                                        "perAppWoJiny": -1,
+                                        "perFlow": 1
+                                    },
+                                    "instruction": {
+                                        "assistInfo": {
+                                            "type": "HIGHLIGHT_WITH_DESC",
+                                            "highlightClickable": false,
+                                            "identifier": "TID1-3",
+                                            "focus": false,
+                                            "layoutInfo": {
+                                                "style": {
+                                                    "bgColor": "#D8000000",
+                                                    "maxWidth": 0.8,
+                                                    "isContentTransparent": true
+                                                },
+                                                "dismissAction": {
+                                                    "outsideDismiss": false,
+                                                    "dismissOnAnchorClick": false
+                                                }
+                                            },
+                                            "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/55d9ae50-931d-4189-95bf-7db88807500f/htmls/4abb15fe-2082-4e89-86d0-aa488ea016e9.html",
+                                            "contentUrls": [
+                                                "/static/images/a04f5ed6-292b-4d93-be07-f9cf49cd21a8.png",
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                                            ],
+                                            "highlightAnchor": true,
+                                            "extraProps": {
+                                                "highlightConnectorType": "none",
+                                                "highlightCornerRadius": "4",
+                                                "animateHighlight": "false",
+                                                "highlightConnectorLength": "33",
+                                                "highlightConnectorColor": "#FFFFFFFF",
+                                                "highlightType": "rect"
+                                            },
+                                            "accessibilityText": "Highlight"
+                                        }
+                                    },
+                                    "transition": {
+                                        "prev": "flow_3_page_1_stage_1",
+                                        "next": "flow_3_page_1_stage_3"
+                                    },
+                                    "isWeb": false
+                                },
+                                {
+                                    "id": 3,
+                                    "uniqueID": "flow_3_page_1_stage_3",
+                                    "name": "Step 3",
+                                    "nativeIdentifiers": [
+                                        "ID4-3"
+                                    ],
+                                    "checkPoint": false,
+                                    "type": "MANUAL_SEQUENCE",
+                                    "frequency": {
+                                        "perSession": -1,
+                                        "perApp": -1,
+                                        "perSessionWoJiny": -1,
+                                        "perAppWoJiny": -1,
+                                        "perFlow": 1
+                                    },
+                                    "instruction": {
+                                        "assistInfo": {
+                                            "type": "TOOLTIP",
+                                            "highlightClickable": false,
+                                            "identifier": "TID2-3",
+                                            "focus": false,
+                                            "layoutInfo": {
+                                                "style": {
+                                                    "bgColor": "#CC000000",
+                                                    "maxWidth": 0.8,
+                                                    "strokeWidth": 0.0,
+                                                    "strokeColor": "#000000"
+                                                },
+                                                "dismissAction": {
+                                                    "outsideDismiss": false,
+                                                    "dismissOnAnchorClick": false
+                                                }
+                                            },
+                                            "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/7a41e644-31e2-4238-8967-7c2b898a28e3/htmls/4b5c0375-4183-4e19-a73f-57232ba12b4d.html",
+                                            "contentUrls": [
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                                                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                                            ],
+                                            "highlightAnchor": true,
+                                            "extraProps": {
+                                                "highlightCornerRadius": "4",
+                                                "animateHighlight": "false",
+                                                "tooltipType": "MEDIA_RICH",
+                                                "highlightType": "rect"
+                                            },
+                                            "accessibilityText": "Tooltip"
+                                        }
+                                    },
+                                    "transition": {
+                                        "prev": "flow_3_page_1_stage_2",
+                                        "next": null
+                                    },
+                                    "isWeb": false,
+                                    "isSuccess": true
+                                }
+                            ],
+                            "isWeb": false
+                        }
+                    ],
+                    "firstStep": "flow_3_page_1_stage_1"
+                }
+            ],
+            "languages": [
+                {
+                    "localeId": "ang",
+                    "localeName": "ENGLISH",
+                    "localeScript": "ENGLISH",
+                    "muteText": "Stop",
+                    "repeatText": "Repeat",
+                    "changeLanguageText": "Languages",
+                    "ttsInfo": {
+                        "ttsLocale": "en",
+                        "ttsRegion": "IN"
+                    }
+                }
+            ],
+            "discoverySounds": {
+                "baseUrl": "https://np-asset.leap.is",
+                "jinySounds": {}
+            },
+            "localeSounds": {
+                "baseUrl": "https://np-asset.leap.is",
+                "sounds": {}
+            },
+            "discoveryList": [
+                {
+                    "id": 3,
+                    "uniqueID": "discovery_3",
+                    "name": "Start Screen",
+                    "nativeIdentifiers": [
+                        "ID1-3"
+                    ],
+                    "checkPoint": false,
+                    "enableIcon": true,
+                    "triggerMode": "SINGLE_FLOW_TRIGGER",
+                    "instruction": {
+                        "assistInfo": {
+                            "type": "PING",
+                            "highlightClickable": true,
+                            "layoutInfo": {
+                                "alignment": "left",
+                                "style": {
+                                    "bgColor": "#66000000",
+                                    "maxWidth": 0.4
+                                },
+                                "dismissAction": {
+                                    "outsideDismiss": true
+                                }
+                            },
+                            "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/6b952f1b-dd53-4cce-9355-2638f6321dd4/htmls/4a8ecd43-2d08-4f85-adff-14edae6a0af1.html",
+                            "contentUrls": [
+                                "/static/images/e6420dec-6453-4e06-af7b-1ad7439284ac.png"
+                            ],
+                            "highlightAnchor": true,
+                            "accessibilityText": "Ping"
+                        }
+                    },
+                    "flowId": 3,
+                    "trigger": {
+                        "type": "instant",
+                        "delay": 0
+                    },
+                    "triggerFrequency": {
+                        "type": "EVERY_SESSION"
+                    },
+                    "localeCodes": [
+                        "ang"
+                    ],
+                    "languageOption": {
+                        "htmlUrl": "/static/html/jiny-language-panel.html",
+                        "accessibilityText": "Language Selector"
+                    },
+                    "autoStart": false,
+                    "isWeb": false
+                }
+            ],
+            "nativeIdentifiers": {
+                "TID2-3": {
+                    "controller": "HomeViewController",
+                    "idParams": {
+                        "className": "UIButton",
+                        "text": {
+                            "ang": "Enter Source"
+                        }
+                    },
+                    "relationToTarget": [
+                        "P",
+                        "C11",
+                        "C0"
+                    ],
+                    "isAnchorSameAsTarget": false
+                },
+                "TID1-3": {
+                    "controller": "HomeViewController",
+                    "idParams": {
+                        "className": "UISegmentLabel",
+                        "text": {
+                            "ang": "Trains"
+                        }
+                    },
+                    "relationToTarget": [
+                        "P"
+                    ],
+                    "isAnchorSameAsTarget": false
+                },
+                "ID6-3": {
+                    "controller": "HomeViewController"
+                },
+                "ID1-3": {
+                    "controller": "HomeViewController",
+                    "idParams": {
+                        "ACC_ID": "source",
+                        "className": "UIButton",
+                        "text": {
+                            "ang": "Enter Source"
+                        }
+                    }
+                },
+                "ID2-3": {
+                    "controller": "HomeViewController",
+                    "idParams": {
+                        "ACC_ID": "destination",
+                        "className": "UIButton",
+                        "text": {
+                            "ang": "Enter Destination"
+                        }
+                    }
+                },
+                "ID3-3": {
+                    "controller": "HomeViewController",
+                    "idParams": {
+                        "className": "UISegmentLabel",
+                        "text": {
+                            "ang": "Trains"
+                        }
+                    },
+                    "relationToTarget": [
+                        "P"
+                    ],
+                    "isAnchorSameAsTarget": false
+                },
+                "ID4-3": {
+                    "controller": "HomeViewController",
+                    "idParams": {
+                        "className": "UIButton",
+                        "text": {
+                            "ang": "Enter Source"
+                        }
+                    },
+                    "relationToTarget": [
+                        "P",
+                        "C11",
+                        "C0"
+                    ],
+                    "isAnchorSameAsTarget": false
+                }
+            },
+            "auiContent": {
+                "baseUrl": "https://np-asset.leap.is",
+                "content": [
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/html/bb022174-785c-4d97-ba4a-847f67e86dd5/htmls/00bfdbe9-c164-4c98-9728-8596379d024d.html",
+                    "/static/images/ed917eeb-a657-45a8-bc29-8329e4301534.png",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/55d9ae50-931d-4189-95bf-7db88807500f/htmls/4abb15fe-2082-4e89-86d0-aa488ea016e9.html",
+                    "/static/images/a04f5ed6-292b-4d93-be07-f9cf49cd21a8.png",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/7a41e644-31e2-4238-8967-7c2b898a28e3/htmls/4b5c0375-4183-4e19-a73f-57232ba12b4d.html",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                    "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/06449f03-93a4-4c6f-b821-787412fb240c/6b952f1b-dd53-4cce-9355-2638f6321dd4/htmls/4a8ecd43-2d08-4f85-adff-14edae6a0af1.html",
+                    "/static/images/e6420dec-6453-4e06-af7b-1ad7439284ac.png",
+                    "/static/html/jiny-language-panel.html",
+                    "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/htmls/9ef75548-74db-4ab1-ad13-8f6f380f7d50.html"
+                ]
+            },
+            "iconSetting": {
+                "3": {
+                    "dismissible": true,
+                    "leftAlign": true,
+                    "bgColor": "#5532FF",
+                    "htmlUrl": "/orgs/ebaf240e-d0cb-47ff-998e-12ac183eb97b/htmls/9ef75548-74db-4ab1-ad13-8f6f380f7d50.html",
+                    "isCustomised": true
+                }
+            },
+            "defaultAccessibilityText": {
+                "stop": "Stop Flow",
+                "language": "Change Language",
+                "arrowDown": "Click to scroll down",
+                "arrowUp": "Click to scroll up",
+                "pingCross": "Close",
+                "closeIconOptions": "Dismiss Options"
+            }
+        }
+    ],
+    "params": {
+        "viewAlphaIgnoreLimit": 230
+    }
+}

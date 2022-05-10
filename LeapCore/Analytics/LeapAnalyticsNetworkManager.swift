@@ -9,7 +9,11 @@
 import Foundation
 import UIKit
 
-class LeapAnalyticsNetworkHandler {
+protocol LeapAnalyticsNetworkHandlerDelegate: AnyObject {
+    func flushEvents(_ events: Array<Dictionary<String, String>>)
+}
+
+class LeapAnalyticsNetworkHandler: LeapAnalyticsNetworkHandlerDelegate {
     
     private let networkService = LeapNetworkService()
     
@@ -17,7 +21,7 @@ class LeapAnalyticsNetworkHandler {
     
     private let prefs = UserDefaults.standard
     
-    init(_ delegate: LeapEventsDelegate) {
+    init(_ delegate: LeapEventsDelegate? = nil) {
         self.delegate = delegate
     }
     

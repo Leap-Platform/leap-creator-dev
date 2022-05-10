@@ -18,6 +18,7 @@ class LeapStarter: NSObject {
     private var currentEmbeddedProjectId: String?
     
     private var configRepo: LeapConfigRepository?
+    private weak var configRepoDelegate: LeapConfigRepositoryDelegate?
     
     init(_ token : String, uiManager: LeapAUIHandler?) {
         self.contextManager = LeapContextManager(withUIHandler: uiManager)
@@ -26,6 +27,7 @@ class LeapStarter: NSObject {
         LeapSharedInformation.shared.setAPIKey(token)
         LeapSharedInformation.shared.setSessionId()
         configRepo = LeapConfigRepository(token: token)
+        configRepoDelegate = configRepo
         fetchConfigForDetection()
     }
     
@@ -34,7 +36,7 @@ class LeapStarter: NSObject {
     }
     
     func fetchConfigForDetection() {
-        configRepo?.fetchConfig(completion: { [weak self] config in
+        configRepoDelegate?.fetchConfig(projectId: nil, completion: { [weak self] config in
             DispatchQueue.main.async {
                 self?.startContextDetection(config: config)
             }
@@ -79,7 +81,7 @@ extension LeapStarter {
         }()
         let isEmbeddedFlow = contextManager.isFlowEmbedFor(projectId: mainProjId)
         
-        configRepo?.fetchConfig(projectId: mainProjId, completion: { config in
+        configRepoDelegate?.fetchConfig(projectId: mainProjId, completion: { config in
             DispatchQueue.main.async {
                 if !isEmbedProject { self.fetchedProjectIds.append(mainProjId) }
                 
@@ -126,7 +128,7 @@ extension LeapStarter {
 extension LeapStarter: LeapContextManagerDelegate {
     
     func fetchUpdatedConfig(completion: @escaping(_ : LeapConfig?) -> Void) {
-        configRepo?.fetchConfig(completion: { [weak self] updatedConfig in
+        configRepoDelegate?.fetchConfig(projectId: nil, completion: { [weak self] updatedConfig in
             DispatchQueue.main.async {
                 let updatedLeapConfig  = LeapConfig(withDict: updatedConfig, isPreview: false)
                 completion(updatedLeapConfig)
@@ -141,152 +143,5 @@ extension LeapStarter: LeapContextManagerDelegate {
     
     func resetCurrentEmbeddedProjectId() {
         self.currentEmbeddedProjectId = nil
-    }
-}
-
-// MARK: - LOCAL/REMOTE CONFIGURATION HANDLING
-class LeapConfigRepository {
-    
-    private let remoteConfigHandler: LeapRemoteConfigHandler?
-    
-    init(token: String) {
-        remoteConfigHandler = LeapRemoteConfigHandler(token: token)
-    }
-    
-    private func setConfig(projectId: String? = nil, configDict: Dictionary<String, AnyHashable> = [:], response: URLResponse) {
-        
-        switch (response as? HTTPURLResponse)?.statusCode {
-            
-        case 404, 401:
-            guard let projectId = projectId else {
-                remoteConfigHandler?.resetSavedHeaders()
-                self.resetSavedConfig()
-                break
-            }
-            self.resetProjectConfigFor(projectId: projectId)
-            
-        case 200:
-            guard let projectId = projectId else {
-                self.saveConfig(config: configDict)
-                fallthrough
-            }
-            self.saveProjectConfig(projectId: projectId, config: configDict)
-            
-        default:
-            if projectId == nil {
-                if let httpResponse = response as? HTTPURLResponse {
-                    remoteConfigHandler?.saveHeaders(headers: httpResponse.allHeaderFields)
-                }
-            }
-        }
-    }
-    
-    private func getConfig(projectId: String? = nil) -> Dictionary<String, AnyHashable> {
-        
-        guard let projectId = projectId else {
-            return self.getSavedConfig()
-        }
-        
-        let savedProjectConfig = self.getSavedProjectConfigFor(projectId: projectId)
-        return savedProjectConfig
-    }
-    
-    func fetchConfig(projectId: String? = nil, completion: ((_ config: Dictionary<String, AnyHashable>) -> Void)? = nil) {
-        
-        remoteConfigHandler?.fetchConfig(projectId: projectId, completion: { [weak self] (result: Result<ResponseData, RequestError>?) in
-            
-            DispatchQueue.main.async {
-                
-                switch result {
-                    
-                case .success(let responseData):
-                    
-                    let configDict: Dictionary<String, AnyHashable> = {
-                        let dict = try? JSONSerialization.jsonObject(with: responseData.data, options: .allowFragments) as? Dictionary<String, AnyHashable>
-                        return dict ?? [:]
-                    }()
-                    
-                    guard !configDict.isEmpty else { return }
-                    
-                    // make sure to set config before get config.
-                    self?.setConfig(projectId: projectId, configDict: configDict, response: responseData.response)
-                    guard let config = self?.getConfig() else { return }
-                    completion?(config)
-                    
-                case .failure(let requestErrorResponse):
-                    
-                    var failureResponse: URLResponse?
-                    
-                    switch(requestErrorResponse) {
-                        
-                    case let .clientError(response): failureResponse = response
-                        
-                    case let .serverError(response): failureResponse = response
-                        
-                    case .noData: print("Failure")
-                        
-                        case .dataDecodingError: print("Failure") }
-                    
-                    guard let failureResponse = failureResponse else { return }
-                    
-                    // make sure to set config before get config.
-                    self?.setConfig(projectId: projectId, response: failureResponse)
-                    guard let config = self?.getConfig() else { return }
-                    completion?(config)
-                    
-                    case .none: print("Failure") }
-            }
-        })
-    }
-    
-    func saveConfig(config:Dictionary<String,AnyHashable>) {
-        guard let configData = try? JSONSerialization.data(withJSONObject: config, options: .prettyPrinted),
-              let configString = String(data: configData, encoding: .utf8) else { return }
-        let prefs = UserDefaults.standard
-        prefs.setValue(configString, forKey: "leap_config")
-    }
-    
-    func getSavedConfig() -> Dictionary<String,AnyHashable> {
-        let prefs = UserDefaults.standard
-        guard let configString = prefs.value(forKey: "leap_config") as? String,
-              let configData = configString.data(using: .utf8),
-              let config = try? JSONSerialization.jsonObject(with: configData, options: .allowFragments) as? Dictionary<String,AnyHashable> else { return [:] }
-        return config
-    }
-    
-    func resetSavedConfig() {
-        let prefs = UserDefaults.standard
-        prefs.setValue([:], forKey: "leap_config")
-    }
-    
-    func saveProjectConfig(projectId:String, config:Dictionary<String,AnyHashable>) {
-        let prefs = UserDefaults.standard
-        var savedConfigs = getSavedProjectConfigs()
-        savedConfigs[projectId] = config
-        guard let newSavedConfigsData = try? JSONSerialization.data(withJSONObject: savedConfigs, options: .prettyPrinted),
-              let newSavedConfigsString = String(data: newSavedConfigsData, encoding: .utf8) else { return }
-        prefs.setValue(newSavedConfigsString, forKey: "leap_project_configs")
-    }
-    
-    func getSavedProjectConfigFor(projectId:String) -> Dictionary<String,AnyHashable> {
-        let savedProjectConfigs = getSavedProjectConfigs()
-        return savedProjectConfigs[projectId] ?? [:]
-    }
-    
-    func getSavedProjectConfigs() -> Dictionary<String,Dictionary<String,AnyHashable>> {
-        let prefs = UserDefaults.standard
-        guard let savedProjectConfigsString = prefs.value(forKey: "leap_project_configs") as? String,
-              let savedConfigsData = savedProjectConfigsString.data(using: .utf8),
-              let savedProjectConfigs = try? JSONSerialization.jsonObject(with: savedConfigsData, options: .allowFragments) as? Dictionary<String,Dictionary<String,AnyHashable>> else { return [:] }
-        return savedProjectConfigs
-    }
-    
-    func resetProjectConfigFor(projectId: String) {
-        let prefs = UserDefaults.standard
-        var savedProjectConfigs = getSavedProjectConfigs()
-        savedProjectConfigs.removeValue(forKey: projectId)
-        guard let newSavedConfigsData = try? JSONSerialization.data(withJSONObject: savedProjectConfigs, options: .prettyPrinted),
-              let newSavedConfigsString = String(data: newSavedConfigsData, encoding: .utf8) else { return }
-        prefs.setValue(newSavedConfigsString, forKey: "leap_project_configs")
     }
 }
