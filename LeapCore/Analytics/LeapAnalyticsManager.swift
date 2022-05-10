@@ -22,21 +22,23 @@ class LeapAnalyticsManager {
     
     private var analyticsModelHandler = LeapAnalyticsModelHandler()
     
-    private lazy var analyticsNetworkHandler: LeapAnalyticsNetworkHandler = {
-        return LeapAnalyticsNetworkHandler(self)
-    }()
+    private var analyticsNetworkHandler = LeapAnalyticsNetworkHandler()
     
     private lazy var analyticsDataHandler: LeapAnalyticsDataHandler = {
         return LeapAnalyticsDataHandler(self)
     }()
     
-    private weak var eventsDelegate: LeapEventsDelegate?
+    weak var eventsDelegate: LeapEventsDelegate?
     
     private weak var modelHandlerDelegate: LeapAnalyticsModelHandlerDelegate?
     
+    private weak var networkHandlerDelegate: LeapAnalyticsNetworkHandlerDelegate?
+    
     init(_ eventsDelegate: LeapEventsDelegate? = nil) {
         self.eventsDelegate = eventsDelegate
+        self.analyticsNetworkHandler.delegate = self
         self.modelHandlerDelegate = self.analyticsModelHandler
+        self.networkHandlerDelegate = self.analyticsNetworkHandler
         NotificationCenter.default.addObserver(self, selector: #selector(flushPendingEvents), name: UIApplication.willResignActiveNotification, object: nil)
         flushPendingEvents()
     }
@@ -154,7 +156,7 @@ class LeapAnalyticsManager {
         }
         if let events = analyticsDataHandler.getEventsToFlush() {
             
-            analyticsNetworkHandler.flushEvents(events)
+            networkHandlerDelegate?.flushEvents(events)
         }
     }
 }

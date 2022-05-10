@@ -56,6 +56,16 @@
 /* Begin PBXBuildFile section */
 		0C5E9391282284B400DC6758 /* LeapCoreSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08DA66C25DEA2E800EB0EFC /* LeapCoreSDK.framework */; };
 		0C5E939F2822854B00DC6758 /* LeapAnalyticsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E939E2822854B00DC6758 /* LeapAnalyticsManagerTests.swift */; };
+		0C5E93A12823A5FA00DC6758 /* LeapAnalyticsModelHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93A02823A5FA00DC6758 /* LeapAnalyticsModelHandlerTests.swift */; };
+		0C5E93A42823F0C800DC6758 /* LeapAnalyticsDataHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93A32823F0C800DC6758 /* LeapAnalyticsDataHandlerTests.swift */; };
+		0C5E93A62825000D00DC6758 /* LeapAnalyticsNetworkHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93A52825000D00DC6758 /* LeapAnalyticsNetworkHandlerTests.swift */; };
+		0C5E93A828253F2400DC6758 /* MockLeapAnalyticsNetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93A728253F2400DC6758 /* MockLeapAnalyticsNetworkHandler.swift */; };
+		0C5E93B12827F8C400DC6758 /* LeapConfigRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93B02827F8C400DC6758 /* LeapConfigRepositoryTests.swift */; };
+		0C5E93B42827F92400DC6758 /* MockLeapConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93B32827F92400DC6758 /* MockLeapConfigRepository.swift */; };
+		0C5E93B82827FEB000DC6758 /* NetworkUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93B72827FEB000DC6758 /* NetworkUtils.swift */; };
+		0C5E93BA282805A400DC6758 /* MockLeapRemoteConfigHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93B9282805A400DC6758 /* MockLeapRemoteConfigHandler.swift */; };
+		0C5E93C228293E4400DC6758 /* LeapConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93C128293E4400DC6758 /* LeapConfigRepository.swift */; };
+		0C5E93C528293EBC00DC6758 /* LeapConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 0C5E93C428293EBC00DC6758 /* LeapConfig.json */; };
 		2D00D44027748E9200AD5F1C /* LeapMediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00D43F27748E9200AD5F1C /* LeapMediaPlayer.swift */; };
 		2D076DEF281FF08E008AE73F /* LeapRemoteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */; };
 		2D2C3310276B4B6B00E09B97 /* LeapNewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C330F276B4B6B00E09B97 /* LeapNewConfig.swift */; };
@@ -101,8 +111,6 @@
 		2DBCDA1C2684884800985C51 /* Leap+UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBCDA1A2684872F00985C51 /* Leap+UILabel.swift */; };
 		2DC138DB26197ED600F9D75A /* LeapPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */; };
 		2DC5FF11265F774700826FEB /* LeapDelight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC5FF10265F774700826FEB /* LeapDelight.swift */; };
-		2DD02F56281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */; };
-		2DD02F57281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */; };
 		2DD7D96126DE95120071A19F /* HybridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD7D96026DE95120071A19F /* HybridViewController.swift */; };
 		2DE2D273260B445B00D5DA7B /* LeapMedia.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DE2D272260B445B00D5DA7B /* LeapMedia.xcassets */; };
 		2DF4645C26B06DA20063FAC2 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF4645B26B06DA20063FAC2 /* MainViewController.swift */; };
@@ -331,6 +339,16 @@
 /* Begin PBXFileReference section */
 		0C5E938D282284B400DC6758 /* LeapCoreSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeapCoreSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C5E939E2822854B00DC6758 /* LeapAnalyticsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsManagerTests.swift; sourceTree = "<group>"; };
+		0C5E93A02823A5FA00DC6758 /* LeapAnalyticsModelHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsModelHandlerTests.swift; sourceTree = "<group>"; };
+		0C5E93A32823F0C800DC6758 /* LeapAnalyticsDataHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsDataHandlerTests.swift; sourceTree = "<group>"; };
+		0C5E93A52825000D00DC6758 /* LeapAnalyticsNetworkHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapAnalyticsNetworkHandlerTests.swift; sourceTree = "<group>"; };
+		0C5E93A728253F2400DC6758 /* MockLeapAnalyticsNetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLeapAnalyticsNetworkHandler.swift; sourceTree = "<group>"; };
+		0C5E93B02827F8C400DC6758 /* LeapConfigRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConfigRepositoryTests.swift; sourceTree = "<group>"; };
+		0C5E93B32827F92400DC6758 /* MockLeapConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLeapConfigRepository.swift; sourceTree = "<group>"; };
+		0C5E93B72827FEB000DC6758 /* NetworkUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkUtils.swift; sourceTree = "<group>"; };
+		0C5E93B9282805A400DC6758 /* MockLeapRemoteConfigHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLeapRemoteConfigHandler.swift; sourceTree = "<group>"; };
+		0C5E93C128293E4400DC6758 /* LeapConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConfigRepository.swift; sourceTree = "<group>"; };
+		0C5E93C428293EBC00DC6758 /* LeapConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LeapConfig.json; sourceTree = "<group>"; };
 		2D00D43F27748E9200AD5F1C /* LeapMediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaPlayer.swift; sourceTree = "<group>"; };
 		2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapRemoteHandler.swift; sourceTree = "<group>"; };
 		2D08591725A31FE9002D7993 /* LeapCreatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCreatorManager.swift; sourceTree = "<group>"; };
@@ -374,7 +392,6 @@
 		2D5E52CE263965E30037575C /* LeapTappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapTappable.swift; sourceTree = "<group>"; };
 		2D664A7C2799A56200F5EEA2 /* Leap.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = Leap.cer; sourceTree = "<group>"; };
 		2D74C2BA25CAA8B3005B59EB /* LeapLanguageOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapLanguageOptions.swift; sourceTree = "<group>"; };
-		2D8347062779AE4000A03B22 /* embedVideo1.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = embedVideo1.html; path = ../../../../Downloads/embedVideo1.html; sourceTree = "<group>"; };
 		2D8478D526C2688400C2E1BA /* Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encoder.swift; sourceTree = "<group>"; };
 		2D8CD76D2636B3130049D21F /* LeapSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapSoundManager.swift; sourceTree = "<group>"; };
 		2D8DEA0225C805F0005145E1 /* LeapDisableAssistanceDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDisableAssistanceDialog.swift; sourceTree = "<group>"; };
@@ -386,7 +403,6 @@
 		2DB7E7EA25A5A4280005F109 /* LeapConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConstants.swift; sourceTree = "<group>"; };
 		2DBCDA1A2684872F00985C51 /* Leap+UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Leap+UILabel.swift"; sourceTree = "<group>"; };
 		2DC5FF10265F774700826FEB /* LeapDelight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapDelight.swift; sourceTree = "<group>"; };
-		2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapNetworkRequestHandler.swift; sourceTree = "<group>"; };
 		2DD0E35225B6D7E700EBB9B8 /* LeapReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachability.swift; sourceTree = "<group>"; };
 		2DD0E35B25B7159400EBB9B8 /* LeapReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapReachabilityManager.swift; sourceTree = "<group>"; };
 		2DD7445D25BB108200D7609A /* jiny_ping_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jiny_ping_close.png; sourceTree = "<group>"; };
@@ -591,6 +607,9 @@
 		0C5E938E282284B400DC6758 /* LeapCoreSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				0C5E93C328293EA100DC6758 /* Resources */,
+				0C5E93B62827FE9C00DC6758 /* Mock Models */,
+				0C5E93AF2827F89F00DC6758 /* LeapConfigTests */,
 				0C5E939D282284DE00DC6758 /* LeapAnalyticsTests */,
 			);
 			path = LeapCoreSDKTests;
@@ -599,9 +618,55 @@
 		0C5E939D282284DE00DC6758 /* LeapAnalyticsTests */ = {
 			isa = PBXGroup;
 			children = (
+				0C5E93A928253F2C00DC6758 /* Mock Models */,
 				0C5E939E2822854B00DC6758 /* LeapAnalyticsManagerTests.swift */,
+				0C5E93A02823A5FA00DC6758 /* LeapAnalyticsModelHandlerTests.swift */,
+				0C5E93A32823F0C800DC6758 /* LeapAnalyticsDataHandlerTests.swift */,
+				0C5E93A52825000D00DC6758 /* LeapAnalyticsNetworkHandlerTests.swift */,
 			);
 			path = LeapAnalyticsTests;
+			sourceTree = "<group>";
+		};
+		0C5E93A928253F2C00DC6758 /* Mock Models */ = {
+			isa = PBXGroup;
+			children = (
+				0C5E93A728253F2400DC6758 /* MockLeapAnalyticsNetworkHandler.swift */,
+			);
+			path = "Mock Models";
+			sourceTree = "<group>";
+		};
+		0C5E93AF2827F89F00DC6758 /* LeapConfigTests */ = {
+			isa = PBXGroup;
+			children = (
+				0C5E93B22827F8E200DC6758 /* Mock Models */,
+				0C5E93B02827F8C400DC6758 /* LeapConfigRepositoryTests.swift */,
+			);
+			path = LeapConfigTests;
+			sourceTree = "<group>";
+		};
+		0C5E93B22827F8E200DC6758 /* Mock Models */ = {
+			isa = PBXGroup;
+			children = (
+				0C5E93B32827F92400DC6758 /* MockLeapConfigRepository.swift */,
+				0C5E93B9282805A400DC6758 /* MockLeapRemoteConfigHandler.swift */,
+			);
+			path = "Mock Models";
+			sourceTree = "<group>";
+		};
+		0C5E93B62827FE9C00DC6758 /* Mock Models */ = {
+			isa = PBXGroup;
+			children = (
+				0C5E93B72827FEB000DC6758 /* NetworkUtils.swift */,
+			);
+			path = "Mock Models";
+			sourceTree = "<group>";
+		};
+		0C5E93C328293EA100DC6758 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C5E93C428293EBC00DC6758 /* LeapConfig.json */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		2D08593D25A33908002D7993 /* Models */ = {
@@ -619,7 +684,6 @@
 				D01BD33125D529C50078324B /* jiny_option_cross.png */,
 				2D1702102591D13700F33729 /* jiny_default_icon.html */,
 				2D1702112591D13700F33729 /* jiny_audio_anim.html */,
-				2D8347062779AE4000A03B22 /* embedVideo1.html */,
 			);
 			path = SupportedFiles;
 			sourceTree = "<group>";
@@ -871,6 +935,7 @@
 				2D8478D426C2686100C2E1BA /* Extensions */,
 				D071662924629C69001937EE /* Context */,
 				D03E45102420DE1500A43FEA /* LeapStarter.swift */,
+				0C5E93C128293E4400DC6758 /* LeapConfigRepository.swift */,
 				2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */,
 				D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */,
 				D0592E7A241FA6E3007782A8 /* LeapCore.h */,
@@ -917,7 +982,6 @@
 				2D1B5DE925CC514200CAF4CE /* LeapPreferences.swift */,
 				2D918D8C278710330021AE11 /* SSLManager.swift */,
 				2D9823A7281ABD4E000F7614 /* LeapNetworkService.swift */,
-				2DD02F55281E87D200723201 /* LeapNetworkRequestHandler.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1374,6 +1438,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C5E93C528293EBC00DC6758 /* LeapConfig.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1496,7 +1561,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C5E93B82827FEB000DC6758 /* NetworkUtils.swift in Sources */,
+				0C5E93B42827F92400DC6758 /* MockLeapConfigRepository.swift in Sources */,
+				0C5E93A828253F2400DC6758 /* MockLeapAnalyticsNetworkHandler.swift in Sources */,
+				0C5E93B12827F8C400DC6758 /* LeapConfigRepositoryTests.swift in Sources */,
+				0C5E93A42823F0C800DC6758 /* LeapAnalyticsDataHandlerTests.swift in Sources */,
 				0C5E939F2822854B00DC6758 /* LeapAnalyticsManagerTests.swift in Sources */,
+				0C5E93A62825000D00DC6758 /* LeapAnalyticsNetworkHandlerTests.swift in Sources */,
+				0C5E93A12823A5FA00DC6758 /* LeapAnalyticsModelHandlerTests.swift in Sources */,
+				0C5E93BA282805A400DC6758 /* MockLeapRemoteConfigHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1569,7 +1642,6 @@
 				2D2C3312276B4BBE00E09B97 /* LeapNewProjectParameters.swift in Sources */,
 				2D5BB244276C8B5500BC2360 /* LeapNewLocaleSounds.swift in Sources */,
 				2D5BB254276C93AF00BC2360 /* LeapNewIconSetting.swift in Sources */,
-				2DD02F56281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */,
 				D08DA63A25DEA2E800EB0EFC /* LeapContextManager.swift in Sources */,
 				D08DA63B25DEA2E800EB0EFC /* LeapConfig.swift in Sources */,
 				D08DA63E25DEA2E800EB0EFC /* LeapStage.swift in Sources */,
@@ -1621,6 +1693,7 @@
 				D08DA65825DEA2E800EB0EFC /* LeapAnalyticsEvent.swift in Sources */,
 				D08DA65C25DEA2E800EB0EFC /* LeapContextDetector.swift in Sources */,
 				2D918D8D278710330021AE11 /* SSLManager.swift in Sources */,
+				0C5E93C228293E4400DC6758 /* LeapConfigRepository.swift in Sources */,
 				D08DA65D25DEA2E800EB0EFC /* LeapLanguage.swift in Sources */,
 				D08DA66025DEA2E800EB0EFC /* LeapDiscovery.swift in Sources */,
 				2D2C3318276B759600E09B97 /* LeapNewFlow.swift in Sources */,
@@ -1670,7 +1743,6 @@
 				D0B603D925DFB6BA0092F735 /* LeapAUIUtils.swift in Sources */,
 				D096B3E825F0F027009BE7B3 /* LeapArrowButton.swift in Sources */,
 				D0B603DA25DFB6BA0092F735 /* LeapFullScreen.swift in Sources */,
-				2DD02F57281E87D200723201 /* LeapNetworkRequestHandler.swift in Sources */,
 				D0B603DB25DFB6BA0092F735 /* LeapKeyWindowAssist.swift in Sources */,
 				D0B603DC25DFB6BA0092F735 /* LeapSpot.swift in Sources */,
 				D0B603DD25DFB6BA0092F735 /* LeapAUIManager.swift in Sources */,

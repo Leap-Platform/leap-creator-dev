@@ -8,7 +8,11 @@
 
 import Foundation
 
-class LeapRemoteConfigHandler {
+protocol LeapRemoteHandlerDelegate: AnyObject {
+    func fetchConfig(projectId: String?, completion: @escaping (Result<ResponseData, RequestError>?) -> Void)
+}
+
+class LeapRemoteConfigHandler: LeapRemoteHandlerDelegate {
     
     lazy var fetchQueue: OperationQueue = {
         var queue = OperationQueue()
@@ -21,7 +25,7 @@ class LeapRemoteConfigHandler {
         resetSavedHeaders(for: token)
     }
     
-    func fetchConfig(projectId: String? = nil, completion: @escaping (Result<ResponseData, RequestError>?) -> Void) {
+    func fetchConfig(projectId: String?, completion: @escaping (Result<ResponseData, RequestError>?) -> Void) {
         let configOp = LeapConfigFetchOperation(projectId: projectId) { (result: Result<ResponseData, RequestError>?) in
             completion(result)
         }
