@@ -81,27 +81,27 @@ class LeapAnalyticsModelHandlerTests: XCTestCase {
         XCTAssert(analyticsEvent?.eventName == "flow_disable")
     }
     
-    func testlanguageChangeEvent() {
+    func testLanguageChangeEvent() {
         let analyticsModel = LeapAnalyticsModel(projectParameter: projectParameters, previousLanguage: "hin", currentLanguage: "eng")
         let analyticsEvent = delegate?.languageChangeEvent(with: analyticsModel)
         XCTAssert(analyticsEvent?.language != analyticsEvent?.previousLanguage)
         XCTAssert(analyticsEvent?.eventName == "flow_language_change")
     }
     
-    func testauiActionTrackingEvent() {
+    func testAUIActionTrackingEvent() {
         let action = ["body": ["":""]]
         let analyticsModel = LeapAnalyticsModel(projectParameter: projectParameters, instructionId: "2", action: action)
         let analyticsEvent = delegate?.auiActionTrackingEvent(with: analyticsModel)
         XCTAssert(analyticsEvent?.eventName == "element_action")
     }
     
-    func testleapSDKDisableEvent() {
+    func testLeapSDKDisableEvent() {
         let analyticsModel = LeapAnalyticsModel(projectParameter: projectParameters, instructionId: "2")
         let analyticsEvent = delegate?.leapSDKDisableEvent(with: analyticsModel)
         XCTAssert(analyticsEvent?.eventName == "leap_sdk_disable")
     }
     
-    func testprojectTerminationEvent() {
+    func testProjectTerminationEvent() {
         projectParameters?.deploymentType = "LINK"
         let analyticsModel = LeapAnalyticsModel(projectParameter: projectParameters, instructionId: "2", terminationRule: "")
         let analyticsEvent = delegate?.projectTerminationEvent(with: analyticsModel)
