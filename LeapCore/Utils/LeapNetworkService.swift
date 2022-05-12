@@ -26,7 +26,7 @@ class LeapNetworkService {
             return
         }
         
-        let session = SSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? SSLManager.shared.session : URLSession.shared
+        let session = LeapSSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? LeapSSLManager.shared.session : URLSession.shared
         
         let urlTask = session?.dataTask(with: request) { (data, response, error) in
             guard error == nil else {

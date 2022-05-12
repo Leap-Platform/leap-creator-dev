@@ -72,7 +72,10 @@ class LeapContextsValidator<T:LeapContext> {
                                                              _ anchorViewId:String?,
                                                              _ anchorRect:CGRect?,
                                                              _ anchorWebview:WKWebView?)->Void) {
-        var contextToCheck:T? = liveContext ?? highestPreferredContext(validContexts)
+        var contextToCheck:T? = {
+            guard let liveContext = liveContext, validContexts.contains(liveContext) else { return highestPreferredContext(validContexts)}
+            return liveContext
+        }()
         var isTriggerableCompletion:((_:Bool, _:String?, _:CGRect?, _:WKWebView?)->Void)? = nil
         isTriggerableCompletion = {[weak self] triggerable, anchorViewId, anchorRect, anchorWebview in
             if triggerable { completion(contextToCheck, anchorViewId, anchorRect, anchorWebview) }
@@ -103,7 +106,7 @@ class LeapContextsValidator<T:LeapContext> {
         let instantOrDelayedAssists: [LeapAssist] = instantOrDelayedContexts.compactMap { return $0 as? LeapAssist }
         let instantOrDelayedContextsToCheckForWeight: [LeapContext] = instantOrDelayedAssists.count > 0 ? instantOrDelayedAssists : instantOrDelayedContexts
         
-        let selectedContext = instantOrDelayedContextsToCheckForWeight.reduce(contexts[0]) { currrentContext, toCheckContext in
+        let selectedContext = instantOrDelayedContextsToCheckForWeight.reduce(instantOrDelayedContextsToCheckForWeight[0]) { currrentContext, toCheckContext in
             return toCheckContext.weight > currrentContext.weight ? toCheckContext : currrentContext
         }
         return selectedContext as? T
