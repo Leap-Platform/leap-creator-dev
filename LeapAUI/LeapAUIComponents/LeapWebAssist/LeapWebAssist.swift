@@ -593,7 +593,7 @@ extension LeapWebAssist:WKURLSchemeHandler {
             urlSchemeTask.didFinish()
         } else {
             guard let baseUrl = baseUrl, let newUrl = URL(string: baseUrl+fileName) else { return }
-            let session = SSLManager.shared.isValidForSSLPinning(urlString: newUrl.absoluteString) ? SSLManager.shared.session : URLSession.shared
+            let session = LeapSSLManager.shared.isValidForSSLPinning(urlString: newUrl.absoluteString) ? LeapSSLManager.shared.session : URLSession.shared
             let dlTask = session?.downloadTask(with: newUrl) { (loc, res, err) in
                 guard let location = loc else { return }
                 DispatchQueue.main.async {

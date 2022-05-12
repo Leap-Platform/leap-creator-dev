@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol LeapConfigRepositoryDelegate: AnyObject {
+protocol LeapConfigRepositoryDelegate: AnyObject {
     func fetchConfig(projectId: String?, completion: ((_ config: Dictionary<String, AnyHashable>) -> Void)?)
 }
 

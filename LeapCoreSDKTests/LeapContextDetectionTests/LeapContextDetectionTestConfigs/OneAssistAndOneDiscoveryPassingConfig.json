@@ -1,0 +1,821 @@
+{
+  "data": [
+    {
+      "projectParameters": {
+        "deploymentType": "REGULAR",
+        "deploymentVersion": "10",
+        "deploymentId": "e39eb779-cb75-46ed-a310-5adf461f592a",
+        "projectType": "STATIC_FLOW",
+        "deploymentName": "Search Flights WT",
+        "projectName": "Search Flights WT",
+        "projectId": "1e1294f1-8e97-4cc3-98c2-7c6c04c8c624"
+      },
+      "flows": [
+        {
+          "id": 8,
+          "name": "Search Flights WT",
+          "pages": [
+            {
+              "id": 1,
+              "uniqueID": "flow_8_page_1",
+              "name": "page 1",
+              "nativeIdentifiers": [
+                "ID7-8"
+              ],
+              "checkPoint": false,
+              "stages": [
+                {
+                  "id": 1,
+                  "uniqueID": "flow_8_page_1_stage_1",
+                  "name": "Step 1",
+                  "nativeIdentifiers": [
+                    "ID1-8",
+                    "ID2-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "MANUAL_SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "TOOLTIP",
+                      "highlightClickable": true,
+                      "identifier": "TID1-8",
+                      "focus": true,
+                      "layoutInfo": {
+                        "style": {
+                          "bgColor": "#CC000000",
+                          "maxWidth": 0.8,
+                          "strokeWidth": 0.0,
+                          "strokeColor": "#000000"
+                        },
+                        "dismissAction": {
+                          "outsideDismiss": false,
+                          "dismissOnAnchorClick": false
+                        }
+                      },
+                      "htmlUrl": "/hihxnvbgu/raw/private/s--npqQhSUT--/v1652159950/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/a5438569-31f2-4abe-aee1-4e629aa1d3d9/aui-resources/4617fd20-eb54-4f5a-9ec8-a290d7a0416a.html",
+                      "contentUrls": [
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                      ],
+                      "highlightAnchor": true,
+                      "extraProps": {
+                        "highlightCornerRadius": "4",
+                        "animateHighlight": "false",
+                        "tooltipType": "MEDIA_RICH",
+                        "highlightType": "rect"
+                      },
+                      "accessibilityText": "Tooltip"
+                    }
+                  },
+                  "transition": {
+                    "prev": null,
+                    "next": "flow_8_page_1_stage_2"
+                  },
+                  "isWeb": false
+                },
+                {
+                  "id": 2,
+                  "uniqueID": "flow_8_page_1_stage_2",
+                  "name": "Step 2",
+                  "nativeIdentifiers": [
+                    "ID1-8",
+                    "ID2-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "MANUAL_SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "TOOLTIP",
+                      "highlightClickable": true,
+                      "identifier": "TID2-8",
+                      "focus": true,
+                      "layoutInfo": {
+                        "style": {
+                          "bgColor": "#CC000000",
+                          "maxWidth": 0.8,
+                          "strokeWidth": 0.0,
+                          "strokeColor": "#000000"
+                        },
+                        "dismissAction": {
+                          "outsideDismiss": false,
+                          "dismissOnAnchorClick": false
+                        }
+                      },
+                      "htmlUrl": "/hihxnvbgu/raw/private/s--DvOrwpjr--/v1652159952/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/fefe450c-4339-4530-8ef4-689cfb408bd0/aui-resources/3863f94d-eed6-4f57-9289-c2cf8ee2b05b.html",
+                      "contentUrls": [
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                      ],
+                      "highlightAnchor": true,
+                      "extraProps": {
+                        "highlightCornerRadius": "4",
+                        "animateHighlight": "false",
+                        "tooltipType": "MEDIA_RICH",
+                        "highlightType": "rect"
+                      },
+                      "accessibilityText": "Tooltip"
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_1_stage_1",
+                    "next": "flow_8_page_1_stage_3"
+                  },
+                  "isWeb": false
+                },
+                {
+                  "id": 3,
+                  "uniqueID": "flow_8_page_1_stage_3",
+                  "name": "Step 3",
+                  "nativeIdentifiers": [
+                    "ID1-8",
+                    "ID2-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "MANUAL_SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "TOOLTIP",
+                      "highlightClickable": true,
+                      "identifier": "TID3-8",
+                      "focus": false,
+                      "layoutInfo": {
+                        "style": {
+                          "bgColor": "#66000000",
+                          "maxWidth": 1.0,
+                          "strokeWidth": 0.0,
+                          "strokeColor": "#000000"
+                        },
+                        "dismissAction": {
+                          "outsideDismiss": false,
+                          "dismissOnAnchorClick": true
+                        }
+                      },
+                      "htmlUrl": "/hihxnvbgu/raw/private/s--6LL1jhY6--/v1652159953/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/b0bd462f-006c-4fc0-ba02-36691de5e815/aui-resources/1bbe86ae-9b6a-435f-bade-ba7b84c503cd.html",
+                      "contentUrls": [
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2"
+                      ],
+                      "highlightAnchor": false,
+                      "extraProps": {
+                        "highlightCornerRadius": "4",
+                        "animateHighlight": "false",
+                        "tooltipType": "WRAP",
+                        "highlightType": "rect"
+                      },
+                      "accessibilityText": "Tooltip"
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_1_stage_2",
+                    "next": "flow_8_page_2_stage_4"
+                  },
+                  "isWeb": false
+                },
+                {
+                  "id": 5,
+                  "uniqueID": "flow_8_page_1_stage_5",
+                  "name": "Step 5",
+                  "nativeIdentifiers": [
+                    "ID1-8",
+                    "ID2-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "MANUAL_SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "HIGHLIGHT_WITH_DESC",
+                      "highlightClickable": true,
+                      "identifier": "TID5-8",
+                      "focus": false,
+                      "layoutInfo": {
+                        "style": {
+                          "bgColor": "#D8000000",
+                          "maxWidth": 0.8,
+                          "isContentTransparent": true
+                        },
+                        "dismissAction": {
+                          "outsideDismiss": false,
+                          "dismissOnAnchorClick": true
+                        }
+                      },
+                      "htmlUrl": "/hihxnvbgu/raw/private/s--ugytLsxB--/v1652159954/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/8e9cb1a8-6418-4006-97d7-f10241a2b7d5/aui-resources/172afd29-c3d8-460a-af1a-0aa2bf18683f.html",
+                      "contentUrls": [
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                      ],
+                      "highlightAnchor": true,
+                      "extraProps": {
+                        "highlightConnectorType": "none",
+                        "highlightCornerRadius": "4",
+                        "animateHighlight": "false",
+                        "highlightConnectorLength": "33",
+                        "highlightConnectorColor": "#FFFFFFFF",
+                        "highlightType": "rect"
+                      },
+                      "accessibilityText": "Highlight"
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_2_stage_4",
+                    "next": "flow_8_page_2_stage_6"
+                  },
+                  "isWeb": false
+                },
+                {
+                  "id": 7,
+                  "uniqueID": "flow_8_page_1_stage_7",
+                  "name": "Step 7",
+                  "nativeIdentifiers": [
+                    "ID1-8",
+                    "ID2-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "MANUAL_SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "FINGER_RIPPLE",
+                      "highlightClickable": true,
+                      "autoScroll": true,
+                      "identifier": "TID7-8",
+                      "focus": false,
+                      "layoutInfo": {
+                        "dismissAction": {
+                          "outsideDismiss": false,
+                          "dismissOnAnchorClick": true
+                        }
+                      },
+                      "accessibilityText": "Tap",
+                      "isWeb": false
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_2_stage_6",
+                    "next": "flow_8_page_3_stage_8"
+                  },
+                  "isWeb": false
+                }
+              ],
+              "isWeb": false
+            },
+            {
+              "id": 2,
+              "uniqueID": "flow_8_page_2",
+              "name": "page 2",
+              "nativeIdentifiers": [
+                "ID8-8"
+              ],
+              "checkPoint": false,
+              "stages": [
+                {
+                  "id": 4,
+                  "uniqueID": "flow_8_page_2_stage_4",
+                  "name": "Step 4",
+                  "nativeIdentifiers": [
+                    "ID3-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "SWIPE_UP",
+                      "highlightClickable": true,
+                      "autoScroll": true,
+                      "identifier": "TID4-8",
+                      "autoDismissDelay": 5000,
+                      "accessibilityText": "Swipe Up",
+                      "isWeb": false
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_1_stage_3",
+                    "next": "flow_8_page_1_stage_5"
+                  },
+                  "isWeb": false
+                },
+                {
+                  "id": 6,
+                  "uniqueID": "flow_8_page_2_stage_6",
+                  "name": "Step 6",
+                  "nativeIdentifiers": [
+                    "ID3-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "SWIPE_UP",
+                      "highlightClickable": true,
+                      "autoScroll": true,
+                      "identifier": "TID6-8",
+                      "autoDismissDelay": 3000,
+                      "accessibilityText": "Swipe Up",
+                      "isWeb": false
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_1_stage_5",
+                    "next": "flow_8_page_1_stage_7"
+                  },
+                  "isWeb": false
+                }
+              ],
+              "isWeb": false
+            },
+            {
+              "id": 3,
+              "uniqueID": "flow_8_page_3",
+              "name": "page 3",
+              "nativeIdentifiers": [
+                "ID9-8"
+              ],
+              "checkPoint": false,
+              "stages": [
+                {
+                  "id": 8,
+                  "uniqueID": "flow_8_page_3_stage_8",
+                  "name": "Step 8",
+                  "nativeIdentifiers": [
+                    "ID4-8",
+                    "ID5-8"
+                  ],
+                  "checkPoint": false,
+                  "type": "SEQUENCE",
+                  "frequency": {
+                    "perSession": -1,
+                    "perApp": -1,
+                    "perSessionWoJiny": -1,
+                    "perAppWoJiny": -1,
+                    "perFlow": 1
+                  },
+                  "instruction": {
+                    "assistInfo": {
+                      "type": "POPUP",
+                      "highlightClickable": false,
+                      "layoutInfo": {
+                        "alignment": "center",
+                        "style": {
+                          "bgColor": "#CC000000"
+                        },
+                        "dismissAction": {
+                          "outsideDismiss": false
+                        }
+                      },
+                      "htmlUrl": "/hihxnvbgu/raw/private/s--0GKMkgEN--/v1652159955/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/9ea04f15-164d-4a85-9446-90e31315d420/aui-resources/8fa7eb57-d8e3-4bb9-bcd0-509d0270f035.html",
+                      "contentUrls": [
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                        "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+                      ],
+                      "highlightAnchor": true,
+                      "autoDismissDelay": 10000,
+                      "accessibilityText": "Pop up"
+                    }
+                  },
+                  "transition": {
+                    "prev": "flow_8_page_1_stage_7",
+                    "next": null
+                  },
+                  "isWeb": false,
+                  "isSuccess": true
+                }
+              ],
+              "isWeb": false
+            }
+          ],
+          "firstStep": "flow_8_page_1_stage_1"
+        }
+      ],
+      "languages": [
+        {
+          "localeId": "ang",
+          "localeName": "ENGLISH",
+          "localeScript": "ENGLISH",
+          "muteText": "Stop",
+          "repeatText": "Repeat",
+          "changeLanguageText": "Languages",
+          "ttsInfo": {
+            "ttsLocale": "en",
+            "ttsRegion": "IN"
+          }
+        }
+      ],
+      "discoverySounds": {
+        "baseUrl": "https://res.cloudinary.com",
+        "jinySounds": {
+          
+        }
+      },
+      "localeSounds": {
+        "baseUrl": "https://res.cloudinary.com",
+        "sounds": {
+          
+        }
+      },
+      "discoveryList": [
+        {
+          "id": 8,
+          "uniqueID": "discovery_8",
+          "name": "Search Flights WT",
+          "nativeIdentifiers": [
+            "ID1-8",
+            "ID2-8"
+          ],
+          "checkPoint": false,
+          "enableIcon": true,
+          "triggerMode": "SINGLE_FLOW_TRIGGER",
+          "instruction": {
+            "assistInfo": {
+              "type": "BOTTOMUP",
+              "highlightClickable": true,
+              "layoutInfo": {
+                "alignment": "bottom",
+                "style": {
+                  "bgColor": "#CC000000"
+                },
+                "dismissAction": {
+                  "outsideDismiss": true
+                }
+              },
+              "htmlUrl": "/hihxnvbgu/raw/private/s--0hld0Trm--/v1652159957/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/html/5467f3f7-423f-45d0-b422-4d0e6f077197/aui-resources/b27ddc09-5503-4ee6-876c-d5dacac73a8c.html",
+              "contentUrls": [
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+              ],
+              "highlightAnchor": true
+            }
+          },
+          "flowId": 8,
+          "trigger": {
+            "type": "instant",
+            "delay": 0
+          },
+          "triggerFrequency": {
+            "type": "EVERY_SESSION"
+          },
+          "localeCodes": [
+            "ang"
+          ],
+          "languageOption": {
+            "htmlUrl": "/hihxnvbgu/raw/upload/v1611384502/jiny-x-resources/jiny-language-panel.html",
+            "accessibilityText": "Language Selector"
+          },
+          "autoStart": false,
+          "isWeb": false
+        }
+      ],
+      "nativeIdentifiers": {
+        "ID4-8": {
+          "controller": "LoginOptionViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Continue Without Login"
+            }
+          }
+        },
+        "ID5-8": {
+          "controller": "LoginOptionViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Login With Email"
+            }
+          }
+        },
+        "ID7-8": {
+          "controller": "HomeViewController"
+        },
+        "ID1-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          }
+        },
+        "ID2-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Destination"
+            }
+          }
+        },
+        "ID3-8": {
+          "controller": "PlaceViewController",
+          "idParams": {
+            "className": "UILabel",
+            "TAG": "0",
+            "text": {
+              "ang": "Choose Location"
+            }
+          }
+        },
+        "TID7-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Search"
+            }
+          }
+        },
+        "TID6-8": {
+          "controller": "PlaceViewController",
+          "idParams": {
+            "className": "UITableView",
+            "TAG": "0"
+          }
+        },
+        "TID5-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Destination"
+            }
+          }
+        },
+        "TID4-8": {
+          "controller": "PlaceViewController",
+          "idParams": {
+            "className": "UITableView",
+            "TAG": "0"
+          }
+        },
+        "ID8-8": {
+          "controller": "PlaceViewController"
+        },
+        "ID9-8": {
+          "controller": "LoginOptionViewController"
+        },
+        "TID3-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          }
+        },
+        "TID2-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          },
+          "relationToTarget": [
+            "P",
+            "C11",
+            "C0"
+          ],
+          "isAnchorSameAsTarget": false
+        },
+        "TID1-8": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          },
+          "relationToTarget": [
+            "P",
+            "C9",
+            "C0"
+          ],
+          "isAnchorSameAsTarget": false
+        }
+      },
+      "auiContent": {
+        "baseUrl": "https://res.cloudinary.com",
+        "content": [
+          "/hihxnvbgu/raw/private/s--npqQhSUT--/v1652159950/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/a5438569-31f2-4abe-aee1-4e629aa1d3d9/aui-resources/4617fd20-eb54-4f5a-9ec8-a290d7a0416a.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "/hihxnvbgu/raw/private/s--DvOrwpjr--/v1652159952/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/fefe450c-4339-4530-8ef4-689cfb408bd0/aui-resources/3863f94d-eed6-4f57-9289-c2cf8ee2b05b.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "/hihxnvbgu/raw/private/s--6LL1jhY6--/v1652159953/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/b0bd462f-006c-4fc0-ba02-36691de5e815/aui-resources/1bbe86ae-9b6a-435f-bade-ba7b84c503cd.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2",
+          "/hihxnvbgu/raw/private/s--ugytLsxB--/v1652159954/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/8e9cb1a8-6418-4006-97d7-f10241a2b7d5/aui-resources/172afd29-c3d8-460a-af1a-0aa2bf18683f.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "/hihxnvbgu/raw/private/s--0GKMkgEN--/v1652159955/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/9ea04f15-164d-4a85-9446-90e31315d420/aui-resources/8fa7eb57-d8e3-4bb9-bcd0-509d0270f035.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "/hihxnvbgu/raw/private/s--0hld0Trm--/v1652159957/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/html/5467f3f7-423f-45d0-b422-4d0e6f077197/aui-resources/b27ddc09-5503-4ee6-876c-d5dacac73a8c.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "/hihxnvbgu/raw/upload/v1611384502/jiny-x-resources/jiny-language-panel.html",
+          "/hihxnvbgu/raw/private/s--rQcbfIaD--/v1652159958/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/aui-resources/edfc43c8-86d3-45d9-a18e-2e1164b56def.html"
+        ]
+      },
+      "iconSetting": {
+        "8": {
+          "dismissible": true,
+          "leftAlign": true,
+          "bgColor": "#5532FF",
+          "htmlUrl": "/hihxnvbgu/raw/private/s--rQcbfIaD--/v1652159958/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/aui-resources/edfc43c8-86d3-45d9-a18e-2e1164b56def.html",
+          "isCustomised": true
+        }
+      },
+      "defaultAccessibilityText": {
+        "stop": "Stop Flow",
+        "language": "Change Language",
+        "arrowDown": "Click to scroll down",
+        "arrowUp": "Click to scroll up",
+        "pingCross": "Close",
+        "closeIconOptions": "Dismiss Options"
+      }
+    },
+    {
+      "projectParameters": {
+        "deploymentType": "REGULAR",
+        "deploymentVersion": "4",
+        "deploymentId": "2ae9b4f7-39f7-42c5-98f7-fd1a4296018f",
+        "projectType": "TOOLTIP",
+        "deploymentName": "Tooltip",
+        "projectName": "Tooltip",
+        "projectId": "ad1c7854-a259-4456-a0fa-84b9e9a2bddd"
+      },
+      "assists": [
+        {
+          "id": 5,
+          "uniqueID": "assist_5",
+          "name": "TOOLTIP",
+          "nativeIdentifiers": [
+            "ID1-5",
+            "ID2-5"
+          ],
+          "checkPoint": false,
+          "type": "MANUAL_SEQUENCE",
+          "instruction": {
+            "assistInfo": {
+              "type": "TOOLTIP",
+              "highlightClickable": true,
+              "identifier": "TID3-5",
+              "focus": true,
+              "layoutInfo": {
+                "style": {
+                  "bgColor": "#CC000000",
+                  "maxWidth": 0.8,
+                  "strokeWidth": 0.0,
+                  "strokeColor": "#000000"
+                },
+                "dismissAction": {
+                  "outsideDismiss": false,
+                  "dismissOnAnchorClick": false
+                }
+              },
+              "htmlUrl": "/hihxnvbgu/raw/private/s--IFMYg0iu--/v1652163036/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/c114cbbf-6cf6-43f6-aaeb-250623c2563b/aui-resources/43c405a8-b79f-4cfc-810c-6b8e709c3c23.html",
+              "contentUrls": [
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+              ],
+              "highlightAnchor": true,
+              "extraProps": {
+                "highlightCornerRadius": "4",
+                "animateHighlight": "false",
+                "tooltipType": "MEDIA_RICH",
+                "highlightType": "rect"
+              },
+              "accessibilityText": "Tooltip"
+            }
+          },
+          "trigger": {
+            "type": "instant",
+            "delay": 0
+          },
+          "localeCode": "ang",
+          "isWeb": false
+        }
+      ],
+      "languages": [
+        {
+          "localeId": "ang",
+          "localeName": "ENGLISH",
+          "localeScript": "ENGLISH",
+          "muteText": "Stop",
+          "repeatText": "Repeat",
+          "changeLanguageText": "Languages",
+          "ttsInfo": {
+            "ttsLocale": "en",
+            "ttsRegion": "IN"
+          }
+        }
+      ],
+      "localeSounds": {
+        "baseUrl": "https://res.cloudinary.com",
+        "sounds": {
+          
+        }
+      },
+      "nativeIdentifiers": {
+        "TID3-5": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          }
+        },
+        "ID1-5": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          }
+        },
+        "ID2-5": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Destination"
+            }
+          }
+        }
+      },
+      "auiContent": {
+        "baseUrl": "https://res.cloudinary.com",
+        "content": [
+          "/hihxnvbgu/raw/private/s--IFMYg0iu--/v1652163036/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/c114cbbf-6cf6-43f6-aaeb-250623c2563b/aui-resources/43c405a8-b79f-4cfc-810c-6b8e709c3c23.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+        ]
+      },
+      "defaultAccessibilityText": {
+        "stop": "Stop Flow",
+        "language": "Change Language",
+        "arrowDown": "Click to scroll down",
+        "arrowUp": "Click to scroll up",
+        "pingCross": "Close",
+        "closeIconOptions": "Dismiss Options"
+      }
+    }
+  ],
+  "params": {
+    "viewAlphaIgnoreLimit": 230
+  }
+}

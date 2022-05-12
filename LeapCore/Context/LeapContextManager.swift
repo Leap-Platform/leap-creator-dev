@@ -29,7 +29,7 @@ class LeapContextManager:NSObject {
     private var configuration:LeapConfig?
     private var previewConfig: LeapConfig?
     private weak var auiHandler:LeapAUIHandler?
-    public weak var delegate:LeapContextManagerDelegate?
+    weak var delegate:LeapContextManagerDelegate?
     private var taggedEvents:Dictionary<String,Any> = [:]
     
     init(withUIHandler uiHandler:LeapAUIHandler?) {

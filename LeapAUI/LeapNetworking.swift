@@ -107,7 +107,7 @@ class LeapDownloadOperation: LeapOperation {
         }
         guard let url = media.url else { return }
         let request = URLRequest(url: url)
-        let session = SSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? SSLManager.shared.session : URLSession.shared
+        let session = LeapSSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? LeapSSLManager.shared.session : URLSession.shared
         let dlTask = session?.downloadTask(with: request) { (fileUrl, urlResponse, error) in
             self.executing(false)
             self.finished(true)

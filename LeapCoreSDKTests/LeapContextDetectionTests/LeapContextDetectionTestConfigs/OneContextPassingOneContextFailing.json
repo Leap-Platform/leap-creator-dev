@@ -1,0 +1,250 @@
+{
+  "data": [
+    {
+      "projectParameters": {
+        "deploymentType": "REGULAR",
+        "deploymentVersion": "2",
+        "deploymentId": "4ba52800-2edb-4251-bff2-b825c4ccfffa",
+        "projectType": "POPUP",
+        "deploymentName": "Popup Assist",
+        "projectName": "Popup Assist",
+        "projectId": "7b85ff92-6b30-452c-a485-edceca5172ad"
+      },
+      "assists": [
+        {
+          "id": 3,
+          "uniqueID": "assist_3",
+          "name": "POPUP",
+          "nativeIdentifiers": [
+            "ID1-3",
+            "ID2-3"
+          ],
+          "checkPoint": false,
+          "type": "MANUAL_SEQUENCE",
+          "instruction": {
+            "assistInfo": {
+              "type": "POPUP",
+              "highlightClickable": true,
+              "focus": true,
+              "layoutInfo": {
+                "alignment": "center",
+                "style": {
+                  "bgColor": "#CC000000"
+                },
+                "dismissAction": {
+                  "outsideDismiss": false
+                }
+              },
+              "htmlUrl": "/hihxnvbgu/raw/private/s--5MPpcrtd--/v1652172752/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/e97abd5f-2787-43d4-b147-b2beb04f8b7a/aui-resources/54bf7943-2339-4732-8d0b-5c4988bd9659.html",
+              "contentUrls": [
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+              ],
+              "highlightAnchor": true,
+              "accessibilityText": "Pop up"
+            }
+          },
+          "trigger": {
+            "type": "instant",
+            "delay": 0
+          },
+          "localeCode": "ang",
+          "isWeb": false
+        }
+      ],
+      "languages": [
+        {
+          "localeId": "ang",
+          "localeName": "ENGLISH",
+          "localeScript": "ENGLISH",
+          "muteText": "Stop",
+          "repeatText": "Repeat",
+          "changeLanguageText": "Languages",
+          "ttsInfo": {
+            "ttsLocale": "en",
+            "ttsRegion": "IN"
+          }
+        }
+      ],
+      "localeSounds": {
+        "baseUrl": "https://res.cloudinary.com",
+        "sounds": {
+          
+        }
+      },
+      "nativeIdentifiers": {
+        "ID1-3": {
+          "controller": "MainViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Native Views"
+            }
+          }
+        },
+        "ID2-3": {
+          "controller": "MainViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Hybrid Views"
+            }
+          }
+        }
+      },
+      "auiContent": {
+        "baseUrl": "https://res.cloudinary.com",
+        "content": [
+          "/hihxnvbgu/raw/private/s--5MPpcrtd--/v1652172752/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/e97abd5f-2787-43d4-b147-b2beb04f8b7a/aui-resources/54bf7943-2339-4732-8d0b-5c4988bd9659.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+        ]
+      },
+      "defaultAccessibilityText": {
+        "stop": "Stop Flow",
+        "language": "Change Language",
+        "arrowDown": "Click to scroll down",
+        "arrowUp": "Click to scroll up",
+        "pingCross": "Close",
+        "closeIconOptions": "Dismiss Options"
+      }
+    },
+    {
+      "projectParameters": {
+        "deploymentType": "REGULAR",
+        "deploymentVersion": "6",
+        "deploymentId": "2ae9b4f7-39f7-42c5-98f7-fd1a4296018f",
+        "projectType": "TOOLTIP",
+        "deploymentName": "Tooltip",
+        "projectName": "Tooltip",
+        "projectId": "ad1c7854-a259-4456-a0fa-84b9e9a2bddd"
+      },
+      "assists": [
+        {
+          "id": 5,
+          "uniqueID": "assist_5",
+          "name": "TOOLTIP",
+          "nativeIdentifiers": [
+            "ID1-5",
+            "ID2-5"
+          ],
+          "checkPoint": false,
+          "type": "MANUAL_SEQUENCE",
+          "instruction": {
+            "assistInfo": {
+              "type": "TOOLTIP",
+              "highlightClickable": true,
+              "identifier": "TID3-5",
+              "focus": true,
+              "layoutInfo": {
+                "style": {
+                  "bgColor": "#CC000000",
+                  "maxWidth": 0.8,
+                  "strokeWidth": 0.0,
+                  "strokeColor": "#000000"
+                },
+                "dismissAction": {
+                  "outsideDismiss": false,
+                  "dismissOnAnchorClick": false
+                }
+              },
+              "htmlUrl": "/hihxnvbgu/raw/private/s--htYLHFRR--/v1652172867/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/c114cbbf-6cf6-43f6-aaeb-250623c2563b/aui-resources/2138018e-0a02-4698-b2a2-ca1b008b88c6.html",
+              "contentUrls": [
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+                "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+              ],
+              "highlightAnchor": true,
+              "extraProps": {
+                "highlightCornerRadius": "4",
+                "animateHighlight": "false",
+                "tooltipType": "MEDIA_RICH",
+                "highlightType": "rect"
+              },
+              "accessibilityText": "Tooltip"
+            }
+          },
+          "trigger": {
+            "type": "delay",
+            "delay": 10000
+          },
+          "localeCode": "ang",
+          "isWeb": false
+        }
+      ],
+      "languages": [
+        {
+          "localeId": "ang",
+          "localeName": "ENGLISH",
+          "localeScript": "ENGLISH",
+          "muteText": "Stop",
+          "repeatText": "Repeat",
+          "changeLanguageText": "Languages",
+          "ttsInfo": {
+            "ttsLocale": "en",
+            "ttsRegion": "IN"
+          }
+        }
+      ],
+      "localeSounds": {
+        "baseUrl": "https://res.cloudinary.com",
+        "sounds": {
+          
+        }
+      },
+      "nativeIdentifiers": {
+        "TID3-5": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          }
+        },
+        "ID1-5": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Source"
+            }
+          }
+        },
+        "ID2-5": {
+          "controller": "HomeViewController",
+          "idParams": {
+            "className": "UIButton",
+            "text": {
+              "ang": "Enter Destination"
+            }
+          }
+        }
+      },
+      "auiContent": {
+        "baseUrl": "https://res.cloudinary.com",
+        "content": [
+          "/hihxnvbgu/raw/private/s--htYLHFRR--/v1652172867/jiny-x-resources/aaa63704-9ae0-40d1-bc11-e990bbf2b1c8/7be57dd6-3098-464b-887a-c8a491ad757f/c114cbbf-6cf6-43f6-aaeb-250623c2563b/aui-resources/2138018e-0a02-4698-b2a2-ca1b008b88c6.html",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "https://fonts.gstatic.com/s/poppins/v15/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2"
+        ]
+      },
+      "defaultAccessibilityText": {
+        "stop": "Stop Flow",
+        "language": "Change Language",
+        "arrowDown": "Click to scroll down",
+        "arrowUp": "Click to scroll up",
+        "pingCross": "Close",
+        "closeIconOptions": "Dismiss Options"
+      }
+    }
+  ],
+  "params": {
+    "viewAlphaIgnoreLimit": 230
+  }
+}
