@@ -1,0 +1,162 @@
+//
+//  LeapBeacon.swift
+//  LeapAUI
+//
+//  Created by mac on 22/09/20.
+//  Copyright © 2020 Leap Inc. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+/// LeapBeacon - A native AUI Component class to point out a view.
+class LeapBeacon: LeapInViewNativeAssist {
+    
+    /// random unique id generated to send certain events only once if tap is recognized twice by the system
+    private var id = String.generateUUIDString()
+    
+    private var lastLocation = CGPoint.zero
+        
+    /// LeapBeacon's custom layer (CAReplicatorLayer) class.
+    var pulsator: LeapPulsator = LeapPulsator()
+    
+    /// - Parameters:
+    ///   - assistDict: A dictionary value for the type LeapAssistInfo.
+    ///   - toView: source view to which the tooltip is attached.
+    override init(withDict assistDict: Dictionary<String,Any>, toView: UIView) {
+        super.init(withDict: assistDict, toView: toView)
+        
+        let bgColorString = assistInfo?.layoutInfo?.style.bgColor ?? "#FF000000"
+        let bgColor = UIColor(hex: bgColorString) ?? .red
+        
+        pulsator.bgColor = bgColor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func addNotifier() {
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    @objc func appWillEnterForeground() {
+        pulsator.removeAllAnimations()
+        
+        pulsator.startAnimation()
+    }
+    
+    /// presents beacon after setting up view, setting up alignment and when start() method called.
+    func presentBeacon() {
+        
+        setupView()
+                
+        setAlignment()
+        
+        show()
+        
+        addNotifier()
+    }
+    
+    func presentBeacon(toRect: CGRect, inView: UIView?) {
+        
+        webRect = toRect
+        pulsator.toRect = toRect
+        presentBeacon()
+    }
+    
+    func updateRect(newRect: CGRect, inView: UIView?) {
+        
+        webRect = newRect
+        pulsator.toRect = newRect
+        show()
+    }
+    
+    override func show() {
+        
+        if webRect != nil  {
+            
+            if lastLocation != webRect?.origin {
+                guard toView != nil else { return }
+                pulsator.placeBeacon(rect: webRect!, inWebView: toView!)
+            }
+            lastLocation = webRect!.origin
+        
+        } else {
+            
+            pulsator.toView = toView
+            
+            let frame = getGlobalToViewFrame()
+            
+            if lastLocation != frame.origin {
+            
+               pulsator.placeBeacon()
+            }
+            lastLocation = frame.origin
+        }
+    }
+    
+    override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
+        pulsator.stopAnimation()
+        super.performExitAnimation(animation: animation, byUser: byUser, autoDismissed: autoDismissed, byContext: byContext, panelOpen: panelOpen, action: action)
+    }
+    
+    /// sets up customised LeapBeacon's class, toView and inView.
+    func setupView() {
+                    
+        inView = toView?.window
+        
+        inView?.addSubview(self)
+        
+        configureOverlayView()
+        
+        self.layer.addSublayer(pulsator)
+        
+        pulsator.pulsatorDelegate = self
+    }
+    
+    /// Sets alignment of the component (LeapBeacon).
+    func setAlignment() {
+        let pos = assistInfo?.layoutInfo?.layoutAlignment ?? "top_left"
+        pulsator.setPosition(pos)
+    }
+    
+    override func hide() {
+        self.pulsator.isHidden = true
+    }
+    
+    override func unhide() {
+        self.pulsator.isHidden = false
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        
+        let hitTestView = super.hitTest(point, with: event)
+
+        let frameForToView = getGlobalToViewFrame()
+
+        if frameForToView.contains(point) {
+                        
+            self.delegate?.sendAUIEvent(action: [constant_body: [constant_anchorClick: true, constant_id: id]])
+            
+            return hitTestView
+
+        } else {
+
+            return hitTestView
+        }
+    }
+}
+
+extension LeapBeacon: LeapPulsatorDelegate {
+    
+    func didStartAnimation() {
+        
+        super.show()        
+    }
+    
+    func didStopAnimation() {
+        
+    }
+}

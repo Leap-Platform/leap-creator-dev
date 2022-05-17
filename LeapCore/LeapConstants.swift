@@ -267,6 +267,25 @@ let constant_LeapSDKStarted = "LeapSDKStarted"
 let constant_internetConnected = "internetConnected"
 let constant_internetNotConnected = "internetNotConnected"
 
+// AUI Names
+let constant_leapIcon = "Leap Icon"
+let constant_leapPopup = "Leap Popup"
+let constant_leapBottomSheet = "Leap Bottomsheet"
+let constant_leapPing = "Leap Ping"
+let constant_leapDrawer = "Leap Drawer"
+let constant_leapTooltip = "Leap Tooltip"
+let constant_leapHighlight = "Leap Highlight"
+let constant_leapFullScreen = "Leap Fullscreen"
+let constant_leapGesture = "Leap Gesture"
+let constant_leapBeacon = "Leap Beacon"
+let constant_leapLabel = "Leap Label"
+let constant_leapSpot = "Leap Spot"
+let constant_leapCarousel = "Leap Carousel"
+let constant_leapSlideIn = "Leap SlideIn"
+let constant_leapNotification = "Leap Notification"
+let constant_leapDelight = "Leap Delight"
+let constant_leapLanguageOptions = "Leap LanguageOptions"
+
 // file extensions
  let constant_cer = "cer"
 
