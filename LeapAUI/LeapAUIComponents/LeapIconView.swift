@@ -82,6 +82,8 @@ class LeapIconView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.iconWebView?.accessibilityLabel = constant_leapIcon
+        
         setupIconView()
     }
     

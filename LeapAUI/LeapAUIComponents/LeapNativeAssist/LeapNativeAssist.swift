@@ -20,6 +20,24 @@ class LeapNativeAssist: UIView, LeapAssist {
     
     var projectParameters: LeapProjectParameters?
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.setAccessibilityLabel()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setAccessibilityLabel() {
+        switch self {
+        case is LeapBeacon: self.accessibilityLabel = constant_leapBeacon
+        case is LeapPointer: self.accessibilityLabel = constant_leapGesture
+        default: print("Not Identified")
+        }
+    }
+    
     func applyStyle(style: LeapStyle) {
         
     }
