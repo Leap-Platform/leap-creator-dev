@@ -22,7 +22,7 @@ class LeapContext {
     var instructionInfoDict:Dictionary<String,Any>?
     var trigger: LeapTrigger?
     
-    init(with dict:Dictionary<String,Any>) {
+    init(with dict: Dictionary<String, Any>) {
         id = dict[constant_id] as? Int ?? -1
         name = dict[constant_name] as? String ?? ""
         nativeIdentifiers = dict[constant_nativeIdentifiers] as? Array<String> ?? []

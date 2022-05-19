@@ -38,7 +38,7 @@ class LeapStageTransition {
     }
 }
 
-class LeapStage:LeapContext {
+class LeapStage: LeapContext {
 
     let type:LeapStageType
     let isSuccess:Bool

@@ -64,8 +64,6 @@ class LeapAUIManager: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(startPreview), name: .init("leap_preview_config"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 }
@@ -94,15 +92,6 @@ extension LeapAUIManager {
     @objc func appDidBecomeActive() {
         guard currentAssist != nil else { return }
         if !(leapMediaPlayer.currentAudioCompletionStatus ?? true) { playAudio() }
-    }
-    
-    @objc func startPreview() {
-        LeapPreferences.shared.isPreview = true
-    }
-    
-    @objc func endPreview() {
-        LeapPreferences.shared.isPreview = false
-        LeapPreferences.shared.previewUserLanguage = LeapPreferences.shared.getUserLanguage() ?? constant_ang
     }
 }
 
