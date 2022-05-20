@@ -145,15 +145,6 @@ class LeapToolTip: LeapTipView {
         }
     }
     
-    /// Observes the toolTipView's Origin, gets called when there is a change in position.
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
-        if keyPath == "position" {
-            
-            placePointer()
-        }
-    }
-    
     /// gets the arrow direction - top or bottom.
     func getArrowDirection() -> LeapTooltipArrowDirection? {
         
