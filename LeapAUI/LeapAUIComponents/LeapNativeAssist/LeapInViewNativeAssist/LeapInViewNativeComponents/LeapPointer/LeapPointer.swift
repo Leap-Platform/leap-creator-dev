@@ -134,7 +134,6 @@ class LeapFingerPointer: LeapPointer {
     override func presentPointer() {
         self.layer.addSublayer(pointerLayer)
         setPosition()
-        inView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
         delegate?.didPresentAssist()
         startAnimation()
         addNotifiers()
@@ -176,14 +175,6 @@ class LeapFingerPointer: LeapPointer {
         let y = toViewFrame.midY - 50
         let x = toViewFrame.midX - 50
         pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "position" {
-            setPosition()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
     
     override func appWillEnterForeground() {
@@ -256,11 +247,6 @@ class LeapFingerPointer: LeapPointer {
     
     override func removeAnimation() {
         ringLayer.removeAllAnimations()
-    }
-    
-    override func removePointer() {
-        if let _ = toView?.layer.observationInfo { toView?.layer.removeObserver(pointerLayer, forKeyPath: "position") }
-        super.removePointer()
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
@@ -363,7 +349,6 @@ class LeapSwipePointer: LeapPointer {
     override func presentPointer() {
         inView?.layer.addSublayer(pointerLayer)
         setPosition()
-        toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
         delegate?.didPresentAssist()
         startAnimation()
         addNotifiers()
@@ -392,7 +377,6 @@ class LeapSwipePointer: LeapPointer {
         pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
         inView?.layer.addSublayer(pointerLayer)
         pointerLayer.zPosition = 10
-        toView?.layer.addObserver(pointerLayer, forKeyPath: "position", options: [.new,.old], context: nil)
         delegate?.didPresentAssist()
         self.toRect = toRect
         startAnimation(toRect: toRect)
@@ -455,14 +439,6 @@ class LeapSwipePointer: LeapPointer {
             x = toViewFrame.midX - 50
         }
         pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "position" {
-            setPosition()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
     
     override func appWillEnterForeground() {
@@ -551,11 +527,6 @@ class LeapSwipePointer: LeapPointer {
     
     override func removeAnimation() {
         pointerLayer.removeAllAnimations()
-    }
-    
-    override func removePointer() {
-        if let _ = toView?.layer.observationInfo { toView?.layer.removeObserver(pointerLayer, forKeyPath: "position")  }
-        super.removePointer()
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
