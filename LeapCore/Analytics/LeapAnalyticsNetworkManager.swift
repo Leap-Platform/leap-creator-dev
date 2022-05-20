@@ -55,11 +55,15 @@ class LeapAnalyticsNetworkHandler: LeapAnalyticsNetworkHandlerDelegate {
     }
     
     private func getHeaders() -> Dictionary<String, String> {
-        guard let apiKey = LeapSharedInformation.shared.getAPIKey() else { return [:] }
+        guard let apiKey = LeapSharedInformation.shared.getAPIKey(),
+              let versionCode = LeapSharedInformation.shared.getVersionCode(),
+              let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
         return [
-            Constants.AnalyticsKeys.xLeapId: UIDevice.current.identifierForVendor?.uuidString ?? "",
-            Constants.AnalyticsKeys.xJinyClientId: apiKey,
-            Constants.AnalyticsKeys.contentTypeKey:Constants.AnalyticsKeys.contentTypeValue
+            "x-jiny-client-id"      : apiKey,
+            "x-app-version-code"    : versionCode,
+            "x-app-version-name"    : versionName,
+            "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
+            "Content-Type"          : Constants.AnalyticsKeys.contentTypeValue
         ]
     }
     
