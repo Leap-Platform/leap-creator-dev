@@ -58,13 +58,15 @@ class LeapAnalyticsNetworkHandler: LeapAnalyticsNetworkHandlerDelegate {
         guard let apiKey = LeapSharedInformation.shared.getAPIKey(),
               let versionCode = LeapSharedInformation.shared.getVersionCode(),
               let versionName = LeapSharedInformation.shared.getVersionName() else { return [:] }
-        return [
-            "x-jiny-client-id"      : apiKey,
-            "x-app-version-code"    : versionCode,
-            "x-app-version-name"    : versionName,
-            "x-leap-id"             : LeapSharedInformation.shared.getLeapId(),
-            "Content-Type"          : Constants.AnalyticsKeys.contentTypeValue
+        let headers = [
+            Constants.AnalyticsKeys.xJinyClientId      : apiKey,
+            Constants.AnalyticsKeys.xAppVersionCode    : versionCode,
+            Constants.AnalyticsKeys.xAppVersionName    : versionName,
+            Constants.AnalyticsKeys.xLeapId            : LeapSharedInformation.shared.getLeapId(),
+            Constants.AnalyticsKeys.contentTypeKey     : Constants.AnalyticsKeys.contentTypeValue
         ]
+        return headers
+
     }
     
     private func addRequestBody(analyticsURLRequest: URLRequest, events: Array<Dictionary<String, String>>) -> URLRequest? {
@@ -108,5 +110,8 @@ extension Constants {
         static let contentTypeValue = "application/json"
         static let xLeapId = "x-leap-id"
         static let xJinyClientId = "x-jiny-client-id"
+        static let xAppVersionCode = "x-app-version-code"
+        static let xAppVersionName = "x-app-version-name"
+
     }
 }
