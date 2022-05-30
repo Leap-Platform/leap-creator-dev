@@ -66,6 +66,12 @@ import LeapCoreSDK
         return self
     }
     
+    @discardableResult
+    @objc public func addUniqueUserId(_ uniqueId:String) -> Leap {
+        LeapCore.shared.setUniqueUserId(uniqueId)
+        return self
+    }
+    
     @objc public func start() {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
         guard floatVersion >= 11 else { return }
@@ -89,6 +95,10 @@ import LeapCoreSDK
         LeapPreferences.shared.apiKey = token
         LeapPropertiesHandler.shared.start()
         start()
+    }
+    
+    @objc public func setUniqueUserId(_ uniqueId:String) {
+        LeapCore.shared.setUniqueUserId(uniqueId)
     }
     
     @objc public func startProject(_ projectId:String, resetProject:Bool = false) {

@@ -103,4 +103,9 @@ import UIKit
         self.leapStarter?.startProject(projectId: projectId, resetProject: true, isEmbedProject: true)
     }
     
+    public func setUniqueUserId(_ uniqueId:String) {
+        guard !uniqueId.isEmpty else { return }
+        LeapSharedInformation.shared.setLeapId(uniqueId)
+    }
+    
 }
