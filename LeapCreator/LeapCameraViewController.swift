@@ -56,6 +56,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     private var modeWidthConstraint: NSLayoutConstraint?
     private var modeHeightConstraint: NSLayoutConstraint?
+    
+    override var shouldAutorotate: Bool {
+        return false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,13 +67,22 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
         
-        setupView()
+        self.lockViewControllerToPortraitMode()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.setupView()
+    }
+    
+    private func lockViewControllerToPortraitMode() {
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: constant_orientation)
     }
     
     func configureSampleApp() {
-        if let infoDict = (UserDefaults.standard.object(forKey: "sampleAppInfoDict") as? Dictionary<String,Any>) {
+        if let infoDict = (UserDefaults.standard.object(forKey: constant_sampleAppInfoDict) as? Dictionary<String,Any>) {
             
-            if let rescan = (UserDefaults.standard.object(forKey: "sampleAppRescan") as? Bool), !rescan {
+            if let rescan = (UserDefaults.standard.object(forKey: constant_sampleAppRescan) as? Bool), !rescan {
                 configureConnectedSampleApp(infoDict: infoDict)
             }
         

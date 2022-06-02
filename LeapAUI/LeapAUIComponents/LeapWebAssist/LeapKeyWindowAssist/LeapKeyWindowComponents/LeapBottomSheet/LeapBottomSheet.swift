@@ -62,14 +62,16 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
+        webView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        webView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidthSupported).isActive = true
         
         widthConstraint?.isActive = false
         heightConstraint?.isActive = false
         
         widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0)
+        
+        widthConstraint?.priority = .defaultLow
         
         let maxHeight = 0.8 * (self.superview?.frame.height ?? 0.0)
         
@@ -97,7 +99,10 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         }
         
         heightConstraint?.constant = sizeHeight
-                
+    }
+    
+    func configureWidthConstraint() {
+        
         if UIApplication.shared.statusBarOrientation.isLandscape {
             
             widthConstraint?.constant = self.frame.height
@@ -125,5 +130,6 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
         guard let height = rect[constant_height] else { return }
         self.configureHeightConstraint(height: CGFloat(height))
+        self.configureWidthConstraint()
     }
 }

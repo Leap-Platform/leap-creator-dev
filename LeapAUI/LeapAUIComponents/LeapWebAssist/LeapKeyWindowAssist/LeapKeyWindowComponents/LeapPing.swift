@@ -183,7 +183,9 @@ class LeapPing: LeapKeyWindowAssist {
             orientationWidth = self.frame.height
         }
         
-        let proportionalWidth: CGFloat = (((CGFloat((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8))*100) * orientationWidth) / 100)
+        orientationWidth = UIDevice.current.userInterfaceIdiom == .pad ? maxWidthSupported : orientationWidth
+        
+        let proportionalWidth: CGFloat = (CGFloat((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) * orientationWidth))
         
         var sizeWidth: CGFloat?
         

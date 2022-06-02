@@ -58,21 +58,21 @@ class LeapDrawer: LeapKeyWindowAssist {
         
         case LeapAlignmentType.left.rawValue:
             
-            self.assistInfo?.layoutInfo?.enterAnimation = "slide_right"
+            self.assistInfo?.layoutInfo?.enterAnimation = LeapLayoutAnimationType.slideRight.rawValue
             
-            self.assistInfo?.layoutInfo?.exitAnimation = "slide_left"
+            self.assistInfo?.layoutInfo?.exitAnimation = LeapLayoutAnimationType.slideLeft.rawValue
             
         case LeapAlignmentType.right.rawValue:
             
-            self.assistInfo?.layoutInfo?.enterAnimation = "slide_left"
+            self.assistInfo?.layoutInfo?.enterAnimation = LeapLayoutAnimationType.slideLeft.rawValue
             
-            self.assistInfo?.layoutInfo?.exitAnimation = "slide_right"
+            self.assistInfo?.layoutInfo?.exitAnimation = LeapLayoutAnimationType.slideRight.rawValue
             
         default:
             
-            self.assistInfo?.layoutInfo?.enterAnimation = "slide_right"
+            self.assistInfo?.layoutInfo?.enterAnimation = LeapLayoutAnimationType.slideRight.rawValue
             
-            self.assistInfo?.layoutInfo?.exitAnimation = "slide_left"
+            self.assistInfo?.layoutInfo?.exitAnimation = LeapLayoutAnimationType.slideLeft.rawValue
         }
     }
     
@@ -80,73 +80,36 @@ class LeapDrawer: LeapKeyWindowAssist {
     private func configureWebViewForDrawer() {
       
         // Setting Constraints to WebView
-        
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        
-        switch assistInfo?.layoutInfo?.layoutAlignment {
-        
-        case LeapAlignmentType.left.rawValue:
-            
-            configureConstraintsForLeftAlignment()
-            
-        case LeapAlignmentType.right.rawValue:
-            
-            configureConstraintsForRightAlignment()
-            
-        default:
-            
-            configureConstraintsForLeftAlignment()
-        }
+        configureConstraints(alignmentType: LeapAlignmentType(rawValue: self.assistInfo?.layoutInfo?.layoutAlignment ?? LeapAlignmentType.left.rawValue) ?? .left)
         
         if #available(iOS 11.0, *) {
             self.webView.scrollView.contentInsetAdjustmentBehavior = .never
         }
     }
     
-    /// Configuration of constraints for left alignment.
-    private func configureConstraintsForLeftAlignment() {
+    /// Configuration of constraints based on alignmentType.
+    private func configureConstraints(alignmentType: LeapAlignmentType) {
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
+        webView.translatesAutoresizingMaskIntoConstraints = false
         
-        widthConstraint?.isActive = false
+        let alignmentConstraint: NSLayoutConstraint = NSLayoutConstraint(item: webView, attribute: (alignmentType == .right ? .trailing : .leading), relatedBy: .equal, toItem: self, attribute: (alignmentType == .right ? .trailing : .leading), multiplier: 1, constant: 0)
         
+        webView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        webView.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        webView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidthSupported*0.8).isActive = true
+
         if UIApplication.shared.statusBarOrientation.isLandscape {
             
-            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0)
+            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.8, constant: 0)
             
         } else {
             
             widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0)
         }
+                
+        widthConstraint?.priority = .defaultLow
         
-        NSLayoutConstraint.activate([widthConstraint!])
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
-    }
-    
-    /// Configuration of constraints for right alignment.
-    private func configureConstraintsForRightAlignment() {
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
-        
-        widthConstraint?.isActive = false
-        
-        if UIApplication.shared.statusBarOrientation.isLandscape {
-            
-            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0)
-            
-        } else {
-            
-            widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0)
-        }
-        
-        NSLayoutConstraint.activate([widthConstraint!])
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+        NSLayoutConstraint.activate([widthConstraint!, alignmentConstraint])
     }
     
     override func configureLeapIconView(superView: UIView, toItemView: UIView, alignmentType: LeapAlignmentType, cornerDistance: CGFloat = 0, heightDistance:CGFloat? = nil) {
