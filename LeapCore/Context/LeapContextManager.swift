@@ -1113,7 +1113,7 @@ extension LeapContextManager {
         
         // optIn event
         let flowMenuValidation = validateFlowMenu()
-        analyticsManager?.queue(event: .optInEvent, for: LeapAnalyticsModel(projectParameter: flowMenuValidation.projectParams, isProjectFlowMenu: flowMenuValidation.isFlowMenu, currentFlowMenu: flowMenuValidation.projectParams, currentSubFlow: getSubFlowProjectParams()))
+        analyticsDelegate?.queue(event: .optInEvent, for: LeapAnalyticsModel(projectParameter: flowMenuValidation.projectParams, isProjectFlowMenu: flowMenuValidation.isFlowMenu, currentFlowMenu: flowMenuValidation.projectParams, currentSubFlow: getSubFlowProjectParams()))
         
         // start screen event
         if let subFlowId = flowManager?.getSubId() {
