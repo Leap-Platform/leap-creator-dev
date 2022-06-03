@@ -40,24 +40,26 @@ class LeapPopup: LeapKeyWindowAssist {
         
         webView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
-        
-        self.addConstraint(NSLayoutConstraint(item: webView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+        webView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        webView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        webView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidthSupported).isActive = true
         
         if UIApplication.shared.statusBarOrientation.isLandscape {
             
-            self.addConstraint(NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
+            let widthConstraint = NSLayoutConstraint(item: webView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0)
+            widthConstraint.priority = .defaultLow
+            NSLayoutConstraint.activate([widthConstraint])
             
         } else {
             
-            self.addConstraint(NSLayoutConstraint(item: webView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -24))
-            
-            self.addConstraint(NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 24))
+            let leadingConstraint = NSLayoutConstraint(item: webView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 24)
+            leadingConstraint.priority = .defaultLow
+            NSLayoutConstraint.activate([leadingConstraint])
         }
         
         heightConstraint?.isActive = false
         
-        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier:1 , constant: 0)
+        heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1 , constant: 0)
         
         NSLayoutConstraint.activate([heightConstraint!])
     }

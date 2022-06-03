@@ -56,6 +56,10 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     private var modeWidthConstraint: NSLayoutConstraint?
     private var modeHeightConstraint: NSLayoutConstraint?
+    
+    override var shouldAutorotate: Bool {
+        return false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,13 +67,22 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
         
-        setupView()
+        self.lockViewControllerToPortraitMode()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.setupView()
+    }
+    
+    private func lockViewControllerToPortraitMode() {
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: constant_orientation)
     }
     
     func configureSampleApp() {
-        if let infoDict = (UserDefaults.standard.object(forKey: "sampleAppInfoDict") as? Dictionary<String,Any>) {
+        if let infoDict = (UserDefaults.standard.object(forKey: constant_sampleAppInfoDict) as? Dictionary<String,Any>) {
             
-            if let rescan = (UserDefaults.standard.object(forKey: "sampleAppRescan") as? Bool), !rescan {
+            if let rescan = (UserDefaults.standard.object(forKey: constant_sampleAppRescan) as? Bool), !rescan {
                 configureConnectedSampleApp(infoDict: infoDict)
             }
         
@@ -82,8 +95,6 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         setupQRCodeImage()
         setupHeadingLabel()
         setupDescLabel()
-        setupCameraIcon()
-        setupCameraButton()
         setupCloseButton(inView: self.view)
         setupModeButton(inView: self.view)
         setupLearnMoreButton()
@@ -99,6 +110,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             }
             
         case .notDetermined: // The user has not yet been asked for camera access.
+            self.addOpenCameraSetup()
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted {
                     DispatchQueue.main.async {
@@ -108,15 +120,12 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
             }
             
         case .denied: // The user has previously denied access.
-            DispatchQueue.main.async {
-                self.showAlertForSettingsPage(with: constant_cameraAccess)
-            }
-            return
+            self.addOpenCameraSetup()
+            self.showAlertForSettingsPage(with: constant_cameraAccess)
             
-        case .restricted: // The user can't grant access due to restrictions.
-            return
-        @unknown default:
-            return
+        case .restricted: self.addOpenCameraSetup() // The user can't grant access due to restrictions.
+            
+        @unknown default: self.addOpenCameraSetup()
         }
     }
     
@@ -244,6 +253,11 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         cameraImage.heightAnchor.constraint(equalTo: cameraImage.widthAnchor, multiplier: icon.size.height/icon.size.width).isActive = true
     }
     
+    private func addOpenCameraSetup() {
+        setupCameraIcon()
+        setupCameraButton()
+    }
+    
     private func setupCloseButton(inView:UIView) {
         closeButton.backgroundColor = UIColor(white: 0, alpha: 0.2)
         closeButton.layer.cornerRadius = 16
@@ -264,8 +278,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
 
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
         
-        setupScannerView()
-        setupCameraFrameView()
+        self.addScannerSetup()
         captureSession = AVCaptureSession()
         
         let videoInput: AVCaptureDeviceInput
@@ -339,6 +352,16 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
     private func removeCameraFrameView() {
         cameraFrameView?.removeFromSuperview()
         cameraFrameView = nil
+    }
+    
+    private func addScannerSetup() {
+        self.setupScannerView()
+        self.setupCameraFrameView()
+    }
+    
+    private func removeScannerSetup() {
+        self.removeScannerView()
+        self.removeCameraFrameView()
     }
     
     func failed() {
@@ -466,8 +489,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
                     return
                 }
                 self?.previewLayer?.removeFromSuperlayer()
-                self?.removeScannerView()
-                self?.removeCameraFrameView()
+                self?.removeScannerSetup()
                 UserDefaults.standard.setValue(projectName, forKey: constant_currentProjectName)
                 self?.configFetched(type: .preview, config: previewDict)
                 self?.dismiss(animated: true, completion: nil)
@@ -646,8 +668,7 @@ extension LeapCameraViewController: UITextFieldDelegate {
         learnMoreButton1.removeFromSuperview()
         learnMoreButton2.removeFromSuperview()
         fetchView?.removeFromSuperview()
-        removeScannerView()
-        removeCameraFrameView()
+        removeScannerSetup()
         previewLayer?.removeFromSuperlayer()
     }
     

@@ -84,9 +84,9 @@ class LeapScreenHelper {
         hierarchy[constant_viewport] = [constant_width: UIScreen.main.bounds.width, constant_height: UIScreen.main.bounds.height]
         hierarchy[constant_screen_width] = UIScreen.main.nativeBounds.width
         hierarchy[constant_screen_height] = UIScreen.main.nativeBounds.height
-        hierarchy["deviceType"] = UIDevice.current.userInterfaceIdiom == .pad ? "TABLET" : "PHONE"
+        hierarchy[constant_deviceType] = UIDevice.current.userInterfaceIdiom == .pad ? constant_TABLET : constant_PHONE
         hierarchy[constant_client_package_name] = Bundle.main.bundleIdentifier
-        hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? "Landscape": "Portrait")
+        hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? constant_Landscape : constant_Portrait)
         let windowsToCheck = getWindowsToCheck()
         if windowsToCheck.count > 1 {
             let hierarchyGroup = DispatchGroup()
@@ -114,7 +114,6 @@ class LeapScreenHelper {
                 completion(hierarchy)
             }
         }
-        
     }
     
     static func jsonToString(json: AnyObject) -> String? {

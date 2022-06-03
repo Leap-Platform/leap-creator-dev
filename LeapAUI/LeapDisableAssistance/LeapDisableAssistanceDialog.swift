@@ -21,6 +21,8 @@ class LeapDisableAssistanceDialog: UIView {
     weak var delegate: LeapDisableAssistanceDelegate?
     
     var bottomDialogView = UIView(frame: .zero)
+    
+    var maxWidthConstraint: NSLayoutConstraint?
         
     var widthConstraint: NSLayoutConstraint?
     
@@ -92,8 +94,6 @@ class LeapDisableAssistanceDialog: UIView {
         superView.addConstraint(NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: superView, attribute: .height, multiplier: 1, constant: 0))
         
         self.backgroundColor = UIColor.black.withAlphaComponent(0.65)
-        
-        //self.elevate(with: CGFloat(assistInfo?.layoutInfo?.style.elevation ?? 0))
     }
     
     func orientationDidChange() {
@@ -105,21 +105,17 @@ class LeapDisableAssistanceDialog: UIView {
                 
         widthConstraint?.isActive = false
         heightConstraint?.isActive = false
+        maxWidthConstraint?.isActive = false
+                
+        maxWidthConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .width, relatedBy: .lessThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: maxWidthSupported)
+                            
+        widthConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .width, relatedBy: .equal, toItem: self, attribute: isLandscape ? .height : .width, multiplier: 1, constant: 0)
         
-        if isLandscape {
+        widthConstraint?.priority = .defaultHigh
             
-            widthConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0)
-            
-            heightConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.55, constant: 0)
+        heightConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .height, relatedBy: .equal, toItem: self, attribute: isLandscape ? .width : .height, multiplier: UIDevice.current.userInterfaceIdiom == .pad ? 0.25 : 0.33, constant: 0)
         
-        } else {
-            
-            widthConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0)
-            
-            heightConstraint = NSLayoutConstraint(item: bottomDialogView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.33, constant: 0)
-        }
-        
-        NSLayoutConstraint.activate([widthConstraint!, heightConstraint!])
+        NSLayoutConstraint.activate([widthConstraint!, heightConstraint!, maxWidthConstraint!])
     }
     
     func configureBottomDialogView() {
@@ -128,12 +124,12 @@ class LeapDisableAssistanceDialog: UIView {
         
         bottomDialogView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addConstraint(NSLayoutConstraint(item: bottomDialogView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+        bottomDialogView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
+        bottomDialogView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+                
         setConstraints(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
-        
-        self.addConstraint(NSLayoutConstraint(item: bottomDialogView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
-                                
+                                        
         bottomDialogView.backgroundColor = .white
         
         if #available(iOS 11.0, *) {
