@@ -87,7 +87,7 @@ import UIKit
     public func initialize(withToken token:String, isTesting isTest:Bool, uiManager:LeapAUIHandler?) -> LeapAUICallback? {
         assert(token != "", "Incorrect token")
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return nil}
+        guard floatVersion >= 11 else { return nil}
         self.apiKey = token
         self.isTest = isTest
         guard let apiKey = self.apiKey else { return nil }
@@ -101,6 +101,11 @@ import UIKit
     
     public func embedProject(_ projectId:String) {
         self.leapStarter?.startProject(projectId: projectId, resetProject: true, isEmbedProject: true)
+    }
+    
+    public func setUniqueUserId(_ uniqueId:String) {
+        guard !uniqueId.isEmpty else { return }
+        LeapSharedInformation.shared.setLeapId(uniqueId)
     }
     
 }
