@@ -91,6 +91,7 @@ extension WKWebView {
 
 extension UIDevice {
     var hasNotch: Bool {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return false }
         if #available(iOS 11.0, *) {
             return (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) > 0
         } else {

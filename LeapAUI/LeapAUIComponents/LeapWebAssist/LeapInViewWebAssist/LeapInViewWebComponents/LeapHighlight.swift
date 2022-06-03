@@ -509,7 +509,9 @@ class LeapHighlight: LeapTipView {
             orientationWidth = self.frame.height
         }
         
-        let proportionalWidth = ((((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8)*100) * Double(orientationWidth)) / 100)
+        orientationWidth = UIDevice.current.userInterfaceIdiom == .pad ? maxWidthSupported : orientationWidth
+        
+        let proportionalWidth = ((self.assistInfo?.layoutInfo?.style.maxWidth ?? 0.8) * Double(orientationWidth))
         
         var sizeWidth: Double?
         

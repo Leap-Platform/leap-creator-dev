@@ -91,7 +91,7 @@ class LeapStreamingManager: LeapAppStateProtocol {
             guard let roomId = room else {
                 return
             }
-            let deviceType = UIDevice.current.userInterfaceIdiom == .pad ? "TABLET" : "PHONE"
+            let deviceType = UIDevice.current.userInterfaceIdiom == .pad ? constant_TABLET : constant_PHONE
             let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\",\"screenDimensions\":{\"screenWidth\":\"\(UIScreen.main.bounds.width)\",\"screenHeight\":\"\(UIScreen.main.bounds.height)\"}, \"deviceType\":\"\(deviceType)\"}"
         let payload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
 

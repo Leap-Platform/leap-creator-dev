@@ -363,12 +363,8 @@ extension LeapAUIManager: LeapAUIHandler {
         
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         
-        var distance = mainIconCornerConstant
-        var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
-        if LeapSharedAUI.shared.iconSetting?.leftAlign ?? false {
-            cornerAttribute = .leading
-            distance = -mainIconCornerConstant
-        }
+        let (distance, cornerAttribute): (CGFloat,NSLayoutConstraint.Attribute) = (LeapSharedAUI.shared.iconSetting?.leftAlign ?? false) ? (-mainIconCornerConstant, .leading) : (mainIconCornerConstant, .trailing)
+
         leapButton?.cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: leapButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
         leapButton?.bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
         NSLayoutConstraint.activate([(leapButton?.cornerConstraint)!, (leapButton?.bottomConstraint)!])
@@ -398,7 +394,7 @@ extension LeapAUIManager: LeapAUIHandler {
         leapMediaPlayer.currentAudioCompletionStatus = true
         currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil, isReinitialize: false)
         languageOptions?.removeFromSuperview()
-        leapButton?.removeDisableDialog()
+        leapButton?.disableDialog.removeBottomDialog()
         leapIconOptions?.dismiss(withAnimation: false)
     }
 }
@@ -452,6 +448,7 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     
     func didPresentDisableAssistance() {
         self.removeCurrentAssistTemporarily()
+        self.dismissLeapButton()
         guard let _ = autoDismissTimer else { return }
         self.stopAutoDismissTimer()
     }
@@ -462,6 +459,7 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     }
     
     func didDismissDisableAssistance() {
+        self.leapButton?.isHidden = false
         self.showCurrentAssist()
         startAutoDismissTimer()
     }
