@@ -8,17 +8,17 @@
 
 import Foundation
 
-class LeapPage:LeapContext {
+class LeapPage: LeapContext {
     
-    let previousId:Int?
-    let mustHavePreviousPage:Bool?
-    var stages:Array<LeapStage> = []
+    let previousId: Int?
+    let mustHavePreviousPage: Bool?
+    var stages: Array<LeapStage> = []
     
     init(withDict pageDict:Dictionary<String,Any>) {
         previousId = pageDict[constant_prevId] as? Int
         mustHavePreviousPage = pageDict[constant_mustHavePrevPage] as? Bool
         super.init(with: pageDict)
-        if let stagesDictsArray = pageDict[constant_stages] as? Array<Dictionary<String,Any>> {
+        if let stagesDictsArray = pageDict[constant_stages] as? Array<Dictionary<String, Any>> {
             for stageDict in stagesDictsArray { stages.append(LeapStage(withDict: stageDict, pageId: id)) }
         }
     }

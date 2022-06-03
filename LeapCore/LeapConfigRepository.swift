@@ -28,8 +28,8 @@ class LeapConfigRepository {
     
     private weak var remoteHandlerDelegate: LeapRemoteHandlerDelegate?
     
-    init(token: String) {
-        remoteConfigHandler = LeapRemoteConfigHandler(token: token)
+    init(with remoteConfigHandler: LeapRemoteConfigHandler) {
+        self.remoteConfigHandler = remoteConfigHandler
         remoteHandlerDelegate = remoteConfigHandler
     }
     

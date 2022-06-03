@@ -74,7 +74,7 @@ class LeapFlowTerminationFrequency: LeapFrequency {
     }
 }
 
-class LeapDiscovery:LeapContext {
+class LeapDiscovery: LeapProject {
 
     var enableIcon:Bool
     var triggerMode:LeapTriggerMode
@@ -111,7 +111,7 @@ class LeapDiscovery:LeapContext {
             self.languageOption = languageOption
         }
         
-        super.init(with: discoveryDict)
+        super.init(with: discoveryDict, projectParams: LeapProjectParameters(withDict: discoveryDict[constant_projectParameters] as? Dictionary<String, Any> ?? [:]))
         if let locales = self.localeCodes, locales.isEmpty {
             self.localeCodes = ["ang"]
         }

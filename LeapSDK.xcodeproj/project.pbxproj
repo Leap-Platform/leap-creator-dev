@@ -67,6 +67,9 @@
 		0C5E93C228293E4400DC6758 /* LeapConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5E93C128293E4400DC6758 /* LeapConfigRepository.swift */; };
 		0C5E93C528293EBC00DC6758 /* LeapConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 0C5E93C428293EBC00DC6758 /* LeapConfig.json */; };
 		0CC75D512833A34A00DE7F89 /* LeapInViewNativeAssist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC75D502833A34A00DE7F89 /* LeapInViewNativeAssist.swift */; };
+		0CFD5DE5282BB38D00E17C8B /* LeapConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFD5DE4282BB38D00E17C8B /* LeapConfigManager.swift */; };
+		0CFD5DE7282BDF6B00E17C8B /* LeapProjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFD5DE6282BDF6B00E17C8B /* LeapProjectManager.swift */; };
+		0CFD5DE9282D203000E17C8B /* LeapProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFD5DE8282D203000E17C8B /* LeapProject.swift */; };
 		2D00D44027748E9200AD5F1C /* LeapMediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D00D43F27748E9200AD5F1C /* LeapMediaPlayer.swift */; };
 		2D076DEF281FF08E008AE73F /* LeapRemoteHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */; };
 		2D2C3310276B4B6B00E09B97 /* LeapNewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C330F276B4B6B00E09B97 /* LeapNewConfig.swift */; };
@@ -359,6 +362,9 @@
 		0C5E93C128293E4400DC6758 /* LeapConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConfigRepository.swift; sourceTree = "<group>"; };
 		0C5E93C428293EBC00DC6758 /* LeapConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LeapConfig.json; sourceTree = "<group>"; };
 		0CC75D502833A34A00DE7F89 /* LeapInViewNativeAssist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapInViewNativeAssist.swift; sourceTree = "<group>"; };
+		0CFD5DE4282BB38D00E17C8B /* LeapConfigManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapConfigManager.swift; sourceTree = "<group>"; };
+		0CFD5DE6282BDF6B00E17C8B /* LeapProjectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapProjectManager.swift; sourceTree = "<group>"; };
+		0CFD5DE8282D203000E17C8B /* LeapProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapProject.swift; sourceTree = "<group>"; };
 		2D00D43F27748E9200AD5F1C /* LeapMediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapMediaPlayer.swift; sourceTree = "<group>"; };
 		2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapRemoteHandler.swift; sourceTree = "<group>"; };
 		2D08591725A31FE9002D7993 /* LeapCreatorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeapCreatorManager.swift; sourceTree = "<group>"; };
@@ -822,6 +828,7 @@
 			children = (
 				D0084C872486814D0082508C /* LeapConfig.swift */,
 				D0DC3EFF25540A8900B6FA93 /* LeapContext.swift */,
+				0CFD5DE8282D203000E17C8B /* LeapProject.swift */,
 				D00E859924F51914000D8E5B /* LeapAssist.swift */,
 				D0084C91248682A80082508C /* LeapDiscovery.swift */,
 				D0084C8B248681A30082508C /* LeapFlow.swift */,
@@ -976,6 +983,8 @@
 				D03E45102420DE1500A43FEA /* LeapStarter.swift */,
 				0C5E93C128293E4400DC6758 /* LeapConfigRepository.swift */,
 				2D076DEE281FF08E008AE73F /* LeapRemoteHandler.swift */,
+				0CFD5DE4282BB38D00E17C8B /* LeapConfigManager.swift */,
+				0CFD5DE6282BDF6B00E17C8B /* LeapProjectManager.swift */,
 				D0ABD037248145F60069FA67 /* LeapSharedInformation.swift */,
 				D0592E7A241FA6E3007782A8 /* LeapCore.h */,
 				D0592E7B241FA6E3007782A8 /* Info.plist */,
@@ -1717,6 +1726,7 @@
 				D0F44B632823A288009971BE /* LeapContextsValidator.swift in Sources */,
 				D08DA64625DEA2E800EB0EFC /* LeapAssistManager.swift in Sources */,
 				2D9823A8281ABD4E000F7614 /* LeapNetworkService.swift in Sources */,
+				0CFD5DE7282BDF6B00E17C8B /* LeapProjectManager.swift in Sources */,
 				2D5BB258276CA08600BC2360 /* LeapNewConnectedProject.swift in Sources */,
 				2D5BB25E276CA57800BC2360 /* LeapNewWebView.swift in Sources */,
 				2D076DEF281FF08E008AE73F /* LeapRemoteHandler.swift in Sources */,
@@ -1729,6 +1739,7 @@
 				2D2C3310276B4B6B00E09B97 /* LeapNewConfig.swift in Sources */,
 				2D5BB25A276CA30400BC2360 /* LeapNewWebIdentifier.swift in Sources */,
 				D08DA64E25DEA2E800EB0EFC /* LeapPage.swift in Sources */,
+				0CFD5DE9282D203000E17C8B /* LeapProject.swift in Sources */,
 				D0F44B612821593C009971BE /* LeapWebViewFinder.swift in Sources */,
 				D08DA64F25DEA2E800EB0EFC /* LeapUtils.swift in Sources */,
 				2D2C3314276B512900E09B97 /* LeapNewLanguage.swift in Sources */,
@@ -1755,6 +1766,7 @@
 				2D918D8D278710330021AE11 /* LeapSSLManager.swift in Sources */,
 				0C5E93C228293E4400DC6758 /* LeapConfigRepository.swift in Sources */,
 				D08DA65D25DEA2E800EB0EFC /* LeapLanguage.swift in Sources */,
+				0CFD5DE5282BB38D00E17C8B /* LeapConfigManager.swift in Sources */,
 				D08DA66025DEA2E800EB0EFC /* LeapDiscovery.swift in Sources */,
 				2D2C3318276B759600E09B97 /* LeapNewFlow.swift in Sources */,
 				D0F44B622822D585009971BE /* LeapViewProperties.swift in Sources */,
