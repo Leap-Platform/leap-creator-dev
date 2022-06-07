@@ -35,12 +35,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        Leap.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        let arguments = ProcessInfo.processInfo.arguments
+        let apiKey:String = {
+            guard let tokenKeyIndex = arguments.firstIndex(of: "apiKey"),
+                  arguments.count > tokenKeyIndex+1 else { return Bundle.main.infoDictionary?["APP_API_KEY"] as! String }
+            return arguments[tokenKeyIndex+1]
+        }()
+        
+        let projectId:String? = {
+            guard let projectIdKeyIndex = arguments.firstIndex(of: "projectId"),
+                  arguments.count > projectIdKeyIndex+1 else { return nil }
+            return arguments[projectIdKeyIndex+1]
+        }()
+        
+        let resetProject:Bool = {
+            guard let projectIdKeyIndex = arguments.firstIndex(of: "resetProject"),
+                  arguments.count > projectIdKeyIndex+1 else { return true }
+            return arguments[projectIdKeyIndex+1] != "false"
+        }()
+        
+        Leap.shared.start(apiKey)
         Leap.shared.callback = self
-        LeapCreator.shared.start(Bundle.main.infoDictionary?["APP_API_KEY"] as! String)
+        LeapCreator.shared.start(apiKey)
+        if let projectId = projectId { Leap.shared.startProject(projectId, resetProject: resetProject) }
         return true
     }
-    
+     
     // MARK: UISceneSession Lifecycle
     
     @available(iOS 13.0, *)

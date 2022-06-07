@@ -61,6 +61,8 @@ class LeapWebAssist: UIView, LeapAssist {
         self.webView.navigationDelegate = self
         self.webView.backgroundColor = .clear
         self.webView.isOpaque = false
+        
+        self.setAccessibilityLabel()
     }
     
     required init?(coder: NSCoder) {
@@ -77,6 +79,25 @@ class LeapWebAssist: UIView, LeapAssist {
     
     func applyStyle(style: LeapStyle) {
         
+    }
+    
+    private func setAccessibilityLabel() {
+        switch self {
+        case is LeapPopup: self.webView.accessibilityLabel = constant_leapPopup
+        case is LeapBottomSheet: self.webView.accessibilityLabel = constant_leapBottomSheet
+        case is LeapPing: self.webView.accessibilityLabel = constant_leapPing
+        case is LeapDrawer: self.webView.accessibilityLabel = constant_leapDrawer
+        case is LeapToolTip: self.webView.accessibilityLabel = constant_leapTooltip
+        case is LeapHighlight: self.webView.accessibilityLabel = constant_leapHighlight
+        case is LeapSpot: self.webView.accessibilityLabel = constant_leapSpot
+        case is LeapFullScreen: self.webView.accessibilityLabel = constant_leapFullScreen
+        case is LeapDelight: self.webView.accessibilityLabel = constant_leapDelight
+        case is LeapLanguageOptions: self.webView.accessibilityLabel = constant_leapLanguageOptions
+        case is LeapCarousel: self.webView.accessibilityLabel = constant_leapCarousel
+        case is LeapSlideIn: self.webView.accessibilityLabel = constant_leapSlideIn
+        case is LeapNotification: self.webView.accessibilityLabel = constant_leapNotification
+        default: print("Not Identified")
+        }
     }
     
     func setContent(htmlUrl: String, appLocale: String, contentFileUriMap: Dictionary<String, String>?) {
@@ -593,7 +614,7 @@ extension LeapWebAssist:WKURLSchemeHandler {
             urlSchemeTask.didFinish()
         } else {
             guard let baseUrl = baseUrl, let newUrl = URL(string: baseUrl+fileName) else { return }
-            let session = SSLManager.shared.isValidForSSLPinning(urlString: newUrl.absoluteString) ? SSLManager.shared.session : URLSession.shared
+            let session = LeapSSLManager.shared.isValidForSSLPinning(urlString: newUrl.absoluteString) ? LeapSSLManager.shared.session : URLSession.shared
             let dlTask = session?.downloadTask(with: newUrl) { (loc, res, err) in
                 guard let location = loc else { return }
                 DispatchQueue.main.async {

@@ -31,7 +31,6 @@ import LeapCoreSDK
     
     private override init() {
         auiManager = LeapAUIManager()
-        auiManager.addObservers()
         isStarted = false
         super.init()
         addObservers()
@@ -40,7 +39,7 @@ import LeapCoreSDK
     @discardableResult
     @objc public func withBuilder(_ apiKey: String) -> Leap? {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return nil}
+        guard floatVersion >= 11 else { return nil}
         token = apiKey
         guard !(token!.isEmpty) else { fatalError("Empty token. Token cannot be empty") }
         LeapPreferences.shared.apiKey = apiKey
@@ -67,9 +66,15 @@ import LeapCoreSDK
         return self
     }
     
+    @discardableResult
+    @objc public func addUniqueUserId(_ uniqueId:String) -> Leap {
+        LeapCore.shared.setUniqueUserId(uniqueId)
+        return self
+    }
+    
     @objc public func start() {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
+        guard floatVersion >= 11 else { return }
         guard let apiKey = token, !apiKey.isEmpty else { fatalError("Api Key missing") }
         auiManager.auiManagerCallBack = LeapCore.shared.initialize(withToken: token!, isTesting: false, uiManager: auiManager)
         isStarted = true
@@ -78,30 +83,34 @@ import LeapCoreSDK
     
     @objc public func flush() {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
+        guard floatVersion >= 11 else { return }
         guard isStarted else { return }
         auiManager.auiManagerCallBack?.flush()
     }
     
     @objc public func start(_ apiKey:String) {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
+        guard floatVersion >= 11 else { return }
         token = apiKey
         LeapPreferences.shared.apiKey = token
         LeapPropertiesHandler.shared.start()
         start()
     }
     
+    @objc public func setUniqueUserId(_ uniqueId:String) {
+        LeapCore.shared.setUniqueUserId(uniqueId)
+    }
+    
     @objc public func startProject(_ projectId:String, resetProject:Bool = false) {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
+        guard floatVersion >= 11 else { return }
         guard isStarted else { return }
         LeapCore.shared.startProject(projectId: projectId, resetProject: resetProject)
     }
     
     @objc public func embedProject(_ projectId:String) {
         let floatVersion = (UIDevice.current.systemVersion as NSString).floatValue
-        guard UIDevice.current.userInterfaceIdiom == .phone, floatVersion >= 11 else { return }
+        guard floatVersion >= 11 else { return }
         guard  isStarted else { return }
         LeapCore.shared.embedProject(projectId)
     }

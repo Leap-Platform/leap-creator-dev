@@ -84,6 +84,11 @@ extension LeapSharedInformation {
 
 extension LeapSharedInformation {
     
+    func setLeapId(_ leapId:String) {
+        prefs.setValue(leapId, forKey: "leap_id")
+        prefs.synchronize()
+    }
+    
     func getLeapId() -> String {
         guard let leapId = prefs.value(forKey: "leap_id") as? String else { return generateLeapId() }
         return leapId

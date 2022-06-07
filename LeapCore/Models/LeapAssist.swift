@@ -8,13 +8,13 @@
 
 import Foundation
 
-class LeapAssist:LeapContext {
+class LeapAssist: LeapProject {
     
     var type:String
     var terminationFrequency:LeapFlowTerminationFrequency?
     var localeCode:String
     
-    init(withDict assistDict:Dictionary<String,Any>, isPreview:Bool) {
+    init(withDict assistDict: Dictionary<String, Any>, isPreview: Bool) {
         type = assistDict[constant_type] as? String ?? "NORMAL"
         localeCode = assistDict[constant_localeCode]  as? String ?? "ang"
         if !isPreview {
@@ -22,9 +22,7 @@ class LeapAssist:LeapContext {
                 terminationFrequency = LeapFlowTerminationFrequency(with: terminationFrequencyDict)
             }
         }
-        
-        super.init(with: assistDict)
-        
+        super.init(with: assistDict, projectParams: LeapProjectParameters(withDict: assistDict[constant_projectParameters] as? Dictionary<String, Any> ?? [:]))
     }
 }
 

@@ -41,30 +41,35 @@ class LeapAUIManager: NSObject {
     weak var currentTargetView: UIView?
     var currentTargetRect: CGRect?
     weak var currentWebView: UIView?
-    var currentAudioCompletionStatus:Bool?
     var currentIconInfo: Dictionary<String, Any>?
     
     private var lastOrientation: UIInterfaceOrientation?
     
     var autoDismissTimer: Timer?
     private var baseUrl = String()
+    
+    var leapMediaPlayer = LeapMediaPlayer()
         
     let soundManager = LeapSoundManager()
     
     var languageOptions: LeapLanguageOptions?
-}
-
-extension LeapAUIManager {
+    
+    override init() {
+        super.init()
+        self.addObservers()
+        leapMediaPlayer.delegate = self
+    }
     
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(startPreview), name: .init("leap_preview_config"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(endPreview), name: .init("leap_end_preview"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
-    
+}
+
+extension LeapAUIManager {
+
     @objc func keyboardDidShow(_ notification: NSNotification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
            leapButton != nil
@@ -86,16 +91,7 @@ extension LeapAUIManager {
     
     @objc func appDidBecomeActive() {
         guard currentAssist != nil else { return }
-        if !(currentAudioCompletionStatus ?? true) { playAudio() }
-    }
-    
-    @objc func startPreview() {
-        LeapPreferences.shared.isPreview = true
-    }
-    
-    @objc func endPreview() {
-        LeapPreferences.shared.isPreview = false
-        LeapPreferences.shared.previewUserLanguage = LeapPreferences.shared.getUserLanguage() ?? constant_ang
+        if !(leapMediaPlayer.currentAudioCompletionStatus ?? true) { playAudio() }
     }
 }
 
@@ -143,7 +139,6 @@ extension LeapAUIManager: LeapAUIHandler {
                     }
                 }
             }
-            
         }
     }
     
@@ -315,8 +310,7 @@ extension LeapAUIManager: LeapAUIHandler {
         currentTargetView = nil
         currentTargetRect = nil
         currentWebView = nil
-        currentAudioCompletionStatus = nil
-        currentIconInfo = nil
+        leapMediaPlayer.currentAudioCompletionStatus = nil
     }
     
     func removeLanguageOptions() {
@@ -369,12 +363,8 @@ extension LeapAUIManager: LeapAUIHandler {
         
         guard let keyWindow = UIApplication.shared.keyWindow else { return }
         
-        var distance = mainIconCornerConstant
-        var cornerAttribute: NSLayoutConstraint.Attribute = .trailing
-        if LeapSharedAUI.shared.iconSetting?.leftAlign ?? false {
-            cornerAttribute = .leading
-            distance = -mainIconCornerConstant
-        }
+        let (distance, cornerAttribute): (CGFloat,NSLayoutConstraint.Attribute) = (LeapSharedAUI.shared.iconSetting?.leftAlign ?? false) ? (-mainIconCornerConstant, .leading) : (mainIconCornerConstant, .trailing)
+
         leapButton?.cornerConstraint = NSLayoutConstraint(item: keyWindow, attribute: cornerAttribute, relatedBy: .equal, toItem: leapButton, attribute: cornerAttribute, multiplier: 1, constant: distance)
         leapButton?.bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: leapButton, attribute: .bottom, multiplier: 1, constant: mainIconBottomConstant)
         NSLayoutConstraint.activate([(leapButton?.cornerConstraint)!, (leapButton?.bottomConstraint)!])
@@ -400,11 +390,11 @@ extension LeapAUIManager: LeapAUIHandler {
     }
     
     func appGoesToBackground() {
-        stopAudio()
-        currentAudioCompletionStatus = true
+        leapMediaPlayer.stopAudio()
+        leapMediaPlayer.currentAudioCompletionStatus = true
         currentAssist?.remove(byContext: false, byUser: false, autoDismissed: false, panelOpen: true, action: nil, isReinitialize: false)
         languageOptions?.removeFromSuperview()
-        leapButton?.removeDisableDialog()
+        leapButton?.disableDialog.removeBottomDialog()
         leapIconOptions?.dismiss(withAnimation: false)
     }
 }
@@ -458,6 +448,7 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     
     func didPresentDisableAssistance() {
         self.removeCurrentAssistTemporarily()
+        self.dismissLeapButton()
         guard let _ = autoDismissTimer else { return }
         self.stopAutoDismissTimer()
     }
@@ -468,6 +459,7 @@ extension LeapAUIManager: LeapDisableAssistanceDelegate {
     }
     
     func didDismissDisableAssistance() {
+        self.leapButton?.isHidden = false
         self.showCurrentAssist()
         startAutoDismissTimer()
     }
@@ -515,11 +507,11 @@ extension LeapAUIManager {
                 self.startAutoDismissTimer()
                 return
             }
-            self.currentAudioCompletionStatus = false
+            self.leapMediaPlayer.currentAudioCompletionStatus = false
             if currentAudio.isTTS {
                 if let text = currentAudio.text,
                    let ttsCode = self.auiManagerCallBack?.getTTSCodeFor(code: code) {
-                    self.tryTTS(text: text, code: ttsCode)
+                    self.leapMediaPlayer.tryTTS(text: text, code: ttsCode)
                     return
                 }
             }
@@ -533,50 +525,12 @@ extension LeapAUIManager {
                 self.mediaManager.overrideMediaDownloadCompletion(currentAudio.filename, code: code) { [weak self] (success) in
                     DispatchQueue.main.async { self?.leapButton?.iconState = .rest }
                     guard let newCode = LeapPreferences.shared.getUserLanguage(), newCode == code, success else { return }
-                    self?.playAudioFile(filePath: soundPath)
+                    self?.leapMediaPlayer.playAudio(filePath: soundPath)
                 }
             case .downloaded:
-                self.playAudioFile(filePath: soundPath)
+                self.leapMediaPlayer.playAudio(filePath: soundPath)
             }
         }
-    }
-    
-    func playAudioFile(filePath: URL) {
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-            self.audioPlayer = try AVAudioPlayer(contentsOf: filePath)
-            self.audioPlayer?.delegate = self
-            guard let player = self.audioPlayer else { return }
-            player.play()
-            if player.isPlaying {
-               DispatchQueue.main.async {
-                  self.leapButton?.iconState = .audioPlay
-               }
-            }
-        } catch let error {
-            print(error.localizedDescription)
-            startAutoDismissTimer()
-        }
-    }
-    
-    func tryTTS(text: String, code: String) {
-        utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: code)
-        utterance.rate = 0.5
-        synthesizer.delegate = self
-        synthesizer.speak(utterance)
-        DispatchQueue.main.async {
-           self.leapButton?.iconState = .audioPlay
-        }
-    }
-    
-    func stopAudio() {
-        self.audioPlayer?.stop()
-        self.audioPlayer = nil
-        
-        self.synthesizer.stopSpeaking(at: AVSpeechBoundary.immediate)
-        
-        leapButton?.iconState = .rest
     }
 }
 
@@ -746,27 +700,27 @@ extension LeapAUIManager {
         // Present Assist
         switch type {
         case FINGER_RIPPLE:
-            let fingerPointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil,baseUrl: nil)
+            let fingerPointer = LeapFingerPointer(withDict: assistInfo, toView: inView)
             currentAssist = fingerPointer
             fingerPointer.presentPointer(view: inView)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inView, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer()
             
         case HIGHLIGHT_WITH_DESC:
-            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
+            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inView, baseUrl: baseUrl)
             currentAssist = highlight
             highlight.presentHighlight()
             
         case SPOT:
-            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
+            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inView, baseUrl: baseUrl)
             currentAssist = spot
             spot.presentSpot()
             
         case LABEL:
-            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: baseUrl)
+            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inView, baseUrl: baseUrl)
             currentAssist = label
             label.presentLabel()
             
@@ -776,7 +730,7 @@ extension LeapAUIManager {
             beacon.presentBeacon()
             
         case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-            let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inView, insideView: nil, baseUrl: nil)
+            let swipePointer = LeapSwipePointer(withDict: assistInfo, toView: inView)
             guard let swipePointerType = LeapSwipePointerType(rawValue: type) else { return }
             swipePointer.type = swipePointerType
             currentAssist = swipePointer
@@ -803,34 +757,34 @@ extension LeapAUIManager {
         
         switch type {
         case FINGER_RIPPLE:
-            let pointer = LeapFingerPointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: nil)
+            let pointer = LeapFingerPointer(withDict: assistInfo, toView: inWebview)
             currentAssist = pointer
             pointer.presentPointer(toRect: rect, inView: inWebview)
             
         case SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN:
-            let swipePointer = LeapSwipePointer(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: nil)
+            let swipePointer = LeapSwipePointer(withDict: assistInfo, toView: inWebview)
             guard let swipePointerType = LeapSwipePointerType(rawValue: type) else { return }
             swipePointer.type = swipePointerType
             currentAssist = swipePointer
             swipePointer.presentPointer(toRect: rect, inView: inWebview)
             
         case TOOLTIP:
-            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
+            let tooltip = LeapToolTip(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, baseUrl: baseUrl, projectParametersInfo: auiManagerCallBack?.getProjectParameters())
             currentAssist = tooltip
             tooltip.presentPointer(toRect: rect, inView: inWebview)
             
         case HIGHLIGHT_WITH_DESC:
-            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
+            let highlight = LeapHighlight(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, baseUrl: baseUrl)
             currentAssist = highlight
             highlight.presentHighlight(toRect: rect, inView: inWebview)
             
         case SPOT:
-            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
+            let spot = LeapSpot(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, baseUrl: baseUrl)
             currentAssist = spot
             spot.presentSpot(toRect: rect, inView: inWebview)
             
         case LABEL:
-            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, insideView: nil, baseUrl: baseUrl)
+            let label = LeapLabel(withDict: assistInfo, iconDict: iconInfo, toView: inWebview, baseUrl: baseUrl)
             currentAssist = label
             label.presentLabel(toRect: rect, inView: inWebview)
             
@@ -921,36 +875,34 @@ extension LeapAUIManager {
     }
 }
 
-// MARK: - AUDIO PLAYER DELEGATES
-extension LeapAUIManager: AVAudioPlayerDelegate {
+// MARK: - MEDIA PLAYER DELEGATES
+extension LeapAUIManager: LeapMediaPlayerDelegate {
     
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        self.audioPlayer = nil
+    func audioDidStartPlaying() {
+        self.leapButton?.iconState = .audioPlay
+    }
+    
+    func audioDidStopPlaying() {
+        self.leapButton?.iconState = .rest
+    }
+    
+    func audioDidFinishPlaying() {
         leapButton?.iconState = .rest
-        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
     
-    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
-        self.audioPlayer = nil
+    func audioDecodeErrorDidOccur() {
         leapButton?.iconState = .rest
-        currentAudioCompletionStatus = true
-        startAutoDismissTimer()
-    }
-}
-
-// MARK: - TTS HANDLING
-extension LeapAUIManager: AVSpeechSynthesizerDelegate {
-    
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        leapButton?.iconState = .rest
-        currentAudioCompletionStatus = true
         startAutoDismissTimer()
     }
     
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+    func speechSynthesizerDidFinishUtterance() {
         leapButton?.iconState = .rest
-        currentAudioCompletionStatus = true
+        startAutoDismissTimer()
+    }
+    
+    func speechSynthesizerDidCancelUtterance() {
+        leapButton?.iconState = .rest
         startAutoDismissTimer()
     }
 }
@@ -1018,9 +970,8 @@ extension LeapAUIManager: LeapAssistDelegate {
         self.stopAutoDismissTimer()
         currentAssist = nil
         currentInstruction = nil
-        stopAudio()
-        currentAudioCompletionStatus = nil
-        currentIconInfo = nil
+        leapMediaPlayer.stopAudio()
+        leapMediaPlayer.currentAudioCompletionStatus = nil
         scrollArrowButton.noAssist()
         if !byContext { dismissLeapButton() }
         auiManagerCallBack?.didDismissView(byUser: byUser, autoDismissed: autoDismissed, panelOpen: panelOpen, action: action)
@@ -1050,7 +1001,7 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             return
         }
         self.stopAutoDismissTimer()
-        self.stopAudio()
+        self.leapMediaPlayer.stopAudio()
         
         self.showLanguageOptions(withLocaleCodes: localeCodes, iconInfo: iconInfo, localeHtmlUrl: htmlUrl) { [weak self] success in
             
@@ -1073,23 +1024,22 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
     }
 }
 
-
 // MARK: - ARROW BUTTON DELEGATES
 extension LeapAUIManager:LeapArrowButtonDelegate {
     
     func arrowShown() {
        currentAssist?.hide()
-        if audioPlayer?.isPlaying ?? false {
-            currentAudioCompletionStatus = false
-            stopAudio()
+        if leapMediaPlayer.audioPlayer?.isPlaying ?? false {
+            leapMediaPlayer.currentAudioCompletionStatus = false
+            leapMediaPlayer.stopAudio()
         } else {
-            currentAudioCompletionStatus = true
+            leapMediaPlayer.currentAudioCompletionStatus = true
         }
     }
     
     func arrowHidden() {
        currentAssist?.unhide()
-        if !(currentAudioCompletionStatus ?? true) {
+        if !(leapMediaPlayer.currentAudioCompletionStatus ?? true) {
             playAudio()
         }
     }

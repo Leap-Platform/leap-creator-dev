@@ -91,8 +91,10 @@ class LeapStreamingManager: LeapAppStateProtocol {
             guard let roomId = room else {
                 return
             }
-            let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\",\"screenDimensions\":{\"screenWidth\":\"\(UIScreen.main.bounds.width)\",\"screenHeight\":\"\(UIScreen.main.bounds.height)\"}}"
-        let payload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
+            let deviceType = UIDevice.current.userInterfaceIdiom == .pad ? constant_TABLET : constant_PHONE
+            let sdkVersion = Bundle(for: type(of: self)).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+                  let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\",\"screenDimensions\":{\"screenWidth\":\"\(UIScreen.main.bounds.width)\",\"screenHeight\":\"\(UIScreen.main.bounds.height)\"}, \"deviceType\":\"\(deviceType)\", \"sdkVersion\":\"\(sdkVersion)\"}"
+                let payload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
 
         webSocket?.write(string: payload, completion: {
           //print("End :: \(end)")

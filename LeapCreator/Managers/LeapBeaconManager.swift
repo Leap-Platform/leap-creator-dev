@@ -32,6 +32,7 @@ class LeapBeaconManager {
             "status"                : "AVAILABLE",
             "authToolsVersionName"  : (Bundle(for: LeapBeaconManager.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Empty",
             "authToolsVersionCode"  : (Bundle(for: LeapBeaconManager.self).object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Empty",
+            "deviceType"            : UIDevice.current.userInterfaceIdiom == .pad ? constant_TABLET : constant_PHONE
         ]
         guard let data = try? JSONSerialization.data(withJSONObject: info, options: .fragmentsAllowed),
               let json = String(data: data, encoding: .utf8) else { return "{}" }

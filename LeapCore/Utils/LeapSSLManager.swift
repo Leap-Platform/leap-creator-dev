@@ -8,9 +8,9 @@
 
 import Foundation
 
-class SSLManager: NSObject {
+class LeapSSLManager: NSObject {
 
-     static let shared = SSLManager()
+     static let shared = LeapSSLManager()
 
      private lazy var certificates: [Data] = {
          let bundle = Bundle(for: type(of: self))
@@ -43,7 +43,7 @@ class SSLManager: NSObject {
  }
 
  // MARK: - URLSessionDelegate
- extension SSLManager: URLSessionDelegate {
+ extension LeapSSLManager: URLSessionDelegate {
      func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
          if let trust = challenge.protectionSpace.serverTrust, SecTrustGetCertificateCount(trust) > 0 {
              if let certificate = SecTrustGetCertificateAtIndex(trust, 0) {

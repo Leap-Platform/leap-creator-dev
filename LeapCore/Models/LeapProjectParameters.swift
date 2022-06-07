@@ -18,8 +18,8 @@ class LeapProjectParameters: NSObject, Codable {
     var projectId: String?
     var projectType: String?
     var id: Int?
-    var isEmbed:Bool = false
-    var isEnabled:Bool = false
+    var isEmbed: Bool = false
+    var isEnabled: Bool = false
     
     init(withDict paramDict: Dictionary<String, Any>) {
         

@@ -15,23 +15,6 @@ class LeapCreatorData: Codable {
     enum CodingKeys: String, CodingKey {
         case creatorConfig = "data"
     }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-                
-        self.creatorConfig = try? container.decodeIfPresent(LeapCreatorConfig.self, forKey: .creatorConfig)
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
-    }
 }
 
 class LeapCreatorConfig: Codable {
@@ -56,33 +39,6 @@ class LeapCreatorConfig: Codable {
         case message = "message"
         case streaming = "streaming"
     }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        self.appName = try container.decodeIfPresent(String.self, forKey: .appName)
-        
-        self.beacon = try container.decodeIfPresent(Beacon.self, forKey: .beacon)
-        
-        self.documentation = try container.decodeIfPresent(Documentation.self, forKey: .documentation)
-        
-        self.permission = try? container.decodeIfPresent(Permission.self, forKey: .permission)
-     
-        self.message = try container.decodeIfPresent(Message.self, forKey: .message)
-        
-        self.streaming = try container.decodeIfPresent(Streaming.self, forKey: .streaming)
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
-    }
 }
 
 class Beacon: Codable {
@@ -91,24 +47,6 @@ class Beacon: Codable {
     
     enum CodingKeys: String, CodingKey {
         case interval = "interval"
-    }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-                
-        self.interval = try container.decode(Double.self, forKey: .interval)
-
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
     }
 }
 
@@ -128,29 +66,6 @@ class Documentation: Codable {
         case mirrorApp = "mirrorApp"
         case previewDevice = "previewDevice"
     }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-                
-        self.connectSampleApp = try container.decode(String.self, forKey: .connectSampleApp)
-        
-        self.generateQrHelp = try container.decode(String.self, forKey: .generateQrHelp)
-        
-        self.mirrorApp = try container.decode(String.self, forKey: .mirrorApp)
-        
-        self.previewDevice = try container.decode(String.self, forKey: .previewDevice)
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
-    }
 }
 
 class Permission: Codable {
@@ -169,29 +84,6 @@ class Permission: Codable {
         case timeOutDuration = "timeOutDuration"
         case positiveFeedbackBtnBackground = "positiveFeedbackBtnBackground"
     }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        self.dialogTitle = try container.decodeIfPresent(String.self, forKey: .dialogTitle)
-        
-        self.dialogDescription = try container.decodeIfPresent(String.self, forKey: .dialogDescription)
-        
-        self.timeOutDuration = try container.decodeIfPresent(Double.self, forKey: .timeOutDuration)
-        
-        self.positiveFeedbackBtnBackground = try container.decodeIfPresent(String.self, forKey: .positiveFeedbackBtnBackground)
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
-    }
 }
 
 class Message: Codable {
@@ -200,23 +92,6 @@ class Message: Codable {
     
     enum CodingKeys: String, CodingKey {
         case sessionTimeOut = "sessionTimeOut"
-    }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-                
-        self.sessionTimeOut = try? container.decodeIfPresent(String.self, forKey: .sessionTimeOut)
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
     }
 }
 
@@ -232,26 +107,5 @@ class Streaming: Codable {
         case frameRate = "frameRate"
         case quality = "quality"
         case shouldResize = "shouldResize"
-    }
-    
-    init() {
-        
-    }
-    
-    // MARK: - Decodable
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        self.frameRate = try container.decodeIfPresent(Double.self, forKey: .frameRate)
-        
-        self.quality = try container.decodeIfPresent(Double.self, forKey: .quality)
-        
-        self.shouldResize = try container.decodeIfPresent(Bool.self, forKey: .shouldResize)
-    }
-    
-    // MARK: - Encodable
-    func encode(to encoder: Encoder) throws {
     }
 }
