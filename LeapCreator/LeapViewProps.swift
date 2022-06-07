@@ -169,8 +169,9 @@ class LeapViewProps:Codable {
         var webChildren: String?
         if is_webview {
             var injectionScript = LeapScreenHelper.layoutInjectionJSScript
-            injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.nativeBounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.nativeBounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)")
+            
             if let wk_web = view as? WKWebView {
+                injectionScript = injectionScript.replacingOccurrences(of: "${totalScreenHeight}", with: "\(UIScreen.main.nativeBounds.height)").replacingOccurrences(of: "${totalScreenWidth}", with: "\(UIScreen.main.nativeBounds.width)").replacingOccurrences(of: "${topMargin}", with: "\(location_y_on_screen)").replacingOccurrences(of: "${leftMargin}", with: "\(location_x_on_screen)").replacingOccurrences(of: "${webviewScale}", with: "\(wk_web.scrollView.zoomScale)")
                 wk_web.evaluateJavaScript(injectionScript, completionHandler: { (res, error) in
                     webChildren = res as? String
                     group.leave()
