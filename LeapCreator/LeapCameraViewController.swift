@@ -98,11 +98,18 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         setupCloseButton(inView: self.view)
         setupModeButton(inView: self.view)
         setupLearnMoreButton()
-        askForCameraAccess()
+        handleCameraAccess()
     }
     
-    @objc func askForCameraAccess() {
-        
+    @objc func handleCameraAccess() {
+        #if targetEnvironment(simulator)
+        addOpenCameraSetup()
+        #else
+        askForCameraAccess()
+        #endif
+    }
+    
+    private func askForCameraAccess() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized: // The user has previously granted access to the camera.
             DispatchQueue.main.async {
@@ -231,7 +238,7 @@ class LeapCameraViewController: UIViewController, AVCaptureMetadataOutputObjects
         openCamera.setTitle("Open Camera", for: .normal)
         openCamera.setTitleColor(.white, for: .normal)
         openCamera.titleLabel?.font = UIFont(name: "Helvetica Neue Bold", size: 15)
-        openCamera.addTarget(self, action: #selector(askForCameraAccess), for: .touchUpInside)
+        openCamera.addTarget(self, action: #selector(handleCameraAccess), for: .touchUpInside)
         view.addSubview(openCamera)
         openCamera.translatesAutoresizingMaskIntoConstraints = false
         openCamera.topAnchor.constraint(equalTo: cameraImage.bottomAnchor, constant: 30).isActive = true
