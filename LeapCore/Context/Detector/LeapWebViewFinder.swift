@@ -193,7 +193,7 @@ class LeapWebViewFinder {
                 let resultArray = result.components(separatedBy: ",").compactMap({ CGFloat(($0 as NSString).doubleValue) })
                 if resultArray.count != 4 { completion(nil) }
                 else {
-                    var rect = CGRect(x: resultArray[0], y: resultArray[1], width: resultArray[2], height: resultArray[3])
+                    var rect = CGRect(x: resultArray[0] * inWebView.scrollView.zoomScale, y: resultArray[1] * inWebView.scrollView.zoomScale, width: resultArray[2] * inWebView.scrollView.zoomScale, height: resultArray[3] * inWebView.scrollView.zoomScale)
                     
                     if #available(iOS 11.0, *) {
                         rect.origin.y += inWebView.scrollView.adjustedContentInset.top

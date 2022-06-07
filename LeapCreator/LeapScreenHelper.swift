@@ -11,7 +11,7 @@ import UIKit
 
 class LeapScreenHelper {
     
-    static let layoutInjectionJSScript = "(function (totalScreenHeight, totalScreenWidth, topMargin=0, leftMargin=0) {\n" +
+    static let layoutInjectionJSScript = "(function (webviewScale, totalScreenHeight, totalScreenWidth, topMargin=0, leftMargin=0) {\n" +
         "    var jinyFetchClientHierarchy = function(root){\n" +
         "        var node = {};\n" +
         "        if(root!==undefined){\n" +
@@ -31,10 +31,10 @@ class LeapScreenHelper {
         "            node.bounds = root.getClientRects()[0];\n" +
         "            if(node.bounds!==undefined){\n" +
         "               node.normalised_bounds = {};\n" +
-        "               node.normalised_bounds.top = (node.bounds.top*totalScreenHeight)/viewportHeight + topMargin;\n" +
-        "               node.normalised_bounds.bottom = (node.bounds.bottom*totalScreenHeight)/viewportHeight + topMargin;\n" +
-        "               node.normalised_bounds.left = (node.bounds.left*totalScreenWidth)/viewportWidth + leftMargin;\n" +
-        "               node.normalised_bounds.right = (node.bounds.right*totalScreenWidth)/viewportWidth + leftMargin;\n" +
+        "               node.normalised_bounds.top = (node.bounds.top*totalScreenHeight * webviewScale)/viewportHeight + topMargin;\n" +
+        "               node.normalised_bounds.bottom = (node.bounds.bottom*totalScreenHeight * webviewScale)/viewportHeight + topMargin;\n" +
+        "               node.normalised_bounds.left = (node.bounds.left*totalScreenWidth * webviewScale)/viewportWidth + leftMargin;\n" +
+        "               node.normalised_bounds.right = (node.bounds.right*totalScreenWidth * webviewScale)/viewportWidth + leftMargin;\n" +
         "            }\n" +
         "            node.innerText = root.innerText;\n" +
         "            node.value = root.value;\n" +
@@ -48,7 +48,7 @@ class LeapScreenHelper {
         "    }\n" +
         "    var layout = jinyFetchClientHierarchy(document.getElementsByTagName('html')[0])\n" +
         "    return JSON.stringify(layout)\n" +
-        "}(${totalScreenHeight},${totalScreenWidth},${topMargin},${leftMargin}));";
+        "}(${webviewScale},${totalScreenHeight},${totalScreenWidth},${topMargin},${leftMargin}));";
     
     static func captureScreenshot() -> UIImage? {
         let imageSize = UIScreen.main.bounds.size
@@ -82,8 +82,8 @@ class LeapScreenHelper {
             hierarchy[constant_controller] = ""
         }
         hierarchy[constant_viewport] = [constant_width: UIScreen.main.bounds.width, constant_height: UIScreen.main.bounds.height]
-        hierarchy[constant_screen_width] = UIScreen.main.nativeBounds.width
-        hierarchy[constant_screen_height] = UIScreen.main.nativeBounds.height
+        hierarchy[constant_screen_width] = UIScreen.main.bounds.width * UIScreen.main.scale
+        hierarchy[constant_screen_height] = UIScreen.main.bounds.height * UIScreen.main.scale
         hierarchy[constant_deviceType] = UIDevice.current.userInterfaceIdiom == .pad ? constant_TABLET : constant_PHONE
         hierarchy[constant_client_package_name] = Bundle.main.bundleIdentifier
         hierarchy[constant_orientation] = (UIDevice.current.orientation.isLandscape ? constant_Landscape : constant_Portrait)
