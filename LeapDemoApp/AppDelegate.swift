@@ -48,13 +48,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return arguments[projectIdKeyIndex+1]
         }()
         
+        let resetProject:Bool = {
+            guard let projectIdKeyIndex = arguments.firstIndex(of: "resetProject"),
+                  arguments.count > projectIdKeyIndex+1 else { return true }
+            return arguments[projectIdKeyIndex+1] != "false"
+        }()
+        
         Leap.shared.start(apiKey)
         Leap.shared.callback = self
         LeapCreator.shared.start(apiKey)
-        if let projectId = projectId { Leap.shared.startProject(projectId, resetProject: true) }
+        if let projectId = projectId { Leap.shared.startProject(projectId, resetProject: resetProject) }
         return true
     }
-    
+     
     // MARK: UISceneSession Lifecycle
     
     @available(iOS 13.0, *)
