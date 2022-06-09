@@ -73,7 +73,7 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         
         widthConstraint?.priority = .defaultLow
         
-        let maxHeight = 0.8 * (self.superview?.frame.height ?? 0.0)
+        let maxHeight = 0.8 * self.frame.height
         
         heightConstraint = NSLayoutConstraint(item: webView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: maxHeight)
         
@@ -131,5 +131,13 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         guard let height = rect[constant_height] else { return }
         self.configureHeightConstraint(height: CGFloat(height))
         self.configureWidthConstraint()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.webView.evaluateJavaScript("getPageMetaData()") { res, err in
+                guard let metaData:[String:[String:CGFloat]] = res as? [String:[String:CGFloat]] else { return }
+                guard let rect = metaData[constant_rect] else { return }
+                guard let height = rect[constant_height] else { return }
+                self.configureHeightConstraint(height: height)
+            }
+        }
     }
 }

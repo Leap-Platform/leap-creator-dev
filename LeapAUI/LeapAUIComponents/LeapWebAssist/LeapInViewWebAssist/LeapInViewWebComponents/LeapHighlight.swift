@@ -547,6 +547,16 @@ class LeapHighlight: LeapTipView {
         DispatchQueue.main.async {
             self.placePointer()
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.webView.evaluateJavaScript("getPageMetaData()") { res, err in
+                guard let metaData:[String:[String:Float]] = res as? [String:[String:Float]] else { return }
+                guard let rect = metaData[constant_rect] else { return }
+                guard let width = rect[constant_width] else { return }
+                guard let height = rect[constant_height] else { return }
+                self.setToolTipDimensions(width: width, height: height)
+                self.placePointer()
+            }
+        }
     }
     
     override func performEnterAnimation(animation: String) {
