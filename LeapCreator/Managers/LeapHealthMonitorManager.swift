@@ -39,8 +39,7 @@ class LeapHealthMonitorManager {
     
     func sendPing() {
         if isSessionActive() {
-            guard let roomId = roomId else { return }
-            let payload = "{\"room\":\"\(roomId)\",\"message\": {\"commandType\":\"PING\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
+            guard let payload = getPayloadFor("PING") else { return }
             self.webSocket?.write(string: payload, completion: {
                 print("PING has been sent! ")
             })
@@ -57,12 +56,29 @@ class LeapHealthMonitorManager {
     }
     
     func sendPong() {
-        guard let roomId = roomId else { return }
-        let payload = "{\"room\":\"\(roomId)\",\"message\": {\"commandType\":\"PONG\",\"end\":\"true\"},\"action\": \"message\",\"source\": \"android\"}"
+        guard let payload = getPayloadFor("PONG") else { return }
         self.webSocket?.write(string: payload, completion: {
             print(" payload : \(payload)")
             print("PONG has been sent! ")
         })
+    }
+    
+    func getPayloadFor(_ commandType:String) -> String? {
+        guard commandType == "PING" || commandType == "PONG" else { return nil }
+        guard let roomId = roomId else { return nil }
+
+        let payloadDict:[String:AnyHashable] = [
+            "room"              : roomId,
+            "message"           : [
+                "commandType"   : commandType,
+                "end"           : "true",
+            ],
+            "action"            : "message",
+            "source"            : "android"
+        ]
+        guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDict, options: .fragmentsAllowed),
+              let payloadString = String(data: payloadData, encoding: .utf8) else { return nil }
+        return payloadString
     }
     
     func isSessionActive() -> Bool {
