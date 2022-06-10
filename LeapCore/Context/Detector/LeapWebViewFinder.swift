@@ -200,7 +200,11 @@ class LeapWebViewFinder {
                         rect.origin.x += UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0.0
                     }
                     
-                    completion(rect)
+                    if rect.origin.y < 0 || rect.origin.x < 0 || rect.origin.x > inWebView.bounds.maxX {
+                        completion(nil)
+                    } else {
+                        completion(rect)
+                    }
                 }
             } else { (completion(nil)) }
         }

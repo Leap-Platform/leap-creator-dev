@@ -575,7 +575,6 @@ extension LeapAUIManager {
                     self?.removeLanguageOptions()
                     if LeapPreferences.shared.getUserLanguage() != nil {
                         self?.leapButton?.isHidden = false
-                        self?.showCurrentAssist()
                     }
                     if success, let code = languageCode {
                         if let userLanguage = LeapPreferences.shared.getUserLanguage() {
@@ -598,7 +597,7 @@ extension LeapAUIManager {
     func didLanguageChange(from previousLanguage: String, to currentLanguage: String) {
         if previousLanguage != currentLanguage {
             self.auiManagerCallBack?.didLanguageChange(from: previousLanguage, to: currentLanguage)
-            removeCurrentAssist(byContext: false, panelOpen: true)
+            //removeCurrentAssist(byContext: false, panelOpen: true)
         }
     }
 }
@@ -692,7 +691,7 @@ extension LeapAUIManager {
         guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String,Any> else { return }
         scrollArrowButton.setView(view: inView)
         
-        guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
+        guard isReadyToPresent(type: type, assistInfo: assistInfo), currentAssist == nil else {
             auiManagerCallBack?.failedToPerform()
             return
         }
@@ -750,7 +749,7 @@ extension LeapAUIManager {
             if let wkweb = inWebview as? WKWebView { wkweb.evaluateJavaScript(focusScript,completionHandler: nil) }
         }
         
-        guard isReadyToPresent(type: type, assistInfo: assistInfo) else {
+        guard isReadyToPresent(type: type, assistInfo: assistInfo), currentAssist == nil else {
             auiManagerCallBack?.failedToPerform()
             return
         }
@@ -800,7 +799,7 @@ extension LeapAUIManager {
     
     private func performKeyWindowInstruction(instruction: Dictionary<String, Any>, iconInfo: Dictionary<String, Any>? = [:]) {
         
-        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String, Any>, let type = assistInfo[constant_type] as? String, isReadyToPresent(type: type, assistInfo: assistInfo) else {
+        guard let assistInfo = instruction[constant_assistInfo] as? Dictionary<String, Any>, let type = assistInfo[constant_type] as? String, isReadyToPresent(type: type, assistInfo: assistInfo), currentAssist == nil else {
 
             auiManagerCallBack?.failedToPerform()
             return
@@ -1008,6 +1007,9 @@ extension LeapAUIManager:LeapIconOptionsDelegate {
             if !success {
                 self?.startAutoDismissTimer()
             }
+            
+            self?.showCurrentAssist()
+            
             if let _ = self?.currentAssist as? LeapWebAssist, let _ = LeapPreferences.shared.getUserLanguage() {
                 self?.playAudio()
             }
