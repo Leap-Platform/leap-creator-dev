@@ -155,14 +155,29 @@ class LeapProtocolManager: LeapSocketListener, LeapAppStateProtocol, LeapHealthC
     }
     
     func sendJoinRoomRequest(roomId: String)->Void{
-        let json = "{ \"room\": \"\(roomId)\", \"action\": \"join\",\"source\": \"android\"}"
-        webSocketTask?.write(string: json, completion: {
+        let payloadDict:[String:AnyHashable] = [
+            "room"              : roomId,
+            "action"            : "join",
+            "source"            : "android"
+        ]
+        guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDict, options: .fragmentsAllowed),
+              let payload = String(data: payloadData, encoding: .utf8) else { return }
+        webSocketTask?.write(string: payload, completion: {
             print("Connecting to room ID :: \(roomId)")
         })
     }
     
     @objc func sendDisconnectCommand() {
-        let payload = "{\"room\":\"\(roomId ?? "")\",\"message\": {\"commandType\":\"DISCONNECT\"},\"action\": \"message\",\"source\": \"android\"}"
+        let payloadDict:[String:AnyHashable] = [
+            "room"              : roomId ?? "",
+            "message"           : [
+                "commandType"   : "DISCONNECT"
+            ],
+            "action"            : "message",
+            "source"            : "android"
+        ]
+        guard let payloadData = try? JSONSerialization.data(withJSONObject: payloadDict, options: .fragmentsAllowed),
+              let payload = String(data: payloadData, encoding: .utf8) else { return }
         webSocketTask?.write(string: payload, completion: {
             print("Disconnect command sent")
             DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
