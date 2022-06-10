@@ -128,8 +128,8 @@ class LeapBottomSheet: LeapKeyWindowAssist {
         guard let dict = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? Dictionary<String,Any> else { return }
         guard let metaData = dict[constant_pageMetaData] as? Dictionary<String,Any> else {return}
         guard let rect = metaData[constant_rect] as? Dictionary<String,Float> else {return}
-        guard let height = rect[constant_height] else { return }
-        self.configureHeightConstraint(height: CGFloat(height))
+        guard let _ = rect[constant_height] else { return }
+        //self.configureHeightConstraint(height: CGFloat(height))
         self.configureWidthConstraint()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.webView.evaluateJavaScript("getPageMetaData()") { res, err in
