@@ -282,8 +282,8 @@ extension LeapAUIManager: LeapAUIHandler {
     
     func updateView(inView view: UIView) {
         
-        if let swipePointer = currentAssist as? LeapSwipePointer { swipePointer.setPosition() }
-        else if let fingerPointer = currentAssist as? LeapFingerPointer { fingerPointer.setPosition() }
+        if let swipePointer = currentAssist as? LeapSwipePointer { swipePointer.updatePosition() }
+        else if let fingerPointer = currentAssist as? LeapFingerPointer { fingerPointer.updatePosition() }
         else if let label = currentAssist as? LeapLabel { label.setAlignment() }
         else if let tooltip = currentAssist as? LeapToolTip { tooltip.updatePointer() }
         else if let highlight = currentAssist as? LeapHighlight { highlight.updateHighlight() }

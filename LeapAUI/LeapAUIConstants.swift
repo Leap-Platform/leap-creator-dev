@@ -39,3 +39,4 @@ let mainIconBottomConstant: CGFloat = 45
 let webAssistPreloadTime = 0.25
 
 let maxWidthSupported: CGFloat = 450 // Specifically to support ipad where the width has to be restricted to 450 for better UI/UX.
+let swipePointerMaxLengthSupported: CGFloat = 300 // Specifically to support ipad where the width/height has to be restricted to 300 for better UI/UX.

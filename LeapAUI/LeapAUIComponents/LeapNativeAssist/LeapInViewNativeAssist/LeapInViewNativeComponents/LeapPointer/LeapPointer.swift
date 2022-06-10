@@ -42,44 +42,71 @@ class LeapPointer: LeapInViewNativeAssist {
         removeAnimation()
     }
     
-    func startAnimation(toRect: CGRect? = nil) {
+    func startAnimation() {
         
     }
     
     func presentPointer() {
-        
+        inView?.addSubview(self)
+        self.configureOverlayView()
+        self.layer.addSublayer(pointerLayer)
+        setPosition()
+        delegate?.didPresentAssist()
+        startAnimation()
+        addNotifiers()
     }
     
     func presentPointer(view: UIView) {
         toView = view
-        if toView?.window != UIApplication.shared.keyWindow {
-            inView = toView!.window
-        } else {
-            inView = UIApplication.getCurrentVC()?.view
-        }
+        inView = toView?.window
         presentPointer()
     }
     
-    func presentPointer(toRect:CGRect, inView:UIView?) {
-        
+    func presentPointer(toRect: CGRect, inView: UIView?) {
+        self.inView = inView
+        webRect = toRect
+        presentPointer()
     }
     
-    func updateRect(newRect:CGRect, inView:UIView?) {
+    func updateRect(newRect: CGRect, inView: UIView?) {
         
+        self.inView = inView
+        
+        webRect = newRect
+        
+        // Do the same check in the overridden method, if you're overriding this method.
+        guard let previousFrame = self.previousFrame, previousFrame.origin != getGlobalToViewFrame().origin else { return }
+        
+        setPosition()
+        
+        resetAnimation()
     }
     
-    func getToViewPositionForInView() -> CGRect? {
-        guard toView != nil, inView != nil else { return nil }
-        return toView?.superview?.convert(toView!.frame, to: inView!)
+    func updatePosition() {
+        
+        guard let previousFrame = self.previousFrame, previousFrame.origin != getGlobalToViewFrame().origin else { return }
+                        
+        setPosition()
+        
+        resetAnimation()
     }
     
     func removeAnimation() {
         pointerLayer.removeAllAnimations()
     }
     
+    func resetAnimation() {
+        pointerLayer.removeAllAnimations()
+        startAnimation()
+    }
+    
     func removePointer() {
         pointerLayer.removeFromSuperlayer()
         self.removeFromSuperview()
+    }
+    
+    func setPosition() {
+        self.previousFrame = getGlobalToViewFrame()
     }
     
     override func performExitAnimation(animation: String, byUser: Bool, autoDismissed: Bool, byContext: Bool, panelOpen: Bool, action: Dictionary<String, Any>?) {
@@ -131,47 +158,9 @@ class LeapFingerPointer: LeapPointer {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func presentPointer() {
-        self.layer.addSublayer(pointerLayer)
-        setPosition()
-        delegate?.didPresentAssist()
-        startAnimation()
-        addNotifiers()
-    }
-    
-    override func presentPointer(toRect: CGRect, inView:UIView?) {
-        self.inView = inView
-        webRect = toRect
-        let y = webRect!.midY - 50
-        let x = webRect!.midX - 50
-        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
-        self.inView?.addSubview(self)
-        configureOverlayView()
-        self.layer.addSublayer(pointerLayer)
-        pointerLayer.zPosition = 10
-        delegate?.didPresentAssist()
-        startAnimation()
-        addNotifiers()
-    }
-    
-    override func updateRect(newRect: CGRect, inView: UIView?) {
-        self.inView = inView
-        webRect = newRect
-        let y = webRect!.midY - 50
-        let x = webRect!.midX - 50
-        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
-    }
-    
-    override func presentPointer(view: UIView) {
-        toView = view
-        inView = toView?.window
-        inView?.addSubview(self)
-        configureOverlayView()
-        presentPointer()
-    }
-    
-    func setPosition() {
-        guard let toViewFrame = getToViewPositionForInView() else { return }
+    override func setPosition() {
+        super.setPosition()
+        let toViewFrame = getGlobalToViewFrame()
         let y = toViewFrame.midY - 50
         let x = toViewFrame.midX - 50
         pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
@@ -184,7 +173,7 @@ class LeapFingerPointer: LeapPointer {
         startAnimation()
     }
     
-    override func startAnimation(toRect: CGRect? = nil) {
+    override func startAnimation() {
         let fingerAnimation = CABasicAnimation(keyPath: "transform.scale")
         fingerAnimation.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
         fingerAnimation.toValue = NSValue(caTransform3D: CATransform3DMakeScale(0.667, 0.667, 1))
@@ -315,10 +304,10 @@ class LeapSwipePointer: LeapPointer {
     var fingerLayer: CALayer
     
     let swipeAnimation = CAAnimationGroup()
+            
+    private var screenWidth = UIDevice.current.userInterfaceIdiom == .pad ? swipePointerMaxLengthSupported : UIScreen.main.bounds.width
     
-    var toRect: CGRect?
-    
-    private var screenWidth = UIScreen.main.bounds.width
+    private var screenHeight = UIDevice.current.userInterfaceIdiom == .pad ? swipePointerMaxLengthSupported : UIScreen.main.bounds.height
     
     override init(withDict assistDict: Dictionary<String, Any>, toView: UIView) {
         
@@ -346,96 +335,27 @@ class LeapSwipePointer: LeapPointer {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func presentPointer() {
-        inView?.layer.addSublayer(pointerLayer)
-        setPosition()
-        delegate?.didPresentAssist()
-        startAnimation()
-        addNotifiers()
-    }
-    
-    override func presentPointer(toRect: CGRect, inView:UIView?) {
+    override func setPosition() {
+        super.setPosition()
+        let toViewFrame = getGlobalToViewFrame()
         pointerLayer.frame.size = CGSize(width: 100, height: 100)
-        self.inView = inView
-        let toViewFrame = toRect
+        
+        let screenLength = UIDevice.current.orientation == .landscapeLeft ? screenHeight : screenWidth
+        
         var y = toViewFrame.midY - 50
-        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
+        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenLength)
         switch type {
         case .swipeLeft:
             y = toViewFrame.midY - 50
-            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenLength)
         case .swipeRight:
             y = toViewFrame.midY - 50
-            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
+            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenLength)
         case .swipeUp:
-            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenLength)
             x = toViewFrame.midX - 50
         case .swipeDown:
-            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
-            x = toViewFrame.midX - 50
-        }
-        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
-        inView?.layer.addSublayer(pointerLayer)
-        pointerLayer.zPosition = 10
-        delegate?.didPresentAssist()
-        self.toRect = toRect
-        startAnimation(toRect: toRect)
-        addNotifiers()
-    }
-    
-    override func updateRect(newRect: CGRect, inView: UIView?) {
-        
-        if toRect == newRect { return }
-        
-        self.inView = inView
-        pointerLayer.frame.size = CGSize(width: 100, height: 100)
-        let toViewFrame = newRect
-        var y = toViewFrame.midY - 50
-        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
-        switch type {
-        case .swipeLeft:
-            y = toViewFrame.midY - 50
-            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
-        case .swipeRight:
-            y = toViewFrame.midY - 50
-            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
-        case .swipeUp:
-            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
-            x = toViewFrame.midX - 50
-        case .swipeDown:
-            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
-            x = toViewFrame.midX - 50
-        }
-        pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
-        
-        toRect = newRect
-        
-        resetAnimation()
-    }
-    
-    override func presentPointer(view: UIView) {
-        toView = view
-        inView = toView?.window
-        presentPointer()
-    }
-    
-    func setPosition() {
-        guard let toViewFrame = getToViewPositionForInView() else { return }
-        pointerLayer.frame.size = CGSize(width: 100, height: 100)
-        var y = toViewFrame.midY - 50
-        var x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
-        switch type {
-        case .swipeLeft:
-            y = toViewFrame.midY - 50
-            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) + (1/4*screenWidth)
-        case .swipeRight:
-            y = toViewFrame.midY - 50
-            x = (toViewFrame.midX - pointerLayer.frame.size.width/2) - (1/4*screenWidth)
-        case .swipeUp:
-            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) + (1/4*screenWidth)
-            x = toViewFrame.midX - 50
-        case .swipeDown:
-            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenWidth)
+            y = (toViewFrame.midY - pointerLayer.frame.size.height/2) - (1/4*screenLength)
             x = toViewFrame.midX - 50
         }
         pointerLayer.frame = CGRect(x: x, y: y, width: 100, height: 100)
@@ -445,13 +365,7 @@ class LeapSwipePointer: LeapPointer {
         resetAnimation()
     }
     
-    func resetAnimation() {
-        pointerLayer.removeAllAnimations()
-        
-        startAnimation(toRect: toRect)
-    }
-    
-    override func startAnimation(toRect: CGRect? = nil) {
+    override func startAnimation() {
         
         //Zero opacity animation
         let zeroOpacityAnimation = CABasicAnimation(keyPath: "opacity")
@@ -484,7 +398,9 @@ class LeapSwipePointer: LeapPointer {
         fadeOutAnimation.duration = 0.15
         fadeOutAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
-        guard let toViewFrame = toRect ?? getToViewPositionForInView() else { return }
+        let toViewFrame = getGlobalToViewFrame()
+        
+        let screenLength = UIDevice.current.orientation == .landscapeLeft ? screenHeight : screenWidth
         
         switch type {
         
@@ -493,28 +409,28 @@ class LeapSwipePointer: LeapPointer {
             fingerAnimation.keyPath = "position.x"
             
             fingerAnimation.fromValue = pointerLayer.position.x
-            fingerAnimation.toValue = (toViewFrame.midX - (pointerLayer.frame.size.width/2)) - (1/4*screenWidth)
+            fingerAnimation.toValue = (toViewFrame.midX - (pointerLayer.frame.size.width/2)) - (1/4*screenLength)
                         
         case .swipeRight:
             
             fingerAnimation.keyPath = "position.x"
             
             fingerAnimation.fromValue = pointerLayer.position.x
-            fingerAnimation.toValue = toViewFrame.midX + (1/4*screenWidth)
+            fingerAnimation.toValue = toViewFrame.midX + (1/4*screenLength)
                     
         case .swipeUp:
             
             fingerAnimation.keyPath = "position.y"
             
             fingerAnimation.fromValue = pointerLayer.position.y
-            fingerAnimation.toValue = (toViewFrame.midY - (pointerLayer.frame.size.height/2)) - (1/4*screenWidth)
+            fingerAnimation.toValue = (toViewFrame.midY - (pointerLayer.frame.size.height/2)) - (1/4*screenLength)
                         
         case .swipeDown:
             
             fingerAnimation.keyPath = "position.y"
         
             fingerAnimation.fromValue = pointerLayer.position.y
-            fingerAnimation.toValue = toViewFrame.midY + (1/4*screenWidth)
+            fingerAnimation.toValue = toViewFrame.midY + (1/4*screenLength)
         }
         
         let group = CAAnimationGroup()

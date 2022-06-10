@@ -20,6 +20,9 @@ class LeapInViewNativeAssist: LeapNativeAssist {
     // rect for web page UI components
     var webRect: CGRect?
     
+    // the last frame/point of the AUI Component.
+    var previousFrame: CGRect?
+    
     /// - Parameters:
     ///   - assistDict: A dictionary value for the type LeapAssistInfo.
     ///   - toView: target view to which the tooltip is attached.
