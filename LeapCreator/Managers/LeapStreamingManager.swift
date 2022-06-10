@@ -92,11 +92,30 @@ class LeapStreamingManager: LeapAppStateProtocol {
                 return
             }
             let deviceType = UIDevice.current.userInterfaceIdiom == .pad ? constant_TABLET : constant_PHONE
-            let sdkVersion = Bundle(for: LeapCreator.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
-                  let message = "{\"dataPacket\":\"\(sub)\", \"commandType\": \"SCREENSTREAM\",\"end\":\"\(end)\",\"screenDimensions\":{\"screenWidth\":\"\(UIScreen.main.bounds.width)\",\"screenHeight\":\"\(UIScreen.main.bounds.height)\"}, \"deviceType\":\"\(deviceType)\", \"sdkVersion\":\"\(sdkVersion)\"}"
-                let payload = "{\"room\":\"\(roomId)\",\"message\":\(message),\"action\": \"message\",\"source\": \"android\"}"
+            let messageDict:[String:AnyHashable] = [
+                "dataPacket"        : sub,
+                "commandType"       : "SCREENSTREAM",
+                "end"               : "\(end)",
+                "screenDimensions"  : [
+                    "screenWidth"   : "\(UIScreen.main.bounds.width)",
+                    "screenHeight"  : "\(UIScreen.main.bounds.height)"
+                ],
+                "deviceType"        : deviceType,
+                "sdkVersion"        : LEAP_SDK_VERSION
+            ]
+            
+            let payloadDict:[String:AnyHashable] = [
+                "room"      : roomId,
+                "message"   : messageDict,
+                "action"    : "message",
+                "source"    : "android"
+            ]
+            
+            guard let payloadData =  try? JSONSerialization.data(withJSONObject: payloadDict, options: .fragmentsAllowed),
+                  let payloadString = String(data: payloadData, encoding: .utf8) else { return }
+            
 
-        webSocket?.write(string: payload, completion: {
+            webSocket?.write(string: payloadString, completion: {
           //print("End :: \(end)")
             if end == "true" {
                 self.previousImage = self.image
