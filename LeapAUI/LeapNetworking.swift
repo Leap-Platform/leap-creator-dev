@@ -107,8 +107,8 @@ class LeapDownloadOperation: LeapOperation {
         }
         guard let url = media.url else { return }
         let request = URLRequest(url: url)
-        let session = LeapSSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? LeapSSLManager.shared.session : URLSession.shared
-        let dlTask = session?.downloadTask(with: request) { (fileUrl, urlResponse, error) in
+        let session = URLSession.shared
+        let dlTask = session.downloadTask(with: request) { (fileUrl, urlResponse, error) in
             self.executing(false)
             self.finished(true)
             guard let tempLocation = fileUrl else {
@@ -127,7 +127,7 @@ class LeapDownloadOperation: LeapOperation {
             try! unzippedData.write(to: newFilePath, options: .atomic)
             print("[Leap]File download = \(newFilePath.path)")
         }
-        dlTask?.resume()
+        dlTask.resume()
     }
     
     func copyFileToLeapFolder(_ inputLocation: URL) {
