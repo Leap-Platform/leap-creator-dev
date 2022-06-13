@@ -21,14 +21,14 @@ class LeapNetworkService {
     
     func makeUrlRequest(_ request: URLRequest, resultHandler: @escaping (Result<ResponseData, RequestError>) -> Void) {
         
-        guard let url = request.url else {
+        guard request.url != nil else {
             resultHandler(.failure(.clientError(response: nil)))
             return
         }
         
-        let session = LeapSSLManager.shared.isValidForSSLPinning(urlString: url.absoluteString) ? LeapSSLManager.shared.session : URLSession.shared
+        let session = URLSession.shared
         
-        let urlTask = session?.dataTask(with: request) { (data, response, error) in
+        let urlTask = session.dataTask(with: request) { (data, response, error) in
             guard error == nil else {
                 resultHandler(.failure(.clientError(response: response)))
                 return
@@ -56,6 +56,6 @@ class LeapNetworkService {
 //            resultHandler(.success(decodedData))
         }
         
-        urlTask?.resume()
+        urlTask.resume()
     }
 }
