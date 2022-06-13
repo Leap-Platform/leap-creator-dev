@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-internal let LEAP_SDK_VERSION:String = "1.4.2"
+internal let LEAP_SDK_VERSION:String = "1.4.3"
 
 @objc public class LeapCreator: NSObject {
     @objc public static let shared = LeapCreator()
