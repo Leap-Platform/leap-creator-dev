@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = "LeapCreatorDevSDK"
-    s.version      = "2.0.57"
+    s.version      = "2.0.58"
     s.summary      = "Product engagement made easy"
     s.description  = <<-DESC 
     Product engagement made easy. Onboard, nudge, & delight your mobile users
