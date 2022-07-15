@@ -1,2 +1,2 @@
 # leap-creator-ios
-Leap Creator SDK
+Leap Creator DEV SDK

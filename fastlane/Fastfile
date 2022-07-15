@@ -1,0 +1,32 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+podspec_name = "LeapCreatorDevSDK.podspec"
+
+platform :ios do
+  desc "Step 1"
+  lane :release do
+    # add actions here: https://docs.fastlane.tools/actions
+    pod_lib_lint
+    version = version_bump_podspec(path: podspec_name)
+    git_add(path: podspec_name)
+    git_commit(path: [podspec_name],
+               message: "#{version} release")
+    add_git_tag(tag: "#{version}")
+    push_to_git_remote
+    pod_push
+  end
+end
