@@ -1,4 +1,0 @@
-framework module LeapCreatorSDK {
-  header "LeapCreatorSDK-Swift.h"
-  requires objc
-}
